@@ -2,19 +2,19 @@ import React from "react";
 import { getCurrentUser } from "@/lib/session";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { TrashIcon, CalendarIcon, PenIcon, Delete } from "lucide-react";
+import { TrashIcon, CalendarIcon, PenIcon } from "lucide-react";
 import Link from "next/link";
 import { DeleteBlogButton } from "../../delete-blog-button";
-import { getBlogsByPublishedUseCase } from "@/use-cases/blogs";
+import { getBlogsByPublished } from "@/service/blog";
 
 export default async function PublishedPage() {
   const user = await getCurrentUser();
 
-  if (!user || user.role !== "admin") {
+  if (!user) {
     return null;
   }
 
-  const blogs = await getBlogsByPublishedUseCase({ published: true });
+  const blogs = await getBlogsByPublished({ published: true });
 
   if (blogs.length === 0) {
     return (
@@ -30,7 +30,7 @@ export default async function PublishedPage() {
     <div className="space-y-4">
       {blogs.map((post) => (
         <Card
-          key={post.id}
+          key={post._id}
           className="hover:shadow-md transition-shadow duration-200"
         >
           <CardContent className="p-3">
@@ -60,7 +60,7 @@ export default async function PublishedPage() {
                 </div>
               </div>
               <div className="flex space-x-2">
-                <Link href={`/edit/${post.id}`} passHref>
+                <Link href={`/edit/${post._id}`} passHref>
                   <Button
                     variant="outline"
                     size="sm"
@@ -70,7 +70,7 @@ export default async function PublishedPage() {
                     {/* <span>Edit</span> */}
                   </Button>
                 </Link>
-                <DeleteBlogButton blogId={post.id}>
+                <DeleteBlogButton blogId={post._id}>
                   <Button
                     variant="outline"
                     size="sm"

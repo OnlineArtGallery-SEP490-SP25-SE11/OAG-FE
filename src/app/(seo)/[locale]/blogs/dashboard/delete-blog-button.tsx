@@ -25,7 +25,7 @@ export function DeleteBlogButton({
   blogId,
   children,
 }: {
-  blogId: number;
+  blogId: string;
   children: React.ReactNode;
 }) {
   const { toast } = useToast();

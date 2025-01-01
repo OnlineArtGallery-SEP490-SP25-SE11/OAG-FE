@@ -5,16 +5,16 @@ import { Button } from "@/components/ui/button";
 import { TrashIcon, CalendarIcon, PenIcon } from "lucide-react";
 import Link from "next/link";
 import { DeleteBlogButton } from "../../delete-blog-button";
-import { getBlogsByPublishedUseCase } from "@/use-cases/blogs";
+import { getBlogsByPublished} from "@/service/blog";
 
 export default async function DraftPage() {
   const user = await getCurrentUser();
 
-  if (!user || user.role !== "admin") {
+  if (!user) {
     return null;
   }
 
-  const blogs = await getBlogsByPublishedUseCase({ published: false });
+  const blogs = await getBlogsByPublished({ published: false });
 
   if (blogs.length === 0) {
     return (
@@ -28,7 +28,7 @@ export default async function DraftPage() {
     <div className="space-y-4">
       {blogs.map((post) => (
         <Card
-          key={post.id}
+          key={post._id}
           className="hover:shadow-md transition-shadow duration-200"
         >
           <CardContent className="p-3">
@@ -58,7 +58,7 @@ export default async function DraftPage() {
                 </div>
               </div>
               <div className="flex space-x-2">
-                <Link href={`/draft/${post.id}`} passHref>
+                <Link href={`/draft/${post._id}`} passHref>
                   <Button
                     variant="outline"
                     size="sm"
@@ -69,7 +69,7 @@ export default async function DraftPage() {
                   </Button>
                 </Link>
 
-                <DeleteBlogButton blogId={post.id}>
+                <DeleteBlogButton blogId={post._id}>
                   <Button
                     variant="outline"
                     size="sm"

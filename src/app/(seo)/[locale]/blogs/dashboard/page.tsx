@@ -7,7 +7,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Breadcrumb } from "@/components/Breadcrumb";
+import { Breadcrumb } from "@/components/ui.custom/Breadcrumb";
 
 export default function DashboardPage() {
   return (
