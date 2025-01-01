@@ -1,7 +1,6 @@
 // components/DashboardSidebar.tsx
 import React from "react";
 import ReusableSidebar from "../sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Grid, NotepadText, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/session";

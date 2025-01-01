@@ -1,6 +1,6 @@
 "use client";
 
-import { LoaderButton } from "@/components/loader-button";
+import { LoaderButton } from "@/components/ui.custom/loader-button";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -12,7 +12,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 // import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 // import { btnIconStyles, btnStyles } from "@/styles/icons";
 // import { DoorOpen } from "lucide-react";
 import { useState } from "react";
@@ -25,7 +25,7 @@ export function DeleteBlogButton({
   blogId,
   children,
 }: {
-  blogId: number;
+  blogId: string;
   children: React.ReactNode;
 }) {
   const { toast } = useToast();

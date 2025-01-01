@@ -1,4 +1,4 @@
 export default function AdminDashboardPage() {
   // TODO charts
-  return <div>Admin dashboard</div>;
+  return <div>Admin dashboard deploy1</div>;
 }
