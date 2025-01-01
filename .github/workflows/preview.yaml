@@ -7,7 +7,7 @@ env:
 on:
   pull_request:
     branches:
-      - preview
+      - preview    # Chỉ trigger khi PR vào nhánh preview
     types: [opened, synchronize, reopened]
 
 jobs:
@@ -15,23 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
-
-      - name: Pull Vercel Environment Variables
-        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-      
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: latest
-
-      - name: Install Dependencies
-        run: bun install
-
-      - name: Build Project
-        run: bun run build
       
       - name: Deploy to Vercel
         id: vercel-deploy
@@ -41,7 +24,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-
+          
       - name: Comment Preview URL
         uses: peter-evans/create-or-update-comment@v3
         with:
