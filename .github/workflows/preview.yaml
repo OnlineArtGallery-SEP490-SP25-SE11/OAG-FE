@@ -16,6 +16,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel Environment Variables
+        run: vercel env pull --environment=preview .env
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
         with:
@@ -35,7 +43,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          
+
       - name: Comment Preview URL
         uses: peter-evans/create-or-update-comment@v3
         with:
