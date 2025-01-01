@@ -1,3 +1,4 @@
+"use client";
 import dynamic from "next/dynamic";
 import { GalleryLoader } from "./components/gallery-loader";
 
