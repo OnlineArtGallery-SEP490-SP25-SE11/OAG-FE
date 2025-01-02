@@ -1,4 +1,4 @@
-import { Breadcrumb } from '@/components/Breadcrumb';
+import { Breadcrumb } from "@/components/ui.custom/Breadcrumb";
 
 export default function PostsPage() {
 	return (

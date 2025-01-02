@@ -1,6 +1,7 @@
-import axios, { axiosWithAuth } from '@/lib/axios';
-import { ApiResponse } from '@/types/response';
-import axiosInstance from 'axios';
+import axios, { axiosWithAuth } from "@/lib/axios";
+import { Blog } from "@/types/blog";
+import { ApiResponse } from "@/types/response";
+import axiosInstance from "axios";
 
 export async function getBlogById(blogId: string) {
 	try {
@@ -137,4 +138,13 @@ export async function getBlogs(accessToken: string) {
 			console.error(`Unexpected error: ${err}`);
 		}
 	}
+}
+
+export async function getBlogsByPublished({
+  published,
+}: {
+  published: boolean;
+}) : Promise<Blog[]> {
+  const res = await axios.get(`/blog/published/${published}`);
+  return res.data;
 }

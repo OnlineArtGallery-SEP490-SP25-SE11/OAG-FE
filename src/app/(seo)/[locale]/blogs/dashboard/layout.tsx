@@ -1,7 +1,6 @@
 // layout.tsx
 // import Sidebar from "@/app/dashboard/sidebar-dashboard";
-import { Breadcrumb } from '@/components/Breadcrumb';
-import { getCurrentUser } from '@/lib/session';
+import { getCurrentUser } from "@/lib/session";
 
 export default async function DashboardLayout({
 	children
