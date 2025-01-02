@@ -1,15 +1,15 @@
-import createMiddleware from "next-intl/middleware";
-import { routing } from "./i18n/routing";
+import createMiddleware from 'next-intl/middleware';
+import { routing } from './i18n/routing';
 
 export default createMiddleware(routing);
 
 export const config = {
-  matcher: [
-    "/",
-    "/(vi|en)/:path*",
-    "/((?!admin|api|_next|test|.*\\..*).*)",
-    // '/test/:path*',
-  ],
+	matcher: [
+		'/',
+		'/(vi|en)/:path*',
+		'/((?!admin|api|_next|test|.*\\..*).*)'
+		// '/test/:path*',
+	]
 };
 
 /*

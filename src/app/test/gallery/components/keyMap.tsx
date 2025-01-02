@@ -1,10 +1,10 @@
-"use client";
-import { keys } from "./player";
+'use client';
+import { keys } from './player';
 
 // Add event listeners for movement
 export const keyMap: { [key: string]: keyof typeof keys } = {
-  KeyW: "forward",
-  KeyS: "backward",
-  KeyA: "right",
-  KeyD: "left",
+	KeyW: 'forward',
+	KeyS: 'backward',
+	KeyA: 'right',
+	KeyD: 'left'
 };

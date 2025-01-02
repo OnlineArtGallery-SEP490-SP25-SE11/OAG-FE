@@ -2,7 +2,7 @@
 // import { Button } from '@/components/ui/button';
 // import { signIn, signOut } from 'next-auth/react';
 
-import AuthForm from "./components/auth-form";
+import AuthForm from './components/auth-form';
 
 // function Signin() {
 //   const handleGoogleLogin = async () => {
@@ -46,11 +46,11 @@ import AuthForm from "./components/auth-form";
 
 // export default Signin;
 async function AuthPage() {
-  return (
-    <>
-      <AuthForm />
-    </>
-  );
+	return (
+		<>
+			<AuthForm />
+		</>
+	);
 }
 
 export default AuthPage;
