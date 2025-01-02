@@ -1,6 +1,6 @@
-'use client'
-import dynamic from "next/dynamic";
-import { GalleryLoader } from "./components/gallery-loader";
+'use client';
+import dynamic from 'next/dynamic';
+import { GalleryLoader } from './components/gallery-loader';
 
 export default function GalleryPage() {
 	const ArtGallery = dynamic(

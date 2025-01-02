@@ -42,7 +42,8 @@ export default function Header() {
 
 	return (
 		<header
-			className={cn('fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out shadow-md' ,
+			className={cn(
+				'fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out shadow-md',
 				isScrolled
 					? 'bg-gray-800 bg-opacity-60 backdrop-blur-sm texture'
 					: 'bg-transparent'
@@ -120,7 +121,7 @@ export default function Header() {
 			</div>
 			<Separator />
 			<div
-				className={cn('md:hidden' ,isMenuOpen ? 'block' : 'hidden')}
+				className={cn('md:hidden', isMenuOpen ? 'block' : 'hidden')}
 				id='mobile-menu'
 			>
 				<div className='px-2 pt-2 pb-3 space-y-1 sm:px-3'>

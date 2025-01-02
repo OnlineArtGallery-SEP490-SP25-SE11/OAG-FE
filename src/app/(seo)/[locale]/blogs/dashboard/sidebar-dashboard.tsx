@@ -1,9 +1,9 @@
 // components/DashboardSidebar.tsx
-import React from "react";
-import ReusableSidebar from "../sidebar";
-import { Grid, NotepadText, ExternalLink } from "lucide-react";
-import Link from "next/link";
-import { getCurrentUser } from "@/lib/session";
+import React from 'react';
+import ReusableSidebar from '../sidebar';
+import { Grid, NotepadText, ExternalLink } from 'lucide-react';
+import Link from 'next/link';
+import { getCurrentUser } from '@/lib/session';
 
 const DashboardSidebar: React.FC = async () => {
 	const user = await getCurrentUser();
