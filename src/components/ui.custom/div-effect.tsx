@@ -1,6 +1,6 @@
 'use client';
 import { cn } from '@/lib/utils';
-import React, { useRef } from 'react';
+import React, { memo, useRef } from 'react';
 
 interface DivWithEffectProps {
 	children: React.ReactNode;
@@ -8,14 +8,12 @@ interface DivWithEffectProps {
 	background?: string;
 	className?: string;
 }
-
-export default function DivWithEffect({
+function DivWithEffect({
 	children,
 	color,
 	className = ''
 }: DivWithEffectProps) {
 	const effectRef = useRef<HTMLDivElement | null>(null);
-
 	const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
 		if (effectRef.current) {
 			const rect = e.currentTarget.getBoundingClientRect();
@@ -26,7 +24,6 @@ export default function DivWithEffect({
 			}px)`;
 		}
 	};
-
 	return (
 		<div
 			className={cn('overflow-hidden relative', className)}
@@ -61,3 +58,5 @@ export default function DivWithEffect({
 		</div>
 	);
 }
+
+export default memo(DivWithEffect);

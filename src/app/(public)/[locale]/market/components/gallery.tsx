@@ -1,14 +1,13 @@
 'use client';
 import DynamicBreadcrumb from '@/components/ui.custom/dynamic-breadcrumb';
-import { TooltipProvider } from '@/components/ui/tooltip';
 import { ArtPiece } from '@/types/marketplace.d';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { fetchArtPieces } from '../api';
-import { ProductCard } from '../components/product-card';
-import { ProductModal } from '../components/product-modal';
-import { Sidebar } from '../components/sidebar';
 import ArtPieceSkeleton from './art-skeleton';
+import { ProductCard } from './product-card';
+import { ProductModal } from './product-modal';
+import { Sidebar } from './sidebar';
 
 const breakpointColumns = {
 	1300: 4,
@@ -21,12 +20,6 @@ const getRandomHeight = () => {
 	const minHeight = 200;
 	const maxHeight = 400;
 	return Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
-};
-const generateRandomKey = () => {
-	return (
-		Math.random().toString(36).substring(2, 15) +
-		Math.random().toString(36).substring(2, 15)
-	);
 };
 
 export default function Gallery() {
@@ -61,7 +54,8 @@ export default function Gallery() {
 		const loadArtPieces = async (): Promise<void> => {
 			setLoading(true);
 			try {
-				const newArtPieces = await fetchArtPieces(page, 20);
+				const newArtPieces = await fetchArtPieces(page, 8);
+				console.log('page', page);
 				setArtPieces((prev) => [...prev, ...newArtPieces]);
 				setFilteredArtPieces((prev) => [...prev, ...newArtPieces]);
 				if (initialLoading) setInitialLoading(false);
@@ -107,96 +101,68 @@ export default function Gallery() {
 	if (!mounted) {
 		return null;
 	}
-
+	const combinedList = [
+		...artPieces,
+		...Array.from({ length: true ? 4 : 0 }).map(() => ({
+			id: `skeleton-${Math.random()}`,
+			isSkeleton: true,
+			height: getRandomHeight()
+		}))
+	];
 	return (
-		<TooltipProvider>
-			<div className='flex'>
-				<div className='hidden lg:block md:block sticky top-0 self-start h-screen'>
-					<Sidebar
-						onSearch={handleSearch}
-						onFilterPrice={handleFilterPrice}
-						onFilterArtist={handleFilterArtist}
-					/>
-				</div>
-				<div className='flex-1 p-4'>
-					<DynamicBreadcrumb currentPath='/test/market' />
-					<h1 className='text-4xl font-bold mb-8 text-center'>
-						Digital Art Gallery
-					</h1>
-					{initialLoading ? (
-						<ResponsiveMasonry
-							columnsCountBreakPoints={breakpointColumns}
-						>
-							<Masonry gutter='30px'>
-								{Array.from({
-									length: 8
-								}).map((_, index) => (
-									<div
-										className='w-full'
-										key={`${generateRandomKey()}`}
-									>
+		<div className='flex'>
+			<div className='hidden lg:block md:block sticky top-28 self-start h-screen m-1'>
+				<Sidebar
+					onSearch={handleSearch}
+					onFilterPrice={handleFilterPrice}
+					onFilterArtist={handleFilterArtist}
+				/>
+			</div>
+			<div className='flex-1 p-4'>
+				<DynamicBreadcrumb />
+				<h1 className='text-4xl font-bold mb-8 text-center'>
+					Digital Art Gallery
+				</h1>
+				{!initialLoading && (
+					<ResponsiveMasonry
+						columnsCountBreakPoints={breakpointColumns}
+					>
+						<Masonry gutter='30px'>
+							{combinedList.map((art, index) => (
+								<div
+									key={art.id || `skeleton-${index}`}
+									ref={
+										index === combinedList.length - 1
+											? lastArtPieceRef
+											: null
+									}
+								>
+									{'isSkeleton' in art && art.isSkeleton ? (
 										<ArtPieceSkeleton
 											height={getRandomHeight()}
 										/>
-									</div>
-								))}
-							</Masonry>
-						</ResponsiveMasonry>
-					) : (
-						<ResponsiveMasonry
-							columnsCountBreakPoints={breakpointColumns}
-						>
-							<Masonry gutter='30px'>
-								{filteredArtPieces.map((art, index) => (
-									<div
-										key={`${generateRandomKey()}`}
-										ref={
-											index ===
-											filteredArtPieces.length - 1
-												? lastArtPieceRef
-												: null
-										}
-									>
+									) : (
 										<ProductCard
-											art={art}
+											art={art as ArtPiece}
 											onClick={setSelectedArt}
 										/>
-									</div>
-								))}
-							</Masonry>
-						</ResponsiveMasonry>
-					)}
+									)}
+								</div>
+							))}
+						</Masonry>
+					</ResponsiveMasonry>
+				)}
+				{loading && (
+					<p className='text-center mt-4'>
+						Loading more art pieces...
+					</p>
+				)}
 
-					{loading && filteredArtPieces.length > 0 && (
-						<ResponsiveMasonry
-							columnsCountBreakPoints={breakpointColumns}
-						>
-							<Masonry gutter='30px'>
-								{Array.from({
-									length: 4
-								}).map((_, index) => (
-									<div key={`${generateRandomKey()}`}>
-										<ArtPieceSkeleton
-											height={getRandomHeight()}
-										/>
-									</div>
-								))}
-							</Masonry>
-						</ResponsiveMasonry>
-					)}
-
-					{loading && (
-						<p className='text-center mt-4'>
-							Loading more art pieces...
-						</p>
-					)}
-
-					<ProductModal
-						art={selectedArt}
-						onClose={() => setSelectedArt(null)}
-					/>
-				</div>
+				<ProductModal
+					art={selectedArt}
+					onClose={() => setSelectedArt(null)}
+				/>
 			</div>
-		</TooltipProvider>
+		</div>
 	);
 }

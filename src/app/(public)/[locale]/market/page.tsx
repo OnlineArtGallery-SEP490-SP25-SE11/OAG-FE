@@ -1,6 +1,6 @@
 import Gallery from './components/gallery';
 
-function GalleryPage() {
+async function GalleryPage() {
 	return (
 		<>
 			<Gallery />
