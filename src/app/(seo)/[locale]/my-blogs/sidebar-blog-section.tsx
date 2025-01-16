@@ -83,7 +83,7 @@ const BlogEntryDropdown = ({
             iconColor="blue"
             text="Copy article link"
             onClick={() =>
-              copyArticleLink(process.env.NEXT_PUBLIC_HOST_NAME + "/blog/" + id)
+              copyArticleLink(process.env.NEXT_PUBLIC_HOST_NAME + "/blogs/" + id)
             }
           />
           <DropdownMenuItemWithIcon
@@ -93,7 +93,7 @@ const BlogEntryDropdown = ({
             text="View on blog"
             onClick={() =>
               window.open(
-                `${process.env.NEXT_PUBLIC_HOST_NAME}/blog/${id}`,
+                `${process.env.NEXT_PUBLIC_HOST_NAME}/blogs/${id}`,
                 "_blank"
               )
             }
@@ -135,7 +135,7 @@ const BlogEntry = ({ blog }: { blog: Blog }) => {
       )}
     >
       <div className="flex items-center justify-between w-full space-x-4">
-        <Link href={`/blogs/${blog._id}`} className="flex-grow">
+        <Link href={`/my-blogs/${blog._id}`} className="flex-grow">
           <div className="flex items-center space-x-3 group">
             {blog.published ? (
               <FileCheck

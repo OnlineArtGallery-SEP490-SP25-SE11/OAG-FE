@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { LoaderCircleIcon } from "lucide-react";
 import { publishBlogAction, unpublishBlogAction } from "./action";
+import { useTranslations } from "next-intl";
 
 interface PublicButtonProps {
   blogId: string;
@@ -17,6 +18,7 @@ const PublicButton = ({ blogId, initialPublishedState }: PublicButtonProps) => {
   const [isPending, setIsPending] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
+  const tBlog = useTranslations("blog");
 
   const handlePublishToggle = async () => {
     setIsPending(true);
@@ -59,9 +61,9 @@ const PublicButton = ({ blogId, initialPublishedState }: PublicButtonProps) => {
       {isPending ? (
         <LoaderCircleIcon className="animate-spin" />
       ) : published ? (
-        "Private"
+        tBlog("private")
       ) : (
-        "Public"
+        tBlog("publish")
       )}
     </Button>
   );
