@@ -1,11 +1,11 @@
-import Gallery from "./components/gallery";
+import Gallery from './components/gallery';
 
 function GalleryPage() {
-  return (
-    <>
-      <Gallery />
-    </>
-  );
+	return (
+		<>
+			<Gallery />
+		</>
+	);
 }
 
 export default GalleryPage;
