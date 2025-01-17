@@ -10,6 +10,7 @@ import { useServerAction } from "zsa-react";
 interface ToggleHeartButtonProps {
     blogId: string;
     initialHearted: boolean;
+    initialHeartCount: number;
 }
 
 // export function ToggleHeartButton({ blogId, initialHearted }: ToggleHeartButtonProps) {
@@ -39,6 +40,7 @@ interface ToggleHeartButtonProps {
 //                     });
 //                     return newState;
 //                 });
+//             // eslint-disable-next-line @typescript-eslint/no-explicit-any
 //             } catch (error: any) {
 //                 console.error("Error in handleToggleHeart:", error);
 //                 toast({

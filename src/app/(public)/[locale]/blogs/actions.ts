@@ -1,3 +1,4 @@
+'use server';
 import { z } from 'zod';
 import { authenticatedAction } from '@/lib/safe-action';
 import { rateLimitByKey } from '@/lib/limiter';

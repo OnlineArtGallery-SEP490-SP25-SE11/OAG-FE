@@ -16,7 +16,7 @@ export function BottomBar({ isBookmarked, userId, isHearted, heartCount, blogId 
         <div className="flex items-center">
           {
             userId ? (
-              <ToggleHeartButton blogId={blogId} initialHearted={isHearted} />
+              <ToggleHeartButton blogId={blogId} initialHearted={isHearted} initialHeartCount={heartCount} />
             ) : (
 
               <Link href="/sign-in">

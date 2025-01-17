@@ -1,5 +1,5 @@
-import axios, { axiosWithAuth } from '@/lib/axios';
-import { Blog } from '@/types/blog';
+import axios, { axiosWithAuth, createApi } from '@/lib/axios';
+import { Blog, GetPublishedBlogsResponse } from '@/types/blog';
 import { ApiResponse } from '@/types/response';
 import axiosInstance from 'axios';
 
@@ -93,8 +93,8 @@ export async function updateBlog({
 		published?: boolean;
 	} = {};
 
-	if (updateData.title) payload.title = payload.title;
-	if (updateData.content) payload.content = payload.content;
+	if (updateData.title) payload.title = updateData.title;
+	if (updateData.content) payload.content = updateData.content;
 	if (updateData.image) payload.image = updateData.image;
 	if (updateData.published !== undefined)
 		payload.published = updateData.published;
@@ -149,35 +149,19 @@ export async function getBlogsByPublished({
 	return res.data;
 }
 
-export async function toggleBookmarkBlogService(
-	accessToken: string,
-	blogId: string
-) {
-	try {
-		const res = await axiosWithAuth(accessToken).put(
-			`/blog/toggle-bookmark/${blogId}`
-		);
-		return res.data;
-	} catch (error) {
-		if (axiosInstance.isAxiosError(error)) {
-			console.error(
-				`Error when toggle bookmark blog: ${error.response?.data}`
-			);
-		} else {
-			console.error(`Unexpected error: ${error}`);
-		}
-	}
-}
-
 export async function toggleHeartBlogService(
 	accessToken: string,
 	blogId: string
-) {
+): Promise<boolean> {
 	try {
 		const res = await axiosWithAuth(accessToken).put(
 			`/blog/toggle-heart/${blogId}`
 		);
-		return res.data;
+		if (res.status === 200) {
+			return res.data;
+		} else {
+			return false;
+		}
 	} catch (error) {
 		if (axiosInstance.isAxiosError(error)) {
 			console.error(
@@ -186,6 +170,32 @@ export async function toggleHeartBlogService(
 		} else {
 			console.error(`Unexpected error: ${error}`);
 		}
+		return false;
+	}
+}
+
+export async function toggleBookmarkBlogService(
+	accessToken: string,
+	blogId: string
+): Promise<boolean> {
+	try {
+		const res = await axiosWithAuth(accessToken).put(
+			`/blog/toggle-bookmark/${blogId}`
+		);
+		if (res.status === 200) {
+			return res.data;
+		} else {
+			return false;
+		}
+	} catch (error) {
+		if (axiosInstance.isAxiosError(error)) {
+			console.error(
+				`Error when toggle bookmark blog: ${error.response?.data}`
+			);
+		} else {
+			console.error(`Unexpected error: ${error}`);
+		}
+		return false;
 	}
 }
 
@@ -207,9 +217,13 @@ export async function getBlogInteractions(blogId: string) {
 export async function getUserInteractions(accessToken: string, blogId: string) {
 	try {
 		const res = await axiosWithAuth(accessToken).get(
-			`/user/interactions/${blogId}`
+			`/interaction/user/blog/${blogId}`
 		);
-		return res.data;
+		console.log(res.data, 'getUserInteractions res');
+		return {
+			...res.data,
+			bookmarked: false
+		};
 	} catch (error) {
 		if (axiosInstance.isAxiosError(error)) {
 			console.error(
@@ -220,3 +234,60 @@ export async function getUserInteractions(accessToken: string, blogId: string) {
 		}
 	}
 }
+
+export async function getPublishedBlogs({
+	after,
+	before,
+	first,
+	last,
+	query
+}: {
+	after?: string;
+	before?: string;
+	first?: number;
+	last?: number;
+	query?: string;
+}) : Promise<GetPublishedBlogsResponse> {
+	try {
+		const params = new URLSearchParams();
+
+		if (after) params.set('after', after);
+		if (before) params.set('before', before);
+		if (first) params.set('first', first.toString());
+		if (last) params.set('last', last.toString());
+		if (query) params.set('query', query);
+
+		const queryString = params.toString();
+		const url = `/blog/published${queryString ? `?${queryString}` : ''}`;
+		const res = await axios.get<GetPublishedBlogsResponse>(url);
+		return res.data;
+	} catch (error) {
+		if (axiosInstance.isAxiosError(error)) {
+			console.error(
+				`Error when get published blogs: ${error.response?.data}`
+			);
+		} else {
+			console.error(`Unexpected error: ${error}`);
+		}
+		return {
+			edges: [],
+			pageInfo: {
+				hasNextPage: false,
+				endCursor: ''
+			},
+			total: 0
+		};
+	}
+}
+
+export function getBookmarkedPostIds(accessToken: string) {
+	try {
+		// const res = await createApi(accessToken).get('/blog/bookmarked');
+		// return res.data.map((post: { id: string }) => post.id);
+		return [];
+	} catch (error) {
+		console.error(`Error when get bookmarked post ids: ${error}`);
+		return [];
+	}
+}
+
