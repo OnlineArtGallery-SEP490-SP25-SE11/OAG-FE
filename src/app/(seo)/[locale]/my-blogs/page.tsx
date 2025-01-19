@@ -16,7 +16,7 @@ async function BlogContent() {
   if (!user) redirect("/");
 
   const lastBlogId = await getLastEditedBlogId(user.accessToken);
-  if (lastBlogId) redirect(`/blogs/${lastBlogId}`);
+  if (lastBlogId) redirect(`/my-blogs/${lastBlogId}`);
 
   return <div>No blogs </div>;
 }

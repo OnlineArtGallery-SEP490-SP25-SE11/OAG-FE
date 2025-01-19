@@ -5,6 +5,7 @@ import {
 import { clsx, type ClassValue } from "clsx";
 import { jwtDecode } from "jwt-decode";
 import { twMerge } from "tailwind-merge";
+import slugify from 'slugify';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -46,4 +47,15 @@ export function validateImage(image: File) {
       `File size too large. Max size is ${MAX_UPLOAD_IMAGE_SIZE_IN_MB}MB`
     );
   }
+}
+
+
+export function createSlug(title: string): string {
+  return slugify(title, {
+    lower: true,      // Convert to lower case
+    strict: true,     // Strip special characters except replacement
+    trim: true,       // Trim leading and trailing replacement chars
+    locale: 'vi',     // Language code for locale-specific rules
+    remove: /[*+~.()'"!:@]/g  // Remove specific characters
+  });
 }

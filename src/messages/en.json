@@ -25,7 +25,8 @@
     "googleLogin": "Login with Google",
     "phoneLogin": "Sign in with phone number",
     "back": "Back",
-    "notification": "Notification"
+    "notification": "Notification",
+    "success": "Success"
   },
   "header": {
     "home": "Home",
@@ -81,7 +82,7 @@
   "blog": {
     "preview_draft": "Preview Draft",
     "publish": "Publish",
-    "unpublish": "Unpublish",
+    "private": "Private",
     "close": "Close",
     "desktop": "Desktop",
     "mobile": "Mobile",
@@ -95,6 +96,7 @@
     "image": "Image",
     "upload_image": "Upload Image",
     "creating": "Creating...",
-    "create_draft": "Create Draft"
+    "create_draft": "Create Draft",
+    "preview" : "Preview"
   }
 }
