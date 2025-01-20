@@ -25,7 +25,8 @@
 		"googleLogin": "Đăng nhập với Google",
 		"phoneLogin": "Đăng nhập bằng số điện thoại",
 		"back": "Quay lại",
-		"notification": "Thông báo"
+		"notification": "Thông báo",
+		"success": "Thành công"
 	},
 	"header": {
 		"settings": "Cài đặt",
@@ -81,7 +82,7 @@
 	"blog": {
 		"preview_draft": "Xem trước bản nháp",
 		"publish": "Xuất bản",
-		"unpublish": "Hủy xuất bản",
+		"private": "Ẩn",
 		"close": "Đóng",
 		"desktop": "Máy tính",
 		"mobile": "Di động",
@@ -95,6 +96,7 @@
 		"image": "Hình ảnh",
 		"upload_image": "Tải ảnh lên",
 		"creating": "Đang tạo...",
-		"create_draft": "Tạo bản nháp"
+		"create_draft": "Tạo bản nháp",
+		"preview": "Xem trước"
 	}
 }

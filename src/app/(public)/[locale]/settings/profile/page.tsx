@@ -1,11 +1,9 @@
-import ProfilePage from "./components/profile";
+import ProfilePage from './components/profile';
 async function profile() {
-	return(
+	return (
 		<>
-	<ProfilePage/>
-	</>
-
-	)
-	
+			<ProfilePage />
+		</>
+	);
 }
-export default profile
+export default profile;
