@@ -145,7 +145,8 @@ const AutoCamera = ({ width, height }: { width: number; height: number }) => {
 	return null;
 };
 
-const ArtCanvas = ({ url, width = 4, height = 3 }: ArtCanvasProps) => {
+const ArtCanvas = ({ url, width = 400, height = 500 }: ArtCanvasProps) => {
+	console.log(`ArtCanvas: ${url}, ${width}, ${height}`);
 	return (
 		<Canvas
 			camera={{ position: [0, 0, 8], fov: 50 }}
@@ -155,9 +156,9 @@ const ArtCanvas = ({ url, width = 4, height = 3 }: ArtCanvasProps) => {
 				// Thêm các cài đặt để cải thiện chất lượng render
 				pixelRatio: Math.min(window.devicePixelRatio, 2) // Giới hạn pixel ratio để tránh hiệu năng quá mức
 				// shadowMap: {
-				//   enabled: true,
-				//   type: THREE.PCFSoftShadowMap, // Sử dụng shadow map mềm mại hơn
-				// },
+				// 	enabled: true,
+				// 	type: THREE.PCFSoftShadowMap // Sử dụng shadow map mềm mại hơn
+				// }
 			}}
 			// Thêm props để kiểm soát render
 			frameloop='demand' // Chỉ render khi có thay đổi

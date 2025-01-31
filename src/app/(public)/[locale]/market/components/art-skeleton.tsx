@@ -1,4 +1,5 @@
 import { Skeleton } from '@/components/ui/skeleton';
+import { memo } from 'react';
 
 const ArtPieceSkeleton = ({ height }: { height: number }) => (
 	<div className='w-full p-4 transition-all'>
@@ -13,5 +14,5 @@ const ArtPieceSkeleton = ({ height }: { height: number }) => (
 		</div>
 	</div>
 );
-
-export default ArtPieceSkeleton;
+ArtPieceSkeleton.displayName = 'ArtPieceSkeleton';
+export default memo(ArtPieceSkeleton);

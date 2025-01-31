@@ -1,6 +1,6 @@
 'use client';
 import { cn } from '@/lib/utils';
-import React, { memo, useRef } from 'react';
+import React, { useRef } from 'react';
 
 interface DivWithEffectProps {
 	children: React.ReactNode;
@@ -59,4 +59,5 @@ function DivWithEffect({
 	);
 }
 
-export default memo(DivWithEffect);
+// export default memo(DivWithEffect);
+export default DivWithEffect;

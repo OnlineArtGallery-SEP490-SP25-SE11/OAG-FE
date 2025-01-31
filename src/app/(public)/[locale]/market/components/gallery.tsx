@@ -1,162 +1,212 @@
 'use client';
 import DynamicBreadcrumb from '@/components/ui.custom/dynamic-breadcrumb';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { ArtPiece } from '@/types/marketplace.d';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
-import { fetchArtPieces } from '../api';
+import { debounce } from 'lodash';
+import { Masonry } from 'masonic';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { fetchArtPieces } from '../../gallery/api';
 import ArtPieceSkeleton from './art-skeleton';
-import { ProductCard } from './product-card';
+import ProductCard from './product-card';
 import { ProductModal } from './product-modal';
-import { Sidebar } from './sidebar';
 
-const breakpointColumns = {
-	1300: 4,
-	1100: 3,
-	900: 2,
-	500: 1
-};
+const INITIAL_SKELETON_COUNT = 8;
 
-const getRandomHeight = () => {
-	const minHeight = 200;
-	const maxHeight = 400;
-	return Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
-};
+interface CachedItem extends ArtPiece {
+	height: number;
+	cached?: boolean;
+}
 
 export default function Gallery() {
-	const [mounted, setMounted] = useState(false);
-	const [artPieces, setArtPieces] = useState<ArtPiece[]>([]);
-	const [filteredArtPieces, setFilteredArtPieces] = useState<ArtPiece[]>([]);
+	const [artPieces, setArtPieces] = useState<CachedItem[]>([]);
 	const [page, setPage] = useState(1);
-	const [loading, setLoading] = useState(false);
-	const [initialLoading, setInitialLoading] = useState(true);
+	const [loading, setLoading] = useState(true);
+	const [hasMore, setHasMore] = useState(true);
 	const [selectedArt, setSelectedArt] = useState<ArtPiece | null>(null);
-	const observer = useRef<IntersectionObserver | null>(null);
+	const [shouldUpdateLayout, setShouldUpdateLayout] = useState(false);
 
-	const lastArtPieceRef = useCallback(
-		(node: HTMLDivElement) => {
-			if (loading) return;
-			if (observer.current) observer.current.disconnect();
-			observer.current = new IntersectionObserver((entries) => {
-				if (entries[0].isIntersecting) {
-					setPage((prevPage) => prevPage + 1);
-				}
-			});
-			if (node) observer.current.observe(node);
-		},
-		[loading]
-	);
+	const observerRef = useRef<IntersectionObserver | null>(null);
+	const loadingRef = useRef(false);
+	const heightCacheRef = useRef<Map<string, number>>(new Map());
+	const containerRef = useRef<HTMLDivElement>(null);
 
-	useEffect(() => {
-		setMounted(true);
+	// Memoize the height getter function
+	const getItemHeight = useCallback((id: string, defaultHeight: number) => {
+		const cachedHeight = heightCacheRef.current.get(id);
+		if (cachedHeight) return cachedHeight;
+
+		heightCacheRef.current.set(id, defaultHeight);
+		return defaultHeight;
 	}, []);
 
+	const loadArtPieces = useCallback(async () => {
+		if (loadingRef.current || !hasMore) return;
+		loadingRef.current = true;
+
+		try {
+			const newArtPieces = await fetchArtPieces(page, 8);
+			if (newArtPieces.length === 0 || newArtPieces.length < 8) {
+				setHasMore(false);
+			}
+
+			// Add heights to new pieces without affecting existing ones
+			const newPiecesWithHeight = newArtPieces.map((piece) => ({
+				...piece,
+				height: getItemHeight(
+					piece.id,
+					Math.floor(Math.random() * (400 - 200 + 1)) + 200
+				),
+				cached: false
+			}));
+
+			setArtPieces((prev) => {
+				// Keep existing items with their cached heights
+				const existingItems = prev.map((item) => ({
+					...item,
+					cached: true,
+					height: heightCacheRef.current.get(item.id) || item.height
+				}));
+
+				return [...existingItems, ...newPiecesWithHeight];
+			});
+
+			setPage((prev) => prev + 1);
+		} catch (error) {
+			console.error('Error fetching art pieces:', error);
+		} finally {
+			loadingRef.current = false;
+			setLoading(false);
+		}
+	}, [page, hasMore, getItemHeight]);
+
+	// Intersection Observer setup
+	const lastArtPieceRef = useCallback(
+		(node: HTMLDivElement | null) => {
+			if (!node) return;
+
+			if (observerRef.current) {
+				observerRef.current.disconnect();
+			}
+
+			observerRef.current = new IntersectionObserver(
+				(entries) => {
+					const [entry] = entries;
+					if (
+						entry.isIntersecting &&
+						hasMore &&
+						!loadingRef.current
+					) {
+						debounce(loadArtPieces, 500)();
+					}
+				},
+				{ rootMargin: '300px' }
+			);
+
+			observerRef.current.observe(node);
+		},
+		[hasMore, loadArtPieces]
+	);
+
+	// Memoize the render function to prevent unnecessary re-renders
+	const renderItem = useCallback(
+		({ data, index }: { data: any; index: number }) => {
+			const isLast = index === artPieces.length - 1;
+
+			if ('isSkeleton' in data && data.isSkeleton) {
+				return (
+					<div style={{ height: data.height }}>
+						<ArtPieceSkeleton height={data.height} />
+					</div>
+				);
+			}
+
+			return (
+				<div ref={isLast ? lastArtPieceRef : null}>
+					<ProductCard
+						art={data as ArtPiece}
+						onClick={setSelectedArt}
+					/>
+				</div>
+			);
+		},
+		[artPieces.length, lastArtPieceRef, setSelectedArt]
+	);
+
+	// Memoize items array
+	const items = useMemo(() => {
+		const currentItems = artPieces.map((item) => ({
+			...item,
+			height: heightCacheRef.current.get(item.id) || item.height
+		}));
+
+		if (loading) {
+			const skeletonCount =
+				currentItems.length === 0 ? INITIAL_SKELETON_COUNT : 4;
+			const skeletons = Array(skeletonCount)
+				.fill(null)
+				.map((_, i) => ({
+					id: `skeleton-${i}-${Date.now()}`,
+					isSkeleton: true,
+					height: 300
+				}));
+			return [...currentItems, ...skeletons];
+		}
+
+		return currentItems;
+	}, [artPieces, loading]);
+
+	// Initial load
 	useEffect(() => {
-		const loadArtPieces = async (): Promise<void> => {
-			setLoading(true);
-			try {
-				const newArtPieces = await fetchArtPieces(page, 8);
-				console.log('page', page);
-				setArtPieces((prev) => [...prev, ...newArtPieces]);
-				setFilteredArtPieces((prev) => [...prev, ...newArtPieces]);
-				if (initialLoading) setInitialLoading(false);
-			} catch (error) {
-				console.error('Error fetching art pieces:', error);
-			} finally {
-				setLoading(false);
+		loadArtPieces();
+		return () => {
+			if (observerRef.current) {
+				observerRef.current.disconnect();
 			}
 		};
+	}, []);
 
-		if (mounted) {
-			loadArtPieces();
-		}
-	}, [page, mounted, initialLoading]);
+	// Handle resize
+	useEffect(() => {
+		const handleResize = debounce(() => {
+			setShouldUpdateLayout((prev) => !prev);
+		}, 100);
 
-	const handleSearch = (query: string) => {
-		const filtered = artPieces.filter(
-			(art) =>
-				art.title.toLowerCase().includes(query.toLowerCase()) ||
-				art.artist.toLowerCase().includes(query.toLowerCase())
-		);
-		setFilteredArtPieces(filtered);
-	};
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
 
-	const handleFilterPrice = (min: number, max: number) => {
-		const filtered = artPieces.filter(
-			(art) => art.price >= min && art.price <= max
-		);
-		setFilteredArtPieces(filtered);
-	};
-
-	const handleFilterArtist = (artists: string[]) => {
-		if (artists.length === 0) {
-			setFilteredArtPieces(artPieces);
-		} else {
-			const filtered = artPieces.filter((art) =>
-				artists.includes(art.artist)
-			);
-			setFilteredArtPieces(filtered);
-		}
-	};
-
-	if (!mounted) {
-		return null;
-	}
-	const combinedList = [
-		...artPieces,
-		...Array.from({ length: true ? 4 : 0 }).map(() => ({
-			id: `skeleton-${Math.random()}`,
-			isSkeleton: true,
-			height: getRandomHeight()
-		}))
-	];
 	return (
 		<div className='flex'>
-			<div className='hidden lg:block md:block sticky top-28 self-start h-screen m-1'>
-				<Sidebar
-					onSearch={handleSearch}
-					onFilterPrice={handleFilterPrice}
-					onFilterArtist={handleFilterArtist}
-				/>
-			</div>
-			<div className='flex-1 p-4'>
+			<div className='flex-1 p-4' ref={containerRef}>
 				<DynamicBreadcrumb />
 				<h1 className='text-4xl font-bold mb-8 text-center'>
 					Digital Art Gallery
 				</h1>
-				{!initialLoading && (
-					<ResponsiveMasonry
-						columnsCountBreakPoints={breakpointColumns}
-					>
-						<Masonry gutter='30px'>
-							{combinedList.map((art, index) => (
-								<div
-									key={art.id || `skeleton-${index}`}
-									ref={
-										index === combinedList.length - 1
-											? lastArtPieceRef
-											: null
-									}
-								>
-									{'isSkeleton' in art && art.isSkeleton ? (
-										<ArtPieceSkeleton
-											height={getRandomHeight()}
-										/>
-									) : (
-										<ProductCard
-											art={art as ArtPiece}
-											onClick={setSelectedArt}
-										/>
-									)}
-								</div>
-							))}
-						</Masonry>
-					</ResponsiveMasonry>
-				)}
-				{loading && (
-					<p className='text-center mt-4'>
-						Loading more art pieces...
-					</p>
-				)}
+				<ScrollArea>
+					<Masonry
+						items={items}
+						columnGutter={15}
+						columnWidth={350}
+						render={renderItem}
+						key={
+							shouldUpdateLayout
+								? 'layout-update'
+								: 'stable-layout'
+						}
+					/>
+
+					{loading && hasMore && artPieces.length > 0 && (
+						<div className='w-full text-center py-4'>
+							<p>Loading more art pieces...</p>
+						</div>
+					)}
+
+					{!hasMore && artPieces.length > 0 && (
+						<div className='w-full text-center py-4'>
+							<p>No more art pieces to load</p>
+						</div>
+					)}
+				</ScrollArea>
 
 				<ProductModal
 					art={selectedArt}

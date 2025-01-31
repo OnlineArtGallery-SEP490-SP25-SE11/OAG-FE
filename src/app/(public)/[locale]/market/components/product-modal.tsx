@@ -11,7 +11,7 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ArtPiece } from '@/types/marketplace.d';
 import { useState } from 'react';
-import { purchaseArt } from '../api';
+import { purchaseArt } from '../../gallery/api';
 
 interface ProductModalProps {
 	art: ArtPiece | null;
