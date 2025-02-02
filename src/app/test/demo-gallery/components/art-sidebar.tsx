@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { Fragment, useCallback, useEffect, useState } from 'react';
 
-const FloatingSidebar = ({ changeLayout }) => {
+const FloatingSidebar = () => {
 	const controls = useAnimation();
 	const [isExpanded, setIsExpanded] = useState(false);
 	const [isHovering, setIsHovering] = useState(false);
@@ -103,17 +103,6 @@ const FloatingSidebar = ({ changeLayout }) => {
 					</Button>
 				</div>
 
-				{/*button change layout*/}
-				<div className='flex items-center justify-between px-6 py-5 pl-16 border-b border-white/10 bg-white/5'>
-					<Button
-						variant='ghost'
-						size='sm'
-						className='hover:bg-white/10 text-white/80 hover:text-white'
-						onClick={changeLayout}
-					>
-						<span>Change Layout</span>
-					</Button>
-				</div>
 				{/* Content */}
 				<div className='flex-1 overflow-y-auto px-6 py-6 space-y-6 custom-scrollbar'>
 					{/* Search */}

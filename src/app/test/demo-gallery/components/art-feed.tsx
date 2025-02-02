@@ -1,10 +1,8 @@
-import { ArtPiece } from '@/types/marketplace.d';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
-import { useWindowSize } from '@react-hook/window-size';
-import { AnimatePresence, motion } from 'framer-motion';
 import { Skeleton } from '@/components/ui/skeleton';
-
+import { useWindowSize } from '@react-hook/window-size';
+import { ArtPiece } from '@/types/marketplace';
 interface ArtFeedProps {
 	data: ArtPiece;
 	index: number;
@@ -12,11 +10,10 @@ interface ArtFeedProps {
 
 const ArtFeed: React.FC<ArtFeedProps> = ({ data }) => {
 	const [windowWidth, windowHeight] = useWindowSize();
+	const [isImageLoaded, setIsImageLoaded] = useState(false);
 	const containerRef = useRef<HTMLDivElement>(null);
 
-	const headerHeight = 67;
-	const [isLoading, setIsLoading] = useState(true);
-	const [hasError, setHasError] = useState(false);
+	const headerHeight = 67; // Thay thế bằng chiều cao thực tế của header
 
 	const calculateContainerSize = useCallback(() => {
 		if (!data.width || !data.height)
@@ -40,45 +37,30 @@ const ArtFeed: React.FC<ArtFeedProps> = ({ data }) => {
 	}, []);
 
 	const { w, h } = calculateContainerSize();
-	const handleImageError = useCallback(() => {
-		setIsLoading(false);
-		setHasError(true);
-	}, []);
-
-	const handleImageLoad = useCallback(() => {
-		setIsLoading(false);
-	}, []);
 
 	return (
 		<div
 			ref={containerRef}
 			style={{
-				// width: '100vw',
-				// height: '100vh',
 				width: '100%',
 				height: '100%',
-				overflow: 'hidden', // Ẩn scroll
+				overflow: 'hidden',
 				display: 'flex',
 				alignItems: 'center',
 				justifyContent: 'center',
 				position: 'relative',
 				scrollSnapAlign: 'start'
 			}}
-			className='bg-white/5 backdrop-blur-sm rounded-md shadow-md'
 		>
-			<AnimatePresence mode='wait'>
-				{(isLoading || hasError) && (
-					<motion.div
-						className='absolute inset-0'
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						exit={{ opacity: 0 }}
-						transition={{ duration: 0.3 }}
-					>
-						<Skeleton className='w-full h-full bg-gray-300/50 dark:bg-gray-600/50' />
-					</motion.div>
-				)}
-			</AnimatePresence>
+			{!isImageLoaded && (
+				<Skeleton
+					className='w-full h-full animate-pulse'
+					style={{
+						width: `${w}px`,
+						height: `${h}px`
+					}}
+				/>
+			)}
 			<div
 				style={{
 					width: `${w}px`,
@@ -92,10 +74,9 @@ const ArtFeed: React.FC<ArtFeedProps> = ({ data }) => {
 					width={w}
 					height={h}
 					style={{ objectFit: 'contain' }}
-					quality={80}
+					quality={100}
 					priority
-					onLoad={handleImageLoad} // Hide skeleton when image loads
-					onError={handleImageError} // Handle errors
+					onLoadingComplete={() => setIsImageLoaded(true)}
 				/>
 			</div>
 		</div>
