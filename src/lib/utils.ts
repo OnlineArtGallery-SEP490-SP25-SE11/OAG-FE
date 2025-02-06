@@ -1,12 +1,4 @@
 import {
-<<<<<<< HEAD
-	MAX_UPLOAD_IMAGE_SIZE,
-	MAX_UPLOAD_IMAGE_SIZE_IN_MB
-} from '@/app-config';
-import { clsx, type ClassValue } from 'clsx';
-import { jwtDecode } from 'jwt-decode';
-import { twMerge } from 'tailwind-merge';
-=======
   MAX_UPLOAD_IMAGE_SIZE,
   MAX_UPLOAD_IMAGE_SIZE_IN_MB,
 } from "@/app-config";
@@ -14,7 +6,6 @@ import { clsx, type ClassValue } from "clsx";
 import { jwtDecode } from "jwt-decode";
 import { twMerge } from "tailwind-merge";
 import slugify from 'slugify';
->>>>>>> 592f1c8501b901be16ad94fdfd08df99a433f9ac
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));

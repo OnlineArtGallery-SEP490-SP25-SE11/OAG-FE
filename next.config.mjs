@@ -4,13 +4,6 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-<<<<<<< HEAD
-	experimental: {},
-	webpack: (config) => {
-		config.cache = false;
-		return config;
-	} // tắt caching
-=======
   images: {
     remotePatterns: [
       {
@@ -39,7 +32,6 @@ const nextConfig = {
     config.cache = false;
     return config;
   }, // tắt caching
->>>>>>> 592f1c8501b901be16ad94fdfd08df99a433f9ac
 };
 
 export default withNextIntl(nextConfig);
