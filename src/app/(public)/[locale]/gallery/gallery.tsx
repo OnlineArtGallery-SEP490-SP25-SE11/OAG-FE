@@ -5,7 +5,7 @@ import ArtModal from '@/app/(public)/[locale]/gallery/components/art-modal';
 import ArtFeed from '@/app/(public)/[locale]/gallery/components/art-feed';
 import { ArtPiece } from '@/types/marketplace';
 import { List, Masonry, useInfiniteLoader } from 'masonic';
-import { useCallback, useMemo, useState } from 'react';
+import { CSSProperties, useCallback, useMemo, useState } from 'react';
 import FloatingSidebar from './components/art-sidebar';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -81,21 +81,22 @@ export default function Gallery({ artworks }: { artworks: ArtPiece[] }) {
 			variants={animation.variants}
 			transition={animation.transition}
 			className='w-full'
+			// style={{
+			// 	height: '670px',
+			// 	overflowY: 'scroll',
+			// 	scrollSnapType: 'y mandatory',
+			// 	scrollbarWidth: 'none',
+			// } as CSSProperties}
 		>
 			<List
 				onRender={loadMore}
 				items={artPieces}
-				// render={ArtFeed}
-				render={({ data, index }) => (
-					<ArtFeed data={data} index={index} />
-				)}
+				render={ArtFeed}
+				// render={({ data, index }) => (
+				// 	<ArtFeed data={data} index={index} />
+				// )}
 				rowGutter={67}
 				overscanBy={1.5}
-				// style={{
-				// 	height: '670px',
-				// 	overflowY: 'scroll',
-				// 	scrollSnapType: 'y mandatory',
-				// } as CSSProperties}
 			/>
 		</motion.div>
 	);

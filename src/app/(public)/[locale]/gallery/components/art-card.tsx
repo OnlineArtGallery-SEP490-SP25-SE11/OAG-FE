@@ -83,7 +83,7 @@ const ArtCard: React.FC<ArtCardProps> = ({ data, width, index }) => {
 				</TooltipTrigger>
 				<TooltipContent
 					align='center'
-					className='max-w-xs p-4 space-y-2 acrylic rounded border text-black dark:text-white prose dark:prose-invert'
+					className='max-w-xs p-4 space-y-2 acrylic rounded border backdrop-blur-lg text-black dark:text-white prose dark:prose-invert'
 					sideOffset={5}
 					style={
 						{
