@@ -7,3 +7,5 @@ export type ApiResponse = {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	details: any;
 };
+
+
