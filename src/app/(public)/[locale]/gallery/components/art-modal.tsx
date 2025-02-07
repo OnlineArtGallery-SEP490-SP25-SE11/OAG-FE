@@ -1,11 +1,11 @@
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useArtModal } from '@/hooks/useArtModal';
 import { AnimatePresence, motion } from 'framer-motion';
 import { DollarSignIcon, Info, RulerIcon, UserIcon, X } from 'lucide-react';
 import Image from 'next/image';
 import { Fragment, memo, useCallback, useEffect } from 'react';
-import { Separator } from '@/components/ui/separator';
 import { BiComment } from 'react-icons/bi';
 
 const overlayVariants = {
@@ -180,7 +180,7 @@ function Modal() {
 									>
 										<BiComment className='w-5 h-5' />
 										Comments (
-										{(selected as never).commentsCount || 0}
+										{(selected as any).commentsCount || 0}
 										)
 									</TabsTrigger>
 								</TabsList>
