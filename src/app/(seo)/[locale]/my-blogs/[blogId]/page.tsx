@@ -14,41 +14,6 @@ export default async function DraftPage({
 	const { blogId } = params;
 	const user = await getCurrentUser();
 
-<<<<<<< HEAD:src/app/(seo)/[locale]/blogs/[blogId]/page.tsx
-	if (!user) {
-		notFound();
-	}
-	const post = await getBlogById(blogId);
-
-	if (!post || post.userId !== user.id) {
-		notFound();
-	}
-
-	return (
-		<>
-			<div className='flex items-center justify-between mb-4'>
-				<div className='flex space-x-4'>
-					<PreviewButton blog={post} />
-					{
-						<PublicButton
-							blogId={blogId}
-							initialPublishedState={post.published}
-						/>
-					}
-				</div>
-			</div>
-
-			<div className=''>
-				<DraftBlogForm
-					content={post.content}
-					_id={blogId}
-					blogTitle={post.title}
-					isAdminOrAuthor={!!user}
-				/>
-			</div>
-		</>
-	);
-=======
   if (!user) {
     notFound();
   }
@@ -82,5 +47,4 @@ export default async function DraftPage({
       </div>
     </>
   );
->>>>>>> 592f1c8501b901be16ad94fdfd08df99a433f9ac:src/app/(seo)/[locale]/my-blogs/[blogId]/page.tsx
 }
