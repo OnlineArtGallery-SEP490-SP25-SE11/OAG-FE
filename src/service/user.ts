@@ -1,36 +1,36 @@
-import axios, { axiosWithAuth } from "@/lib/axios";
+import axios, { axiosWithAuth } from '@/lib/axios';
 interface User {
-  provider: string; // google, facebook, phone, etc.
-  providerId?: string; // ID của user từ provider
-  password?: string; // Mật khẩu (chỉ cần nếu provider là "phone")
-  name?: string;
-  email: string;
-  image?: string;
-  role: string[];
-  phone: string; // Số điện thoại
+	provider: string; // google, facebook, phone, etc.
+	providerId?: string; // ID của user từ provider
+	password?: string; // Mật khẩu (chỉ cần nếu provider là "phone")
+	name?: string;
+	email: string;
+	image?: string;
+	role: string[];
+	phone: string; // Số điện thoại
 }
 
 export async function getUser(token: string): Promise<User> {
-  try {
-    const res = await axiosWithAuth(token).get("/user");
+	try {
+		const res = await axiosWithAuth(token).get('/user');
 
-    return res.data;
-  } catch (error) {
-    console.error("Failed to get user", error);
-    throw error;
-  }
+		return res.data;
+	} catch (error) {
+		console.error('Failed to get user', error);
+		throw error;
+	}
 }
 
 export async function registerUser(
-  name: string,
-  phone: string,
-  password: string,
-  otp: string
+	name: string,
+	phone: string,
+	password: string,
+	otp: string
 ): Promise<{
-  message: string;
-  user: User | null;
+	message: string;
+	user: User | null;
 }> {
-  /*
+	/*
   - Example res.data:
   {
     "message": "userRegisteredSuccessfully",
@@ -44,12 +44,12 @@ export async function registerUser(
   }
 
   */
-  const res = await axios.post("/auth/phone/signup", {
-    name,
-    phone,
-    password,
-    otp,
-  });
+	const res = await axios.post('/auth/phone/signup', {
+		name,
+		phone,
+		password,
+		otp
+	});
 
-  return res.data;
+	return res.data;
 }

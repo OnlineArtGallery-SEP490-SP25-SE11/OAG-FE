@@ -4,13 +4,13 @@ import { useState } from "react";
 import BlogPreviewOverlay from "./blog-preview";
 import { useTranslations } from "next-intl";
 interface PreviewButtonProps {
-  blog: {
-    id: string;
-    title: string;
-    content: string;
-    createdAt: Date;
-    imageUrl: string;
-  };
+	blog: {
+		id: string;
+		title: string;
+		content: string;
+		createdAt: Date;
+		imageUrl: string;
+	};
 }
 
 const PreviewButton = ({ blog }: PreviewButtonProps) => {

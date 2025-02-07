@@ -1,71 +1,71 @@
-"use client";
+'use client';
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger
+} from '@/components/ui/accordion';
 import {
-  MoreVertical,
-  Trash,
-  LinkIcon,
-  FileCheck,
-  FileText,
-  ExternalLink,
-} from "lucide-react";
+	MoreVertical,
+	Trash,
+	LinkIcon,
+	FileCheck,
+	FileText,
+	ExternalLink
+} from 'lucide-react';
 import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
-import { Blog } from "@/types/blog";
+	DropdownMenu,
+	DropdownMenuTrigger,
+	DropdownMenuContent,
+	DropdownMenuItem
+} from '@/components/ui/dropdown-menu';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
+import { Blog } from '@/types/blog';
 
 const DropdownMenuItemWithIcon = ({
-  icon: Icon,
-  iconColor,
-  text,
-  onClick,
-  className,
+	icon: Icon,
+	iconColor,
+	text,
+	onClick,
+	className
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  icon: React.FC<any>;
-  iconColor: string;
-  text: string;
-  onClick?: () => void;
-  className?: string;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	icon: React.FC<any>;
+	iconColor: string;
+	text: string;
+	onClick?: () => void;
+	className?: string;
 }) => (
-  <DropdownMenuItem
-    className={cn(
-      "flex items-center space-x-2 hover:bg-gray-100 dark:hover:bg-gray-800",
-      className
-    )}
-    onClick={onClick}
-  >
-    <Icon className={`text-${iconColor}-500`} size={16} />
-    <span className="text-gray-700 dark:text-gray-300">{text}</span>
-  </DropdownMenuItem>
+	<DropdownMenuItem
+		className={cn(
+			'flex items-center space-x-2 hover:bg-gray-100 dark:hover:bg-gray-800',
+			className
+		)}
+		onClick={onClick}
+	>
+		<Icon className={`text-${iconColor}-500`} size={16} />
+		<span className='text-gray-700 dark:text-gray-300'>{text}</span>
+	</DropdownMenuItem>
 );
 const copyArticleLink = (link: string) => {
-  navigator.clipboard
-    .writeText(link)
-    .then(() => {
-      alert("Article link copied to clipboard!");
-    })
-    .catch((err) => {
-      console.error("Failed to copy the link: ", err);
-    });
+	navigator.clipboard
+		.writeText(link)
+		.then(() => {
+			alert('Article link copied to clipboard!');
+		})
+		.catch((err) => {
+			console.error('Failed to copy the link: ', err);
+		});
 };
 
 const BlogEntryDropdown = ({
-  isPublished,
-  id,
+	isPublished,
+	id
 }: {
-  isPublished: boolean;
-  id: string;
+	isPublished: boolean;
+	id: string;
 }) => (
   <DropdownMenu>
     <DropdownMenuTrigger>
@@ -103,26 +103,26 @@ const BlogEntryDropdown = ({
         <>
           {/* <DropdownMenuItemWithIcon icon={LinkIcon} iconColor="blue" text="Copy preview link" />
                     <DropdownMenuItemWithIcon icon={Eye} iconColor="green" text="Preview draft" /> */}
-        </>
-      )}
-      <DropdownMenuItemWithIcon
-        icon={Trash}
-        iconColor="red"
-        text="Delete"
-        className="cursor-not-allowed"
-      />
-    </DropdownMenuContent>
-  </DropdownMenu>
+				</>
+			)}
+			<DropdownMenuItemWithIcon
+				icon={Trash}
+				iconColor='red'
+				text='Delete'
+				className='cursor-not-allowed'
+			/>
+		</DropdownMenuContent>
+	</DropdownMenu>
 );
 
 const truncateTitle = (title: string, maxLength: number = 12) => {
-  if (title.length <= maxLength) return title;
-  return `${title.slice(0, maxLength)} ...`;
+	if (title.length <= maxLength) return title;
+	return `${title.slice(0, maxLength)} ...`;
 };
 
 const BlogEntry = ({ blog }: { blog: Blog }) => {
-  const pathname = usePathname();
-  const isActive = pathname.includes(blog._id);
+	const pathname = usePathname();
+	const isActive = pathname.includes(blog._id);
 
   return (
     <div
@@ -163,32 +163,32 @@ const BlogEntry = ({ blog }: { blog: Blog }) => {
 };
 
 const BlogSection = ({ title, blogs }: { title: string; blogs: Blog[] }) => (
-  <Accordion type="single" collapsible className="w-full">
-    <AccordionItem value="item-1">
-      <AccordionTrigger className="text-sm text-slate-500 hover:text-slate-700 hover:no-underline">
-        {title}
-      </AccordionTrigger>
-      <AccordionContent>
-        {blogs.map((blog) => (
-          <BlogEntry key={blog._id} blog={blog} />
-        ))}
-      </AccordionContent>
-    </AccordionItem>
-  </Accordion>
+	<Accordion type='single' collapsible className='w-full'>
+		<AccordionItem value='item-1'>
+			<AccordionTrigger className='text-sm text-slate-500 hover:text-slate-700 hover:no-underline'>
+				{title}
+			</AccordionTrigger>
+			<AccordionContent>
+				{blogs.map((blog) => (
+					<BlogEntry key={blog._id} blog={blog} />
+				))}
+			</AccordionContent>
+		</AccordionItem>
+	</Accordion>
 );
 
 interface BlogSectionProps {
-  blogs: Blog[];
+	blogs: Blog[];
 }
 
 export function SidebarBlogSection({ blogs }: BlogSectionProps) {
-  const publishedBlogs = blogs.filter((blog) => blog.published === true);
-  const draftBlogs = blogs.filter((blog) => blog.published !== true);
+	const publishedBlogs = blogs.filter((blog) => blog.published === true);
+	const draftBlogs = blogs.filter((blog) => blog.published !== true);
 
-  return (
-    <div>
-      <BlogSection title="MY DRAFT" blogs={draftBlogs} />
-      <BlogSection title="PUBLISHED" blogs={publishedBlogs} />
-    </div>
-  );
+	return (
+		<div>
+			<BlogSection title='MY DRAFT' blogs={draftBlogs} />
+			<BlogSection title='PUBLISHED' blogs={publishedBlogs} />
+		</div>
+	);
 }

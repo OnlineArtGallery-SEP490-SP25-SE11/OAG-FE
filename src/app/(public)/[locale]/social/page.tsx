@@ -5,7 +5,6 @@
 // import { getCurrentUser } from '@/lib/session';
 // import { TooltipProvider } from '@/components/ui/tooltip';
 
-
 // export default async function Social() {
 // 	const user = await getCurrentUser();
 // 	let bookmarksId: string[] = [];
@@ -35,52 +34,52 @@ import { EventFeed } from './components/event-feed';
 
 export default function SocialPage() {
 	return (
-	  <div className="container mx-auto px-4 py-6">
-		<div className="flex  justify-between">
-		  {/* Left Sidebar */}
-		  <div className="hidden lg:block w-64 shrink-0">
-			<SocialSidebar />
-		  </div>
-  
-		  {/* Main Content Area */}
-		  <div className="flex-1 max-w-[700px]">
-			<h1 className="text-3xl font-bold mb-8">Art Community</h1>
-			
-			<Tabs defaultValue="all" className="mb-8">
-			  <TabsList>
-				<TabsTrigger value="all">All</TabsTrigger>
-				<TabsTrigger value="artwork">Artwork</TabsTrigger>
-				<TabsTrigger value="blogs">Blogs</TabsTrigger>
-				<TabsTrigger value="events">Events</TabsTrigger>
-			  </TabsList>
-  
-			  <TabsContent value="all">
-				<div className="space-y-6">
-				  <EventFeed />
-				  <ArtFeed />
-				  <BlogFeed />
+		<div className='container mx-auto px-4 py-6'>
+			<div className='flex  justify-between'>
+				{/* Left Sidebar */}
+				<div className='hidden lg:block w-64 shrink-0'>
+					<SocialSidebar />
 				</div>
-			  </TabsContent>
-  
-			  <TabsContent value="artwork">
-				<ArtFeed />
-			  </TabsContent>
-  
-			  <TabsContent value="blogs">
-				<BlogFeed />
-			  </TabsContent>
-  
-			  <TabsContent value="events">
-				<EventFeed />
-			  </TabsContent>
-			</Tabs>
-		  </div>
-  
-		  {/* Right Sidebar */}
-		  <div className="hidden lg:block w-[300px] shrink-0">
-			<UpcomingEvents />
-		  </div>
+
+				{/* Main Content Area */}
+				<div className='flex-1 max-w-[700px]'>
+					<h1 className='text-3xl font-bold mb-8'>Art Community</h1>
+
+					<Tabs defaultValue='all' className='mb-8'>
+						<TabsList>
+							<TabsTrigger value='all'>All</TabsTrigger>
+							<TabsTrigger value='artwork'>Artwork</TabsTrigger>
+							<TabsTrigger value='blogs'>Blogs</TabsTrigger>
+							<TabsTrigger value='events'>Events</TabsTrigger>
+						</TabsList>
+
+						<TabsContent value='all'>
+							<div className='space-y-6'>
+								<EventFeed />
+								<ArtFeed />
+								<BlogFeed />
+							</div>
+						</TabsContent>
+
+						<TabsContent value='artwork'>
+							<ArtFeed />
+						</TabsContent>
+
+						<TabsContent value='blogs'>
+							<BlogFeed />
+						</TabsContent>
+
+						<TabsContent value='events'>
+							<EventFeed />
+						</TabsContent>
+					</Tabs>
+				</div>
+
+				{/* Right Sidebar */}
+				<div className='hidden lg:block w-[300px] shrink-0'>
+					<UpcomingEvents />
+				</div>
+			</div>
 		</div>
-	  </div>
 	);
-  }
+}

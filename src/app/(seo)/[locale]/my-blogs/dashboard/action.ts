@@ -1,4 +1,4 @@
-"use server";
+'use server';
 
 import { authenticatedAction } from "@/lib/safe-action";
 // import { deleteBlogUseCase } from "@/use-cases/blogs";

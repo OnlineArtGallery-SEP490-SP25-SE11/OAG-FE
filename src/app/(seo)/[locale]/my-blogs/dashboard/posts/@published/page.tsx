@@ -8,7 +8,7 @@ import { DeleteBlogButton } from "../../delete-blog-button";
 import { getBlogsByPublished } from "@/service/blog";
 
 export default async function PublishedPage() {
-  const user = await getCurrentUser();
+	const user = await getCurrentUser();
 
   if (!user) {
     return null;
@@ -16,15 +16,15 @@ export default async function PublishedPage() {
 
   const blogs = await getBlogsByPublished({ published: true });
 
-  if (blogs.length === 0) {
-    return (
-      <div className="text-center py-10">
-        <p className="text-xl text-muted-foreground">
-          No published blogs found.
-        </p>
-      </div>
-    );
-  }
+	if (blogs.length === 0) {
+		return (
+			<div className='text-center py-10'>
+				<p className='text-xl text-muted-foreground'>
+					No published blogs found.
+				</p>
+			</div>
+		);
+	}
 
   return (
     <div className="space-y-4">
