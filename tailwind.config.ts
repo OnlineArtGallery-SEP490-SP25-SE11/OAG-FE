@@ -3,6 +3,7 @@ import tailwindcssTypography from '@tailwindcss/typography';
 import type { Config } from 'tailwindcss';
 import tailwindcssAnimate from 'tailwindcss-animate';
 import plugin from 'tailwindcss/plugin';
+
 const config: Config = {
 	darkMode: ['class'],
 	content: [
@@ -62,7 +63,6 @@ const config: Config = {
 			fontFamily: {
 				sans: ['Poppins']
 			},
-
 			keyframes: {
 				'accordion-down': {
 					from: {

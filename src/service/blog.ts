@@ -247,7 +247,7 @@ export async function getPublishedBlogs({
 	first?: number;
 	last?: number;
 	query?: string;
-}) : Promise<GetPublishedBlogsResponse> {
+}): Promise<GetPublishedBlogsResponse> {
 	try {
 		const params = new URLSearchParams();
 
@@ -290,4 +290,3 @@ export function getBookmarkedPostIds(accessToken: string) {
 		return [];
 	}
 }
-

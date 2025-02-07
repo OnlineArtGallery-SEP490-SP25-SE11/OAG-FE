@@ -11,12 +11,7 @@ import { NextIntlClientProvider } from 'next-intl';
 export const metadata: Metadata = {
 	title: 'Art Gallery',
 	icons: [
-		{
-			rel: 'icon',
-			type: 'image/png',
-			sizes: '48x48',
-			url: '/favicon.ico'
-		}
+		{ rel: 'icon', type: 'image/png', sizes: '48x48', url: '/favicon.ico' }
 	],
 	keywords: 'yolo',
 	description: 'art gallery online for everyone'

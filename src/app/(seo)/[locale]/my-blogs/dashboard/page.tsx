@@ -14,14 +14,8 @@ export default function DashboardPage() {
 		<>
 			<Breadcrumb
 				items={[
-					{
-						label: 'Dashboard',
-						link: '/dashboard'
-					},
-					{
-						label: 'Overview',
-						link: '/dashboard/overview'
-					}
+					{ label: 'Dashboard', link: '/dashboard' },
+					{ label: 'Overview', link: '/dashboard/overview' }
 				]}
 			/>
 			<main className='flex-1 bg-muted/40 p-4 md:p-6 lg:p-8'>

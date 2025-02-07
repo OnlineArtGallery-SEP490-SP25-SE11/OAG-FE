@@ -1,22 +1,22 @@
-import { cn } from '@/lib/utils';
-import { memo, useEffect, useRef } from 'react';
+import { cn } from "@/lib/utils";
+import { useEffect, useRef } from "react";
 
-interface CanvasImageProps extends React.HTMLAttributes<HTMLImageElement> {
-	src: string;
-	width?: number;
-	height?: number;
-	className?: string;
-	watermark?: WatermarkOptions | null;
+interface CanvasImageProps {
+  src: string;
+  width?: number;
+  height?: number;
+  className?: string;
+  watermark?: WatermarkOptions | null;
 }
 
 interface WatermarkOptions {
-	text: string;
-	color?: string;
-	font?: string;
-	style?: 'circular' | 'diagonal';
-	position?: 'bottomRight' | 'bottomLeft' | 'topRight' | 'topLeft';
-	radius?: number;
-	textStyle?: 'inside' | 'along';
+  text: string;
+  color?: string;
+  font?: string;
+  style?: "circular" | "diagonal";
+  position?: "bottomRight" | "bottomLeft" | "topRight" | "topLeft";
+  radius?: number; // percentage of smallest dimension
+  textStyle?: "inside" | "along"; // text placement style
 }
 
 function CanvasImage({
@@ -41,6 +41,7 @@ function CanvasImage({
 		const canvas = canvasRef.current;
 		const ctx = canvas?.getContext('2d');
 
+		if (!canvas || !ctx) return;
 		if (!canvas || !ctx) return;
 
 		const image = new Image();
@@ -92,6 +93,18 @@ function CanvasImage({
 						centerY = circleRadius + padding;
 						break;
 				}
+				switch (watermark.position) {
+					case 'bottomLeft':
+						centerX = circleRadius + padding;
+						break;
+					case 'topRight':
+						centerY = circleRadius + padding;
+						break;
+					case 'topLeft':
+						centerX = circleRadius + padding;
+						centerY = circleRadius + padding;
+						break;
+				}
 
 				// Draw circle outline
 				ctx.beginPath();
@@ -99,7 +112,20 @@ function CanvasImage({
 				ctx.strokeStyle = watermark.color || 'rgba(255, 0, 0, 0.6)';
 				ctx.lineWidth = 2;
 				ctx.stroke();
+				// Draw circle outline
+				ctx.beginPath();
+				ctx.arc(centerX, centerY, circleRadius, 0, 2 * Math.PI);
+				ctx.strokeStyle = watermark.color || 'rgba(255, 0, 0, 0.6)';
+				ctx.lineWidth = 2;
+				ctx.stroke();
 
+				// Configure text style
+				ctx.font = `${circleRadius * 0.2}px ${
+					watermark.font || 'Arial'
+				}`;
+				ctx.fillStyle = watermark.color || 'rgba(255, 0, 0, 0.6)';
+				ctx.textAlign = 'center';
+				ctx.textBaseline = 'middle';
 				// Configure text style
 				ctx.font = `${circleRadius * 0.2}px ${
 					watermark.font || 'Arial'

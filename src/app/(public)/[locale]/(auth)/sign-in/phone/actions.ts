@@ -23,10 +23,7 @@ export const signInAction = unauthenticatedAction
 	.handler(async ({ input }) => {
 		try {
 			const result = await authenticate(
-				{
-					phone: input.phone,
-					password: input.password
-				},
+				{ phone: input.phone, password: input.password },
 				{ provider: 'phone' }
 			);
 			return result.isAuthenticated;

@@ -5,10 +5,7 @@ export default function PostsPage() {
 		<Breadcrumb
 			items={[
 				{ label: 'Dashboard', link: '/dashboard' },
-				{
-					label: 'Articles and drafts',
-					link: '/dashboard/posts'
-				}
+				{ label: 'Articles and drafts', link: '/dashboard/posts' }
 			]}
 		/>
 	);

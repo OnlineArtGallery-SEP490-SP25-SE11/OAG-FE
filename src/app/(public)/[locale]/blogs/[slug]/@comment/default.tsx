@@ -1,3 +1,3 @@
 export default function Default() {
-  return <div>DefaultComment</div>;
+	return <div>DefaultComment</div>;
 }

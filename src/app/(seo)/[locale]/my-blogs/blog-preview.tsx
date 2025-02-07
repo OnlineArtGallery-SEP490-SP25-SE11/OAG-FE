@@ -134,9 +134,7 @@ const BlogPreviewOverlay: React.FC<BlogPreviewOverlayProps> = ({
 						className={`prose dark:prose-invert max-w-none ${
 							previewMode === 'mobile' ? 'text-sm' : 'text-base'
 						}`}
-						dangerouslySetInnerHTML={{
-							__html: post.content
-						}}
+						dangerouslySetInnerHTML={{ __html: post.content }}
 					/>
 				</section>
 				<footer className='mt-8'>
