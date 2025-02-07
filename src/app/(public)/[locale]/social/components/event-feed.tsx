@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CalendarDays, MapPin, Users, Clock, Share2 } from "lucide-react";
 import Image from "next/image";
+import { useToast } from "@/hooks/use-toast";
 
 // Mock data - replace with real data fetching
 const mockEvents = [
@@ -39,6 +40,17 @@ const mockEvents = [
 ];
 
 export function EventFeed() {
+  const { toast } = useToast();
+
+  const handleRegister = () => {
+    toast({
+      title: "Registration Successful",
+      description: "You have successfully registered for this event.",
+      duration: 3000,
+      className: "bg-green-500 text-white border-green-600", 
+    });
+  };
+
   return (
     <div className="grid grid-cols-1 gap-8 place-items-center">
       {mockEvents.map((event) => (
@@ -106,7 +118,9 @@ export function EventFeed() {
                   <Share2 className="h-4 w-4 mr-2" />
                   Share
                 </Button>
-                <Button size="sm">Register Now</Button>
+                <Button size="sm" onClick={handleRegister}>
+                  Register Now
+                </Button>
               </div>
             </div>
           </div>

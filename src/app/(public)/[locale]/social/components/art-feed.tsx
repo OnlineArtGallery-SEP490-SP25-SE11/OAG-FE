@@ -2,7 +2,7 @@
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Heart, MessageSquare, Share2 } from "lucide-react";
+import { Flag, Heart, MessageSquare, Share2 } from "lucide-react";
 import Image from "next/image";
 import {
     Drawer,
@@ -16,7 +16,7 @@ import {
   } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-
+import { ReportButton } from "@/components/ui.custom/report-button";
 const mockComments = [
   {
     id: '1',
@@ -148,6 +148,7 @@ export function ArtFeed() {
                                 </button>
                               </div>
                             </div>
+                            <ReportButton></ReportButton>
                           </div>
                         ))}
                       </div>
@@ -172,6 +173,7 @@ export function ArtFeed() {
                 <Button variant="ghost" size="sm" className="ml-auto">
                   <Share2 className="w-4 h-4" />
                 </Button>
+            <ReportButton/>
               </div>
             </div>
           </Card>

@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-import axios, { axiosWithAuth } from '@/lib/axios';
-=======
 import axios, { axiosWithAuth, createApi } from '@/lib/axios';
 import { Blog, GetPublishedBlogsResponse } from '@/types/blog';
->>>>>>> 592f1c8501b901be16ad94fdfd08df99a433f9ac
 import { ApiResponse } from '@/types/response';
 import axiosInstance from 'axios';
 
@@ -97,13 +93,8 @@ export async function updateBlog({
 		published?: boolean;
 	} = {};
 
-<<<<<<< HEAD
-	if (updateData.title) payload.title = payload.title;
-	if (updateData.content) payload.content = payload.content;
-=======
 	if (updateData.title) payload.title = updateData.title;
 	if (updateData.content) payload.content = updateData.content;
->>>>>>> 592f1c8501b901be16ad94fdfd08df99a433f9ac
 	if (updateData.image) payload.image = updateData.image;
 	if (updateData.published !== undefined)
 		payload.published = updateData.published;
