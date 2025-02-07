@@ -83,14 +83,15 @@ const ArtCard: React.FC<ArtCardProps> = ({ data, width, index }) => {
 				</TooltipTrigger>
 				<TooltipContent
 					align='center'
-					className='max-w-xs p-4 space-y-2 acrylic rounded border backdrop-blur-lg text-black dark:text-white prose dark:prose-invert'
+					// className='max-w-xs p-4 space-y-2 acrylic rounded border backdrop-blur-lg text-black dark:text-white prose dark:prose-invert'
+					className='max-w-xs p-4 space-y-2 rounded border backdrop-blur-md  bg-black/50 text-white prose dark:prose-invert'
 					sideOffset={5}
-					style={
-						{
-							'--gradient-angle': '120deg',
-							'--gradient-end': 'rgba(0, 0, 255, 0.2)'
-						} as React.CSSProperties
-					}
+					// style={
+					// 	{
+					// 		'--gradient-angle': '120deg',
+					// 		'--gradient-end': 'rgba(0, 0, 255, 0.2)'
+					// 	} as React.CSSProperties
+					// }
 				>
 					<h4 className='text-lg font-bold border-b border-gray-300 dark:border-gray-600 pb-2'>
 						{data.title}

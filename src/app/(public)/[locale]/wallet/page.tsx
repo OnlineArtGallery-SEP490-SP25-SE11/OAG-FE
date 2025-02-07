@@ -1,4 +1,11 @@
-import { ChevronDown, CreditCard, History, Plus } from 'lucide-react';
+'use client';
+import {
+	ArrowLeft,
+	ChevronDown,
+	CreditCard,
+	History,
+	Plus
+} from 'lucide-react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
@@ -19,6 +26,7 @@ import {
 import { BalanceChart } from './components/balance-chart';
 // import { NotificationBell } from "./notification-bell"
 import { TransactionList } from './components/transaction-list';
+import { motion } from 'framer-motion';
 
 export default function WalletDashboard() {
 	return (
@@ -48,6 +56,23 @@ export default function WalletDashboard() {
 			{/*		</div>*/}
 			{/*	</div>*/}
 			{/*</header>*/}
+			<header className='border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50'>
+				<div className='container max-w-screen-xl mx-auto py-4'>
+					<div className='flex justify-between'>
+						<div className='flex items-center gap-4'>
+							<Button variant='ghost' size='icon' asChild>
+								<Link href='/wallet'>
+									<ArrowLeft className='h-5 w-5' />
+									<span className='sr-only'>Back</span>
+								</Link>
+							</Button>
+							<h1 className='text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent'>
+								My Wallet
+							</h1>
+						</div>
+					</div>
+				</div>
+			</header>
 			<main className='container py-6'>
 				<div className='grid gap-6'>
 					<Card>
@@ -87,53 +112,58 @@ export default function WalletDashboard() {
 							</div>
 						</CardContent>
 					</Card>
-					<div className='grid gap-4 md:grid-cols-3'>
-						<Link href='/wallet/deposit'>
-							<Card className='transition-all hover:bg-muted/50'>
-								<CardHeader className='flex flex-row items-center justify-between space-y-0'>
-									<CardTitle className='text-sm font-medium'>
-										Deposit
-									</CardTitle>
-									<Plus className='h-4 w-4 text-muted-foreground' />
-								</CardHeader>
-								<CardContent>
-									<CardDescription>
-										Add funds to your wallet
-									</CardDescription>
-								</CardContent>
-							</Card>
-						</Link>
-						<Link href='/wallet/payment'>
-							<Card className='transition-all hover:bg-muted/50'>
-								<CardHeader className='flex flex-row items-center justify-between space-y-0'>
-									<CardTitle className='text-sm font-medium'>
-										Pay
-									</CardTitle>
-									<CreditCard className='h-4 w-4 text-muted-foreground' />
-								</CardHeader>
-								<CardContent>
-									<CardDescription>
-										Make a payment
-									</CardDescription>
-								</CardContent>
-							</Card>
-						</Link>
-						<Link href='/wallet/history'>
-							<Card className='transition-all hover:bg-muted/50'>
-								<CardHeader className='flex flex-row items-center justify-between space-y-0'>
-									<CardTitle className='text-sm font-medium'>
-										History
-									</CardTitle>
-									<History className='h-4 w-4 text-muted-foreground' />
-								</CardHeader>
-								<CardContent>
-									<CardDescription>
-										View transaction history
-									</CardDescription>
-								</CardContent>
-							</Card>
-						</Link>
-					</div>
+					<section>
+						<div className='grid gap-6 md:grid-cols-3'>
+							{[
+								{
+									href: '/wallet/deposit',
+									title: 'Deposit',
+									icon: Plus,
+									desc: 'Add funds to your wallet',
+									color: 'bg-green-500'
+								},
+								{
+									href: '/wallet/payment',
+									title: 'Payment',
+									icon: CreditCard,
+									desc: 'Make a payment',
+									color: 'bg-blue-500'
+								},
+								{
+									href: '/wallet/history',
+									title: 'History',
+									icon: History,
+									desc: 'View transaction history',
+									color: 'bg-gray-500'
+								}
+							].map(
+								(
+									{ href, title, icon: Icon, desc, color },
+									idx
+								) => (
+									<Link key={idx} href={href}>
+										<motion.div whileTap={{ scale: 0.95 }}>
+											<Card
+												className={`transition-all hover:${color}/80 ${color} text-white`}
+											>
+												<CardHeader className='flex flex-row items-center justify-between space-y-0'>
+													<CardTitle className='text-lg font-medium'>
+														{title}
+													</CardTitle>
+													<Icon className='h-6 w-6' />
+												</CardHeader>
+												<CardContent>
+													<CardDescription className='text-white/80'>
+														{desc}
+													</CardDescription>
+												</CardContent>
+											</Card>
+										</motion.div>
+									</Link>
+								)
+							)}
+						</div>
+					</section>
 					<Card>
 						<CardHeader>
 							<CardTitle>Recent Transactions</CardTitle>

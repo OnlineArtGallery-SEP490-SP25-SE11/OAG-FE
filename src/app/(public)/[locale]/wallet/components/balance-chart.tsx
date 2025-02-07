@@ -9,7 +9,8 @@ import {
 	Title,
 	Tooltip,
 	Legend,
-	type ChartOptions
+	type ChartOptions,
+	type ChartData
 } from 'chart.js';
 import { useTheme } from 'next-themes';
 
@@ -36,7 +37,7 @@ const data = [
 export function BalanceChart() {
 	const { theme } = useTheme();
 
-	const chartData = {
+	const chartData: ChartData<'line'> = {
 		labels: data.map((item) => item.date),
 		datasets: [
 			{
@@ -44,12 +45,12 @@ export function BalanceChart() {
 				data: data.map((item) => item.balance),
 				borderColor:
 					theme === 'dark'
-						? 'rgba(255, 255, 255, 0.8)'
-						: 'rgba(0, 0, 0, 0.8)',
+						? 'rgba(59, 130, 246, 0.8)'
+						: 'rgba(37, 99, 235, 0.8)',
 				backgroundColor:
 					theme === 'dark'
-						? 'rgba(255, 255, 255, 0.2)'
-						: 'rgba(0, 0, 0, 0.2)',
+						? 'rgba(59, 130, 246, 0.2)'
+						: 'rgba(37, 99, 235, 0.2)',
 				tension: 0.4
 			}
 		]
@@ -90,9 +91,7 @@ export function BalanceChart() {
 			}
 		},
 		plugins: {
-			legend: {
-				display: false
-			},
+			legend: { display: false },
 			tooltip: {
 				mode: 'index',
 				intersect: false,

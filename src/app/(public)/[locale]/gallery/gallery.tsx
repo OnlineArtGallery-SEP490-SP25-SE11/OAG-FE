@@ -5,7 +5,7 @@ import ArtModal from '@/app/(public)/[locale]/gallery/components/art-modal';
 import ArtFeed from '@/app/(public)/[locale]/gallery/components/art-feed';
 import { ArtPiece } from '@/types/marketplace';
 import { List, Masonry, useInfiniteLoader } from 'masonic';
-import { CSSProperties, useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import FloatingSidebar from './components/art-sidebar';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -110,7 +110,6 @@ export default function Gallery({ artworks }: { artworks: ArtPiece[] }) {
 					</motion.div>
 				</AnimatePresence>
 			</div>
-
 			<ArtModal />
 		</>
 	);
