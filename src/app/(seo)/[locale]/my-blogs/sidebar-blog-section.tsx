@@ -6,18 +6,18 @@ import {
 	AccordionTrigger
 } from '@/components/ui/accordion';
 import {
-	MoreVertical,
-	Trash,
-	LinkIcon,
+	ExternalLink,
 	FileCheck,
 	FileText,
-	ExternalLink
+	LinkIcon,
+	MoreVertical,
+	Trash
 } from 'lucide-react';
 import {
 	DropdownMenu,
-	DropdownMenuTrigger,
 	DropdownMenuContent,
-	DropdownMenuItem
+	DropdownMenuItem,
+	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -85,7 +85,7 @@ const BlogEntryDropdown = ({
 						onClick={() =>
 							copyArticleLink(
 								process.env.NEXT_PUBLIC_HOST_NAME +
-									'/blog/' +
+									'/blogs/' +
 									id
 							)
 						}
@@ -97,7 +97,7 @@ const BlogEntryDropdown = ({
 						text='View on blog'
 						onClick={() =>
 							window.open(
-								`${process.env.NEXT_PUBLIC_HOST_NAME}/blog/${id}`,
+								`${process.env.NEXT_PUBLIC_HOST_NAME}/blogs/${id}`,
 								'_blank'
 							)
 						}
@@ -139,7 +139,7 @@ const BlogEntry = ({ blog }: { blog: Blog }) => {
 			)}
 		>
 			<div className='flex items-center justify-between w-full space-x-4'>
-				<Link href={`/blogs/${blog._id}`} className='flex-grow'>
+				<Link href={`/my-blogs/${blog._id}`} className='flex-grow'>
 					<div className='flex items-center space-x-3 group'>
 						{blog.published ? (
 							<FileCheck

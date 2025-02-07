@@ -5,7 +5,28 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	images: {
-		domains: ['picsum.photos']
+		remotePatterns: [
+			{
+				protocol: 'https',
+				hostname: '*.googleusercontent.com',
+				port: '',
+				pathname: '**'
+			},
+			{
+				protocol: 'http',
+				hostname: 'localhost',
+				port: '3000',
+				pathname: '**'
+			},
+			{
+				protocol: 'https',
+				hostname: 'res.cloudinary.com'
+			},
+			{
+				protocol: 'https',
+				hostname: 'picsum.photos'
+			}
+		]
 	},
 	experimental: {},
 	eslint: {
@@ -14,7 +35,7 @@ const nextConfig = {
 	webpack: (config) => {
 		config.cache = false;
 		return config;
-	} // tắt caching
+	}
 };
 
 export default withNextIntl(nextConfig);

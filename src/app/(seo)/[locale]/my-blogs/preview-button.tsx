@@ -2,6 +2,8 @@
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import BlogPreviewOverlay from './blog-preview';
+import { useTranslations } from 'next-intl';
+
 interface PreviewButtonProps {
 	blog: {
 		id: string;
@@ -14,6 +16,7 @@ interface PreviewButtonProps {
 
 const PreviewButton = ({ blog }: PreviewButtonProps) => {
 	const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+	const tBlog = useTranslations('blog');
 
 	return (
 		<div>
@@ -23,7 +26,7 @@ const PreviewButton = ({ blog }: PreviewButtonProps) => {
 					setIsPreviewOpen(true);
 				}}
 			>
-				Preview
+				{tBlog('preview')}
 			</Button>
 			<BlogPreviewOverlay
 				isOpen={isPreviewOpen}

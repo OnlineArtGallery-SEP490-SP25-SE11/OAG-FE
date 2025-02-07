@@ -12,12 +12,11 @@ const BlogSidebar: React.FC = async () => {
 	const user = await getCurrentUser();
 	if (!user) redirect('/');
 	const blogs = await getBlogs(user.accessToken);
-	console.log(blogs, 'blogs sidebar');
 
 	const header = (
 		<Link href='/' className='mx-auto '>
 			<Image
-				src={'/images/demo4.jpg'}
+				src={'/oag-logo.png'}
 				alt='Logo'
 				width={40}
 				height={40}

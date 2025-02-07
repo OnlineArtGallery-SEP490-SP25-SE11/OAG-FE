@@ -17,9 +17,9 @@ export default async function DraftPage({
 	if (!user) {
 		notFound();
 	}
-	const post = await getBlogById(blogId);
+	const blog = await getBlogById(blogId);
 
-	if (!post || post.userId !== user.id) {
+	if (!blog || blog.author !== user.id) {
 		notFound();
 	}
 
@@ -27,11 +27,11 @@ export default async function DraftPage({
 		<>
 			<div className='flex items-center justify-between mb-4'>
 				<div className='flex space-x-4'>
-					<PreviewButton blog={post} />
+					<PreviewButton blog={blog} />
 					{
 						<PublicButton
 							blogId={blogId}
-							initialPublishedState={post.published}
+							initialPublishedState={blog.published}
 						/>
 					}
 				</div>
@@ -39,9 +39,9 @@ export default async function DraftPage({
 
 			<div className=''>
 				<DraftBlogForm
-					content={post.content}
+					content={blog.content}
 					_id={blogId}
-					blogTitle={post.title}
+					blogTitle={blog.title}
 					isAdminOrAuthor={!!user}
 				/>
 			</div>
