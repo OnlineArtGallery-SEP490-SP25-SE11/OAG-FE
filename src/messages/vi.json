@@ -35,7 +35,8 @@
     "contact": "Liên hệ",
     "profile": "Hồ sơ",
     "darkmode": "Chế độ tối",
-    "lightmode": "Chế độ sáng"
+    "lightmode": "Chế độ sáng",
+    "creator": "Tạo phòng tranh"
   },
   "auth": {
     "loginTitle": "Đăng nhập vào tài khoản",

@@ -35,10 +35,12 @@
     "profile": "Profile",
     "settings": "Settings",
     "darkmode": "Dark Mode",
-    "lightmode": "Light Mode"
+    "lightmode": "Light Mode",
+    "creator": "Creator"
   },
   "auth": {
     "loginTitle": "Login to your account",
+
     "signupTitle": "Create new account",
     "googleLogin": "Login with Google"
   },
