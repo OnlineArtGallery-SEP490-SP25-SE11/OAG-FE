@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 
 interface CanvasImageProps {
   src: string;
