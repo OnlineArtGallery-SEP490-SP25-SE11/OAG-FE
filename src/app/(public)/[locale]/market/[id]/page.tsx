@@ -6,7 +6,7 @@ function ArtDetailPage() {
 		<div className='mx-auto'>
 			<div className='px-2'>
 				<div className='mt-5 ml-5'>
-					<DynamicBreadcrumb currentPath='/test/market' />
+					<DynamicBreadcrumb/>
 				</div>
 			</div>
 			<div className='px-5 py-3'>
