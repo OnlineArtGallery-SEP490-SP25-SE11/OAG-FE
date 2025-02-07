@@ -1,10 +1,6 @@
 'use client';
 
-<<<<<<< HEAD:src/app/(seo)/[locale]/blogs/dashboard/delete-blog-button.tsx
-import { LoaderButton } from '@/components/loader-button';
-=======
 import { LoaderButton } from "@/components/ui.custom/loader-button";
->>>>>>> 592f1c8501b901be16ad94fdfd08df99a433f9ac:src/app/(seo)/[locale]/my-blogs/dashboard/delete-blog-button.tsx
 import {
 	AlertDialog,
 	AlertDialogCancel,
@@ -16,11 +12,7 @@ import {
 	AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 // import { Button } from "@/components/ui/button";
-<<<<<<< HEAD:src/app/(seo)/[locale]/blogs/dashboard/delete-blog-button.tsx
-import { useToast } from '@/components/ui/use-toast';
-=======
 import { useToast } from "@/hooks/use-toast";
->>>>>>> 592f1c8501b901be16ad94fdfd08df99a433f9ac:src/app/(seo)/[locale]/my-blogs/dashboard/delete-blog-button.tsx
 // import { btnIconStyles, btnStyles } from "@/styles/icons";
 // import { DoorOpen } from "lucide-react";
 import { useState } from 'react';
@@ -33,13 +25,8 @@ export function DeleteBlogButton({
 	blogId,
 	children
 }: {
-<<<<<<< HEAD:src/app/(seo)/[locale]/blogs/dashboard/delete-blog-button.tsx
-	blogId: number;
-	children: React.ReactNode;
-=======
   blogId: string;
   children: React.ReactNode;
->>>>>>> 592f1c8501b901be16ad94fdfd08df99a433f9ac:src/app/(seo)/[locale]/my-blogs/dashboard/delete-blog-button.tsx
 }) {
 	const { toast } = useToast();
 	const [isOpen, setIsOpen] = useState(false);

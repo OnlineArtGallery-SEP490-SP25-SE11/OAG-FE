@@ -67,47 +67,6 @@ const BlogEntryDropdown = ({
 	isPublished: boolean;
 	id: string;
 }) => (
-<<<<<<< HEAD:src/app/(seo)/[locale]/blogs/sidebar-blog-section.tsx
-	<DropdownMenu>
-		<DropdownMenuTrigger>
-			<MoreVertical
-				className='cursor-pointer text-slate-500 hover:text-slate-700'
-				size={20}
-			/>
-		</DropdownMenuTrigger>
-		<DropdownMenuContent className='w-44 rounded-md shadow-lg ring-1 ring-black ring-opacity-5'>
-			{isPublished ? (
-				<>
-					<DropdownMenuItemWithIcon
-						className='cursor-pointer'
-						icon={LinkIcon}
-						iconColor='blue'
-						text='Copy article link'
-						onClick={() =>
-							copyArticleLink(
-								process.env.NEXT_PUBLIC_HOST_NAME +
-									'/blog/' +
-									id
-							)
-						}
-					/>
-					<DropdownMenuItemWithIcon
-						className='cursor-pointer'
-						icon={ExternalLink}
-						iconColor='green'
-						text='View on blog'
-						onClick={() =>
-							window.open(
-								`${process.env.NEXT_PUBLIC_HOST_NAME}/blog/${id}`,
-								'_blank'
-							)
-						}
-					/>
-				</>
-			) : (
-				<>
-					{/* <DropdownMenuItemWithIcon icon={LinkIcon} iconColor="blue" text="Copy preview link" />
-=======
   <DropdownMenu>
     <DropdownMenuTrigger>
       <MoreVertical
@@ -143,7 +102,6 @@ const BlogEntryDropdown = ({
       ) : (
         <>
           {/* <DropdownMenuItemWithIcon icon={LinkIcon} iconColor="blue" text="Copy preview link" />
->>>>>>> 592f1c8501b901be16ad94fdfd08df99a433f9ac:src/app/(seo)/[locale]/my-blogs/sidebar-blog-section.tsx
                     <DropdownMenuItemWithIcon icon={Eye} iconColor="green" text="Preview draft" /> */}
 				</>
 			)}
@@ -166,44 +124,6 @@ const BlogEntry = ({ blog }: { blog: Blog }) => {
 	const pathname = usePathname();
 	const isActive = pathname.includes(blog._id);
 
-<<<<<<< HEAD:src/app/(seo)/[locale]/blogs/sidebar-blog-section.tsx
-	return (
-		<div
-			className={cn(
-				'flex items-center p-3 rounded-lg transition-colors duration-200 shadow-sm',
-				'hover:bg-gray-100 dark:hover:bg-slate-800',
-				isActive
-					? 'bg-secondary-50 dark:bg-secondary-400 text-blue-800 dark:text-blue-100'
-					: 'text-gray-700 dark:text-gray-300'
-			)}
-		>
-			<div className='flex items-center justify-between w-full space-x-4'>
-				<Link href={`/blogs/${blog._id}`} className='flex-grow'>
-					<div className='flex items-center space-x-3 group'>
-						{blog.published ? (
-							<FileCheck
-								className='text-secondary-600 group-hover:text-secondary-800 transition-colors duration-200'
-								size={20}
-							/>
-						) : (
-							<FileText
-								className='text-yellow-600 group-hover:text-yellow-800 transition-colors duration-200'
-								size={20}
-							/>
-						)}
-						<span
-							className='flex-grow truncate text-sm text-gray-800 dark:text-gray-200 group-hover:text-secondary-600 dark:group-hover:text-secondary-300 transition-colors duration-200'
-							title={blog.title}
-						>
-							{truncateTitle(blog.title)}
-						</span>
-					</div>
-				</Link>
-				<BlogEntryDropdown isPublished={blog.published} id={blog._id} />
-			</div>
-		</div>
-	);
-=======
   return (
     <div
       className={cn(
@@ -240,7 +160,6 @@ const BlogEntry = ({ blog }: { blog: Blog }) => {
       </div>
     </div>
   );
->>>>>>> 592f1c8501b901be16ad94fdfd08df99a433f9ac:src/app/(seo)/[locale]/my-blogs/sidebar-blog-section.tsx
 };
 
 const BlogSection = ({ title, blogs }: { title: string; blogs: Blog[] }) => (

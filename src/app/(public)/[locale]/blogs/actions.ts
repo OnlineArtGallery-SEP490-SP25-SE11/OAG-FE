@@ -2,7 +2,10 @@
 import { z } from 'zod';
 import { authenticatedAction } from '@/lib/safe-action';
 import { rateLimitByKey } from '@/lib/limiter';
-import { toggleBookmarkBlogService, toggleHeartBlogService } from '@/service/blog';
+import {
+	toggleBookmarkBlogService,
+	toggleHeartBlogService
+} from '@/service/blog';
 import { RateLimitError } from '@/lib/errors';
 import { revalidatePath } from 'next/cache';
 export const toggleBookmarkBlogAction = authenticatedAction

@@ -9,24 +9,6 @@ import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/session';
 
 const BlogSidebar: React.FC = async () => {
-<<<<<<< HEAD:src/app/(seo)/[locale]/blogs/sidebar-blog.tsx
-	const user = await getCurrentUser();
-	if (!user) redirect('/');
-	const blogs = await getBlogs(user.accessToken);
-	console.log(blogs, 'blogs sidebar');
-
-	const header = (
-		<Link href='/' className='mx-auto '>
-			<Image
-				src={'/images/demo4.jpg'}
-				alt='Logo'
-				width={40}
-				height={40}
-				className='rounded-full'
-			/>
-		</Link>
-	);
-=======
   const user = await getCurrentUser();
   if (!user) redirect("/");
   const blogs = await getBlogs(user.accessToken);
@@ -42,7 +24,6 @@ const BlogSidebar: React.FC = async () => {
       />
     </Link>
   );
->>>>>>> 592f1c8501b901be16ad94fdfd08df99a433f9ac:src/app/(seo)/[locale]/my-blogs/sidebar-blog.tsx
 
 	const content = (
 		<>

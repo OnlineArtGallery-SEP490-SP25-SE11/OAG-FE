@@ -20,11 +20,9 @@ export const useSignUpSchemas = () => {
 	const verifyOtpSchema = z.object({
 		otp: z.string().length(6, { message: t('otpLength') }),
 		phone: phoneSchema.shape.phone,
-		name: z
-			.string()
-			.min(2, {
-				message: t('minLength', { field: t('name'), length: '2' })
-			}),
+		name: z.string().min(2, {
+			message: t('minLength', { field: t('name'), length: '2' })
+		}),
 		password: z.string().min(8, { message: t('passwordLength') })
 	});
 
