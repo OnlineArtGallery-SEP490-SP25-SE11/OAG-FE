@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { Fragment, useCallback, useEffect, useState } from 'react';
 
-const FloatingSidebar = ({ changeLayout }) => {
+const FloatingSidebar = ({ changeLayout }:any) => {
 	const controls = useAnimation();
 	const [isExpanded, setIsExpanded] = useState(false);
 	const [isHovering, setIsHovering] = useState(false);
