@@ -18,7 +18,11 @@ import {
 } from 'lucide-react';
 import { Fragment, useCallback, useEffect, useState } from 'react';
 
-const FloatingSidebar = ({ changeLayout }:any) => {
+interface FloatingSidebarProps {
+    changeLayout: () => void;
+}
+
+const FloatingSidebar = ({ changeLayout }: FloatingSidebarProps) => {
 	const controls = useAnimation();
 	const [isExpanded, setIsExpanded] = useState(false);
 	const [isHovering, setIsHovering] = useState(false);
@@ -41,7 +45,7 @@ const FloatingSidebar = ({ changeLayout }:any) => {
 	}, []);
 
 	useEffect(() => {
-		let timeoutId;
+		let timeoutId: ReturnType<typeof setTimeout>;
 
 		if (!isHovering) {
 			timeoutId = setTimeout(() => {
@@ -66,7 +70,7 @@ const FloatingSidebar = ({ changeLayout }:any) => {
 		status: false
 	});
 
-	const toggleSection = useCallback((section) => {
+	const toggleSection = useCallback((section: keyof typeof openSections) => {
 		setOpenSections((prev) => ({
 			...prev,
 			[section]: !prev[section]
