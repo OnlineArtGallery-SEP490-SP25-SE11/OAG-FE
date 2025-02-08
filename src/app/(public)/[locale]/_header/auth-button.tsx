@@ -13,7 +13,7 @@ import Link from 'next/link';
 import HeaderButton from '@/app/(public)/[locale]/_header/components/header-button';
 import { Separator } from '@/components/ui/separator';
 import { DropdownItemWithIcon } from '@/app/(public)/[locale]/_header/components/header-dropdown';
-import { CircleUserRoundIcon, SettingsIcon } from 'lucide-react'; // Import Skeleton from shadcn/ui
+import { CircleUserRoundIcon, Palette, SettingsIcon } from 'lucide-react'; // Import Skeleton from shadcn/ui
 import { useTranslations } from 'next-intl';
 export default function AuthButton() {
 	const t = useTranslations('header');
@@ -65,6 +65,15 @@ export default function AuthButton() {
 						text={t('settings')}
 						href='/settings'
 					/>
+          <DropdownItemWithIcon
+						icon={<Palette   className='w-6 h-6' />}
+						text={t('creator')}
+						href='/creator'
+					/>
+
+
+
+
 					<Separator className='mt-6' />
 					<SignOutItem dropdown />
 				</DropdownMenuContent>
