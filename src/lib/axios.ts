@@ -63,7 +63,9 @@ export async function createAxiosInstance({
 		baseURL: env.NEXT_PUBLIC_API_URL,
 		headers: {
 			'Content-Type': 'application/json',
-			...(accessToken && { Authorization: `Bearer ${accessToken}` })
+			...(accessToken && {
+				Authorization: `Bearer ${accessToken}`
+			})
 		}
 	});
 

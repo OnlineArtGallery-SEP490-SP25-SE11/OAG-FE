@@ -1,16 +1,16 @@
 'use client';
 
-import { MenuIcon } from 'lucide-react';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { cn } from '@/lib/utils';
-import ThemeSwitcher from './theme-switcher';
 import AuthButton from '@/app/(public)/[locale]/_header/auth-button';
+import HeaderButton from '@/app/(public)/[locale]/_header/components/header-button';
 import Settings from '@/app/(public)/[locale]/_header/settings';
 import { Separator } from '@/components/ui/separator';
-import HeaderButton from '@/app/(public)/[locale]/_header/components/header-button';
+import { cn } from '@/lib/utils';
+import { MenuIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import ThemeSwitcher from './theme-switcher';
 
 const listMenu = [
 	{ href: '/', label: 'home' },
@@ -42,11 +42,12 @@ export default function Header() {
 
 	return (
 		<header
-			className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out shadow-md ${
+			className={cn(
+				'fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out shadow-md',
 				isScrolled
 					? 'bg-gray-800 bg-opacity-60 backdrop-blur-sm texture'
 					: 'bg-transparent'
-			}`}
+			)}
 		>
 			<div className='container mx-auto px-4 sm:px-6 lg:px-8'>
 				<div className='flex items-center justify-between h-16'>
@@ -120,7 +121,7 @@ export default function Header() {
 			</div>
 			<Separator />
 			<div
-				className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'}`}
+				className={cn('md:hidden', isMenuOpen ? 'block' : 'hidden')}
 				id='mobile-menu'
 			>
 				<div className='px-2 pt-2 pb-3 space-y-1 sm:px-3'>

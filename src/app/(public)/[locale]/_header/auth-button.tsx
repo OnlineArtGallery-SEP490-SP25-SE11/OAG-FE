@@ -1,20 +1,21 @@
 'use client';
+import HeaderButton from '@/app/(public)/[locale]/_header/components/header-button';
+import { DropdownItemWithIcon } from '@/app/(public)/[locale]/_header/components/header-dropdown';
 import Notification from '@/app/(public)/[locale]/_header/notification';
-import useAuthClient from '@/hooks/useAuth-client';
+import SignOutItem from '@/app/(public)/[locale]/_header/sign-out-item';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import SignOutItem from '@/app/(public)/[locale]/_header/sign-out-item';
-import { Skeleton } from '@/components/ui/skeleton';
-import Link from 'next/link';
-import HeaderButton from '@/app/(public)/[locale]/_header/components/header-button';
 import { Separator } from '@/components/ui/separator';
-import { DropdownItemWithIcon } from '@/app/(public)/[locale]/_header/components/header-dropdown';
+import { Skeleton } from '@/components/ui/skeleton';
+import useAuthClient from '@/hooks/useAuth-client';
 import { CircleUserRoundIcon, Palette, SettingsIcon } from 'lucide-react'; // Import Skeleton from shadcn/ui
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
+
 export default function AuthButton() {
 	const t = useTranslations('header');
 	const tCommon = useTranslations('common');

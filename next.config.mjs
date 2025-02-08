@@ -21,6 +21,10 @@ const nextConfig = {
 			{
 				protocol: 'https',
 				hostname: 'res.cloudinary.com'
+			},
+			{
+				protocol: 'https',
+				hostname: 'picsum.photos'
 			}
 		]
 	},
@@ -31,7 +35,7 @@ const nextConfig = {
 	webpack: (config) => {
 		config.cache = false;
 		return config;
-	} // tắt caching
+	}
 };
 
 export default withNextIntl(nextConfig);

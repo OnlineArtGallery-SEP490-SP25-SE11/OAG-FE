@@ -14,37 +14,37 @@ export default async function DraftPage({
 	const { blogId } = params;
 	const user = await getCurrentUser();
 
-  if (!user) {
-    notFound();
-  }
-  const blog = await getBlogById(blogId);
+	if (!user) {
+		notFound();
+	}
+	const blog = await getBlogById(blogId);
 
-  if (!blog || blog.author !== user.id) {
-    notFound();
-  }
+	if (!blog || blog.author !== user.id) {
+		notFound();
+	}
 
-  return (
-    <>
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex space-x-4">
-          <PreviewButton blog={blog} />
-          {
-            <PublicButton
-              blogId={blogId}
-              initialPublishedState={blog.published}
-            />
-          }
-        </div>
-      </div>
+	return (
+		<>
+			<div className='flex items-center justify-between mb-4'>
+				<div className='flex space-x-4'>
+					<PreviewButton blog={blog} />
+					{
+						<PublicButton
+							blogId={blogId}
+							initialPublishedState={blog.published}
+						/>
+					}
+				</div>
+			</div>
 
-      <div className="">
-        <DraftBlogForm
-          content={blog.content}
-          _id={blogId}
-          blogTitle={blog.title}
-          isAdminOrAuthor={!!user}
-        />
-      </div>
-    </>
-  );
+			<div className=''>
+				<DraftBlogForm
+					content={blog.content}
+					_id={blogId}
+					blogTitle={blog.title}
+					isAdminOrAuthor={!!user}
+				/>
+			</div>
+		</>
+	);
 }

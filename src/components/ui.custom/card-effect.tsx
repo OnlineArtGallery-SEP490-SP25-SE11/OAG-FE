@@ -7,7 +7,10 @@ const CardWithEffect = ({ children }: { children: React.ReactNode }) => {
 
 	const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
 		const rect = e.currentTarget.getBoundingClientRect();
-		setMousePosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+		setMousePosition({
+			x: e.clientX - rect.left,
+			y: e.clientY - rect.top
+		});
 	};
 
 	return (

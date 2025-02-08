@@ -14,7 +14,9 @@ export const formatCreatedAt = (
 			date = createdAt; // Nếu đã là đối tượng Date, dùng trực tiếp
 		}
 		const selectedLocale = locale === 'vi' ? vi : enUS;
-		return `${formatDistanceToNow(date, { locale: selectedLocale })}`;
+		return `${formatDistanceToNow(date, {
+			locale: selectedLocale
+		})}`;
 	} catch (error) {
 		console.error('Error formatting date:', error);
 		return 'Invalid date';

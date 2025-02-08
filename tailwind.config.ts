@@ -1,4 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import tailwindcssTypography from '@tailwindcss/typography';
 import type { Config } from 'tailwindcss';
+import tailwindcssAnimate from 'tailwindcss-animate';
+import plugin from 'tailwindcss/plugin';
 
 const config: Config = {
 	darkMode: ['class'],
@@ -83,6 +87,21 @@ const config: Config = {
 			}
 		}
 	},
-	plugins: [require('tailwindcss-animate')]
+	plugins: [
+		tailwindcssAnimate,
+		tailwindcssTypography,
+		plugin(function ({ addUtilities }) {
+			addUtilities({
+				'.bg-acrylic': {
+					position: 'relative',
+					background: 'rgba(255, 255, 255, 0.6)', // Màu nền mờ
+					backdropFilter: 'blur(20px)', // Hiệu ứng mờ nhám
+					WebkitBackdropFilter: 'blur(10px)', // Hỗ trợ trình duyệt WebKit
+					boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)', // Đổ bóng nhẹ
+					border: '1px solid rgba(255, 255, 255, 0.3)' // Đường viền mờ
+				}
+			});
+		})
+	]
 };
 export default config;
