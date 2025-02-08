@@ -13,8 +13,8 @@ const Breadcrumb = React.forwardRef<
 Breadcrumb.displayName = "Breadcrumb"
 
 const BreadcrumbList = React.forwardRef<
-  HTMLOListElement,
-  React.ComponentPropsWithoutRef<"ol">
+	HTMLOListElement,
+	React.ComponentPropsWithoutRef<'ol'>
 >(({ className, ...props }, ref) => (
   <ol
     ref={ref}
@@ -28,8 +28,8 @@ const BreadcrumbList = React.forwardRef<
 BreadcrumbList.displayName = "BreadcrumbList"
 
 const BreadcrumbItem = React.forwardRef<
-  HTMLLIElement,
-  React.ComponentPropsWithoutRef<"li">
+	HTMLLIElement,
+	React.ComponentPropsWithoutRef<'li'>
 >(({ className, ...props }, ref) => (
   <li
     ref={ref}
@@ -58,8 +58,8 @@ const BreadcrumbLink = React.forwardRef<
 BreadcrumbLink.displayName = "BreadcrumbLink"
 
 const BreadcrumbPage = React.forwardRef<
-  HTMLSpanElement,
-  React.ComponentPropsWithoutRef<"span">
+	HTMLSpanElement,
+	React.ComponentPropsWithoutRef<'span'>
 >(({ className, ...props }, ref) => (
   <span
     ref={ref}

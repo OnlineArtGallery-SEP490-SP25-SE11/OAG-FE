@@ -1,18 +1,18 @@
 // app/blogs/[blogId]/draft/page.tsx
-import { DraftBlogForm } from "../draft-blog-form";
-import { notFound } from "next/navigation";
-import PreviewButton from "../preview-button";
-import PublicButton from "../public-button";
-import { getCurrentUser } from "@/lib/session";
-import { getBlogById } from "@/service/blog";
+import { DraftBlogForm } from '../draft-blog-form';
+import { notFound } from 'next/navigation';
+import PreviewButton from '../preview-button';
+import PublicButton from '../public-button';
+import { getCurrentUser } from '@/lib/session';
+import { getBlogById } from '@/service/blog';
 
 export default async function DraftPage({
-  params,
+	params
 }: {
-  params: { blogId: string };
+	params: { blogId: string };
 }) {
-  const { blogId } = params;
-  const user = await getCurrentUser();
+	const { blogId } = params;
+	const user = await getCurrentUser();
 
   if (!user) {
     notFound();

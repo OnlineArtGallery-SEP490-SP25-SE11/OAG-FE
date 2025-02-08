@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -9,8 +9,8 @@ import { publishBlogAction, unpublishBlogAction } from "./action";
 import { useTranslations } from "next-intl";
 
 interface PublicButtonProps {
-  blogId: string;
-  initialPublishedState: boolean;
+	blogId: string;
+	initialPublishedState: boolean;
 }
 
 const PublicButton = ({ blogId, initialPublishedState }: PublicButtonProps) => {
@@ -20,34 +20,34 @@ const PublicButton = ({ blogId, initialPublishedState }: PublicButtonProps) => {
   const router = useRouter();
   const tBlog = useTranslations("blog");
 
-  const handlePublishToggle = async () => {
-    setIsPending(true);
-    try {
-      const action = published ? unpublishBlogAction : publishBlogAction;
-      await action({ _id: blogId });
-      setPublished(!published);
-      toast({
-        title: "Success",
-        description: published
-          ? "Blog has been private"
-          : "Blog has been published",
-        variant: "success",
-      });
-      router.refresh(); // Refresh the page to get updated data
-    } catch {
-      toast({
-        title: "Error",
-        description: "Failed to update blog status",
-        variant: "destructive",
-      });
-    } finally {
-      setIsPending(false);
-    }
-  };
+	const handlePublishToggle = async () => {
+		setIsPending(true);
+		try {
+			const action = published ? unpublishBlogAction : publishBlogAction;
+			await action({ _id: blogId });
+			setPublished(!published);
+			toast({
+				title: 'Success',
+				description: published
+					? 'Blog has been private'
+					: 'Blog has been published',
+				variant: 'success'
+			});
+			router.refresh(); // Refresh the page to get updated data
+		} catch {
+			toast({
+				title: 'Error',
+				description: 'Failed to update blog status',
+				variant: 'destructive'
+			});
+		} finally {
+			setIsPending(false);
+		}
+	};
 
-  return (
-    <Button
-      className={`text-white rounded-full py-2 px-4 
+	return (
+		<Button
+			className={`text-white rounded-full py-2 px-4 
                 ${
                   published
                     ? "bg-yellow-500 border border-yellow-500 hover:bg-yellow-600 dark:bg-yellow-700 dark:hover:bg-yellow-800 dark:border-yellow-700"
