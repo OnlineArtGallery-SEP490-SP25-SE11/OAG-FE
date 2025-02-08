@@ -1,4 +1,4 @@
-import axios, { axiosWithAuth, createApi } from '@/lib/axios';
+import axios, { axiosWithAuth } from '@/lib/axios';
 import { Blog, GetPublishedBlogsResponse } from '@/types/blog';
 import { ApiResponse } from '@/types/response';
 import axiosInstance from 'axios';

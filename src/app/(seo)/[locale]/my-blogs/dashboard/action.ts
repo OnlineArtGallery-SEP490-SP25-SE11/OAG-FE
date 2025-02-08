@@ -1,9 +1,9 @@
 'use server';
 
-import { authenticatedAction } from "@/lib/safe-action";
+import { authenticatedAction } from '@/lib/safe-action';
 // import { deleteBlogUseCase } from "@/use-cases/blogs";
-import { redirect } from "next/navigation";
-import { z } from "zod";
+import { redirect } from 'next/navigation';
+import { z } from 'zod';
 
 export const deleteBlogAction = authenticatedAction
   .createServerAction()

@@ -21,7 +21,10 @@ export async function refreshAccessToken({ oldToken }: { oldToken: string }) {
 				await fetch(`${process.env.NEXTAUTH_URL}/api/auth/logout`, {
 					method: 'POST'
 				});
-				await signOut({ redirect: true, callbackUrl: '/sign-in' });
+				await signOut({
+					redirect: true,
+					callbackUrl: '/sign-in'
+				});
 				// throw new TokenExpiredError();
 			}
 			throw new Error(`HTTP error! status: ${response.status}`);

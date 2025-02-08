@@ -9,21 +9,21 @@ import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/session';
 
 const BlogSidebar: React.FC = async () => {
-  const user = await getCurrentUser();
-  if (!user) redirect("/");
-  const blogs = await getBlogs(user.accessToken);
+	const user = await getCurrentUser();
+	if (!user) redirect('/');
+	const blogs = await getBlogs(user.accessToken);
 
-  const header = (
-    <Link href="/" className="mx-auto ">
-      <Image
-        src={"/oag-logo.png"}
-        alt="Logo"
-        width={40}
-        height={40}
-        className="rounded-full"
-      />
-    </Link>
-  );
+	const header = (
+		<Link href='/' className='mx-auto '>
+			<Image
+				src={'/oag-logo.png'}
+				alt='Logo'
+				width={40}
+				height={40}
+				className='rounded-full'
+			/>
+		</Link>
+	);
 
 	const content = (
 		<>

@@ -11,7 +11,10 @@ const authOptions: AuthOptions = {
 			name: 'Phone',
 			credentials: {
 				phone: { label: 'Phone', type: 'text' },
-				password: { label: 'Password', type: 'password' }
+				password: {
+					label: 'Password',
+					type: 'password'
+				}
 			},
 			authorize: async (credentials) => {
 				try {
