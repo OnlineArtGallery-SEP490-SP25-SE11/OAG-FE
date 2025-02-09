@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useGLTF } from "@react-three/drei";
 import { TextureLoader } from "three";
 // import { preloadAssets } from '@/utils/preload-assets';
-import { MODEL_PATHS, TEXTURE_PATHS } from "@/utils/asset-mannager";
+import { MODEL_PATHS, TEXTURE_PATHS } from "@/utils/asset-manager";
 
 interface AssetPreloaderOptions {
   onProgress?: (progress: number) => void;

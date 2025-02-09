@@ -32,10 +32,12 @@ const nextConfig = {
 	eslint: {
 		ignoreDuringBuilds: true
 	},
+	transpilePackages: ['three'],
 	webpack: (config) => {
 		config.cache = false;
 		return config;
 	}
+
 };
 
 export default withNextIntl(nextConfig);

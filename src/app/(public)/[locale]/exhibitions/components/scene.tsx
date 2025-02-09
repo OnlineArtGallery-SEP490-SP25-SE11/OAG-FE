@@ -15,10 +15,19 @@ import { GalleryRoom } from "./gallery-room";
 
 export default function Scene() {
   const { set } = useThree();
-
+  const props = {
+    maxPolarAngle: Math.PI * 0.7, // Giới hạn góc nhìn lên
+    minPolarAngle: Math.PI * 0.3, // Giới hạn góc nhìn xuống
+    pointerSpeed: 0.05,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onUpdate: (controls: any) => {
+      set({ controls });
+    },
+  };
   return (
     <>
       {/* <Suspense fallback={<Loader />}> */}
+
       <color attach="background" args={["#f0f0f0"]} />
       <PerspectiveCamera
         makeDefault
@@ -39,18 +48,12 @@ export default function Scene() {
         {/* <GalleryRoom /> */}
       </Physics>
 
-      <Preload all />
+      <Preload all /> 
       <axesHelper position={[0, 0, 0]} args={[55]} />
-      <PointerLockControls
-        maxPolarAngle={Math.PI * 0.7} // Giới hạn góc nhìn lên
-        minPolarAngle={Math.PI * 0.3} // Giới hạn góc nhìn xuống
-        pointerSpeed={0.05}
-        onUpdate={(controls) => {
-          set({ controls });
-        }}
-      />
+      <PointerLockControls {...props} />
       <Crosshair />
       {/* </Suspense> */}
+
     </>
   );
 }

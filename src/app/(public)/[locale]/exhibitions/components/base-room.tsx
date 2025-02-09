@@ -1,5 +1,6 @@
-import { Vec3 } from "@/utils/type";
+import { Vec3 } from "@/types/gallery";
 import React from "react";
+
 
 interface BaseRoomProps {
   position: Vec3;

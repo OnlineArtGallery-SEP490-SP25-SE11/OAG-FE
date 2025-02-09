@@ -1,5 +1,5 @@
 "use client";
-import { Vec3 } from "@/utils/type";
+import { Vec3 } from "@/types/gallery";
 import { useMemo } from "react";
 import { useEffect } from "react";
 import { Mesh } from "three";
@@ -54,7 +54,7 @@ export function StairLowPoly({ position = [6.6, 0, 13], scale, rotation }: Stair
     });
 
     useEffect(() => {
-        clonedScene.traverse((child) => {
+        clonedScene.traverse((child: { castShadow: boolean; receiveShadow: boolean; }) => {
             if (child instanceof Mesh) {
                 child.castShadow = true;
                 child.receiveShadow = true;
