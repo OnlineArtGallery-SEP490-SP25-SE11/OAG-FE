@@ -35,8 +35,19 @@
 		"contact": "Liên hệ",
 		"profile": "Hồ sơ",
 		"darkmode": "Chế độ tối",
-		"lightmode": "Chế độ sáng"
+		"lightmode": "Chế độ sáng",
+		"creator": "Tạo phòng tranh",
+		"artworks": "Tranh",
+		"discover": "Khám phá",
+		"community": "Cộng đồng",
+		"artists": "Nghệ sĩ",
+		"wallet": "Ví",
+		"messages": "Tin nhắn",
+		"my_blogs": "Bài viết"
 	},
+
+
+
 	"auth": {
 		"loginTitle": "Đăng nhập vào tài khoản",
 		"signupTitle": "Tạo tài khoản mới",

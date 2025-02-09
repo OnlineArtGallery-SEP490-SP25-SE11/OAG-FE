@@ -46,15 +46,16 @@ export default function ManageArtworks() {
 			artist: 'John Doe',
 			status: 'Available',
 			price: 500,
-			imageUrl: '/images/demo.jpg'
+			imageUrl: '/demo.jpg'
 		},
 		{
 			id: '2',
+
 			title: 'Mountain View',
 			artist: 'Jane Smith',
 			status: 'Sold',
 			price: 750,
-			imageUrl: '/images/demo.jpg'
+			imageUrl: '/demo.jpg'
 		},
 		{
 			id: '3',
@@ -62,10 +63,12 @@ export default function ManageArtworks() {
 			artist: 'Bob Johnson',
 			status: 'Hidden',
 			price: 1000,
-			imageUrl: '/images/demo.jpg'
+
+			imageUrl: '/demo.jpg'
 		}
 		// Add more artwork entries here...
 	]);
+
 
 	const [searchTerm, setSearchTerm] = useState('');
 	const [currentPage, setCurrentPage] = useState(1);

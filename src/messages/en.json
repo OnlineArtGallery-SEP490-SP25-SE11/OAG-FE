@@ -35,10 +35,21 @@
 		"profile": "Profile",
 		"settings": "Settings",
 		"darkmode": "Dark Mode",
-		"lightmode": "Light Mode"
+		"lightmode": "Light Mode",
+		"creator": "Creator",
+		"artworks": "Artworks",
+		"discover": "Discover",
+		"community": "Community",
+		"artists": "Artists",
+		"wallet": "Wallet",
+		"messages": "Messages",
+		"my_blogs": "My Blogs"
 	},
 	"auth": {
 		"loginTitle": "Login to your account",
+
+
+
 		"signupTitle": "Create new account",
 		"googleLogin": "Login with Google"
 	},
