@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState, useCallback } from 'react';
@@ -37,17 +38,17 @@ export default function Collections() {
 			id: '1',
 			name: 'Summer Collection',
 			description: 'Artworks inspired by summer',
-			coverImage: '/images/demo.jpg',
+			coverImage: '/demo.jpg',
 			artworks: [
 				{
 					id: 'a1',
 					title: 'Beach Sunset',
-					imageUrl: '/images/demo.jpg'
+					imageUrl: '/demo.jpg'
 				},
 				{
 					id: 'a2',
 					title: 'Tropical Paradise',
-					imageUrl: '/images/demo.jpg'
+					imageUrl: '/demo.jpg'
 				}
 			]
 		},
@@ -55,17 +56,20 @@ export default function Collections() {
 			id: '2',
 			name: 'Abstract Series',
 			description: 'A collection of abstract artworks',
-			coverImage: '/images/demo.jpg',
+			coverImage: '/demo.jpg',
 			artworks: [
 				{
 					id: 'a3',
+
 					title: 'Colorful Shapes',
-					imageUrl: '/images/demo.jpg'
+					imageUrl: '/demo.jpg'
+
 				},
 				{
 					id: 'a4',
 					title: 'Geometric Patterns',
-					imageUrl: '/images/demo.jpg'
+					imageUrl: '/demo.jpg'
+
 				}
 			]
 		}
@@ -76,6 +80,7 @@ export default function Collections() {
 		description: ''
 	});
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [editingCollection, setEditingCollection] = useState<string | null>(
 		null
 	);

@@ -1,15 +1,15 @@
 'use client';
-import { fetchArtPiecesByRange } from '@/app/(public)/[locale]/gallery/api';
-import ArtCard from '@/app/(public)/[locale]/gallery/components/art-card';
-import ArtModal from '@/app/(public)/[locale]/gallery/components/art-modal';
-import ArtFeed from '@/app/(public)/[locale]/gallery/components/art-feed';
+import { fetchArtPiecesByRange } from '@/app/(public)/[locale]/artworks/api';
+import ArtCard from '@/app/(public)/[locale]/artworks/components/art-card';
+import ArtModal from '@/app/(public)/[locale]/artworks/components/art-modal';
+import ArtFeed from '@/app/(public)/[locale]/artworks/components/art-feed';
 import { ArtPiece } from '@/types/marketplace';
 import { List, Masonry, useInfiniteLoader } from 'masonic';
 import { useCallback, useMemo, useState } from 'react';
 import FloatingSidebar from './components/art-sidebar';
 import { AnimatePresence, motion } from 'framer-motion';
 
-export default function Gallery({ artworks }: { artworks: ArtPiece[] }) {
+export default function Artworks({ artworks }: { artworks: ArtPiece[] }) {
 	const [artPieces, setArtPieces] = useState<ArtPiece[]>(artworks);
 	const [masonryLayout, setMasonryLayout] = useState<boolean>(true);
 

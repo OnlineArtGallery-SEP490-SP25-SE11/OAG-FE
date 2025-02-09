@@ -33,7 +33,7 @@ export default function DiscoverPage() {
             id: "1",
             title: "Modern Art Exhibition 2024",
             author: "Johny Dang",
-            thumbnail: "/modern_c1_plan.png",
+            thumbnail: "/demo.jpg",
             category: "Modern Art",
             description: "Contemporary mixed media portrait artwork by Johny Dang",
             likes: 1234,
@@ -103,9 +103,10 @@ export default function DiscoverPage() {
                                             className="object-cover transition-transform"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                                        <Badge className="absolute top-4 right-4 bg-white/90">Featured</Badge>
+                                        <Badge className="absolute top-4 right-4 bg-gray-300">Featured</Badge>
                                     </div>
                                     <div className="p-4">
+
                                         <h3 className="text-xl font-semibold mb-2">{gallery.title}</h3>
                                         <p className="text-gray-500 mb-4">{gallery.description}</p>
                                         <div className="flex items-center gap-4 text-sm text-gray-600">
