@@ -63,13 +63,11 @@ export default function Collections() {
 
 					title: 'Colorful Shapes',
 					imageUrl: '/demo.jpg'
-
 				},
 				{
 					id: 'a4',
 					title: 'Geometric Patterns',
 					imageUrl: '/demo.jpg'
-
 				}
 			]
 		}

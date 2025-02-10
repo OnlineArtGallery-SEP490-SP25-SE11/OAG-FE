@@ -8,7 +8,6 @@ const Artworks = dynamic(
 	{
 		ssr: false,
 		loading(loadingProps) {
-
 			return (
 				<LoadingComponent
 					error={loadingProps.error}
@@ -24,12 +23,9 @@ const Artworks = dynamic(
 const ArtworksPage = async () => {
 	const initialData = (await fetchArtPiecesByRange(0, 20)) as ArtPiece[];
 	return (
-
 		<>
 			<Artworks artworks={initialData} />
 		</>
-
 	);
 };
 export default ArtworksPage;
-

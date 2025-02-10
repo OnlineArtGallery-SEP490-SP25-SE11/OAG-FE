@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { LoaderCircleIcon } from "lucide-react";
-import { publishBlogAction, unpublishBlogAction } from "./action";
-import { useTranslations } from "next-intl";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { LoaderCircleIcon } from 'lucide-react';
+import { publishBlogAction, unpublishBlogAction } from './action';
+import { useTranslations } from 'next-intl';
 
 interface PublicButtonProps {
 	blogId: string;

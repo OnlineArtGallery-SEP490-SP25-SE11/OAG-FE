@@ -19,7 +19,7 @@ import {
 import { Fragment, useCallback, useEffect, useState } from 'react';
 
 interface FloatingSidebarProps {
-    changeLayout: () => void;
+	changeLayout: () => void;
 }
 
 const FloatingSidebar = ({ changeLayout }: FloatingSidebarProps) => {

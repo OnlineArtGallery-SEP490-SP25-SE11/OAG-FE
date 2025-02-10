@@ -180,8 +180,7 @@ function Modal() {
 									>
 										<BiComment className='w-5 h-5' />
 										Comments (
-										{(selected as any).commentsCount || 0}
-										)
+										{(selected as any).commentsCount || 0})
 									</TabsTrigger>
 								</TabsList>
 

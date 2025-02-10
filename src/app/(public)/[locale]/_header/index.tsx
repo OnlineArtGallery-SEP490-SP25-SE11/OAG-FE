@@ -18,10 +18,8 @@ const listMenu = [
 	{ href: '/contact', label: 'contact' },
 	{ href: '/artworks', label: 'artworks' },
 	{ href: '/discover', label: 'discover' },
-	{ href: '/social', label: 'community' },
-
+	{ href: '/social', label: 'community' }
 ];
-
 
 export default function Header() {
 	const t = useTranslations('header');
@@ -66,12 +64,15 @@ export default function Header() {
 									: 'text-gray-800 dark:text-gray-200'
 							)}
 						>
-							<Image src='/logo.svg' alt='logo' width={70} height={70} />
+							<Image
+								src='/logo.svg'
+								alt='logo'
+								width={70}
+								height={70}
+							/>
 						</Link>
 					</div>
 					<nav className='hidden md:flex items-center justify-center w-full'>
-
-
 						<div className='flex flex-row space-x-8'>
 							{listMenu.map(({ href, label }) => (
 								<Link
