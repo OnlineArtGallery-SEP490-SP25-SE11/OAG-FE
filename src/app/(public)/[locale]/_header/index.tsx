@@ -18,7 +18,8 @@ const listMenu = [
 	{ href: '/contact', label: 'contact' },
 	{ href: '/artworks', label: 'artworks' },
 	{ href: '/discover', label: 'discover' },
-	{ href: '/social', label: 'community' }
+	{ href: '/social', label: 'community' },
+	{ href: '/premium', label:'premium'}
 ];
 
 export default function Header() {

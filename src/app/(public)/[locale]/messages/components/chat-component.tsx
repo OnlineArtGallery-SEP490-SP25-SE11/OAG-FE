@@ -38,29 +38,23 @@ export default function ChatComponent() {
 		}, 1000);
 	};
 
-	return (
-		<div className='flex flex-col w-full h-[calc(100vh-200px)] mx-auto border rounded-lg shadow-lg bg-white dark:bg-gray-800'>
-			{/* Chat Header */}
-			<div className='p-4 border-b dark:border-gray-700'>
-				<div className='flex items-center gap-3'>
-					<div className='relative h-10 w-10 rounded-full overflow-hidden'>
-						<img
-							src='/demo.jpg'
-							alt='User'
-							className='object-cover'
-						/>
-						<span className='absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white dark:border-gray-800 bg-green-500'></span>
-					</div>
-					<div>
-						<h5 className='font-medium text-dark dark:text-white'>
-							Thuy Nguyen
-						</h5>
-						<span className='text-xs text-gray-500'>
-							Active Now
-						</span>
-					</div>
-				</div>
-			</div>
+    return (
+        <div className="flex flex-col w-full h-[calc(100vh-200px)] mx-auto border rounded-lg shadow-lg bg-white dark:bg-gray-800">
+            {/* Chat Header */}
+            <div className="p-4 border-b dark:border-gray-700">
+                <div className="flex items-center gap-3">
+                    <div className="relative h-10 w-10 rounded-full overflow-hidden">
+                        <img src="https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg" alt="User" className="object-cover" />
+                        <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white dark:border-gray-800 bg-green-500"></span>
+                    </div>
+                    <div>
+                        <h5 className="font-medium text-dark dark:text-white">
+                            Thuy Nguyen
+                        </h5>
+                        <span className="text-xs text-gray-500">Active Now</span>
+                    </div>
+                </div>
+            </div>
 
 			{/* Chat Messages */}
 			<div className='flex-1 overflow-y-auto p-4 space-y-4'>

@@ -38,17 +38,17 @@ export default function Collections() {
 			id: '1',
 			name: 'Summer Collection',
 			description: 'Artworks inspired by summer',
-			coverImage: '/demo.jpg',
+			coverImage: 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg',
 			artworks: [
 				{
 					id: 'a1',
 					title: 'Beach Sunset',
-					imageUrl: '/demo.jpg'
+					imageUrl: 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg'
 				},
 				{
 					id: 'a2',
 					title: 'Tropical Paradise',
-					imageUrl: '/demo.jpg'
+					imageUrl: 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg'
 				}
 			]
 		},
@@ -56,18 +56,20 @@ export default function Collections() {
 			id: '2',
 			name: 'Abstract Series',
 			description: 'A collection of abstract artworks',
-			coverImage: '/demo.jpg',
+			coverImage: 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg',
 			artworks: [
 				{
 					id: 'a3',
 
 					title: 'Colorful Shapes',
-					imageUrl: '/demo.jpg'
+					imageUrl: 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg'
+
 				},
 				{
 					id: 'a4',
 					title: 'Geometric Patterns',
-					imageUrl: '/demo.jpg'
+					imageUrl: 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg'
+
 				}
 			]
 		}

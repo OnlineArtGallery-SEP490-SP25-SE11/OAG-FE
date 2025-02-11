@@ -8,11 +8,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 export function ArtworksList() {
-	// Mock data - replace with real data
-	const artworks = [
-		{ id: 1, name: 'Artwork 1', thumbnail: '/demo.jpg' },
-		{ id: 2, name: 'Artwork 2', thumbnail: '/demo.jpg' }
-	];
+  // Mock data - replace with real data
+  const artworks = [
+    { id: 1, name: "Artwork 1", thumbnail: "https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg" },
+    { id: 2, name: "Artwork 2", thumbnail: "https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg" },
+  ];
 
 	return (
 		<div className='mt-4'>

@@ -22,7 +22,7 @@ export default async function PublicLayout({
 	return (
 		<NextIntlClientProvider messages={messages} locale={locale}>
 			<Header />
-			<div className='mt-16'>{children}</div>
+			<div className='mt-20'>{children}</div>
 		</NextIntlClientProvider>
 	);
 }

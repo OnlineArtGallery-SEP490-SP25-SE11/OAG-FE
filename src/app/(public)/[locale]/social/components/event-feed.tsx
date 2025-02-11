@@ -14,7 +14,7 @@ const mockEvents = [
 		time: '14:00 - 18:00',
 		location: 'Main Gallery Hall',
 		attendees: 156,
-		image: '/demo.jpg',
+		image: 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg',
 		price: 'Free Entry',
 		description:
 			'Join us for an extraordinary exhibition featuring contemporary artworks from emerging artists around the globe.',
@@ -30,7 +30,7 @@ const mockEvents = [
 		time: '10:00 - 12:00',
 		location: 'Virtual Event',
 		attendees: 89,
-		image: '/demo.jpg',
+		image: 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg',
 		price: '$25',
 		description:
 			'Learn the fundamentals of digital art creation with industry professionals.',

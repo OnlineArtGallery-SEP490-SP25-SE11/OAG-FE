@@ -46,7 +46,7 @@ export default function ManageArtworks() {
 			artist: 'John Doe',
 			status: 'Available',
 			price: 500,
-			imageUrl: '/demo.jpg'
+			imageUrl: 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg'
 		},
 		{
 			id: '2',
@@ -55,7 +55,7 @@ export default function ManageArtworks() {
 			artist: 'Jane Smith',
 			status: 'Sold',
 			price: 750,
-			imageUrl: '/demo.jpg'
+			imageUrl: 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg'
 		},
 		{
 			id: '3',
@@ -64,7 +64,7 @@ export default function ManageArtworks() {
 			status: 'Hidden',
 			price: 1000,
 
-			imageUrl: '/demo.jpg'
+			imageUrl: 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg'
 		}
 		// Add more artwork entries here...
 	]);

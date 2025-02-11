@@ -26,22 +26,22 @@ interface Gallery {
 export default function DiscoverPage() {
 	const [searchQuery, setSearchQuery] = useState('');
 
-	// Mock data - replace with API call
-	const galleries: Gallery[] = [
-		{
-			id: '1',
-			title: 'Modern Art Exhibition 2024',
-			author: 'Johny Dang',
-			thumbnail: '/demo.jpg',
-			category: 'Modern Art',
-			description:
-				'Contemporary mixed media portrait artwork by Johny Dang',
-			likes: 1234,
-			views: 5678,
-			featured: true,
-			tags: ['Modern', 'Abstract', '2024']
-		}
-	];
+    // Mock data - replace with API call
+    const galleries: Gallery[] = [
+        {
+            id: "1",
+            title: "Modern Art Exhibition 2024",
+            author: "Johny Dang",
+            thumbnail: "https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg",
+            category: "Modern Art",
+            description: "Contemporary mixed media portrait artwork by Johny Dang",
+            likes: 1234,
+            views: 5678,
+            featured: true,
+            tags: ["Modern", "Abstract", "2024"]
+
+        },
+    ];
 
 	return (
 		<div className='min-h-screen bg-gradient-to-b from-gray-50 to-white'>

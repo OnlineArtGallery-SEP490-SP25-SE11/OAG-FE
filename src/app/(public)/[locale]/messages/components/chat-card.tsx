@@ -13,52 +13,58 @@ export type Chat = {
 };
 
 const chatData: Chat[] = [
-	{
-		active: true,
-		avatar: '/demo.jpg',
-		name: 'Devid Heilo',
-		text: 'Hello, how are you?',
-		time: '12 min',
-		textCount: 3,
-		dot: 3
-	},
-	{
-		active: true,
-		avatar: '/demo.jpg',
-		name: 'Henry Fisher',
-		text: 'I am waiting for you',
-		time: '5:54 PM',
-		textCount: 0,
-		dot: 1
-	},
-	{
-		active: false,
-		avatar: '/demo.jpg',
-		name: 'Wilium Smith',
-		text: 'Where are you now?',
-		time: '10:12 PM',
-		textCount: 0,
-		dot: 3
-	},
-	{
-		active: true,
-		seen: true,
-		avatar: '/demo.jpg',
-		name: 'Henry Deco',
-		text: 'Thank you so much!',
-		time: 'Sun',
-		textCount: 2,
-		dot: 6
-	},
-	{
-		active: false,
-		avatar: '/demo.jpg',
-		name: 'Jubin Jack',
-		text: 'Hello, how are you?',
-		time: 'Oct 23',
-		textCount: 0,
-		dot: 3
-	}
+  {
+    active: true,
+    avatar: "https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg",
+    name: "Devid Heilo",
+    text: "Hello, how are you?",
+    time: "12 min",
+    textCount: 3,
+    dot: 3,
+
+  },
+  {
+    active: true,
+    avatar: "https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg",
+    name: "Henry Fisher",
+    text: "I am waiting for you",
+    time: "5:54 PM",
+    textCount: 0,
+    dot: 1,
+
+  },
+  {
+    active: false,
+    avatar: "https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg",
+    name: "Wilium Smith",
+    text: "Where are you now?",
+    time: "10:12 PM",
+    textCount: 0,
+    dot: 3,
+
+
+  },
+  {
+    active: true,
+    seen: true,
+    avatar: "https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg",
+    name: "Henry Deco",
+    text: "Thank you so much!",
+    time: "Sun",
+    textCount: 2,
+    dot: 6,
+
+  },
+  {
+    active: false,
+    avatar: "https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg",
+    name: "Jubin Jack",
+    text: "Hello, how are you?",
+    time: "Oct 23",
+    textCount: 0,
+    dot: 3,
+
+  },
 ];
 
 const ChatCard = () => {
