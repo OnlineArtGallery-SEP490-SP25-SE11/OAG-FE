@@ -1,3 +1,4 @@
+'use client'
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { Mesh, Vector3, BoxGeometry, PlaneGeometry, MeshStandardMaterial, MeshBasicMaterial } from "three";
 import { Vec3 } from "@/types/gallery";
