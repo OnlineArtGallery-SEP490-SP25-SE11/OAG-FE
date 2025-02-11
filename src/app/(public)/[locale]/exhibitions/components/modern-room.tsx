@@ -5,7 +5,7 @@ import { RoomFloor } from "./room-floor";
 import { GALLERY_CONFIG } from "@/utils/gallery-config";
 import { Vec3 } from "@/types/gallery";
 import { ArtworkMesh } from "./art-work-mesh";
-import GlassWindow from "./model/glass-window";
+// import GlassWindow from "./model/glass-window";
 
 import { RoomLights } from "./room-light";
 
@@ -97,14 +97,14 @@ export function ModernRoom() {
                         }}
                     />
                     {/* Windows */}
-                    {[-Z_AXIS / 4, Z_AXIS / 4].map((zPos, index) => (
+                    {/* {[-Z_AXIS / 4, Z_AXIS / 4].map((zPos, index) => (
                         <GlassWindow
                             key={`window_${index}`}
                             position={[-X_AXIS / 2 + 0.3, Y_AXIS / 2, zPos]}
                             rotation={[0, Math.PI / 2, 0]}
                             scale={[1.5, 1.5, 1.5]}
                         />
-                    ))}
+                    ))} */}
                 </group>
             ),
             // Right wall with artwork

@@ -101,6 +101,15 @@ body {
 		border-radius: var(--radius, 8px);
 		overflow: hidden;
 	} */
+
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
+	
+	.no-scrollbar {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
 }
 
 @layer base {
