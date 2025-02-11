@@ -109,6 +109,7 @@ export default function Dashboard() {
 						<p className='text-4xl font-bold'>$12,450</p>
 					</CardContent>
 				</Card>
+				
 			</div>
 			<div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-6'>
 				<Card>

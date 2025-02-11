@@ -12,7 +12,15 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import useAuthClient from '@/hooks/useAuth-client';
-import { BookOpen, CircleUserRoundIcon, MessageCircle, Palette, SettingsIcon, UserRoundPen, WalletMinimal } from 'lucide-react';
+import {
+	BookOpen,
+	CircleUserRoundIcon,
+	MessageCircle,
+	Palette,
+	SettingsIcon,
+	UserRoundPen,
+	WalletMinimal
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
@@ -96,7 +104,6 @@ export default function AuthButton() {
 
 					<SignOutItem dropdown />
 				</DropdownMenuContent>
-
 			</DropdownMenu>
 		</div>
 	);

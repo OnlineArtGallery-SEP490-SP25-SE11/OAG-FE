@@ -69,7 +69,6 @@ export default function ManageArtworks() {
 		// Add more artwork entries here...
 	]);
 
-
 	const [searchTerm, setSearchTerm] = useState('');
 	const [currentPage, setCurrentPage] = useState(1);
 	const [statusFilter, setStatusFilter] = useState('All');

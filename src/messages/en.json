@@ -43,12 +43,11 @@
 		"artists": "Artists",
 		"wallet": "Wallet",
 		"messages": "Messages",
-		"my_blogs": "My Blogs"
+		"my_blogs": "My Blogs",
+		"premium": "Premium"
 	},
 	"auth": {
 		"loginTitle": "Login to your account",
-
-
 
 		"signupTitle": "Create new account",
 		"googleLogin": "Login with Google"
@@ -109,5 +108,67 @@
 		"creating": "Creating...",
 		"create_draft": "Create Draft",
 		"preview": "Preview"
-	}
+	},
+	"premium": {
+		"feature_comparison": {
+		  "title": "Compare Plan Features",
+		  "subtitle": "Experience unlimited art with Premium",
+		  "features": {
+			"gallery_views": "3D Gallery Views",
+			"image_quality": "Image Quality",
+			"artist_follows": "Artist Follow Limit",
+			"favorite_artworks": "Save Favorite Artworks",
+			"free_plan": "Free Plan",
+			"premium_plan": "Premium Plan"
+		  },
+		  "limits": {
+			"per_day": "5 turn/day",
+			"unlimited": "Unlimited",
+			"hd": "HD (1080p)",
+			"ultra_hd": "4K Ultra HD",
+			"artists_limit": "10 artists",
+			"artworks_limit": "3 artworks"
+		  }
+		},
+		"payment": {
+		  "title": "Affordable Plans for Everyone",
+		  "subtitle": "Choose a Premium plan for unlimited art experience. Pay as you need. Cancel anytime."
+		},
+		"interview": {
+		  "banner": {
+			"title": "40,000 VND for unlimited art experiences",
+			"subtitle": "Enjoy the highest quality images, unlimited gallery views and more benefits. Cancel anytime."
+		  },
+		  "benefits": {
+			"title": "Benefits of all Premium plans",
+			"items": {
+			  "gallery": "Unlimited 3D gallery views",
+			  "quality": "4K ultra HD image quality",
+			  "follows": "Unlimited artist follows",
+			  "favorites": "Unlimited favorite artworks"
+			}
+		  }
+		},
+		"subscription": {
+		  "title": "Choose the Premium plan that's right for you",
+		  "subtitle": "Experience unlimited art with Premium. Enjoy the highest quality and exclusive features.",
+		  "plan": {
+			"price": "40,000 VND",
+			"period": "/month",
+			"features": {
+			  "gallery": "Unlimited 3D gallery views",
+			  "quality": "4K ultra HD image quality", 
+			  "follows": "Unlimited artist follows",
+			  "favorites": "Unlimited favorite artworks",
+			  "cancel": "Cancel anytime"
+			},
+			"cta": "Buy Now"
+		  },
+		  "footer": {
+			"terms": "Terms and conditions apply. Offer not valid for previous Premium subscribers.",
+			"vat": "* Price includes VAT. Secure payment through encrypted payment gateways."
+		  }
+		}
+	  }
+	  
 }
