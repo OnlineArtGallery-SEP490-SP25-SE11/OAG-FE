@@ -28,7 +28,7 @@ const ExhibitionSection = ({ title, description, dateRange }: {
 								<div className="flex flex-col bg-white rounded-3xl overflow-hidden shadow hover:shadow-md transition-shadow duration-300">
 									<div className="relative aspect-[3/2]">
 										<Image
-											src={`/demo.jpg`}
+											src={`https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg`}
 											alt={`${title} ${i}`}
 											fill
 											className="object-cover"

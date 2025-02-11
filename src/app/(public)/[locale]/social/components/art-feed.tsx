@@ -46,7 +46,7 @@ const mockArtPosts = [
 			name: 'Sarah Chen',
 			avatar: '/oag-logo.png'
 		},
-		image: '/demo.jpg',
+		image: 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg',
 		likes: 234,
 		comments: 45,
 		description: 'A contemporary piece exploring color and emotion'
@@ -58,7 +58,7 @@ const mockArtPosts = [
 			name: 'Sarah Chen',
 			avatar: '/oag-logo.png'
 		},
-		image: '/demo.jpg',
+		image: 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg',
 		likes: 234,
 		comments: 45,
 		description: 'A contemporary piece exploring color and emotion'

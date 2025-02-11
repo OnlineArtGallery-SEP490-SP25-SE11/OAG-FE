@@ -33,7 +33,7 @@ export default function DiscoverPage() {
             id: "1",
             title: "Modern Art Exhibition 2024",
             author: "Johny Dang",
-            thumbnail: "/demo.jpg",
+            thumbnail: "https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg",
             category: "Modern Art",
             description: "Contemporary mixed media portrait artwork by Johny Dang",
             likes: 1234,

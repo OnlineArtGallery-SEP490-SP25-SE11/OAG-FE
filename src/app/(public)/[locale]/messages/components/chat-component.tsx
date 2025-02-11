@@ -36,7 +36,7 @@ export default function ChatComponent() {
             <div className="p-4 border-b dark:border-gray-700">
                 <div className="flex items-center gap-3">
                     <div className="relative h-10 w-10 rounded-full overflow-hidden">
-                        <img src="/demo.jpg" alt="User" className="object-cover" />
+                        <img src="https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg" alt="User" className="object-cover" />
                         <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white dark:border-gray-800 bg-green-500"></span>
                     </div>
                     <div>

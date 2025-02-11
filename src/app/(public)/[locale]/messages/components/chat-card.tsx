@@ -15,7 +15,7 @@ export type Chat = {
 const chatData: Chat[] = [
   {
     active: true,
-    avatar: "/demo.jpg",
+    avatar: "https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg",
     name: "Devid Heilo",
     text: "Hello, how are you?",
     time: "12 min",
@@ -25,7 +25,7 @@ const chatData: Chat[] = [
   },
   {
     active: true,
-    avatar: "/demo.jpg",
+    avatar: "https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg",
     name: "Henry Fisher",
     text: "I am waiting for you",
     time: "5:54 PM",
@@ -35,7 +35,7 @@ const chatData: Chat[] = [
   },
   {
     active: false,
-    avatar: "/demo.jpg",
+    avatar: "https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg",
     name: "Wilium Smith",
     text: "Where are you now?",
     time: "10:12 PM",
@@ -47,7 +47,7 @@ const chatData: Chat[] = [
   {
     active: true,
     seen: true,
-    avatar: "/demo.jpg",
+    avatar: "https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg",
     name: "Henry Deco",
     text: "Thank you so much!",
     time: "Sun",
@@ -57,7 +57,7 @@ const chatData: Chat[] = [
   },
   {
     active: false,
-    avatar: "/demo.jpg",
+    avatar: "https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg",
     name: "Jubin Jack",
     text: "Hello, how are you?",
     time: "Oct 23",

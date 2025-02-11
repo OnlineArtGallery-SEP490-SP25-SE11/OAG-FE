@@ -11,7 +11,7 @@ const galleryData = {
   author: "John Doe", 
   date: "31.1.2025",
   description: "Experience a stunning collection of contemporary artworks in this immersive virtual gallery.",
-  thumbnail: "/demo.jpg",
+  thumbnail: "https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg",
   backgroundImage: "https://res.cloudinary.com/djvlldzih/image/upload/v1738920776/gallery/arts/phiadv4m1kbsxidfostr.jpg",
 };
 
