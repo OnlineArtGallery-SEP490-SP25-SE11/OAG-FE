@@ -2,7 +2,7 @@
 import { Canvas } from "@react-three/fiber";
 import { Environment, PerspectiveCamera, PointerLockControls, Preload } from "@react-three/drei";
 import { ModernRoom } from "../../exhibitions/components/modern-room";
-import { Suspense } from "react";
+import { Suspense, useState, useCallback } from "react";
 import { Physics } from "@react-three/cannon";
 import Image from "next/image";
 import { GalleryPreviewLoader } from "./gallery-preview-loader";
@@ -11,17 +11,28 @@ import { Crosshair } from "../../exhibitions/components/crosshair";
 import Player from "../../exhibitions/components/player";
 
 export function FeaturedGalleryPreview() {
+  const [isPointerLocked, setIsPointerLocked] = useState(false);
+
+  const handleCanvasClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    setIsPointerLocked(true);
+  }, []);
+
   return (
-    <div className="relative w-full max-w-5xl mx-auto">
+    <div className="relative w-full max-w-5xl mx-auto"
+      onClick={handleCanvasClick}
+    >
 
       <Image
-        src="/monitor-frame.png"
+        src="https://res.cloudinary.com/djvlldzih/image/upload/v1739338527/gallery/monitor-frame.png"
         alt="Monitor Frame"
         width={1920}
         height={1080}
         className="w-full h-auto relative z-20"
       />
-      <div className="absolute top-[5.5%] left-[3.5%] right-[3.5%] bottom-[20%] overflow-hidden">
+      <div
+        className="absolute top-[5.5%] left-[3.5%] right-[3.5%] bottom-[20%] overflow-hidden"
+      >
         <Canvas
           camera={{ position: [0, 2, 5], fov: 75 }}
           gl={{ antialias: true }}
@@ -49,11 +60,15 @@ export function FeaturedGalleryPreview() {
             </Physics>
 
             <Preload all />
-            <PointerLockControls
-              maxPolarAngle={Math.PI * 0.7}
-              minPolarAngle={Math.PI * 0.3}
-              pointerSpeed={0.1}
-            />
+            {isPointerLocked && (
+              <PointerLockControls
+                maxPolarAngle={Math.PI * 0.7}
+                minPolarAngle={Math.PI * 0.3}
+                pointerSpeed={0.1}
+                onLock={() => setIsPointerLocked(true)}
+                onUnlock={() => setIsPointerLocked(false)}
+              />
+            )}
             <Crosshair />
           </Suspense>
         </Canvas>

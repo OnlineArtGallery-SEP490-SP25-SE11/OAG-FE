@@ -9,7 +9,7 @@ import { FeaturedGalleryPreview } from './components/featured-gallery-preview';
 export default function AboutPage() {
     return (
         <div className='min-h-screen flex flex-col font-[family-name:var(--font-geist-sans)]'>
-            <main className='flex-1 w-full mt-5'>
+            <main className='flex-1 w-full'>
                 <div className="relative w-full min-h-[90vh] flex items-center">
                     {/* Video Background */}
                     <video
