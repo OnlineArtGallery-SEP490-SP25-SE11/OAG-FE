@@ -10,26 +10,26 @@ interface Feature {
 
 const features: Feature[] = [
   {
-    name: 'Số lượt xem phòng tranh 3D',
-    freeSupported: '5 lượt/ngày',
-    premiumSupported: 'Không giới hạn'
+    name: '3D Gallery Views',
+    freeSupported: '5 views/day',
+    premiumSupported: 'Unlimited'
   },
   {
-    name: 'Chất lượng hình ảnh',
+    name: 'Image Quality',
     freeSupported: 'HD (1080p)',
     premiumSupported: '4K Ultra HD'
   },
   
   {
-    name: 'số nghệ sỹ có thể follow',
-    freeSupported: '10 nghệ sỹ',
-    premiumSupported: 'Không giới hạn'
+    name: 'Artists You Can Follow',
+    freeSupported: '10 artists',
+    premiumSupported: 'Unlimited'
   },
  
   {
-    name: 'Lưu tác phẩm yêu thích',
-    freeSupported: '3 tác phẩm',
-    premiumSupported: 'Không giới hạn'
+    name: 'Save Favorite Collections',
+    freeSupported: '3 collections',
+    premiumSupported: 'Unlimited'
   }
 ];
 
@@ -37,20 +37,20 @@ export const FeatureComparison = () => {
   return (
     <div className="w-full max-w-4xl mx-auto bg-white rounded-2xl p-8 shadow-lg">
       <h2 className="text-3xl font-bold text-center text-gray-900 mb-4">
-        So sánh tính năng các gói
+        Plan Feature Comparison
       </h2>
       <p className="text-center text-gray-600 mb-8">
-        Trải nghiệm nghệ thuật không giới hạn với gói Premium
+        Experience unlimited art with Premium
       </p>
 
       <div className="grid grid-cols-3 gap-6">
         {/* Header */}
         <div className="col-span-1" />
         <div className="text-center font-medium text-gray-900 pb-4 border-b">
-          Gói Free
+          Free Plan
         </div>
         <div className="text-center font-medium text-gray-900 pb-4 border-b">
-          Gói Premium
+          Premium Plan
         </div>
 
         {/* Features */}

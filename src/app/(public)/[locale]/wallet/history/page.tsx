@@ -2,10 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import {
-	ArrowDownLeft,
 	ArrowLeft,
-	ArrowUpRight,
-	Calendar,
 	Filter,
 	Search,
 	TrendingDown,
@@ -30,7 +27,6 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import {
 	Tooltip,
@@ -173,8 +169,8 @@ export default function HistoryPage() {
 				style={{ opacity: headerOpacity, scale: headerScale }}
 				className='sticky top-0 z-20 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b'
 			>
-				<div className='container max-w-7xl py-4'>
-					<div className='flex justify-between'>
+				<div className='container max-w-screen-xl mx-auto py-4'>
+				<div className='flex justify-between'>
 						<div className='flex items-center gap-4'>
 							<Button
 								variant='ghost'
@@ -213,7 +209,7 @@ export default function HistoryPage() {
 				</div>
 			</motion.header>
 
-			<main className='container max-w-7xl py-8'>
+			<main className='container mx-auto max-w-7xl py-8'>
 				<section className='grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8'>
 					<Card className='lg:col-span-4 bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20'>
 						<CardContent className='flex flex-col lg:flex-row items-center justify-between p-6'>
@@ -416,27 +412,7 @@ export default function HistoryPage() {
 										<TooltipTrigger asChild>
 											<div className='flex items-center justify-between p-4'>
 												<div className='flex items-center gap-4'>
-													<motion.div
-														className={cn(
-															'flex h-12 w-12 items-center justify-center rounded-xl',
-															transaction.type ===
-																'deposit'
-																? 'bg-green-500/10 text-green-600'
-																: 'bg-red-500/10 text-red-600'
-														)}
-														whileHover={{
-															rotate: [
-																0, -10, 10, 0
-															]
-														}}
-													>
-														{transaction.type ===
-														'deposit' ? (
-															<ArrowDownLeft className='h-6 w-6' />
-														) : (
-															<ArrowUpRight className='h-6 w-6' />
-														)}
-													</motion.div>
+													
 
 													<div>
 														<h3 className='font-semibold text-lg'>
@@ -445,70 +421,64 @@ export default function HistoryPage() {
 															}
 														</h3>
 														<div className='flex items-center gap-2 mt-1 text-muted-foreground'>
-															<Calendar className='h-4 w-4' />
 															<span className='text-sm'>
-																{new Date(
-																	transaction.date
-																).toLocaleDateString(
-																	'en-GB',
-																	{
-																		day: '2-digit',
-																		month: 'short',
-																		year: 'numeric'
-																	}
-																)}
+																{new Date(transaction.date).toLocaleDateString('en-GB', {
+																	day: '2-digit',
+																	month: 'short', 
+																	year: 'numeric'
+																})}
+																{' • '}
+																{new Date(transaction.date).toLocaleTimeString('en-GB', {
+																	hour: '2-digit',
+																	minute: '2-digit',
+																	hour12: true
+																})}
 															</span>
 														</div>
 													</div>
 												</div>
 
-												<div className='flex items-center gap-4'>
-													<Badge
-														variant={
-															transaction.type ===
-															'deposit'
-																? 'default'
-																: 'destructive'
-														}
-														className='px-3 py-1.5 text-sm'
-													>
-														{transaction.type ===
-														'deposit'
-															? 'Income'
-															: 'Expense'}
-													</Badge>
-
+												<div className='flex items-center gap-6'>
 													<motion.div
 														className={cn(
-															'text-xl font-semibold flex items-center gap-2',
-															transaction.type ===
-																'deposit'
-																? 'text-green-600'
-																: 'text-red-600'
+															'flex flex-col gap-2 items-end'
 														)}
-														initial={{
-															opacity: 0,
-															x: 20
-														}}
-														animate={{
-															opacity: 1,
-															x: 0
-														}}
 													>
-														{transaction.type ===
-														'deposit' ? (
-															<TrendingUp className='h-5 w-5' />
-														) : (
-															<TrendingDown className='h-5 w-5' />
-														)}
-														{transaction.type ===
-														'deposit'
-															? '+'
-															: '-'}
-														{Math.abs(
-															transaction.amount
-														).toLocaleString()}{' '}
-														VND
+														<motion.div
+															className={cn(
+																'text-xl font-bold flex items-center gap-2',
+																transaction.type === 'deposit'
+																	? 'text-green-600'
+																	: 'text-red-600'
+															)}
+															initial={{ opacity: 0, x: 20 }}
+															animate={{ opacity: 1, x: 0 }}
+															whileHover={{ scale: 1.05 }}
+															transition={{
+																type: 'spring',
+																stiffness: 300,
+																damping: 20
+															}}
+														>
+															{transaction.type === 'deposit' ? (
+																<TrendingUp className='h-5 w-5' />
+															) : (
+																<TrendingDown className='h-5 w-5' />
+															)}
+															<span className='font-mono tracking-tight'>
+																{transaction.type === 'deposit' ? '+' : '-'}
+																{Math.abs(transaction.amount).toLocaleString()}{' '}
+																<span className='text-sm font-medium opacity-75'>VND</span>
+															</span>
+														</motion.div>
+														<motion.div 
+															className='text-sm text-muted-foreground/75 font-medium'
+															initial={{ opacity: 0 }}
+															animate={{ opacity: 1 }}
+															transition={{ delay: 0.1 }}
+														>
+															Balance: {transaction.balance.toLocaleString()} VND
+														</motion.div>
 													</motion.div>
 												</div>
 											</div>

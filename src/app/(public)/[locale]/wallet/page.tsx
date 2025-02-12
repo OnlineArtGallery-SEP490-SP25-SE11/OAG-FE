@@ -73,7 +73,7 @@ export default function WalletDashboard() {
 					</div>
 				</div>
 			</header>
-			<main className='container py-6'>
+			<main className='container mx-auto py-6'>
 				<div className='grid gap-6'>
 					<Card>
 						<CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
@@ -124,7 +124,7 @@ export default function WalletDashboard() {
 								},
 								{
 									href: '/wallet/payment',
-									title: 'Payment',
+									title: 'Wi',
 									icon: CreditCard,
 									desc: 'Make a payment',
 									color: 'bg-blue-500'
