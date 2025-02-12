@@ -5,12 +5,13 @@ import ArtModal from '@/app/(public)/[locale]/artworks/components/art-modal';
 import ArtFeed from '@/app/(public)/[locale]/artworks/components/art-feed';
 import { ArtPiece } from '@/types/marketplace';
 import { List, Masonry, useInfiniteLoader } from 'masonic';
-import { useCallback, useMemo, useState } from 'react';
-import FloatingSidebar from './components/art-sidebar';
+import { useMemo, useState } from 'react';
+// import FloatingSidebar from './components/art-sidebar';
 import { AnimatePresence, motion } from 'framer-motion';
 
 export default function Artworks({ artworks }: { artworks: ArtPiece[] }) {
 	const [artPieces, setArtPieces] = useState<ArtPiece[]>(artworks);
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [masonryLayout, setMasonryLayout] = useState<boolean>(true);
 
 	const loadMore = useInfiniteLoader(
@@ -45,9 +46,9 @@ export default function Artworks({ artworks }: { artworks: ArtPiece[] }) {
 			}
 		};
 	}, []);
-	const changeLayout = useCallback(() => {
-		setMasonryLayout((prev) => !prev);
-	}, []);
+	// const changeLayout = useCallback(() => {
+	// 	setMasonryLayout((prev) => !prev);
+	// }, []);
 
 	const MasonryLayout =
 		// useCallback(
@@ -59,13 +60,12 @@ export default function Artworks({ artworks }: { artworks: ArtPiece[] }) {
 				exit='exit'
 				variants={animation.variants}
 				transition={animation.transition}
-				className='pl-10'
 			>
 				<Masonry
 					onRender={loadMore}
 					items={artPieces}
-					columnGutter={20}
-					columnWidth={280}
+					columnGutter={30}
+					columnWidth={380}
 					overscanBy={1.5}
 					render={ArtCard}
 				/>
@@ -102,7 +102,7 @@ export default function Artworks({ artworks }: { artworks: ArtPiece[] }) {
 	);
 	return (
 		<>
-			<FloatingSidebar changeLayout={changeLayout} />
+			{/* <FloatingSidebar changeLayout={changeLayout} /> */}
 			<div className='p-5'>
 				<AnimatePresence mode='wait'>
 					<motion.div layout>

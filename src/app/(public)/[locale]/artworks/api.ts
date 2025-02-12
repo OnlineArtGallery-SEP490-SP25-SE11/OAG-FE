@@ -62,7 +62,7 @@ const mockArtPieces: ArtPiece[] = Array.from({ length: 1000 }, (_, i) => {
 		artist: ARTIST_NAMES[i % ARTIST_NAMES.length],
 		// imageUrl: `https://picsum.photos/id/${imageId}/${width}/${height}`,
 		imageUrl: `https://picsum.photos/seed/${i + 1}/${width}/${height}`,
-		price: Math.floor(Math.random() * 9000) + 1000, // 1000-10000
+		price: Math.floor(Math.random() * 950000) + 500000, // 500000-10000000
 		description: generateLoremIpsum(20),
 		width,
 		height
@@ -107,6 +107,7 @@ export async function fetchArtPiecesByRange(
 	stopIndex: number
 ): Promise<ArtPiece[]> {
 	// Giả sử rằng startIndex và stopIndex là các chỉ số trong mảng mockArtPieces
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const limit = stopIndex - startIndex + 1;
 	await new Promise((resolve) => setTimeout(resolve, 800)); // Slightly longer delay for realism
 
