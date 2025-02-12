@@ -1,12 +1,7 @@
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger
-} from '@/components/ui/tooltip';
 import { useArtModal } from '@/hooks/useArtModal';
 import { ArtPiece } from '@/types/marketplace.d';
+import { vietnamCurrency } from '@/utils/converters';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -38,7 +33,7 @@ const ArtCard: React.FC<ArtCardProps> = ({ data, width, index }) => {
 
 	return (
 		<motion.div
-			className='relative rounded-md overflow-hidden shadow-md'
+			className='relative overflow-hidden'
 			style={{
 				width,
 				height: scaledHeight // Set fixed height based on aspect ratio
@@ -64,52 +59,36 @@ const ArtCard: React.FC<ArtCardProps> = ({ data, width, index }) => {
 					</motion.div>
 				)}
 			</AnimatePresence>
-			<Tooltip>
-				<TooltipTrigger asChild>
+			<div className="flex flex-col w-full h-full">
+				<div className="relative w-full" style={{ height: `${scaledHeight - 60}px` }}>
 					<Image
 						src={data.imageUrl}
 						alt={data.title}
 						fill
 						sizes={`(max-width: 768px) 100vw, ${width}px`}
 						className={`object-cover ${hasError ? 'hidden' : ''}`}
-						priority={index < 4} // Load first 4 images immediately
+						priority={index < 4}
 						quality={85}
-						onLoad={handleImageLoad} // Hide skeleton when image loads
-						onError={handleImageError} // Handle errors
+						onLoad={handleImageLoad}
+						onError={handleImageError}
 						onClick={() => {
 							setSelected(data);
 						}}
 					/>
-				</TooltipTrigger>
-				<TooltipContent
-					align='center'
-					// className='max-w-xs p-4 space-y-2 acrylic rounded border backdrop-blur-lg text-black dark:text-white prose dark:prose-invert'
-					className='max-w-xs p-4 space-y-2 rounded border backdrop-blur-md  bg-black/50 text-white prose dark:prose-invert'
-					sideOffset={5}
-					// style={
-					// 	{
-					// 		'--gradient-angle': '120deg',
-					// 		'--gradient-end': 'rgba(0, 0, 255, 0.2)'
-					// 	} as React.CSSProperties
-					// }
-				>
-					<h4 className='text-lg font-bold border-b border-gray-300 dark:border-gray-600 pb-2'>
-						{data.title}
-					</h4>
-					<ScrollArea className='h-48 w-full rounded-md p-3 shadow-inner prose-sm'>
-						<p>{data.description}</p>
-					</ScrollArea>
-					<div className='flex items-center justify-between text-sm'>
-						<p className='flex items-center gap-2'>
-							<span className='font-medium'>By:</span>
-							{data.artist}
-						</p>
-						<p className='text-base font-semibold text-green-600'>
-							${data.price}
-						</p>
+				</div>
+				<div className="p-2 bg-white dark:bg-gray-800">
+					<div className="flex items-center justify-between">
+						<div className="flex flex-col">
+							<span className="text-md font-medium truncate">
+								{data.title}
+							</span>
+							<span className="text-sm text-gray-500 dark:text-gray-400">
+								{vietnamCurrency(data.price)}
+							</span>
+						</div>
 					</div>
-				</TooltipContent>
-			</Tooltip>
+				</div>
+			</div>
 		</motion.div>
 	);
 };
