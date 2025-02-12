@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -26,47 +26,147 @@ import {
 	PaginationNext,
 	PaginationPrevious
 } from '@/components/ui/pagination';
+import { vietnamCurrency } from '@/utils/converters';
 
 type Artwork = {
 	id: string;
 	title: string;
-	artist: string;
+	description: string;
+	category: string[];
+	dimensions: {
+		width: number;
+		height: number;
+	};
+	images: {
+		url: string;
+		type: string;
+		order: number;
+	}[];
 	status: string;
 	price: number;
-	imageUrl: string;
+	createdAt: Date;
+	updatedAt: Date;
+	viewCount: number;
 };
 
-const ITEMS_PER_PAGE = 9;
+const ITEMS_PER_PAGE = 12;
 
 export default function ManageArtworks() {
 	const [artworks, setArtworks] = useState<Artwork[]>([
 		{
 			id: '1',
 			title: 'Sunset',
-			artist: 'John Doe',
+			description: 'A beautiful over the ocean',
+			category: ['Landscape', 'Nature'],
+			dimensions: { width: 100, height: 80 },
+			images: [
+				{
+					url: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5',
+					type: 'main',
+					order: 1
+				}
+			],
 			status: 'Available',
-			price: 500,
-			imageUrl: 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg'
+			price: 5000000,
+			createdAt: new Date('2024-01-01'),
+			updatedAt: new Date('2024-01-01'),
+			viewCount: 150
 		},
 		{
 			id: '2',
-
 			title: 'Mountain View',
-			artist: 'Jane Smith',
+			description: 'Majestic mountain peaks at sunrise',
+			category: ['Landscape', 'Nature'],
+			dimensions: { width: 120, height: 90 },
+			images: [
+				{
+					url: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9',
+					type: 'main',
+					order: 1
+				}
+			],
 			status: 'Sold',
-			price: 750,
-			imageUrl: 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg'
+			price: 7500000,
+			createdAt: new Date('2024-01-02'),
+			updatedAt: new Date('2024-01-02'),
+			viewCount: 200
 		},
 		{
 			id: '3',
 			title: 'Abstract Thoughts',
-			artist: 'Bob Johnson',
+			description: 'An abstract of modern life',
+			category: ['Abstract', 'Modern'],
+			dimensions: { width: 80, height: 100 },
+			images: [
+				{
+					url: 'https://images.unsplash.com/photo-1573521193826-58c7dc2e13e3',
+					type: 'main',
+					order: 1
+				}
+			],
 			status: 'Hidden',
-			price: 1000,
-
-			imageUrl: 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg'
+			price: 1000000,
+			createdAt: new Date('2024-01-03'),
+			updatedAt: new Date('2024-01-03'),
+			viewCount: 75
+		},
+		{
+			id: '4',
+			title: 'Urban Dreams',
+			description: 'A cityscape at twilight',
+			category: ['Urban', 'Architecture'],
+			dimensions: { width: 150, height: 100 },
+			images: [
+				{
+					url: 'https://images.unsplash.com/photo-1514924013411-cbf25faa35bb',
+					type: 'main',
+					order: 1
+				}
+			],
+			status: 'Available',
+			price: 850000,
+			createdAt: new Date('2024-01-04'),
+			updatedAt: new Date('2024-01-04'),
+			viewCount: 180
+		},
+		{
+			id: '5',
+			title: 'Floral Symphony',
+			description: 'Vibrant garden flowers in bloom',
+			category: ['Nature', 'Still Life'],
+			dimensions: { width: 90, height: 90 },
+			images: [
+				{
+					url: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946',
+					type: 'main',
+					order: 1
+				}
+			],
+			status: 'Available',
+			price: 6000000,
+			createdAt: new Date('2024-01-05'),
+			updatedAt: new Date('2024-01-05'),
+			viewCount: 120
+		},
+		{
+			id: '6',
+			title: 'Desert Whispers',
+			description: 'Minimalist desert landscape at dawn',
+			category: ['Landscape', 'Minimalist'],
+			dimensions: { width: 120, height: 80 },
+			images: [
+				{
+					url: 'https://images.unsplash.com/photo-1509316785289-025f5b846b35',
+					type: 'main',
+					order: 1
+				}
+			],
+			status: 'Selling',
+			price: 900000,
+			createdAt: new Date('2024-01-06'),
+			updatedAt: new Date('2024-01-06'),
+			viewCount: 95
 		}
-		// Add more artwork entries here...
 	]);
 
 	const [searchTerm, setSearchTerm] = useState('');
@@ -75,10 +175,7 @@ export default function ManageArtworks() {
 
 	const filteredArtworks = artworks.filter(
 		(artwork) =>
-			(artwork.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-				artwork.artist
-					.toLowerCase()
-					.includes(searchTerm.toLowerCase())) &&
+			(artwork.title.toLowerCase().includes(searchTerm.toLowerCase())) &&
 			(statusFilter === 'All' || artwork.status === statusFilter)
 	);
 
@@ -101,15 +198,15 @@ export default function ManageArtworks() {
 	};
 
 	return (
-		<div>
-			<h1 className='text-3xl font-bold mb-6'>Manage Artworks</h1>
-			<div className='flex mb-4 gap-4'>
+		<div className='container mx-auto px-4 py-8'>
+			<h1 className='text-4xl font-bold mb-8'>Manage Artworks</h1>
+			<div className='flex flex-col md:flex-row mb-6 gap-4'>
 				<Input
 					type='text'
 					placeholder='Search artworks...'
 					value={searchTerm}
 					onChange={(e) => setSearchTerm(e.target.value)}
-					className='max-w-sm'
+					className='md:max-w-sm'
 				/>
 				<Select value={statusFilter} onValueChange={setStatusFilter}>
 					<SelectTrigger className='w-[180px]'>
@@ -120,6 +217,7 @@ export default function ManageArtworks() {
 						<SelectItem value='Available'>Available</SelectItem>
 						<SelectItem value='Sold'>Sold</SelectItem>
 						<SelectItem value='Hidden'>Hidden</SelectItem>
+						<SelectItem value='Selling'>Selling</SelectItem>
 					</SelectContent>
 				</Select>
 			</div>
@@ -129,7 +227,7 @@ export default function ManageArtworks() {
 						<div
 							{...provided.droppableProps}
 							ref={provided.innerRef}
-							className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6'
+							className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8'
 						>
 							{paginatedArtworks.map((artwork, index) => (
 								<Draggable
@@ -142,44 +240,30 @@ export default function ManageArtworks() {
 											ref={provided.innerRef}
 											{...provided.draggableProps}
 											{...provided.dragHandleProps}
+											className='group relative aspect-square overflow-hidden rounded-lg transition-all duration-300 hover:shadow-xl'
 										>
-											<CardHeader>
-												<CardTitle>
-													{artwork.title}
-												</CardTitle>
-											</CardHeader>
-											<CardContent>
-												<Image
-													src={
-														artwork.imageUrl ||
-														'/placeholder.svg'
-													}
-													alt={artwork.title}
-													width={200}
-													height={200}
-													className='mb-4 rounded-md'
-												/>
-												<p>
-													<strong>Artist:</strong>{' '}
-													{artwork.artist}
-												</p>
-												<p>
-													<strong>Status:</strong>{' '}
-													{artwork.status}
-												</p>
-												<p>
-													<strong>Price:</strong> $
-													{artwork.price}
-												</p>
-												<div className='mt-4'>
-													<Button className='mr-2'>
+											<Image
+												src={artwork.images[0]?.url || '/placeholder.svg'}
+												alt={artwork.title}
+												fill
+												className='object-cover transition-transform duration-300 group-hover:scale-110'
+											/>
+											<div className='absolute inset-0 bg-black/60 p-4 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
+												<h3 className='text-lg font-bold mb-2'>{artwork.title}</h3>
+												<div className='space-y-1 text-sm'>
+													<p>{artwork.status}</p>
+													<p>{vietnamCurrency(artwork.price)}</p>
+													<p className='line-clamp-2'>{artwork.description}</p>
+												</div>
+												<div className='absolute bottom-4 left-4 right-4 flex gap-2'>
+													<Button size="sm" className='flex-1 bg-white/20 backdrop-blur-sm hover:bg-white/30'>
 														Edit
 													</Button>
-													<Button variant='destructive'>
+													<Button size="sm" variant='destructive' className='flex-1 bg-red-500/20 backdrop-blur-sm hover:bg-red-500/30'>
 														Delete
 													</Button>
 												</div>
-											</CardContent>
+											</div>
 										</Card>
 									)}
 								</Draggable>
@@ -194,9 +278,7 @@ export default function ManageArtworks() {
 					<PaginationItem>
 						<PaginationPrevious
 							href='#'
-							onClick={() =>
-								setCurrentPage((prev) => Math.max(prev - 1, 1))
-							}
+							onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
 						/>
 					</PaginationItem>
 					{[...Array(totalPages)].map((_, i) => (
@@ -213,11 +295,7 @@ export default function ManageArtworks() {
 					<PaginationItem>
 						<PaginationNext
 							href='#'
-							onClick={() =>
-								setCurrentPage((prev) =>
-									Math.min(prev + 1, totalPages)
-								)
-							}
+							onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
 						/>
 					</PaginationItem>
 				</PaginationContent>

@@ -4,14 +4,14 @@ export default function SubscriptionOptions(){
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        {/* Header với animation */}
+        {/* Header with animation */}
         <div className="text-center mb-16 space-y-4 animate-fade-in">
           <h1 className="text-5xl font-bold text-gray-900 mb-4 tracking-tight">
-            Chọn gói Premium phù hợp với bạn
+            Choose the Premium plan that&apos;s right for you
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Trải nghiệm nghệ thuật không giới hạn với gói Premium . 
-            Tận hưởng chất lượng cao nhất và nhiều tính năng độc quyền.
+            Experience unlimited art with Premium.
+            Enjoy the highest quality and exclusive features.
           </p>
         </div>
 
@@ -31,21 +31,21 @@ export default function SubscriptionOptions(){
               </div>
               <h3 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent mb-4">Premium</h3>
               <div className="text-3xl font-bold text-gray-900 mb-6">
-                40.000 ₫
-                <span className="text-sm text-gray-500 font-normal">/1 tháng</span>
+                40,000 VND
+                <span className="text-sm text-gray-500 font-normal">/month</span>
               </div>
 
               <div className="space-y-4 mb-8">
-                <FeatureItem text="Số lượt xem phòng tranh 3D không giới hạn" />
-                <FeatureItem text="Chất lượng hình ảnh 4k ultra HD" />
-                <FeatureItem text="Số nghệ sỹ có thể follow không giới hạn" />
-                <FeatureItem text="Lưu tác phẩm yêu thích không giới hạn" />
-                <FeatureItem text="Hủy bất cứ lúc nào" />
+                <FeatureItem text="Unlimited 3D gallery views" />
+                <FeatureItem text="4K Ultra HD image quality" />
+                <FeatureItem text="Follow unlimited artists" />
+                <FeatureItem text="Save unlimited favorite artworks" />
+                <FeatureItem text="Cancel anytime" />
               </div>
 
               <button className="w-full bg-gradient-to-r from-violet-500 to-purple-600 text-white py-4 px-6 rounded-xl font-semibold 
                 hover:from-violet-600 hover:to-purple-700 transform hover:-translate-y-1 transition-all duration-300 shadow-lg hover:shadow-purple-200">
-                Mua Ngay
+                Buy Now
               </button>
             </div>
           </div>
@@ -57,10 +57,10 @@ export default function SubscriptionOptions(){
         {/* Footer */}
         <div className="text-center mt-16 space-y-4">
           <p className="text-gray-600">
-            Có áp dụng điều khoản và điều kiện. Ưu đãi không áp dụng cho người dùng đã có gói Premium trước đây.
+            Terms and conditions apply. Offer not available for users who have previously had Premium.
           </p>
           <p className="text-sm text-gray-500">
-            * Giá đã bao gồm VAT. Thanh toán an toàn qua các cổng thanh toán được bảo mật.
+            * Price includes VAT. Secure payment through encrypted payment gateways.
           </p>
         </div>
       </div>
@@ -68,7 +68,7 @@ export default function SubscriptionOptions(){
   );
 };
 
-// Component phụ cho các feature items
+// Helper component for feature items
 function FeatureItem({ text }: { text: string }) {
   return (
     <div className="flex items-center space-x-3">
@@ -79,4 +79,3 @@ function FeatureItem({ text }: { text: string }) {
     </div>
   );
 }
-

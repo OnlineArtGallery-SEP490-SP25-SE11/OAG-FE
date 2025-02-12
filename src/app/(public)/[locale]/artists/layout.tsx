@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
 	BarChart,
-	FileText,
 	FolderOpen,
 	Image,
 	Upload,
@@ -35,9 +34,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 			href: '/artists/collections',
 			icon: FolderOpen,
 			label: 'Collections'
-		},
-		{ href: '/artists/reports', icon: FileText, label: 'Reports' }
-	];
+		}	];
 
 	const toggleTheme = () => {
 		setTheme(theme === 'dark' ? 'light' : 'dark');

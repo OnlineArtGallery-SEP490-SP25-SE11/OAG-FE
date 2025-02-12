@@ -146,31 +146,71 @@ export default function AboutPage() {
                         <div className="relative group">
                             <div className="overflow-hidden no-scrollbar">
                                 <div className="flex gap-6 px-4 md:px-8 min-w-full">
-                                    {[1, 2, 3, 4, 5].map((i) => (
-                                        <Link href={`/exhibitions/${i}`} key={i} className="min-w-[250px] md:min-w-[300px]">
-                                            <div className="flex flex-col bg-white rounded-3xl overflow-hidden shadow hover:shadow-md transition-shadow duration-300">
-                                                <div className="relative aspect-[3/2]">
+                                    {[
+                                        {
+                                            id: 1,
+                                            title: "The Abstract Mind",
+                                            artist: "Emma Chen",
+                                            description: "A stunning exploration of abstract expressionism through bold colors and dynamic forms.",
+                                            image: "https://images.unsplash.com/photo-1547891654-e66ed7ebb968",
+                                            dateRange: "March 1 - April 15, 2024"
+                                        },
+                                        {
+                                            id: 2,
+                                            title: "Urban Landscapes",
+                                            artist: "Michael Wong",
+                                            description: "Contemporary interpretations of city life through mixed media and photography.",
+                                            image: "https://images.unsplash.com/photo-1561214115-f2f134cc4912",
+                                            dateRange: "March 10 - April 30, 2024"
+                                        },
+                                        {
+                                            id: 3,
+                                            title: "Digital Dreams",
+                                            artist: "Sarah Johnson",
+                                            description: "An immersive exhibition blending traditional art with cutting-edge digital techniques.",
+                                            image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5",
+                                            dateRange: "March 15 - May 1, 2024"
+                                        },
+                                        {
+                                            id: 4,
+                                            title: "Nature's Harmony",
+                                            artist: "David Park",
+                                            description: "A serene collection inspired by natural landscapes and organic forms.",
+                                            image: "https://images.unsplash.com/photo-1544967082-d9d25d867d66",
+                                            dateRange: "March 20 - May 15, 2024"
+                                        },
+                                        {
+                                            id: 5,
+                                            title: "Modern Expressions",
+                                            artist: "Lisa Zhang",
+                                            description: "Bold contemporary works exploring themes of identity and culture.",
+                                            image: "https://images.unsplash.com/photo-1518998053901-5348d3961a04",
+                                            dateRange: "April 1 - May 30, 2024"
+                                        }
+                                    ].map((exhibition) => (
+                                        <Link href={`/exhibitions/${exhibition.id}`} key={exhibition.id} className="min-w-[250px] md:min-w-[300px] flex">
+                                            <div className="flex flex-col bg-white rounded-3xl overflow-hidden shadow hover:shadow-md transition-shadow duration-300 w-full">
+                                                <div className="relative w-full h-48">
                                                     <Image
-                                                        src={`https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg`}
-                                                        alt={`Featured Exhibition ${i}`}
+                                                        src={exhibition.image}
+                                                        alt={exhibition.title}
                                                         fill
                                                         className="object-cover"
                                                     />
                                                 </div>
-                                                <div className="p-3 flex flex-col gap-1.5">
-                                                    <h3 className="text-lg font-semibold text-gray-900">Exhibition Title {i}</h3>
-                                                    <p className="text-xs text-gray-600">By Artist Name</p>
+                                                <div className="p-3 flex flex-col gap-1.5 flex-1">
+                                                    <h3 className="text-lg font-semibold text-gray-900">{exhibition.title}</h3>
+                                                    <p className="text-xs text-gray-600">By {exhibition.artist}</p>
                                                     <p className="text-xs text-gray-500 line-clamp-2">
-                                                        A beautiful collection showcasing the artist&apos;s unique perspective through various mediums and techniques.
+                                                        {exhibition.description}
                                                     </p>
-                                                    <p className="text-xs text-gray-400 mt-1">March 1 - April 15, 2024</p>
+                                                    <p className="text-xs text-gray-400 mt-auto">{exhibition.dateRange}</p>
                                                 </div>
                                             </div>
                                         </Link>
                                     ))}
                                 </div>
                             </div>
-                            {/* Slider Navigation Buttons */}
                             <button className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 hover:bg-white flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                 <ChevronLeft className="w-6 h-6" />
                             </button>
