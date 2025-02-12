@@ -1,11 +1,11 @@
-import { assertAdmin } from "@/lib/session";
+import { assertAdmin } from '@/lib/session';
 
 export default async function AdminLayout({
-  children,
+	children
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  await assertAdmin();
+	await assertAdmin();
 
-  return <div>{children}</div>;
+	return <div>{children}</div>;
 }

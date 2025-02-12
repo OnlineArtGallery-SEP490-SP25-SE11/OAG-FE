@@ -1,17 +1,46 @@
-import createNextIntlPlugin from "next-intl/plugin";
+import createNextIntlPlugin from 'next-intl/plugin';
 
-const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
+const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {},
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  webpack: (config) => {
-    config.cache = false;
-    return config;
-  }, // tắt caching
+	images: {
+		remotePatterns: [
+			{
+				protocol: 'https',
+				hostname: '*.googleusercontent.com',
+				port: '',
+				pathname: '**'
+			},
+			{
+				protocol: 'http',
+				hostname: 'localhost',
+				port: '3000',
+				pathname: '**'
+			},
+			{
+				protocol: 'https',
+				hostname: 'res.cloudinary.com'
+			},
+			{
+				protocol: 'https',
+				hostname: 'picsum.photos'
+			},
+			{
+				protocol: 'https',
+				hostname: 'images.unsplash.com'
+			}
+		]
+	},
+	experimental: {},
+	eslint: {
+		ignoreDuringBuilds: true
+	},
+	transpilePackages: ['three'],
+	webpack: (config) => {
+		config.cache = false;
+		return config;
+	}
 };
 
 export default withNextIntl(nextConfig);

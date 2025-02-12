@@ -1,100 +1,173 @@
 {
-  "common": {
-    "languages": {
-      "english": "Tiếng Anh",
-      "vietnamese": "Tiếng Việt"
+	"common": {
+		"languages": {
+			"english": "Tiếng Anh",
+			"vietnamese": "Tiếng Việt"
+		},
+		"login": "Đăng nhập",
+		"signup": "Đăng ký",
+		"signin": "Đăng nhập",
+		"logout": "Đăng xuất",
+		"email": "Email",
+		"password": "Mật khẩu",
+		"name": "Tên",
+		"phone": "Số điện thoại",
+		"confirmPassword": "Xác nhận mật khẩu",
+		"forgotPassword": "Quên mật khẩu",
+		"or": "Hoặc",
+		"phonePlaceholder": "Nhập số điện thoại của bạn",
+		"namePlaceholder": "Nhập tên của bạn",
+		"passwordPlaceholder": "Nhập mật khẩu của bạn",
+		"confirmPasswordPlaceholder": "Nhập mật khẩu xác nhận",
+		"haveAccount": "Đã có tài khoản? Đăng nhập",
+		"needAccount": "Chưa có tài khoản? Đăng ký",
+		"signinDescription": "Đăng nhập bằng cách sử dụng một trong các tùy chọn dưới.",
+		"googleLogin": "Đăng nhập với Google",
+		"phoneLogin": "Đăng nhập bằng số điện thoại",
+		"back": "Quay lại",
+		"notification": "Thông báo",
+		"success": "Thành công"
+	},
+	"header": {
+		"settings": "Cài đặt",
+		"home": "Trang chủ",
+		"about": "Giới thiệu",
+		"contact": "Liên hệ",
+		"profile": "Hồ sơ",
+		"darkmode": "Chế độ tối",
+		"lightmode": "Chế độ sáng",
+		"creator": "Tạo phòng tranh",
+		"artworks": "Tranh",
+		"discover": "Khám phá",
+		"community": "Cộng đồng",
+		"artists": "Nghệ sĩ",
+		"wallet": "Ví",
+		"messages": "Tin nhắn",
+		"my_blogs": "Bài viết",
+		"premium": "Premium"
+	},
+
+	"auth": {
+		"loginTitle": "Đăng nhập vào tài khoản",
+		"signupTitle": "Tạo tài khoản mới",
+		"googleLogin": "Đăng nhập với Google"
+	},
+	"validation": {
+		"name": "Tên",
+		"phone": "Số điện thoại",
+		"password": "Mật khẩu",
+		"required": "{field} không được để trống",
+		"minLength": "{field} phải có ít nhất {length} ký tự",
+		"passwordMatch": "Mật khẩu không khớp",
+		"invalidPhoneNumber": "Số điện thoại không hợp lệ",
+		"otpLength": "OTP phải có 6 chữ số",
+		"passwordLength": "Mật khẩu phải có ít nhất 8 ký tự",
+		"invalidPassword": "Mật khẩu không hợp lệ"
+	},
+	"signup": {
+		"otpSent": "OTP đã gửi",
+		"otpSentDescription": "Vui lòng kiểm tra số điện thoại của bạn để nhận OTP",
+		"verifyOtp": "Xác nhận OTP",
+		"resendOtp": "Gửi lại OTP",
+		"resendOtpIn": "Gửi lại OTP trong",
+		"validFor": "Hợp lệ trong"
+	},
+	"error": {
+		"error": "Lỗi",
+		"unknownError": "Đã xảy ra lỗi không xác định",
+		"tokenExpired": "Phiên đã hết hạn, vui lòng thử lại",
+		"userExists": "Số điện thoại đã được đăng ký",
+		"invalidOtp": "Mã OTP không hợp lệ",
+		"otpExpired": "Mã OTP đã hết hạn",
+		"rateLimit": "Quá nhiều lần thử, vui lòng thử lại sau",
+		"validationError": "Vui lòng kiểm tra lại thông tin",
+		"authenticationError": "Bạn phải đăng nhập để xem nội dung này",
+		"authorizationError": "Bạn không có quyền truy cập nội dung này",
+		"rateLimitExceeded": "Quá nhiều lần thử, vui lòng thử lại sau",
+		"somethingWentWrong": "Đã xảy ra lỗi không xác định",
+		"registerError": "Đăng ký không thành công",
+		"accessDenied": "Truy cập bị từ chối",
+		"credentialsSignin": "Thông tin đăng nhập không hợp lệ"
+	},
+	"blog": {
+		"preview_draft": "Xem trước bản nháp",
+		"publish": "Xuất bản",
+		"private": "Ẩn",
+		"close": "Đóng",
+		"desktop": "Máy tính",
+		"mobile": "Di động",
+		"draft_create_success": "Tạo bản nháp thành công",
+		"draft_create_fail": "Tạo bản nháp thất bại",
+		"type_content": "Nhập nội dung...",
+		"new_draft": "Bản nháp mới",
+		"create_new_draft": "Tạo bản nháp mới",
+		"title": "Tiêu đề",
+		"enter_draft_title": "Nhập tiêu đề bản nháp",
+		"image": "Hình ảnh",
+		"upload_image": "Tải ảnh lên",
+		"creating": "Đang tạo...",
+		"create_draft": "Tạo bản nháp",
+		"preview": "Xem trước"
+	},
+	"premium": {
+    "feature_comparison": {
+      "title": "So sánh tính năng các gói",
+      "subtitle": "Trải nghiệm nghệ thuật không giới hạn với gói Premium",
+      "features": {
+        "gallery_views": "Số lượt xem phòng tranh 3D",
+        "image_quality": "Chất lượng hình ảnh",
+        "artist_follows": "Số nghệ sỹ có thể follow",
+        "favorite_artworks": "Lưu tác phẩm yêu thích",
+        "free_plan": "Gói Free",
+        "premium_plan": "Gói Premium"
+      },
+      "limits": {
+        "per_day": "5 lượt/ngày",
+        "unlimited": "Không giới hạn",
+        "hd": "HD (1080p)",
+        "ultra_hd": "4K Ultra HD",
+        "artists_limit": "10 nghệ sỹ",
+        "artworks_limit": "3 tác phẩm"
+      }
     },
-    "login": "Đăng nhập",
-    "signup": "Đăng ký",
-    "signin": "Đăng nhập",
-    "logout": "Đăng xuất",
-    "email": "Email",
-    "password": "Mật khẩu",
-    "name": "Tên",
-    "phone": "Số điện thoại",
-    "confirmPassword": "Xác nhận mật khẩu",
-    "forgotPassword": "Quên mật khẩu",
-    "or": "Hoặc",
-    "phonePlaceholder": "Nhập số điện thoại của bạn",
-    "namePlaceholder": "Nhập tên của bạn",
-    "passwordPlaceholder": "Nhập mật khẩu của bạn",
-    "confirmPasswordPlaceholder": "Nhập mật khẩu xác nhận",
-    "haveAccount": "Đã có tài khoản? Đăng nhập",
-    "needAccount": "Chưa có tài khoản? Đăng ký",
-    "signinDescription": "Đăng nhập bằng cách sử dụng một trong các tùy chọn dưới.",
-    "googleLogin": "Đăng nhập với Google",
-    "phoneLogin": "Đăng nhập bằng số điện thoại",
-    "back": "Quay lại",
-    "notification": "Thông báo"
-  },
-  "header": {
-    "settings": "Cài đặt",
-    "home": "Trang chủ",
-    "about": "Giới thiệu",
-    "contact": "Liên hệ",
-    "profile": "Hồ sơ",
-    "darkmode": "Chế độ tối",
-    "lightmode": "Chế độ sáng"
-  },
-  "auth": {
-    "loginTitle": "Đăng nhập vào tài khoản",
-    "signupTitle": "Tạo tài khoản mới",
-    "googleLogin": "Đăng nhập với Google"
-  },
-  "validation": {
-    "name": "Tên",
-    "phone": "Số điện thoại",
-    "password": "Mật khẩu",
-    "required": "{field} không được để trống",
-    "minLength": "{field} phải có ít nhất {length} ký tự",
-    "passwordMatch": "Mật khẩu không khớp",
-    "invalidPhoneNumber": "Số điện thoại không hợp lệ",
-    "otpLength": "OTP phải có 6 chữ số",
-    "passwordLength": "Mật khẩu phải có ít nhất 8 ký tự",
-    "invalidPassword": "Mật khẩu không hợp lệ"
-  },
-  "signup": {
-    "otpSent": "OTP đã gửi",
-    "otpSentDescription": "Vui lòng kiểm tra số điện thoại của bạn để nhận OTP",
-    "verifyOtp": "Xác nhận OTP",
-    "resendOtp": "Gửi lại OTP",
-    "resendOtpIn": "Gửi lại OTP trong",
-    "validFor": "Hợp lệ trong"
-  },
-  "error": {
-    "error": "Lỗi",
-    "unknownError": "Đã xảy ra lỗi không xác định",
-    "tokenExpired": "Phiên đã hết hạn, vui lòng thử lại",
-    "userExists": "Số điện thoại đã được đăng ký",
-    "invalidOtp": "Mã OTP không hợp lệ",
-    "otpExpired": "Mã OTP đã hết hạn",
-    "rateLimit": "Quá nhiều lần thử, vui lòng thử lại sau",
-    "validationError": "Vui lòng kiểm tra lại thông tin",
-    "authenticationError": "Bạn phải đăng nhập để xem nội dung này",
-    "authorizationError": "Bạn không có quyền truy cập nội dung này",
-    "rateLimitExceeded": "Quá nhiều lần thử, vui lòng thử lại sau",
-    "somethingWentWrong": "Đã xảy ra lỗi không xác định",
-    "registerError": "Đăng ký không thành công",
-    "accessDenied": "Truy cập bị từ chối",
-    "credentialsSignin": "Thông tin đăng nhập không hợp lệ"
-  },
-  "blog": {
-    "preview_draft": "Xem trước bản nháp",
-    "publish": "Xuất bản",
-    "unpublish": "Hủy xuất bản",
-    "close": "Đóng",
-    "desktop": "Máy tính",
-    "mobile": "Di động",
-    "draft_create_success": "Tạo bản nháp thành công",
-    "draft_create_fail": "Tạo bản nháp thất bại",
-    "type_content": "Nhập nội dung...",
-    "new_draft": "Bản nháp mới",
-    "create_new_draft": "Tạo bản nháp mới",
-    "title": "Tiêu đề",
-    "enter_draft_title": "Nhập tiêu đề bản nháp",
-    "image": "Hình ảnh",
-    "upload_image": "Tải ảnh lên",
-    "creating": "Đang tạo...",
-    "create_draft": "Tạo bản nháp"
+    "payment": {
+      "title": "Gói hợp túi tiền cho mọi hoàn cảnh",
+      "subtitle": "Chọn một gói Premium để trải nghiệm nghệ thuật không giới hạn. Thanh toán theo nhu cầu. Hủy bất cứ lúc nào."
+    },
+    "interview": {
+      "banner": {
+        "title": "40.000 đ cho cho các trải nghiệm nghệ thuật không giới hạn",
+        "subtitle": "Tận hưởng trải nghiệm chất lượng hình ảnh cao nhất, xem tranh không giới hạn và nhiều lợi ích khác. Hủy bất cứ lúc nào."
+      },
+      "benefits": {
+        "title": "Lợi ích của tất cả các gói Premium",
+        "items": {
+          "gallery": "Số lượt xem phòng tranh 3D không giới hạn",
+          "quality": "Chất lượng hình ảnh 4k ultra hd",
+          "follows": "Số nghệ sỹ có thể follow không giới hạn",
+          "favorites": "Lưu tác phẩm yêu thích không giới hạn"
+        }
+      }
+    },
+    "subscription": {
+      "title": "Chọn gói Premium phù hợp với bạn",
+      "subtitle": "Trải nghiệm nghệ thuật không giới hạn với gói Premium. Tận hưởng chất lượng cao nhất và nhiều tính năng độc quyền.",
+      "plan": {
+        "price": "40.000 ₫",
+        "period": "/1 tháng",
+        "features": {
+          "gallery": "Số lượt xem phòng tranh 3D không giới hạn",
+          "quality": "Chất lượng hình ảnh 4k ultra HD",
+          "follows": "Số nghệ sỹ có thể follow không giới hạn", 
+          "favorites": "Lưu tác phẩm yêu thích không giới hạn",
+          "cancel": "Hủy bất cứ lúc nào"
+        },
+        "cta": "Mua Ngay"
+      },
+      "footer": {
+        "terms": "Có áp dụng điều khoản và điều kiện. Ưu đãi không áp dụng cho người dùng đã có gói Premium trước đây.",
+        "vat": "* Giá đã bao gồm VAT. Thanh toán an toàn qua các cổng thanh toán được bảo mật."
+      }
+    }
   }
 }
