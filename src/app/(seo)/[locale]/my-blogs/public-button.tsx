@@ -47,7 +47,7 @@ const PublicButton = ({ blogId, initialPublishedState }: PublicButtonProps) => {
 
 	return (
 		<Button
-			className={`text-white rounded-full py-2 px-4 
+			className={`text-black rounded-full py-2 px-4 
                 ${
 					published
 						? 'bg-yellow-500 border border-yellow-500 hover:bg-yellow-600 dark:bg-yellow-700 dark:hover:bg-yellow-800 dark:border-yellow-700'

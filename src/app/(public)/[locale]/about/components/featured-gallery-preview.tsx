@@ -1,14 +1,14 @@
 'use client'
 import { Canvas } from "@react-three/fiber";
 import { Environment, PerspectiveCamera, PointerLockControls, Preload } from "@react-three/drei";
-import { ModernRoom } from "../../exhibitions/components/modern-room";
+import { ModernRoom } from "../../../../(exhibitions)/[locale]/exhibitions/components/modern-room";
 import { Suspense, useState, useCallback } from "react";
 import { Physics } from "@react-three/cannon";
 import Image from "next/image";
 import { GalleryPreviewLoader } from "./gallery-preview-loader";
 import { GALLERY_CONFIG } from "@/utils/gallery-config";
-import { Crosshair } from "../../exhibitions/components/crosshair";
-import Player from "../../exhibitions/components/player";
+import { Crosshair } from "../../../../(exhibitions)/[locale]/exhibitions/components/crosshair";
+import Player from "../../../../(exhibitions)/[locale]/exhibitions/components/player";
 
 export function FeaturedGalleryPreview() {
   const [isPointerLocked, setIsPointerLocked] = useState(false);

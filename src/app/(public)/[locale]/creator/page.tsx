@@ -36,7 +36,7 @@ export default function CreatorPage() {
 		{
 			id: '1',
 			title: 'Modern Art Collection',
-			thumbnail: '/modern_c1_plan.png',
+			thumbnail: 'https://images.unsplash.com/photo-1577720580479-7d839d829c73?q=80&w=2574&auto=format&fit=crop',
 			artworksCount: 24,
 			status: 'published',
 			lastEdited: '2024-03-20'
@@ -44,7 +44,7 @@ export default function CreatorPage() {
 		{
 			id: '2',
 			title: 'Abstract Expressions',
-			thumbnail: '/modern_c1_plan.png',
+			thumbnail: 'https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?q=80&w=2574&auto=format&fit=crop',
 			artworksCount: 12,
 			status: 'draft',
 			lastEdited: '2024-03-19'
