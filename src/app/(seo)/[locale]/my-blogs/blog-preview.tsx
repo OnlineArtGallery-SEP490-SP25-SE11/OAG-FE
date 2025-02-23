@@ -45,7 +45,7 @@ const BlogPreviewOverlay: React.FC<BlogPreviewOverlayProps> = ({
 			<Image
 				width={375}
 				height={812}
-				src='/phone-frame.png'
+				src='https://res.cloudinary.com/djvlldzih/image/upload/v1739338528/gallery/phone-frame.png'
 				alt='Phone frame'
 				className='absolute inset-0 w-full h-full'
 			/>
@@ -66,7 +66,7 @@ const BlogPreviewOverlay: React.FC<BlogPreviewOverlayProps> = ({
 			<Image
 				width={1024}
 				height={640}
-				src='/monitor-frame.png'
+				src='https://res.cloudinary.com/djvlldzih/image/upload/v1739338527/gallery/monitor-frame.png'
 				alt='Monitor frame'
 				className='absolute inset-0 w-full h-full'
 			/>

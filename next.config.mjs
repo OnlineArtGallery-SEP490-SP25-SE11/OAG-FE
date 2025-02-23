@@ -25,6 +25,10 @@ const nextConfig = {
 			{
 				protocol: 'https',
 				hostname: 'picsum.photos'
+			},
+			{
+				protocol: 'https',
+				hostname: 'images.unsplash.com'
 			}
 		]
 	},
@@ -32,6 +36,7 @@ const nextConfig = {
 	eslint: {
 		ignoreDuringBuilds: true
 	},
+	transpilePackages: ['three'],
 	webpack: (config) => {
 		config.cache = false;
 		return config;

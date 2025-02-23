@@ -1,22 +1,22 @@
-import { cn } from "@/lib/utils";
-import { memo, useEffect, useRef } from "react";
+import { cn } from '@/lib/utils';
+import { memo, useEffect, useRef } from 'react';
 
 interface CanvasImageProps {
-  src: string;
-  width?: number;
-  height?: number;
-  className?: string;
-  watermark?: WatermarkOptions | null;
+	src: string;
+	width?: number;
+	height?: number;
+	className?: string;
+	watermark?: WatermarkOptions | null;
 }
 
 interface WatermarkOptions {
-  text: string;
-  color?: string;
-  font?: string;
-  style?: "circular" | "diagonal";
-  position?: "bottomRight" | "bottomLeft" | "topRight" | "topLeft";
-  radius?: number; // percentage of smallest dimension
-  textStyle?: "inside" | "along"; // text placement style
+	text: string;
+	color?: string;
+	font?: string;
+	style?: 'circular' | 'diagonal';
+	position?: 'bottomRight' | 'bottomLeft' | 'topRight' | 'topLeft';
+	radius?: number; // percentage of smallest dimension
+	textStyle?: 'inside' | 'along'; // text placement style
 }
 
 function CanvasImage({

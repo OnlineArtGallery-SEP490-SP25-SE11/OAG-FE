@@ -3,12 +3,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
 	BarChart,
-	FileText,
 	FolderOpen,
 	Image,
 	Upload,
 	Sun,
-	Moon
+	Moon,
+	Crown 
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTheme } from 'next-themes';
@@ -29,13 +29,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 		{ href: '/artists', icon: BarChart, label: 'Dashboard' },
 		{ href: '/artists/upload', icon: Upload, label: 'Upload Artwork' },
 		{ href: '/artists/manage', icon: Image, label: 'Manage Artworks' },
+		{ href: '/artists/premium', icon: Crown, label: 'Premium' },
 		{
 			href: '/artists/collections',
 			icon: FolderOpen,
 			label: 'Collections'
-		},
-		{ href: '/artists/reports', icon: FileText, label: 'Reports' }
-	];
+		}	];
 
 	const toggleTheme = () => {
 		setTheme(theme === 'dark' ? 'light' : 'dark');
