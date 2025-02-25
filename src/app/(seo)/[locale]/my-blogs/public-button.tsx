@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { LoaderCircleIcon } from "lucide-react";
-import { publishBlogAction, unpublishBlogAction } from "./action";
-import { useTranslations } from "next-intl";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { LoaderCircleIcon } from 'lucide-react';
+import { publishBlogAction, unpublishBlogAction } from './action';
+import { useTranslations } from 'next-intl';
 
 interface PublicButtonProps {
 	blogId: string;
@@ -14,11 +14,11 @@ interface PublicButtonProps {
 }
 
 const PublicButton = ({ blogId, initialPublishedState }: PublicButtonProps) => {
-  const [published, setPublished] = useState(initialPublishedState);
-  const [isPending, setIsPending] = useState(false);
-  const { toast } = useToast();
-  const router = useRouter();
-  const tBlog = useTranslations("blog");
+	const [published, setPublished] = useState(initialPublishedState);
+	const [isPending, setIsPending] = useState(false);
+	const { toast } = useToast();
+	const router = useRouter();
+	const tBlog = useTranslations('blog');
 
 	const handlePublishToggle = async () => {
 		setIsPending(true);
@@ -49,24 +49,24 @@ const PublicButton = ({ blogId, initialPublishedState }: PublicButtonProps) => {
 		<Button
 			className={`text-white rounded-full py-2 px-4 
                 ${
-                  published
-                    ? "bg-yellow-500 border border-yellow-500 hover:bg-yellow-600 dark:bg-yellow-700 dark:hover:bg-yellow-800 dark:border-yellow-700"
-                    : "bg-secondary border border-secondary hover:bg-secondary/80 dark:bg-secondary dark:hover:bg-secondary/80 dark:border-secondary"
-                }
-                ${isPending ? "cursor-not-allowed opacity-50" : ""}`}
-      onClick={handlePublishToggle}
-      style={{ width: "80px" }}
-      disabled={isPending}
-    >
-      {isPending ? (
-        <LoaderCircleIcon className="animate-spin" />
-      ) : published ? (
-        tBlog("private")
-      ) : (
-        tBlog("publish")
-      )}
-    </Button>
-  );
+					published
+						? 'bg-yellow-500 border border-yellow-500 hover:bg-yellow-600 dark:bg-yellow-700 dark:hover:bg-yellow-800 dark:border-yellow-700'
+						: 'bg-secondary border border-secondary hover:bg-secondary/80 dark:bg-secondary dark:hover:bg-secondary/80 dark:border-secondary'
+				}
+                ${isPending ? 'cursor-not-allowed opacity-50' : ''}`}
+			onClick={handlePublishToggle}
+			style={{ width: '80px' }}
+			disabled={isPending}
+		>
+			{isPending ? (
+				<LoaderCircleIcon className='animate-spin' />
+			) : published ? (
+				tBlog('private')
+			) : (
+				tBlog('publish')
+			)}
+		</Button>
+	);
 };
 
 export default PublicButton;

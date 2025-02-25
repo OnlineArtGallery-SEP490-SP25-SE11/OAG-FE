@@ -10,6 +10,106 @@ body {
 	.text-balance {
 		text-wrap: balance;
 	}
+	.blur-vignette {
+		position: absolute;
+		inset: 0;
+		border-radius: var(--radius);
+		-webkit-backdrop-filter: blur(var(--blur));
+		backdrop-filter: blur(var(--blur));
+		--r: max(var(--transition-length), calc(var(--radius) - var(--inset)));
+		--corner-size: calc(var(--r) + var(--inset))
+			calc(var(--r) + var(--inset));
+		--corner-gradient: transparent 0px,
+			transparent calc(var(--r) - var(--transition-length)),
+			black var(--r);
+		--fill-gradient: black, black var(--inset),
+			transparent calc(var(--inset) + var(--transition-length)),
+			transparent calc(100% - var(--transition-length) - var(--inset)),
+			black calc(100% - var(--inset));
+		--fill-narrow-size: calc(100% - (var(--inset) + var(--r)) * 2);
+		--fill-farther-position: calc(var(--inset) + var(--r));
+		-webkit-mask-image: linear-gradient(to right, var(--fill-gradient)),
+			linear-gradient(to bottom, var(--fill-gradient)),
+			radial-gradient(at bottom right, var(--corner-gradient)),
+			radial-gradient(at bottom left, var(--corner-gradient)),
+			radial-gradient(at top left, var(--corner-gradient)),
+			radial-gradient(at top right, var(--corner-gradient));
+		-webkit-mask-size: 100% var(--fill-narrow-size),
+			var(--fill-narrow-size) 100%, var(--corner-size), var(--corner-size),
+			var(--corner-size), var(--corner-size);
+		-webkit-mask-position: 0 var(--fill-farther-position),
+			var(--fill-farther-position) 0, 0 0, 100% 0, 100% 100%, 0 100%;
+		-webkit-mask-repeat: no-repeat;
+	}
+	.acrylic {
+		position: relative;
+		inset: 0;
+		overflow: hidden;
+		background: linear-gradient(
+				var(--gradient-angle, 135deg),
+				var(--gradient-start, rgba(255, 255, 255, 0.15)),
+				var(--gradient-end, rgba(0, 0, 0, 0.2))
+			),
+			rgba(var(--bg-color, 20, 20, 20), var(--bg-opacity, 0.65));
+		backdrop-filter: blur(var(--blur, 16px)) brightness(1.4) contrast(1.3)
+			saturate(1.2);
+		-webkit-backdrop-filter: blur(var(--blur, 16px)) brightness(1.4)
+			contrast(1.3) saturate(1.2);
+
+		/* Tăng độ nổi bật của viền */
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4),
+			inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+
+		z-index: 0;
+	}
+
+	.acrylic::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background: radial-gradient(
+			circle at center,
+			rgba(255, 255, 255, 0.18) 0%,
+			rgba(0, 0, 0, 0.25) 65%,
+			transparent 100%
+		);
+		opacity: 0.95;
+		mix-blend-mode: overlay;
+		pointer-events: none;
+	}
+
+	/* Thêm style cho content bên trong */
+	/* .acrylic > * {
+		position: relative;
+		z-index: 1;
+		color: rgba(255, 255, 255, 0.95);
+		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+	} */
+
+	/* .acrylic {
+		position: relative;
+		background-color: rgba(
+			var(--bg-color, 0, 0, 0),
+			var(--bg-opacity, 0.4)
+		);
+		backdrop-filter: blur(
+			var(--blur, 10px)
+		);
+		-webkit-backdrop-filter: blur(var(--blur, 10px)); 
+		border-radius: var(--radius, 8px);
+		overflow: hidden;
+	} */
+
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
+	
+	.no-scrollbar {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
 }
 
 @layer base {
@@ -39,6 +139,12 @@ body {
 		--chart-4: 43 74% 66%;
 		--chart-5: 27 87% 67%;
 		--radius: 0.5rem;
+
+		--gradient-start: rgba(255, 255, 255, 0.3);
+		--gradient-end: rgba(200, 200, 200, 0.3);
+		--bg-color: 255, 255, 255;
+		--bg-opacity: 0.4;
+		--vignette-color: rgba(0, 0, 0, 0.2);
 	}
 	.dark {
 		--background: 224 71.4% 4.1%;
@@ -65,6 +171,12 @@ body {
 		--chart-3: 30 80% 55%;
 		--chart-4: 280 65% 60%;
 		--chart-5: 340 75% 55%;
+
+		--gradient-start: rgba(0, 0, 0, 0.4);
+		--gradient-end: rgba(50, 50, 50, 0.4);
+		--bg-color: 0, 0, 0;
+		--bg-opacity: 0.6;
+		--vignette-color: rgba(255, 255, 255, 0.2);
 	}
 }
 

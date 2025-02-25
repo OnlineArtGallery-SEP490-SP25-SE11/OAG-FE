@@ -1,20 +1,29 @@
 'use client';
+import HeaderButton from '@/app/(public)/[locale]/_header/components/header-button';
+import { DropdownItemWithIcon } from '@/app/(public)/[locale]/_header/components/header-dropdown';
 import Notification from '@/app/(public)/[locale]/_header/notification';
-import useAuthClient from '@/hooks/useAuth-client';
+import SignOutItem from '@/app/(public)/[locale]/_header/sign-out-item';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import SignOutItem from '@/app/(public)/[locale]/_header/sign-out-item';
-import { Skeleton } from '@/components/ui/skeleton';
-import Link from 'next/link';
-import HeaderButton from '@/app/(public)/[locale]/_header/components/header-button';
 import { Separator } from '@/components/ui/separator';
-import { DropdownItemWithIcon } from '@/app/(public)/[locale]/_header/components/header-dropdown';
-import { CircleUserRoundIcon, SettingsIcon } from 'lucide-react'; // Import Skeleton from shadcn/ui
+import { Skeleton } from '@/components/ui/skeleton';
+import useAuthClient from '@/hooks/useAuth-client';
+import {
+	BookOpen,
+	CircleUserRoundIcon,
+	MessageCircle,
+	Palette,
+	SettingsIcon,
+	UserRoundPen,
+	WalletMinimal
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
+
 export default function AuthButton() {
 	const t = useTranslations('header');
 	const tCommon = useTranslations('common');
@@ -65,7 +74,34 @@ export default function AuthButton() {
 						text={t('settings')}
 						href='/settings'
 					/>
+					<DropdownItemWithIcon
+						icon={<UserRoundPen className='w-6 h-6' />}
+						text={t('artists')}
+						href='/artists'
+					/>
+					<DropdownItemWithIcon
+						icon={<Palette className='w-6 h-6' />}
+						text={t('creator')}
+						href='/creator'
+					/>
+					<DropdownItemWithIcon
+						icon={<WalletMinimal className='w-6 h-6' />}
+						text={t('wallet')}
+						href='/wallet'
+					/>
+					<DropdownItemWithIcon
+						icon={<MessageCircle className='w-6 h-6' />}
+						text={t('messages')}
+						href='/messages'
+					/>
+					<DropdownItemWithIcon
+						icon={<BookOpen className='w-6 h-6' />}
+						text={t('my_blogs')}
+						href='/my-blogs'
+					/>
+
 					<Separator className='mt-6' />
+
 					<SignOutItem dropdown />
 				</DropdownMenuContent>
 			</DropdownMenu>

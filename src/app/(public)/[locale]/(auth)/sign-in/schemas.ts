@@ -16,7 +16,10 @@ export const useSignInSchemas = () => {
 	const signInSchema = z.object({
 		phone: phoneSchema.shape.phone,
 		password: z.string().min(8, {
-			message: t('minLength', { field: t('password'), length: '8' })
+			message: t('minLength', {
+				field: t('password'),
+				length: '8'
+			})
 		})
 	});
 

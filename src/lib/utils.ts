@@ -2,7 +2,7 @@ import {
 	MAX_UPLOAD_IMAGE_SIZE,
 	MAX_UPLOAD_IMAGE_SIZE_IN_MB
 } from '@/app-config';
-import { clsx, type ClassValue } from 'clsx';
+import { type ClassValue, clsx } from 'clsx';
 import { jwtDecode } from 'jwt-decode';
 import { twMerge } from 'tailwind-merge';
 import slugify from 'slugify';
@@ -11,7 +11,7 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
-export const formatTime = (seconds: number) => {
+export const formatTime = (seconds: number) =>  {
 	const minutes = Math.floor(seconds / 60);
 	const remainingSeconds = seconds % 60;
 	return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;

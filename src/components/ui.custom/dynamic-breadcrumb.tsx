@@ -7,15 +7,15 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator
 } from '@/components/ui/breadcrumb';
-import { Home } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { ChevronRight, Home } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import React from 'react';
-
 // Function to parse URL path and filter out language codes and unnecessary segments
 const parseBreadcrumbPaths = (path: string) => {
 	// Remove leading and trailing slashes, split the path
 	const segments = path.replace(/^\/|\/$/g, '').split('/');
-
 	// Filter out language codes (en, vn, etc.) - assuming 2-letter language codes
 	const filteredSegments = segments.filter(
 		(segment) => segment.length !== 2 || !/^[a-z]{2}$/.test(segment)
@@ -25,77 +25,68 @@ const parseBreadcrumbPaths = (path: string) => {
 };
 
 interface DynamicBreadcrumbProps {
-	currentPath: string;
 	className?: string;
 	homeLabel?: string;
 }
 
 const DynamicBreadcrumb: React.FC<DynamicBreadcrumbProps> = ({
-	currentPath,
 	className = '',
 	homeLabel = ''
 }) => {
+	const currentPath = usePathname();
 	const pathSegments = parseBreadcrumbPaths(currentPath);
 
 	return (
-		<Breadcrumb className={`w-full ${className}`}>
-			<BreadcrumbList className='flex items-center space-x-2 text-base font-inter'>
-				{/* Always add Home as the first item */}
+		<Breadcrumb className={cn('w-full px-2 py-3', className)}>
+			<BreadcrumbList className='flex flex-wrap items-center gap-2 text-sm sm:text-base md:text-lg'>
+				{/* Home Item */}
 				<BreadcrumbItem>
-					<BreadcrumbLink
-						asChild
-						className='text-foreground/70 hover:text-foreground transition-colors duration-200 ease-in-out'
-					>
+					<BreadcrumbLink asChild>
 						<Link
 							href='/'
-							className='flex items-center gap-1.5 capitalize hover:underline font-semibold tracking-tight italic text-2xl'
+							className='flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-all duration-200 group'
 						>
-							<Home className='w-6 h-6' />
-							{homeLabel}
+							<Home className='w-4 h-4 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform' />
+							<span className='hidden sm:inline font-medium'>
+								{homeLabel}
+							</span>
 						</Link>
 					</BreadcrumbLink>
 				</BreadcrumbItem>
 
 				{pathSegments.length > 0 && (
-					<BreadcrumbSeparator className='text-foreground/50 mx-1 select-none text-2xl font-medium'>
-						/
+					<BreadcrumbSeparator className='text-muted-foreground/50'>
+						<ChevronRight className='h-4 w-4' />
 					</BreadcrumbSeparator>
 				)}
 
 				{pathSegments.map((segment, index) => {
-					// Create cumulative path for each breadcrumb item
 					const path =
 						'/' + pathSegments.slice(0, index + 1).join('/');
-
-					// Last segment is the current page
-					if (index === pathSegments.length - 1) {
-						return (
-							<BreadcrumbItem key={segment}>
-								<BreadcrumbPage className='font-semibold text-foreground capitalize tracking-tight italic text-2xl'>
-									{segment}
-								</BreadcrumbPage>
-							</BreadcrumbItem>
-						);
-					}
+					const isLast = index === pathSegments.length - 1;
 
 					return (
 						<React.Fragment key={segment}>
 							<BreadcrumbItem>
-								<BreadcrumbLink
-									asChild
-									className='text-foreground/70 hover:text-foreground transition-colors duration-200 ease-in-out'
-								>
-									<Link
-										href={path}
-										className='capitalize hover:underline tracking-tight italic font-semibold text-2xl'
-									>
+								{isLast ? (
+									<BreadcrumbPage className='font-semibold text-foreground capitalize px-1 max-w-[200px] truncate'>
 										{segment}
-									</Link>
-								</BreadcrumbLink>
+									</BreadcrumbPage>
+								) : (
+									<BreadcrumbLink asChild>
+										<Link
+											href={path}
+											className='text-muted-foreground hover:text-foreground transition-colors duration-200 capitalize px-1 max-w-[150px] truncate block hover:bg-accent rounded'
+										>
+											{segment}
+										</Link>
+									</BreadcrumbLink>
+								)}
 							</BreadcrumbItem>
-							{index < pathSegments.length - 1 && (
-								<BreadcrumbSeparator className='text-foreground/50 mx-1 select-none text-2xl font-medium'>
-									/
+
+							{!isLast && (
+								<BreadcrumbSeparator className='text-muted-foreground/50'>
+									<ChevronRight className='h-4 w-4' />
 								</BreadcrumbSeparator>
 							)}
 						</React.Fragment>
@@ -107,7 +98,6 @@ const DynamicBreadcrumb: React.FC<DynamicBreadcrumbProps> = ({
 };
 
 export default DynamicBreadcrumb;
-
 // Example usage:
 // <DynamicBreadcrumb currentPath="/en/test/demo" />
 // <DynamicBreadcrumb currentPath="/vn/test/market" />
