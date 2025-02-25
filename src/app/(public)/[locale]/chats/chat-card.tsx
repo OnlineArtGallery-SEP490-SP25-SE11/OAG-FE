@@ -15,7 +15,7 @@ export type Chat = {
 const chatData: Chat[] = [
   {
     active: true,
-    avatar: "/avt.jpg",
+    avatar: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262',
     name: "Devid Heilo",
     text: "Hello, how are you?",
     time: "12 min",
@@ -24,7 +24,7 @@ const chatData: Chat[] = [
   },
   {
     active: true,
-    avatar: "/avt.jpg",
+    avatar: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262',
     name: "Henry Fisher",
     text: "I am waiting for you",
     time: "5:54 PM",
@@ -33,7 +33,7 @@ const chatData: Chat[] = [
   },
   {
     active: null,
-    avatar: "/avt.jpg",
+    avatar: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262',
     name: "Wilium Smith",
     text: "Where are you now?",
     time: "10:12 PM",
@@ -43,7 +43,7 @@ const chatData: Chat[] = [
   {
     active: true,
     seen: true,
-    avatar: "/avt.jpg",
+    avatar: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262',
     name: "Henry Deco",
     text: "Thank you so much!",
     time: "Sun",
@@ -52,7 +52,7 @@ const chatData: Chat[] = [
   },
   {
     active: false,
-    avatar: "/avt.jpg",
+    avatar: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262',
     name: "Jubin Jack",
     text: "Hello, how are you?",
     time: "Oct 23",

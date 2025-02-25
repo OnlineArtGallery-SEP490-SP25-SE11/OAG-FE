@@ -35,10 +35,19 @@ export default function ChatComponent() {
         <div className="flex flex-col w-full max-w-5xl mx-auto border rounded-lg p-4 shadow-lg bg-white dark:bg-gray-800">
            
             <div className="flex flex-1 items-center justify-between">
-                <div>
-                    <h5 className="font-medium text-dark dark:text-white">
+                <div className="flex flex-1">
+                    <div className="relative h-14 w-14 rounded-full overflow-hidden">
+                        <Image
+                            width={56}
+                            height={56}
+                            src='https://images.unsplash.com/photo-1541961017774-22349e4a1262'
+                            alt="User"
+                            className="object-cover"
+                            />
+                    </div>
+                    <h4 className="font-medium text-dark dark:text-white m-3">
                         Thuy Nguyen
-                    </h5>
+                    </h4>
                 </div>
             </div>
 

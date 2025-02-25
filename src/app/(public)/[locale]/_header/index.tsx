@@ -11,50 +11,37 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import ThemeSwitcher from './theme-switcher';
-import ChatPage from '../chats/page';
 
 const listMenu = [
 	{ href: '/', label: 'home' },
 	{ href: '/about', label: 'about' },
-	{ href: '/contact', label: 'contact' },
+	{ href: '/chats', label: 'contact' },
 	{ href: '/artworks', label: 'artworks' },
 	{ href: '/discover', label: 'discover' },
 	{ href: '/social', label: 'community' },
 	{ href: '/premium', label:'premium'}
 ];
 
-export default function Header({ children }: { children: React.ReactNode }) {
+export default function Header() {
 	const t = useTranslations('header');
 	const [isScrolled, setIsScrolled] = useState(false);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
-	const [showChat, setShowChat] = useState(false);
-
 	useEffect(() => {
 		const handleScroll = () => {
-			setIsScrolled(window.scrollY > 10);
+			if (window.scrollY > 10) {
+				setIsScrolled(true);
+			} else {
+				setIsScrolled(false);
+			}
 		};
 		window.addEventListener('scroll', handleScroll);
-		return () => window.removeEventListener('scroll', handleScroll);
+		return () => {
+			window.removeEventListener('scroll', handleScroll);
+		};
 	}, []);
 
-	const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-	const handleShowChat = (event: React.MouseEvent) => {
-		event.preventDefault();  // Ngừng hành động mặc định của thẻ <a>
-		setShowChat(true);
-	};
-
-	const handleHideChat = () => {
-		setShowChat(false);
-	};
-
-	const scrollToChat = () => {
-		if (showChat) {
-			// Cuộn đến phần ChatPage
-			const chatSection = document.getElementById('chat-section');
-			if (chatSection) {
-				chatSection.scrollIntoView({ behavior: 'smooth' });
-			}
-		}
+	const toggleMenu = () => {
+		setIsMenuOpen(!isMenuOpen);
 	};
 
 	return (
@@ -150,13 +137,12 @@ export default function Header({ children }: { children: React.ReactNode }) {
 						</Link>
 					))}
 				</div>
-			)}
-
-			{/* Render các children của Header ở đây */}
-			{children}
-
-			{/* Cuộn tự động đến ChatPage nếu cần */}
-			{scrollToChat()}
-		</>
+			</div>
+			<style jsx>{`
+				.texture {
+					background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%224%22%20height%3D%224%22%20viewBox%3D%220%200%204%204%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.1%22%20d%3D%22M1%203h1v1H1V3zm2-2h1v1H3V1z%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E');
+				}
+			`}</style>
+		</header>
 	);
 }
