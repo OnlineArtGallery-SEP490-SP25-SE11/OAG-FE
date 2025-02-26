@@ -91,7 +91,7 @@
 	},
 	"blog": {
 		"preview_draft": "Preview Draft",
-		"publish": "Publish",
+		"public": "Publish",
 		"private": "Private",
 		"close": "Close",
 		"desktop": "Desktop",
@@ -107,7 +107,13 @@
 		"upload_image": "Upload Image",
 		"creating": "Creating...",
 		"create_draft": "Create Draft",
-		"preview": "Preview"
+		"preview": "Preview",
+		"create_request": "Request to publish has been sent",
+		"cancel": "Cancel Request",
+		"cancel_request": "Request to publish has been canceled",
+		"publish_success": "Blog has been published",
+		"private_success": "Blog has been privated",
+		"pending" : "Pending"
 	},
 	"premium": {
 		"feature_comparison": {

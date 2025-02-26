@@ -1,6 +1,8 @@
-import axios, { axiosWithAuth } from '@/lib/axios';
+"use server";
+import axios, { createApi } from '@/lib/axios';
 import { Blog, GetPublishedBlogsResponse } from '@/types/blog';
 import { ApiResponse } from '@/types/response';
+import { BlogStatus } from '@/utils/enums';
 import axiosInstance from 'axios';
 
 export async function getBlogById(blogId: string) {
@@ -20,7 +22,7 @@ export async function getBlogById(blogId: string) {
 
 export async function getLastEditedBlogId(accessToken: string) {
 	try {
-		const res = await axiosWithAuth(accessToken).get('/blog/last-edited', {
+		const res = await createApi(accessToken).get('/blog/last-edited', {
 			headers: {
 				Authorization: `Bearer ${accessToken}`
 			}
@@ -50,7 +52,7 @@ export async function createBlog({
 	};
 }) {
 	try {
-		const res: ApiResponse = await axiosWithAuth(accessToken).post(
+		const res: ApiResponse = await createApi(accessToken).post(
 			'/blog',
 			blogData
 		);
@@ -83,23 +85,22 @@ export async function updateBlog({
 		title?: string;
 		content?: string;
 		image?: string;
-		published?: boolean;
+		status?: BlogStatus;
 	};
 }) {
 	const payload: {
 		title?: string;
 		content?: string;
 		image?: string;
-		published?: boolean;
+		status?: BlogStatus;
 	} = {};
 
 	if (updateData.title) payload.title = updateData.title;
 	if (updateData.content) payload.content = updateData.content;
 	if (updateData.image) payload.image = updateData.image;
-	if (updateData.published !== undefined)
-		payload.published = updateData.published;
+	if (updateData.status) payload.status = updateData.status;
 	try {
-		const res: ApiResponse = await axiosWithAuth(accessToken).put(
+		const res: ApiResponse = await createApi(accessToken).put(
 			`/blog/${updateData._id}`,
 			payload,
 			{
@@ -108,6 +109,7 @@ export async function updateBlog({
 				}
 			}
 		);
+		console.log(res.data, 'update blog res');
 		return res.data;
 	} catch (err) {
 		if (axiosInstance.isAxiosError(err)) {
@@ -123,7 +125,7 @@ export async function updateBlog({
 
 export async function getBlogs(accessToken: string) {
 	try {
-		const res = await axiosWithAuth(accessToken).get('/blog', {
+		const res = await createApi(accessToken).get('/blog', {
 			headers: {
 				Authorization: `Bearer ${accessToken}`
 			}
@@ -154,7 +156,7 @@ export async function toggleHeartBlogService(
 	blogId: string
 ): Promise<boolean> {
 	try {
-		const res = await axiosWithAuth(accessToken).put(
+		const res = await createApi(accessToken).put(
 			`/blog/toggle-heart/${blogId}`
 		);
 		if (res.status === 200) {
@@ -179,7 +181,7 @@ export async function toggleBookmarkBlogService(
 	blogId: string
 ): Promise<boolean> {
 	try {
-		const res = await axiosWithAuth(accessToken).put(
+		const res = await createApi(accessToken).put(
 			`/blog/toggle-bookmark/${blogId}`
 		);
 		if (res.status === 200) {
@@ -216,7 +218,7 @@ export async function getBlogInteractions(blogId: string) {
 
 export async function getUserInteractions(accessToken: string, blogId: string) {
 	try {
-		const res = await axiosWithAuth(accessToken).get(
+		const res = await createApi(accessToken).get(
 			`/interaction/user/blog/${blogId}`
 		);
 		console.log(res.data, 'getUserInteractions res');
@@ -280,13 +282,38 @@ export async function getPublishedBlogs({
 	}
 }
 
-export function getBookmarkedPostIds(accessToken: string) {
+export async function getBookmarkedPostIds(accessToken: string) {
 	try {
+		console.log('getBookmarkedPostIds', accessToken);
 		// const res = await createApi(accessToken).get('/blog/bookmarked');
 		// return res.data.map((post: { id: string }) => post.id);
 		return [];
 	} catch (error) {
 		console.error(`Error when get bookmarked post ids: ${error}`);
 		return [];
+	}
+}
+
+
+export async function createPublicRequest({
+	accessToken,
+	id
+}: {
+	accessToken: string;
+	id: string;
+}): Promise<Blog | null> {
+	try {
+		console.log('createPublicRequest', id);
+		const res = await createApi(accessToken).put(`/blog/${id}/request-publish`);
+		return res.data;
+	} catch (error) {
+		if (axiosInstance.isAxiosError(error)) {
+			console.error(
+				`Error when create public request: ${error.response?.data}`
+			);
+		} else {
+			console.error(`Unexpected error: ${error}`);
+		}
+		return null;
 	}
 }

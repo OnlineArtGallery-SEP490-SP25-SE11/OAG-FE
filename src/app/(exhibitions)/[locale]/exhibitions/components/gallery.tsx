@@ -4,7 +4,7 @@ import { Loader } from './gallery-loader';
 import dynamic from 'next/dynamic';
 import { Stats } from '@react-three/drei';
 
-export default function Gallery() {
+export default function Gallery({roomId}: {roomId: string}) {
 	const Scene = dynamic(() => import('./scene').then((mod) => mod.default), {
 		ssr: false,
 		loading: () => <Loader />

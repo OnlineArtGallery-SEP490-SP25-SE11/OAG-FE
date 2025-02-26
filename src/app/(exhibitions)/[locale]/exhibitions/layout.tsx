@@ -1,8 +1,7 @@
 import '@/app/globals.css';
 import type { Metadata } from 'next';
 import React, { ReactNode } from 'react';
-import { getCurrentUser } from '@/lib/session';
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { getMessages } from 'next-intl/server';
 import { NextIntlClientProvider } from 'next-intl';

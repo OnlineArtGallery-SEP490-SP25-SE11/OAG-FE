@@ -91,7 +91,7 @@
 	},
 	"blog": {
 		"preview_draft": "Xem trước bản nháp",
-		"publish": "Xuất bản",
+		"public": "Xuất bản",
 		"private": "Ẩn",
 		"close": "Đóng",
 		"desktop": "Máy tính",
@@ -107,7 +107,11 @@
 		"upload_image": "Tải ảnh lên",
 		"creating": "Đang tạo...",
 		"create_draft": "Tạo bản nháp",
-		"preview": "Xem trước"
+		"preview": "Xem trước",
+		"create_request": "Yêu cầu xuất bản đã được gửi",
+		"cancel": "Hủy yêu cầu",
+		"cancel_request": "Yêu cầu xuất bản đã thu hồi",
+		"pending": "Đã gửi"
 	},
 	"premium": {
     "feature_comparison": {

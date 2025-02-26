@@ -1,3 +1,4 @@
+import { BlogStatus } from '@/utils/enums';
 import { z } from 'zod';
 
 export const blogSchema = z.object({
@@ -5,7 +6,7 @@ export const blogSchema = z.object({
 	title: z.string(),
 	content: z.string(),
 	image: z.string(),
-	published: z.boolean(),
+	status: z.nativeEnum(BlogStatus),
 	createdAt: z.date(),
 	updatedAt: z.date(),
 	heartCount: z.number()
