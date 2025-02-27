@@ -63,7 +63,7 @@ export default function CreateDraftButton() {
 			});
 			setIsOpen(false);
 			setIsOverlayOpen(false);
-			router.push(`/blogs/${draft.data.id}`);
+			router.push(`/my-blogs/${draft.data.id}`);
 			router.refresh();
 		},
 		onError: () => {

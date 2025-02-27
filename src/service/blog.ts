@@ -51,6 +51,7 @@ export async function createBlog({
 		image: string;
 	};
 }) {
+	console.log('createBlog', blogData);
 	try {
 		const res: ApiResponse = await createApi(accessToken).post(
 			'/blog',

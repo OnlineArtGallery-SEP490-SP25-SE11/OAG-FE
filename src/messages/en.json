@@ -26,7 +26,8 @@
 		"phoneLogin": "Continue with phone number",
 		"back": "Back",
 		"notification": "Notification",
-		"success": "Success"
+		"success": "Success",
+		"error": "Error"
 	},
 	"header": {
 		"home": "Home",
@@ -113,7 +114,8 @@
 		"cancel_request": "Request to publish has been canceled",
 		"publish_success": "Blog has been published",
 		"private_success": "Blog has been privated",
-		"pending" : "Pending"
+		"pending" : "Pending",
+		"draft_create_error": "An error occurred while creating blog"
 	},
 	"premium": {
 		"feature_comparison": {

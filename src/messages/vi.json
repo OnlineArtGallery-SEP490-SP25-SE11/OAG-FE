@@ -26,7 +26,8 @@
 		"phoneLogin": "Tiếp tục với số điện thoại",
 		"back": "Quay lại",
 		"notification": "Thông báo",
-		"success": "Thành công"
+		"success": "Thành công",
+		"error": "Lỗi"
 	},
 	"header": {
 		"settings": "Cài đặt",
@@ -111,7 +112,8 @@
 		"create_request": "Yêu cầu xuất bản đã được gửi",
 		"cancel": "Hủy yêu cầu",
 		"cancel_request": "Yêu cầu xuất bản đã thu hồi",
-		"pending": "Đã gửi"
+		"pending": "Đã gửi",
+		"draft_create_error": "Đã xảy ra lỗi khi tạo blog"
 	},
 	"premium": {
     "feature_comparison": {
