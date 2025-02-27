@@ -187,7 +187,7 @@ interface BlogSectionProps {
 
 export function SidebarBlogSection({ blogs }: BlogSectionProps) {
 	const publishedBlogs = blogs.filter((blog) => blog.status === 'PUBLISHED');
-	const draftBlogs = blogs.filter((blog) => blog.status !== 'PUBLISHED' );
+	const draftBlogs = blogs.filter((blog) => blog.status !== 'PUBLISHED' ); // DRAFT , PENDING_REVIEW, REJECTED
 
 	return (
 		<div>
