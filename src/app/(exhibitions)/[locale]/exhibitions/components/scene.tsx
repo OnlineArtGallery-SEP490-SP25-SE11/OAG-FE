@@ -1,6 +1,6 @@
 'use client';
 import { Physics } from '@react-three/cannon';
-import { Environment, PerspectiveCamera, Preload } from '@react-three/drei';
+import { PerspectiveCamera, Preload } from '@react-three/drei';
 import { GALLERY_CONFIG } from '@/utils/gallery-config';
 // import { Floor } from "./floor";
 // import { GalleryRoom } from "./gallery-room";
@@ -11,7 +11,8 @@ import { Crosshair } from './crosshair';
 import { useThree } from '@react-three/fiber';
 // import { GalleryRoom2 } from "./gallery-room-2";
 // import { ModernRoom } from "./modern-room";
-import { GalleryRoom } from './gallery-room';
+// import { GalleryRoom } from './gallery-room';
+import { ModernExhibitionRoom } from './rooms/m2-room/m2-room';
 
 export default function Scene() {
 	const { set } = useThree();
@@ -26,33 +27,27 @@ export default function Scene() {
 	};
 	return (
 		<>
-			{/* <Suspense fallback={<Loader />}> */}
-
-			<color attach='background' args={['#f0f0f0']} />
+			{/* <color attach='background' args={['#f0f0f0']} /> */}
 			<PerspectiveCamera
 				makeDefault
 				position={GALLERY_CONFIG.CAMERA.INITIAL_POSITION}
 			/>
-			<Environment preset='apartment' />
 			{/* <Light /> */}
 
 			<Physics
 				gravity={GALLERY_CONFIG.PHYSICS.GRAVITY}
 				defaultContactMaterial={GALLERY_CONFIG.PHYSICS.CONTACT_MATERIAL}
 			>
-				{/* <SecondFloor /> */}
-				{/* <Floor /> */}
 				<Player />
-				<GalleryRoom />
-				{/* <ModernRoom /> */}
 				{/* <GalleryRoom /> */}
+				<ModernExhibitionRoom />
+				{/* <ModernRoom /> */}
 			</Physics>
 
 			<Preload all />
 			<axesHelper position={[0, 0, 0]} args={[55]} />
 			<PointerLockControls {...props} />
 			<Crosshair />
-			{/* </Suspense> */}
 		</>
 	);
 }

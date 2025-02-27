@@ -22,11 +22,12 @@
 		"haveAccount": "Đã có tài khoản? Đăng nhập",
 		"needAccount": "Chưa có tài khoản? Đăng ký",
 		"signinDescription": "Đăng nhập bằng cách sử dụng một trong các tùy chọn dưới.",
-		"googleLogin": "Đăng nhập với Google",
-		"phoneLogin": "Đăng nhập bằng số điện thoại",
+		"googleLogin": "Tiếp tục với Google",
+		"phoneLogin": "Tiếp tục với số điện thoại",
 		"back": "Quay lại",
 		"notification": "Thông báo",
-		"success": "Thành công"
+		"success": "Thành công",
+		"error": "Lỗi"
 	},
 	"header": {
 		"settings": "Cài đặt",
@@ -91,7 +92,7 @@
 	},
 	"blog": {
 		"preview_draft": "Xem trước bản nháp",
-		"publish": "Xuất bản",
+		"public": "Xuất bản",
 		"private": "Ẩn",
 		"close": "Đóng",
 		"desktop": "Máy tính",
@@ -107,7 +108,12 @@
 		"upload_image": "Tải ảnh lên",
 		"creating": "Đang tạo...",
 		"create_draft": "Tạo bản nháp",
-		"preview": "Xem trước"
+		"preview": "Xem trước",
+		"create_request": "Yêu cầu xuất bản đã được gửi",
+		"cancel": "Hủy yêu cầu",
+		"cancel_request": "Yêu cầu xuất bản đã thu hồi",
+		"pending": "Đã gửi",
+		"draft_create_error": "Đã xảy ra lỗi khi tạo blog"
 	},
 	"premium": {
     "feature_comparison": {

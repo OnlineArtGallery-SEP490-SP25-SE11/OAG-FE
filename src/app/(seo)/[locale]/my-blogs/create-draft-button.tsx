@@ -45,7 +45,7 @@ const createDraftSchema = z.object({
 	content: z.string()
 });
 
-export default function CreateBlogButton() {
+export default function CreateDraftButton() {
 	const router = useRouter();
 	const { setIsOpen: setIsOverlayOpen } = useContext(ToggleContext);
 	const { toast } = useToast();
@@ -63,7 +63,7 @@ export default function CreateBlogButton() {
 			});
 			setIsOpen(false);
 			setIsOverlayOpen(false);
-			router.push(`/blogs/${draft.data.id}`);
+			router.push(`/my-blogs/${draft.data.id}`);
 			router.refresh();
 		},
 		onError: () => {
@@ -138,8 +138,8 @@ export default function CreateBlogButton() {
 						<FormField
 							control={form.control}
 							name='image'
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
 							render={({
+								// eslint-disable-next-line @typescript-eslint/no-unused-vars
 								field: { value, onChange, ...field }
 							}) => (
 								<FormItem>

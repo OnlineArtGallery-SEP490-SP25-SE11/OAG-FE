@@ -37,7 +37,7 @@ export default function ArtworksPage() {
 				<div className='w-full flex justify-center'>
 					<div className='w-[600px] rounded-lg overflow-hidden border border-gray-200'>
 						<Image
-							src='/modern_c1_plan.png'
+							src='https://res.cloudinary.com/djvlldzih/image/upload/v1739374668/gallery/modern_c1_plan.png'
 							alt='Floor Plan'
 							width={1000}
 							height={1000}
