@@ -38,7 +38,13 @@ const BlogSidebar: React.FC = async () => {
         <Settings className="mr-3" size={18} /> Blog dashboard
       </Link> */}
 			<Link
-				href='/admin'
+				href={
+						user?.role.includes('admin')
+						? '/admin/dashboard'
+						: user?.role.includes('artist')
+						? '/my-blogs'
+						: '/'
+				}
 				className='flex items-center py-3 px-4 transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-slate-900 rounded-md'
 			>
 				<ArrowLeftIcon className='mr-3' size={18} /> Back Home

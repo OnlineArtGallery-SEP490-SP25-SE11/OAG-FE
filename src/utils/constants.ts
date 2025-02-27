@@ -42,7 +42,9 @@ export const TEXTURE_URL = {
 	BRICK_WALL:
 		'https://res.cloudinary.com/djvlldzih/image/upload/v1738916166/gallery/textures/brick-wall.jpg',
 	WHITE_WALL:
-		'https://res.cloudinary.com/djvlldzih/image/upload/v1738916278/gallery/textures/white-wall.jpg'
+		'https://res.cloudinary.com/djvlldzih/image/upload/v1738916278/gallery/textures/white-wall.jpg',
+	WHITE_DECORATIVE_CELLING: 
+		'https://res.cloudinary.com/djvlldzih/image/upload/v1740022250/gallery/textures/white-decorative-faux-tin-ceiling.jpg'
 };
 
 export const ARTWORK_URL = {

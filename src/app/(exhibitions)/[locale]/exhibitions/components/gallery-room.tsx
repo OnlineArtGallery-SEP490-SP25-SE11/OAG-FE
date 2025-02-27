@@ -17,6 +17,7 @@ import { LIGHT_PRESETS } from '@/utils/light-config';
 import { RoomLights } from './room-light';
 import { useCloudinaryAsset } from '@/hooks/useCloudinaryAsset';
 import { ARTWORK_URL, TEXTURE_URL } from '@/utils/constants';
+import { Environment } from '@react-three/drei';
 
 export function GalleryRoom() {
 	const { X_AXIS, Y_AXIS, Z_AXIS } = GALLERY_CONFIG.ROOM;
@@ -265,30 +266,33 @@ export function GalleryRoom() {
 	);
 
 	return (
-		<group>
-			<RoomLights config={LIGHT_PRESETS.GALLERY} />
-			{rooms.map((room, index) => (
-				<BaseRoom
-					key={`floor${index + 1}`}
-					position={room.position}
-					dimensions={{
-						width: X_AXIS,
-						height: Y_AXIS,
-						depth: Z_AXIS
-					}}
-					floor={room.floor.component}
-					ceiling={room.ceiling?.component}
-					walls={room.walls}
-				>
-					{/* Artworks */}
-					{room.artworks.map((artwork) => (
-						<ArtworkMesh key={artwork.id} artwork={artwork} />
-					))}
+		<>
+			<Environment preset='apartment' />
+			<group>
+				<RoomLights config={LIGHT_PRESETS.GALLERY} />
+				{rooms.map((room, index) => (
+					<BaseRoom
+						key={`floor${index + 1}`}
+						position={room.position}
+						dimensions={{
+							width: X_AXIS,
+							height: Y_AXIS,
+							depth: Z_AXIS
+						}}
+						floor={room.floor.component}
+						ceiling={room.ceiling?.component}
+						walls={room.walls}
+					>
+						{/* Artworks */}
+						{room.artworks.map((artwork) => (
+							<ArtworkMesh key={artwork.id} artwork={artwork} />
+						))}
 
-					{/* Models */}
-					{index === 0 ? firstFloorModels : secondFloorModels}
-				</BaseRoom>
-			))}
-		</group>
+						{/* Models */}
+						{index === 0 ? firstFloorModels : secondFloorModels}
+					</BaseRoom>
+				))}
+			</group>
+		</>
 	);
 }

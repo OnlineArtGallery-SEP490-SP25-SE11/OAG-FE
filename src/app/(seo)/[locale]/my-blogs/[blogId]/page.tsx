@@ -2,10 +2,10 @@
 import { DraftBlogForm } from '../draft-blog-form';
 import { notFound } from 'next/navigation';
 import PreviewButton from '../preview-button';
-import PublicButton from '../public-button';
+import PublishButton from '../publish-button';
 import { getCurrentUser } from '@/lib/session';
 import { getBlogById } from '@/service/blog';
-
+import BlogStatusButton from '../blog-status-button';
 export default async function DraftPage({
 	params
 }: {
@@ -18,8 +18,8 @@ export default async function DraftPage({
 		notFound();
 	}
 	const blog = await getBlogById(blogId);
-
-	if (!blog || blog.author !== user.id) {
+	console.log(blog, 'blog');
+	if (!blog || blog.author._id !== user.id) {
 		notFound();
 	}
 
@@ -28,12 +28,17 @@ export default async function DraftPage({
 			<div className='flex items-center justify-between mb-4'>
 				<div className='flex space-x-4'>
 					<PreviewButton blog={blog} />
-					{
-						<PublicButton
+					{user.role.includes('admin') ? (
+						<PublishButton
 							blogId={blogId}
-							initialPublishedState={blog.published}
+							initialStatus={blog.status}
 						/>
-					}
+					) : user.role.includes('artist') ? (
+						<BlogStatusButton
+							blogId={blogId}
+							initialStatus={blog.status}
+						/>
+					) : null}
 				</div>
 			</div>
 
