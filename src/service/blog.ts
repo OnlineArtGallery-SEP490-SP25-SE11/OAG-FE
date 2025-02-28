@@ -318,3 +318,20 @@ export async function createPublicRequest({
 		return null;
 	}
 }
+
+export async function getUserBlogs(accessToken: string) {
+	try {
+		const res = await createApi(accessToken).get('/blog/user-blogs');
+		console.log(res.data, 'user blogs');
+		return res.data;
+	} catch (error) {
+		if (axiosInstance.isAxiosError(error)) {
+			console.error(
+				`Error when get user blogs: ${error.response?.data}`
+			);
+		} else {
+			console.error(`Unexpected error: ${error}`);
+		}
+		return [];
+	}
+}
