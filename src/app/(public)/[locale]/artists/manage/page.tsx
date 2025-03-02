@@ -1,6 +1,6 @@
 'use client';
-
-import { useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,297 +9,529 @@ import {
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
-	SelectValue
+	SelectValue,
 } from '@/components/ui/select';
 import Image from 'next/image';
 import {
-	DragDropContext,
-	Draggable,
-	Droppable,
-	DropResult
-} from 'react-beautiful-dnd';
-import {
 	Pagination,
 	PaginationContent,
+	PaginationEllipsis,
 	PaginationItem,
 	PaginationLink,
 	PaginationNext,
-	PaginationPrevious
+	PaginationPrevious,
 } from '@/components/ui/pagination';
 import { vietnamCurrency } from '@/utils/converters';
+import { artworkService } from '@/app/(public)/[locale]/artists/queries';
+import { FilterX, Loader2, Search } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Skeleton } from '@/components/ui/skeleton';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 type Artwork = {
-	id: string;
+	_id: string;
 	title: string;
 	description: string;
 	category: string[];
-	dimensions: {
-		width: number;
-		height: number;
-	};
-	images: {
-		url: string;
-		type: string;
-		order: number;
-	}[];
+	dimensions: { width: number; height: number; _id: string };
+	url: string;
 	status: string;
+	views: number;
 	price: number;
-	createdAt: Date;
-	updatedAt: Date;
-	viewCount: number;
+	createdAt: string;
+	updatedAt: string;
+	__v: number;
 };
 
 const ITEMS_PER_PAGE = 12;
+const STATUS_OPTIONS = [
+	{ value: 'all', label: 'Tất cả', color: 'bg-gray-500' },
+	{ value: 'available', label: 'Có sẵn', color: 'bg-emerald-500' },
+	{ value: 'sold', label: 'Đã bán', color: 'bg-red-500' },
+	{ value: 'hidden', label: 'Ẩn', color: 'bg-gray-700' },
+	{ value: 'selling', label: 'Đang bán', color: 'bg-teal-500' },
+];
 
 export default function ManageArtworks() {
-	const [artworks, setArtworks] = useState<Artwork[]>([
-		{
-			id: '1',
-			title: 'Sunset',
-			description: 'A beautiful over the ocean',
-			category: ['Landscape', 'Nature'],
-			dimensions: { width: 100, height: 80 },
-			images: [
-				{
-					url: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5',
-					type: 'main',
-					order: 1
-				}
-			],
-			status: 'Available',
-			price: 5000000,
-			createdAt: new Date('2024-01-01'),
-			updatedAt: new Date('2024-01-01'),
-			viewCount: 150
-		},
-		{
-			id: '2',
-			title: 'Mountain View',
-			description: 'Majestic mountain peaks at sunrise',
-			category: ['Landscape', 'Nature'],
-			dimensions: { width: 120, height: 90 },
-			images: [
-				{
-					url: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9',
-					type: 'main',
-					order: 1
-				}
-			],
-			status: 'Sold',
-			price: 7500000,
-			createdAt: new Date('2024-01-02'),
-			updatedAt: new Date('2024-01-02'),
-			viewCount: 200
-		},
-		{
-			id: '3',
-			title: 'Abstract Thoughts',
-			description: 'An abstract of modern life',
-			category: ['Abstract', 'Modern'],
-			dimensions: { width: 80, height: 100 },
-			images: [
-				{
-					url: 'https://images.unsplash.com/photo-1573521193826-58c7dc2e13e3',
-					type: 'main',
-					order: 1
-				}
-			],
-			status: 'Hidden',
-			price: 1000000,
-			createdAt: new Date('2024-01-03'),
-			updatedAt: new Date('2024-01-03'),
-			viewCount: 75
-		},
-		{
-			id: '4',
-			title: 'Urban Dreams',
-			description: 'A cityscape at twilight',
-			category: ['Urban', 'Architecture'],
-			dimensions: { width: 150, height: 100 },
-			images: [
-				{
-					url: 'https://images.unsplash.com/photo-1514924013411-cbf25faa35bb',
-					type: 'main',
-					order: 1
-				}
-			],
-			status: 'Available',
-			price: 850000,
-			createdAt: new Date('2024-01-04'),
-			updatedAt: new Date('2024-01-04'),
-			viewCount: 180
-		},
-		{
-			id: '5',
-			title: 'Floral Symphony',
-			description: 'Vibrant garden flowers in bloom',
-			category: ['Nature', 'Still Life'],
-			dimensions: { width: 90, height: 90 },
-			images: [
-				{
-					url: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946',
-					type: 'main',
-					order: 1
-				}
-			],
-			status: 'Available',
-			price: 6000000,
-			createdAt: new Date('2024-01-05'),
-			updatedAt: new Date('2024-01-05'),
-			viewCount: 120
-		},
-		{
-			id: '6',
-			title: 'Desert Whispers',
-			description: 'Minimalist desert landscape at dawn',
-			category: ['Landscape', 'Minimalist'],
-			dimensions: { width: 120, height: 80 },
-			images: [
-				{
-					url: 'https://images.unsplash.com/photo-1509316785289-025f5b846b35',
-					type: 'main',
-					order: 1
-				}
-			],
-			status: 'Selling',
-			price: 900000,
-			createdAt: new Date('2024-01-06'),
-			updatedAt: new Date('2024-01-06'),
-			viewCount: 95
-		}
-	]);
+	const router = useRouter();
+	const pathname = usePathname();
+	const searchParams = useSearchParams();
+	const [isMobile, setIsMobile] = useState(false);
 
-	const [searchTerm, setSearchTerm] = useState('');
-	const [currentPage, setCurrentPage] = useState(1);
-	const [statusFilter, setStatusFilter] = useState('All');
+	const [searchTerm, setSearchTerm] = useState(searchParams?.get('search') || '');
+	const [currentPage, setCurrentPage] = useState(Number(searchParams?.get('page')) || 1);
+	const [statusFilter, setStatusFilter] = useState(searchParams?.get('status') || 'all');
+	const [debouncedSearch, setDebouncedSearch] = useState(searchTerm);
+	const searchTimeoutRef = useRef<number | null>(null);
 
-	const filteredArtworks = artworks.filter(
-		(artwork) =>
-			(artwork.title.toLowerCase().includes(searchTerm.toLowerCase())) &&
-			(statusFilter === 'All' || artwork.status === statusFilter)
+	useEffect(() => {
+		const handleResize = () => setIsMobile(window.innerWidth < 768);
+		handleResize();
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
+
+	useEffect(() => {
+		const params = new URLSearchParams(searchParams?.toString());
+		if (searchTerm) params.set('search', searchTerm); else params.delete('search');
+		if (currentPage > 1) params.set('page', currentPage.toString()); else params.delete('page');
+		if (statusFilter !== 'all') params.set('status', statusFilter); else params.delete('status');
+		const queryString = params.toString();
+		router.push(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
+	}, [currentPage, searchTerm, statusFilter, pathname, router, searchParams]);
+
+	const handleSearchChange = useCallback(
+		(e: React.ChangeEvent<HTMLInputElement>) => {
+			const value = e.target.value;
+			setSearchTerm(value);
+			if (currentPage !== 1) setCurrentPage(1);
+			if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+			searchTimeoutRef.current = window.setTimeout(() => setDebouncedSearch(value), 400);
+		},
+		[currentPage]
 	);
 
-	const totalPages = Math.ceil(filteredArtworks.length / ITEMS_PER_PAGE);
-	const paginatedArtworks = filteredArtworks.slice(
-		(currentPage - 1) * ITEMS_PER_PAGE,
-		currentPage * ITEMS_PER_PAGE
+	const queryOptions = useMemo(
+		() => ({
+			title: debouncedSearch,
+			status: statusFilter !== 'all' ? statusFilter : undefined,
+		}),
+		[debouncedSearch, statusFilter]
 	);
 
-	const onDragEnd = (result: DropResult) => {
-		if (!result.destination) {
-			return;
+	const { data, error, isLoading, isFetching } = useQuery({
+		queryKey: ['artworks', currentPage, debouncedSearch, statusFilter],
+		queryFn: () => artworkService.get(queryOptions, currentPage),
+		placeholderData: (previousData) => previousData,
+	});
+
+	const artworks: Artwork[] = data?.data.artworks || [];
+	const totalCount = data?.data.total || 0;
+	const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+
+	const resetFilters = useCallback(() => {
+		setSearchTerm('');
+		setDebouncedSearch('');
+		setStatusFilter('all');
+		setCurrentPage(1);
+	}, []);
+
+	const handleStatusChange = useCallback((value: string) => {
+		setStatusFilter(value);
+		setCurrentPage(1);
+	}, []);
+
+	const renderPaginationItems = useCallback(() => {
+		if (totalPages <= 5) {
+			return Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+				<PaginationItem key={page}>
+					<PaginationLink
+						href="#"
+						onClick={(e) => {
+							e.preventDefault();
+							setCurrentPage(page);
+						}}
+						isActive={currentPage === page}
+						className="text-xs md:text-sm text-teal-700 dark:text-teal-200"
+					>
+						{page}
+					</PaginationLink>
+				</PaginationItem>
+			));
 		}
 
-		const items = Array.from(artworks);
-		const [reorderedItem] = items.splice(result.source.index, 1);
-		items.splice(result.destination.index, 0, reorderedItem);
+		const items = [];
+		items.push(
+			<PaginationItem key={1}>
+				<PaginationLink
+					href="#"
+					onClick={(e) => {
+						e.preventDefault();
+						setCurrentPage(1);
+					}}
+					isActive={currentPage === 1}
+					className="text-xs md:text-sm text-teal-700 dark:text-teal-200"
+				>
+					1
+				</PaginationLink>
+			</PaginationItem>
+		);
 
-		setArtworks(items);
+		if (currentPage > 3) items.push(<PaginationItem key="start-ellipsis"><PaginationEllipsis /></PaginationItem>);
+
+		const startPage = Math.max(2, currentPage - 1);
+		const endPage = Math.min(totalPages - 1, currentPage + 1);
+		for (let i = startPage; i <= endPage; i++) {
+			if (i <= 1 || i >= totalPages) continue;
+			items.push(
+				<PaginationItem key={i}>
+					<PaginationLink
+						href="#"
+						onClick={(e) => {
+							e.preventDefault();
+							setCurrentPage(i);
+						}}
+						isActive={currentPage === i}
+						className="text-xs md:text-sm text-teal-700 dark:text-teal-200"
+					>
+						{i}
+					</PaginationLink>
+				</PaginationItem>
+			);
+		}
+
+		if (currentPage < totalPages - 2) items.push(<PaginationItem key="end-ellipsis"><PaginationEllipsis /></PaginationItem>);
+		if (totalPages > 1) {
+			items.push(
+				<PaginationItem key={totalPages}>
+					<PaginationLink
+						href="#"
+						onClick={(e) => {
+							e.preventDefault();
+							setCurrentPage(totalPages);
+						}}
+						isActive={currentPage === totalPages}
+						className="text-xs md:text-sm text-teal-700 dark:text-teal-200"
+					>
+						{totalPages}
+					</PaginationLink>
+				</PaginationItem>
+			);
+		}
+
+		return items;
+	}, [currentPage, totalPages]);
+
+	const getStatusColor = (status: string) => {
+		const option = STATUS_OPTIONS.find((opt) => opt.value === status);
+		return option ? option.color : 'bg-gray-500';
 	};
 
+	const renderArtworkCard = useCallback(
+		(artwork: Artwork, index: number) => {
+			// const artworkId = artwork._id;
+			const imageUrl = artwork.url || '/placeholder.svg';
+			const statusColor = getStatusColor(artwork.status);
+
+			return (
+				<motion.div
+					initial={{ opacity: 0, y: 15 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.4, delay: index * 0.05, ease: 'easeOut' }}
+					className="group relative hover:shadow-lg transition-all duration-300"
+				>
+					<Card className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
+						<div className={`relative ${isMobile ? 'aspect-[4/5]' : 'aspect-[2/3]'}`}>
+							<Image
+								src={imageUrl}
+								alt={artwork.title}
+								fill
+								className="object-cover transition-transform duration-300 group-hover:scale-105"
+								placeholder="blur"
+								blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjFmMWYxIi8+PC9zdmc+"
+							/>
+							<motion.div
+								className="absolute inset-0 bg-gradient-to-t from-teal-900/80 via-teal-900/50 to-transparent p-2 md:p-3 flex flex-col opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+								initial={{ opacity: 0, y: 10 }}
+								whileHover={{ opacity: 1, y: 0 }}
+								transition={{ duration: 0.2, ease: 'easeInOut' }}
+							>
+								<div className="space-y-1 md:space-y-2 flex-1">
+									<h3 className="text-sm md:text-base font-semibold text-white line-clamp-1">
+										{artwork.title}
+									</h3>
+									<p className="text-xs md:text-sm text-teal-100 line-clamp-2">
+										{artwork.description}
+									</p>
+									<p className="text-xs md:text-sm font-medium text-teal-50">
+										{vietnamCurrency(artwork.price)}
+									</p>
+									{artwork.views > 0 && (
+										<p className="text-xs text-teal-200">
+											{artwork.views.toLocaleString()} lượt xem
+										</p>
+									)}
+								</div>
+								<div className="mt-2 flex gap-1">
+									<Button
+										size="sm"
+										className="flex-1 bg-teal-500/20 text-teal-100 hover:bg-teal-500/30 backdrop-blur-sm text-xs md:text-sm"
+									>
+										Sửa
+									</Button>
+									<Button
+										size="sm"
+										variant="destructive"
+										className="flex-1 bg-red-500/20 hover:bg-red-500/30 backdrop-blur-sm text-xs md:text-sm"
+									>
+										Xóa
+									</Button>
+								</div>
+							</motion.div>
+							<motion.div
+								className={`absolute top-2 right-2 px-2 py-0.5 rounded-full text-xs font-medium ${statusColor} text-white shadow-sm`}
+								initial={{ opacity: 0, scale: 0.9 }}
+								animate={{ opacity: 1, scale: 1 }}
+								transition={{ duration: 0.3, delay: 0.1 + index * 0.05, ease: 'easeOut' }}
+							>
+								{artwork.status}
+							</motion.div>
+						</div>
+					</Card>
+				</motion.div>
+			);
+		},
+		[isMobile]
+	);
+
+	const renderSkeletons = useCallback(() =>
+		Array.from({ length: ITEMS_PER_PAGE }).map((_, index) => (
+			<motion.div
+				key={`skeleton-${index}`}
+				initial={{ opacity: 0, y: 15 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.4, delay: index * 0.05, ease: 'easeOut' }}
+				className={isMobile ? 'aspect-[4/5]' : 'aspect-[2/3]'}
+			>
+				<Skeleton className="w-full h-full rounded-lg" />
+			</motion.div>
+		)), [isMobile]);
+
 	return (
-		<div className='container mx-auto px-4 py-8'>
-			<h1 className='text-4xl font-bold mb-8'>Manage Artworks</h1>
-			<div className='flex flex-col md:flex-row mb-6 gap-4'>
-				<Input
-					type='text'
-					placeholder='Search artworks...'
-					value={searchTerm}
-					onChange={(e) => setSearchTerm(e.target.value)}
-					className='md:max-w-sm'
-				/>
-				<Select value={statusFilter} onValueChange={setStatusFilter}>
-					<SelectTrigger className='w-[180px]'>
-						<SelectValue placeholder='Filter by status' />
+		<motion.div
+			initial={{ opacity: 0 }}
+			animate={{ opacity: 1 }}
+			transition={{ duration: 0.6, ease: 'easeOut' }}
+			className="p-3 md:p-6 space-y-2 md:space-y-3 max-w-6xl mx-auto"
+		>
+			{/* Header */}
+			<motion.div
+				initial={{ opacity: 0, y: -15 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
+			>
+				<h1 className="text-lg md:text-2xl font-bold bg-gradient-to-r from-teal-600 to-cyan-500 bg-clip-text text-transparent">
+					Quản lý tác phẩm
+				</h1>
+				<p className="text-xs md:text-sm text-teal-600 dark:text-cyan-400 mt-1">
+					Tổng cộng {totalCount} tác phẩm
+				</p>
+			</motion.div>
+
+			{/* Filters */}
+			<motion.div
+				initial={{ opacity: 0, y: -10 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.5, delay: 0.2, ease: 'easeOut' }}
+				className="flex flex-col gap-2 md:flex-row md:items-center md:gap-3"
+			>
+				<div className="relative flex-1 max-w-md">
+					<Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-teal-500 dark:text-teal-400 h-4 w-4" />
+					<Input
+						type="text"
+						placeholder="Tìm theo tiêu đề..."
+						value={searchTerm}
+						onChange={handleSearchChange}
+						className="pl-8 rounded-lg border-gray-200 dark:border-gray-700 shadow-sm text-sm focus:ring-2 focus:ring-teal-500 h-9 bg-gray-50 dark:bg-gray-700/30 text-gray-700 dark:text-gray-200"
+					/>
+					{searchTerm && (
+						<motion.button
+							initial={{ opacity: 0, scale: 0.8 }}
+							animate={{ opacity: 1, scale: 1 }}
+							onClick={() => {
+								setSearchTerm('');
+								setDebouncedSearch('');
+								if (currentPage !== 1) setCurrentPage(1);
+							}}
+							className="absolute right-2.5 top-1/2 -translate-y-1/2 text-teal-500 hover:text-teal-600 dark:hover:text-teal-300"
+							transition={{ duration: 0.2 }}
+						>
+							<FilterX className="h-4 w-4" />
+						</motion.button>
+					)}
+				</div>
+				<Select value={statusFilter} onValueChange={handleStatusChange}>
+					<SelectTrigger className="w-full max-w-[140px] rounded-lg border-gray-200 dark:border-gray-700 shadow-sm text-sm h-9 bg-gray-50 dark:bg-gray-700/30 text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-teal-500">
+						<SelectValue placeholder="Trạng thái" />
 					</SelectTrigger>
-					<SelectContent>
-						<SelectItem value='All'>All</SelectItem>
-						<SelectItem value='Available'>Available</SelectItem>
-						<SelectItem value='Sold'>Sold</SelectItem>
-						<SelectItem value='Hidden'>Hidden</SelectItem>
-						<SelectItem value='Selling'>Selling</SelectItem>
+					<SelectContent className="rounded-lg">
+						{STATUS_OPTIONS.map((option) => (
+							<SelectItem key={option.value} value={option.value} className="text-sm text-gray-700 dark:text-gray-200">
+								<span className={`inline-block w-2 h-2 rounded-full ${option.color} mr-2`}></span>
+								{option.label}
+							</SelectItem>
+						))}
 					</SelectContent>
 				</Select>
-			</div>
-			<DragDropContext onDragEnd={onDragEnd}>
-				<Droppable droppableId='artworks'>
-					{(provided) => (
-						<div
-							{...provided.droppableProps}
-							ref={provided.innerRef}
-							className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8'
+				{(debouncedSearch || statusFilter !== 'all') && (
+					<motion.div
+						initial={{ opacity: 0, scale: 0.8 }}
+						animate={{ opacity: 1, scale: 1 }}
+						exit={{ opacity: 0, scale: 0.8 }}
+						transition={{ duration: 0.2 }}
+					>
+						<Button
+							variant="outline"
+							size="icon"
+							onClick={resetFilters}
+							className="h-9 w-9 rounded-lg border-teal-200 dark:border-teal-600 text-teal-500 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-700/50"
 						>
-							{paginatedArtworks.map((artwork, index) => (
-								<Draggable
-									key={artwork.id}
-									draggableId={artwork.id}
-									index={index}
-								>
-									{(provided) => (
-										<Card
-											ref={provided.innerRef}
-											{...provided.draggableProps}
-											{...provided.dragHandleProps}
-											className='group relative aspect-square overflow-hidden rounded-lg transition-all duration-300 hover:shadow-xl'
-										>
-											<Image
-												src={artwork.images[0]?.url || '/placeholder.svg'}
-												alt={artwork.title}
-												fill
-												className='object-cover transition-transform duration-300 group-hover:scale-110'
-											/>
-											<div className='absolute inset-0 bg-black/60 p-4 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
-												<h3 className='text-lg font-bold mb-2'>{artwork.title}</h3>
-												<div className='space-y-1 text-sm'>
-													<p>{artwork.status}</p>
-													<p>{vietnamCurrency(artwork.price)}</p>
-													<p className='line-clamp-2'>{artwork.description}</p>
-												</div>
-												<div className='absolute bottom-4 left-4 right-4 flex gap-2'>
-													<Button size="sm" className='flex-1 bg-white/20 backdrop-blur-sm hover:bg-white/30'>
-														Edit
-													</Button>
-													<Button size="sm" variant='destructive' className='flex-1 bg-red-500/20 backdrop-blur-sm hover:bg-red-500/30'>
-														Delete
-													</Button>
-												</div>
-											</div>
-										</Card>
-									)}
-								</Draggable>
-							))}
-							{provided.placeholder}
+							<FilterX className="h-4 w-4" />
+						</Button>
+					</motion.div>
+				)}
+			</motion.div>
+
+			{/* Pagination (Mobile: Top, Desktop: Bottom) */}
+			{totalPages > 0 && isMobile && (
+				<motion.div
+					initial={{ opacity: 0, y: -10 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.5, delay: 0.3, ease: 'easeOut' }}
+				>
+					<Pagination>
+						<PaginationContent>
+							<PaginationItem>
+								<PaginationPrevious
+									href="#"
+									onClick={(e) => {
+										e.preventDefault();
+										if (currentPage > 1) setCurrentPage(currentPage - 1);
+									}}
+									className={currentPage === 1 ? 'pointer-events-none opacity-50 text-teal-500 dark:text-teal-400' : 'text-teal-500 dark:text-teal-400'}
+								/>
+							</PaginationItem>
+							{renderPaginationItems()}
+							<PaginationItem>
+								<PaginationNext
+									href="#"
+									onClick={(e) => {
+										e.preventDefault();
+										if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+									}}
+									className={currentPage === totalPages ? 'pointer-events-none opacity-50 text-teal-500 dark:text-teal-400' : 'text-teal-500 dark:text-teal-400'}
+								/>
+							</PaginationItem>
+						</PaginationContent>
+					</Pagination>
+				</motion.div>
+			)}
+
+			{/* Content */}
+			<AnimatePresence mode="wait">
+				{isLoading ? (
+					<motion.div
+						key="loading"
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						transition={{ duration: 0.5 }}
+						className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3"
+					>
+						{renderSkeletons()}
+					</motion.div>
+				) : error ? (
+					<motion.div
+						key="error"
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						transition={{ duration: 0.5 }}
+						className="text-center py-6 space-y-2 border rounded-lg bg-emerald-50 dark:bg-teal-900/30"
+					>
+						<p className="text-sm text-red-500 dark:text-red-400 font-medium">
+							Lỗi khi tải tác phẩm
+						</p>
+						<Button variant="outline" onClick={() => window.location.reload()} className="text-sm text-teal-700 dark:text-teal-200 border-teal-200 dark:border-teal-600 hover:bg-teal-100 dark:hover:bg-teal-700/50">
+							Thử lại
+						</Button>
+					</motion.div>
+				) : artworks.length === 0 ? (
+					<motion.div
+						key="empty"
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						transition={{ duration: 0.5 }}
+						className="text-center py-6 border rounded-lg bg-emerald-50 dark:bg-teal-900/30 space-y-2"
+					>
+						<p className="text-sm font-medium text-emerald-700 dark:text-emerald-200">
+							Không tìm thấy tác phẩm
+						</p>
+						<p className="text-xs text-teal-600 dark:text-teal-400">
+							{debouncedSearch || statusFilter !== 'all' ? 'Thay đổi bộ lọc để thử lại' : 'Thêm tác phẩm đầu tiên của bạn'}
+						</p>
+						{(debouncedSearch || statusFilter !== 'all') && (
+							<Button variant="outline" onClick={resetFilters} className="text-sm text-teal-700 dark:text-teal-200 border-teal-200 dark:border-teal-600 hover:bg-teal-100 dark:hover:bg-teal-700/50">
+								Xóa bộ lọc
+							</Button>
+						)}
+					</motion.div>
+				) : (
+					<motion.div
+						key="content"
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						transition={{ duration: 0.5 }}
+					>
+						<div className="relative">
+							<AnimatePresence>
+								{isFetching && !isLoading && (
+									<motion.div
+										initial={{ opacity: 0 }}
+										animate={{ opacity: 1 }}
+										exit={{ opacity: 0 }}
+										className="absolute inset-0 bg-white/70 dark:bg-gray-900/70 flex items-center justify-center z-10 rounded-lg backdrop-blur-sm"
+										transition={{ duration: 0.3 }}
+									>
+										<Loader2 className="h-6 w-6 text-teal-500 animate-spin" />
+									</motion.div>
+								)}
+							</AnimatePresence>
+
+							<div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+								{artworks.map((artwork, index) => renderArtworkCard(artwork, index))}
+							</div>
 						</div>
-					)}
-				</Droppable>
-			</DragDropContext>
-			<Pagination>
-				<PaginationContent>
-					<PaginationItem>
-						<PaginationPrevious
-							href='#'
-							onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-						/>
-					</PaginationItem>
-					{[...Array(totalPages)].map((_, i) => (
-						<PaginationItem key={i}>
-							<PaginationLink
-								href='#'
-								onClick={() => setCurrentPage(i + 1)}
-								isActive={currentPage === i + 1}
+
+						{totalPages > 0 && !isMobile && (
+							<motion.div
+								initial={{ opacity: 0, y: 15 }}
+								animate={{ opacity: 1, y: 0 }}
+								transition={{ duration: 0.5, delay: 0.3, ease: 'easeOut' }}
+								className="mt-3"
 							>
-								{i + 1}
-							</PaginationLink>
-						</PaginationItem>
-					))}
-					<PaginationItem>
-						<PaginationNext
-							href='#'
-							onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-						/>
-					</PaginationItem>
-				</PaginationContent>
-			</Pagination>
-		</div>
+								<Pagination>
+									<PaginationContent>
+										<PaginationItem>
+											<PaginationPrevious
+												href="#"
+												onClick={(e) => {
+													e.preventDefault();
+													if (currentPage > 1) setCurrentPage(currentPage - 1);
+												}}
+												className={currentPage === 1 ? 'pointer-events-none opacity-50 text-teal-500 dark:text-teal-400' : 'text-teal-500 dark:text-teal-400'}
+											/>
+										</PaginationItem>
+										{renderPaginationItems()}
+										<PaginationItem>
+											<PaginationNext
+												href="#"
+												onClick={(e) => {
+													e.preventDefault();
+													if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+												}}
+												className={currentPage === totalPages ? 'pointer-events-none opacity-50 text-teal-500 dark:text-teal-400' : 'text-teal-500 dark:text-teal-400'}
+											/>
+										</PaginationItem>
+									</PaginationContent>
+								</Pagination>
+							</motion.div>
+						)}
+					</motion.div>
+				)}
+			</AnimatePresence>
+		</motion.div>
 	);
 }

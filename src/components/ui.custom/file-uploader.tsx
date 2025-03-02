@@ -13,6 +13,7 @@ import { File, Upload, X } from 'lucide-react';
 import Image from 'next/image';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+
 interface FileUploaderProps {
 	multiple?: boolean;
 	accept?: Record<string, string[]>;
@@ -24,7 +25,20 @@ interface FileUploaderProps {
 		refId?: string;
 		refType?: string;
 	};
-	onFileUpload?: (url: string | string[]) => void; // Thêm onUpload để lưu path file
+	// onFileUpload?: (
+	// 	url: string | string[],
+	// 	width?: number,
+	// 	height?: number,
+	// 	_id?: string
+	// ) => void; // Thêm onUpload để lưu path file
+	onFileUpload?: (
+		files: {
+			url: string;
+			width?: number;
+			height?: number;
+			_id?: string;
+		}[]
+	) => void;
 }
 
 const DropZone = memo(
@@ -449,13 +463,21 @@ const FileUploader: React.FC<FileUploaderProps> = ({
 		});
 
 		if (newCompletedFiles.length > 0) {
-			const newUrls = newCompletedFiles.map((file) => file.url);
-			onFileUpload(newUrls);
+			// const newUrls = newCompletedFiles.map((file) => file.url);
+			// onFileUpload(newUrls);
+			const newFiles = newCompletedFiles.map((file) => ({
+				url: file.url,
+				width: file.width,
+				height: file.height,
+				id: file.id
+			}));
+			// console.log('New files:', newFiles);
+			onFileUpload(newFiles);
 		}
 	}, [completedUploads, onFileUpload, pendingUploads]);
 	return (
 		<>
-			<div className='space-y-4 w-full max-w-full shadow-lg rounded p-2'>
+			<div className='space-y-4 w-full max-w-full p-2'>
 				{/* <Button
 					onClick={handleUpload}
 					disabled={pendingUploads.length === 0}
