@@ -67,3 +67,19 @@ export const GALLERY_CONFIG = {
 		VERTICAL_POSITION: 3
 	}
 };
+
+export const M2_ROOM_CONFIG = {
+	DIMENSION: {
+		X_AXIS: 30, // X_AXIS
+		Y_AXIS: 10, // Y_AXIS
+		Z_AXIS: 40 // Z_AXIS
+	},
+};
+
+export const COSY_A1_ROOM_CONFIG = {
+	DIMENSION: {
+		X_AXIS: 20, // X_AXIS
+		Y_AXIS: 10, // Y_AXIS
+		Z_AXIS: 30 // Z_AXIS
+	},
+};

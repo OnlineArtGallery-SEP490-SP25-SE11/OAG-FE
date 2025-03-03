@@ -12,8 +12,10 @@ import { useThree } from '@react-three/fiber';
 // import { GalleryRoom2 } from "./gallery-room-2";
 // import { ModernRoom } from "./modern-room";
 // import { GalleryRoom } from './gallery-room';
-import { ModernExhibitionRoom } from './rooms/m2-room/m2-room';
-
+// import { M2Room } from './rooms/m2-room/m2-room';
+// import Light from './light';
+// import LightControl from './light-control';
+import { CozyA1Room } from './rooms/cozy-a1-room/cozy-a1-room';
 export default function Scene() {
 	const { set } = useThree();
 	const props = {
@@ -33,6 +35,7 @@ export default function Scene() {
 				position={GALLERY_CONFIG.CAMERA.INITIAL_POSITION}
 			/>
 			{/* <Light /> */}
+			{/* <LightControl /> */}
 
 			<Physics
 				gravity={GALLERY_CONFIG.PHYSICS.GRAVITY}
@@ -40,7 +43,8 @@ export default function Scene() {
 			>
 				<Player />
 				{/* <GalleryRoom /> */}
-				<ModernExhibitionRoom />
+				{/* <M2Room /> */}
+				<CozyA1Room />
 				{/* <ModernRoom /> */}
 			</Physics>
 

@@ -1,6 +1,6 @@
 import { Vec3 } from '@/types/gallery';
 import { Texture } from 'three';
-import { PhysicalFloorCollider } from './physical-floor-collider';
+import { PhysicalCollider } from './physical-collider';
 
 interface RoomFloorProps {
 	position: Vec3;
@@ -38,10 +38,11 @@ export function RoomFloor({
 			</mesh>
 
 			{/* Physics Collider */}
-			<PhysicalFloorCollider
+			<PhysicalCollider
 				position={colliderPosition}
 				rotation={rotation}
 				args={args}
+				material={{ friction: 0.1, restitution: 0 }}
 			/>
 		</>
 	);

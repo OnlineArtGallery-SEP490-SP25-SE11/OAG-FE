@@ -1,18 +1,18 @@
 import * as THREE from "three";
 import { useCloudinaryAsset } from "@/hooks/useCloudinaryAsset";
 import { TEXTURE_URL } from "@/utils/constants";
-import { GALLERY_CONFIG } from "@/utils/gallery-config";
+import { M2_ROOM_CONFIG } from "@/utils/gallery-config";
 
 export default function M2RoomCeilling() {
-    const { X_AXIS, Y_AXIS, Z_AXIS } = GALLERY_CONFIG.ROOM;
-    const ceilingTexture = useCloudinaryAsset(TEXTURE_URL.WHITE_DECORATIVE_CELLING);
+    const { X_AXIS, Y_AXIS, Z_AXIS } = M2_ROOM_CONFIG.DIMENSION;
+    const ceilingTexture = useCloudinaryAsset(TEXTURE_URL.CELLING_GYPSUM);
 
     if (ceilingTexture) {
         // Set texture to repeat instead of stretching
         ceilingTexture.wrapS = THREE.RepeatWrapping;
         ceilingTexture.wrapT = THREE.RepeatWrapping;
         // Adjust the repeat values as needed, here we use fixed values.
-        ceilingTexture.repeat.set(10, 10);
+        ceilingTexture.repeat.set(15, 15);
         ceilingTexture.needsUpdate = true;
     }
 

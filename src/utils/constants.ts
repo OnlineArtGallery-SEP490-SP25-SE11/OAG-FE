@@ -44,7 +44,13 @@ export const TEXTURE_URL = {
 	WHITE_WALL:
 		'https://res.cloudinary.com/djvlldzih/image/upload/v1738916278/gallery/textures/white-wall.jpg',
 	WHITE_DECORATIVE_CELLING: 
-		'https://res.cloudinary.com/djvlldzih/image/upload/v1740022250/gallery/textures/white-decorative-faux-tin-ceiling.jpg'
+		'https://res.cloudinary.com/djvlldzih/image/upload/v1740022250/gallery/textures/white-decorative-faux-tin-ceiling.jpg',
+	CELLING_GYPSUM:
+		'https://res.cloudinary.com/djvlldzih/image/upload/v1740888096/gallery/textures/celling-gypsum.jpg',
+	DARK_GREY_CONCRETE_TEXTURE:
+		'https://res.cloudinary.com/djvlldzih/image/upload/v1740925014/gallery/textures/broken-grey-texture.jpg',
+	GREY_CONCRETE_TEXTURE:
+		'https://res.cloudinary.com/djvlldzih/image/upload/v1740924207/gallery/textures/grey-concrete-texture.webp'
 };
 
 export const ARTWORK_URL = {
