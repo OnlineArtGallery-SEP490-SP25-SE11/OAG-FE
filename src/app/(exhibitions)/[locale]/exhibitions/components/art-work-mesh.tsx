@@ -24,8 +24,9 @@ interface Artwork {
 	id: number; // ID duy nhất của tranh
 	url: string; // Đường dẫn đến hình ảnh tranh
 	position: Vec3; // Vị trí trong không gian 3D (x, y, z)
+	rotation?: Vec3; // Góc quay của tranh (tùy chọn)
 	title?: string; // Tiêu đề tranh (tùy chọn)
-	description?: string; // Mô tả tranh (tùy chọn)
+	description?: string; // Mô tả tranh (tùy chọn),
 }
 
 // Props cho component khung tranh
@@ -45,7 +46,7 @@ const FRAME_GEOMETRY = {
 };
 
 // Component khung tranh
-const FrameMesh: React.FC<FrameMeshProps> = React.memo(({ width, height }) => {
+const FrameMesh: React.FC<FrameMeshProps> = React.memo(({ width, height}) => {
 	// Load texture cho khung tranh
 	const frameTexture = useCloudinaryAsset(TEXTURE_URL.FLOOR);
 
@@ -181,7 +182,9 @@ export const ArtworkMesh: React.FC<{ artwork: Artwork }> = React.memo(
 		}, [texture]);
 
 		return (
-			<group position={artwork.position}>
+			<group 
+			position={artwork.position} 
+			rotation={artwork.rotation || [0, 0, 0]}>
 				{/* Mesh chính hiển thị tranh */}
 				<mesh
 					ref={meshRef}

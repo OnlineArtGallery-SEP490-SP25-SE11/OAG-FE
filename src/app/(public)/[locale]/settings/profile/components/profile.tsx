@@ -4,12 +4,11 @@ import { fetchUser } from '@/app/(public)/[locale]/_header/queries';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar } from '@/components/ui.custom/Avatar';
 import {
-	Pencil,
-	Settings,
+
 	CircleUser,
 	Heart,
 	Image,
-	Grid,
+
 	Camera
 } from 'lucide-react';
 import EditProfileDialog from './EditProfileDialog';
@@ -19,14 +18,13 @@ import { useToast } from '@/hooks/use-toast';
 import { updateAvatar } from '../queries';
 import { useEffect } from 'react';
 import { subscribeToUserUpdates } from '@/lib/user-updates';
-;
-import {
-	ResizableHandle,
-	ResizablePanel,
-	ResizablePanelGroup
-} from '@/components/ui/resizable';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+
 
 function ProfilePage() {
+	const { data: session, status } = useSession();
+	const router = useRouter();
 	const { isLoading, error, data } = useQuery({
 		queryKey: ['currentUser'],
 		queryFn: fetchUser
@@ -36,16 +34,37 @@ function ProfilePage() {
 
 	const { toast } = useToast();
 
-	const handleAvatarUpload = async (base64Image: string) => {
+	const handleAvatarUpload = async (file: File) => {
+		if (status !== 'authenticated') {
+			toast({
+				title: 'Authentication Error',
+				description: 'Please sign in to update your avatar',
+				variant: 'destructive'
+			});
+			router.push('/auth/signin');
+			return;
+		}
+
 		try {
-			const result = await updateAvatar(base64Image);
+			const response = await updateAvatar(file, session?.user?.accessToken);
+			console.log('Avatar update response:', response);
+
 			// Invalidate and refetch user data
 			await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+
+			// Force refetch the user data
+			const updatedUser = await queryClient.fetchQuery({
+				queryKey: ['currentUser'],
+				queryFn: fetchUser
+			});
+			console.log('Updated user data:', updatedUser);
+
 			toast({
 				title: 'Success',
 				description: 'Avatar updated successfully'
 			});
 		} catch (error) {
+			console.error('Error updating avatar:', error);
 			toast({
 				title: 'Error',
 				description: 'Failed to update avatar',
@@ -54,16 +73,17 @@ function ProfilePage() {
 		}
 	};
 
-	const handlePremiumStatusChange = async () => {
-		await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
-		toast({
-			title: 'Premium Status Updated',
-			description: data?.isPremium
-				? 'Welcome to Premium! Enjoy your new benefits.'
-				: 'Your premium status has been updated.',
-			variant: data?.isPremium ? 'success' : 'default'
-		});
-	};
+
+	// const handlePremiumStatusChange = async () => {
+	// 	await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+	// 	toast({
+	// 		title: 'Premium Status Updated',
+	// 		description: data?.isPremium
+	// 			? 'Welcome to Premium! Enjoy your new benefits.'
+	// 			: 'Your premium status has been updated.',
+	// 		variant: data?.isPremium ? 'success' : 'default'
+	// 	});
+	// };
 
 	useEffect(() => {
 		// Subscribe to premium status changes
@@ -118,7 +138,7 @@ function ProfilePage() {
 						<div className="relative">
 							<Avatar
 								user={{
-									image: data.avatar,
+									image: data.image,
 									googleImage: data.googleImage,
 									isPremium: data.isPremium || false
 								}}
@@ -147,6 +167,14 @@ function ProfilePage() {
 								)}
 							</div>
 							<p className="text-gray-600">{email}</p>
+
+							{/* Add Edit Profile Button Here */}
+							<div className="mt-4">
+								<EditProfileDialog
+									name={data.name}
+									address={data.address || ''}
+								/>
+							</div>
 						</div>
 					</div>
 
@@ -172,7 +200,7 @@ function ProfilePage() {
 						</div>
 					</div>
 
-				
+
 				</div>
 			</div>
 

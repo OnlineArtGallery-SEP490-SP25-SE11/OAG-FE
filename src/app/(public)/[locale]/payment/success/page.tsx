@@ -1,7 +1,7 @@
 'use client';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { verifyPayment } from '@/service/payment.service';
+// import { verifyPayment } from '@/service/payment.service';
 import { useToast } from '@/hooks/use-toast';
 import { useServerAction } from 'zsa-react';
 import { verifyPaymentAction } from '../../payment/actions';
@@ -9,13 +9,13 @@ import { verifyPaymentAction } from '../../payment/actions';
 export default function PaymentSuccess() {
   const router = useRouter();
   const searchParams = new URLSearchParams(window.location.search);
-  const code = searchParams.get('code');
+  // const code = searchParams.get('code');
   const id = searchParams.get('id');
-  const cancel = searchParams.get('cancel');
-  const status = searchParams.get('status');
-  const orderCode = searchParams.get('orderCode');
+  // const cancel = searchParams.get('cancel');
+  // const status = searchParams.get('status');
+  // const orderCode = searchParams.get('orderCode');
   const { toast } = useToast();
-  const { execute: verifyPayment, isPending } = useServerAction(verifyPaymentAction);
+  const { execute: verifyPayment,  } = useServerAction(verifyPaymentAction);
 
   useEffect(() => {
     const paymentSuccess = async (paymentId: string) => {

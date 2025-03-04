@@ -16,14 +16,21 @@ export const Avatar = ({ user, size = 'md' }: AvatarProps) => {
     lg: 'w-16 h-16'
   };
 
-  const avatarSrc = user.image || user.googleImage || 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg';
+  // If user has uploaded their own image, use that
+  // Otherwise, fall back to Google image
+  // Finally, use default avatar
+  const avatarSrc = user.image
+    ? user.image
+    : user.googleImage
+      ? user.googleImage
+      : 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg';
 
   return (
     <div className="relative inline-block">
       <img
         src={avatarSrc}
         alt="Avatar"
-        className={`rounded-full ${sizeClasses[size]}`}
+        className={`rounded-full ${sizeClasses[size]} object-cover`}
       />
 
       {user.isPremium && (
