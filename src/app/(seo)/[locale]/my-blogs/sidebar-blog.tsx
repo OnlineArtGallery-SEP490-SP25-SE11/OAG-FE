@@ -42,13 +42,8 @@ const BlogSidebar: React.FC = async () => {
 						user?.role.includes('admin')
 						? '/admin/dashboard'
 						: user?.role.includes('artist')
-<<<<<<< HEAD
-						? '/my-blogs'
-						: '/'
-=======
 						? '/'
 						: '/sign-in'
->>>>>>> 553b5825350d8c24768aa7e8137de022705f4307
 				}
 				className='flex items-center py-3 px-4 transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-slate-900 rounded-md'
 			>
