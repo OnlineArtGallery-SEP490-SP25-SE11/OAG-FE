@@ -1,10 +1,10 @@
 // import {RepeatWrapping} from "three";
 import { useCloudinaryAsset } from "@/hooks/useCloudinaryAsset";
 import { TEXTURE_URL } from "@/utils/constants";
-import { COSY_A1_ROOM_CONFIG } from "@/utils/gallery-config";
+import { COZY_A1_ROOM_CONFIG } from "@/utils/gallery-config";
 
 export default function CozyA1Ceilling() {
-    const { X_AXIS, Y_AXIS, Z_AXIS } = COSY_A1_ROOM_CONFIG.DIMENSION;
+    const { X_AXIS, Y_AXIS, Z_AXIS } = COZY_A1_ROOM_CONFIG.DIMENSION;
     const ceilingTexture = useCloudinaryAsset(TEXTURE_URL.WHITE_WALL);
 
     // if (ceilingTexture) {

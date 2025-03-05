@@ -1,11 +1,11 @@
 'use client';
 import { useState } from 'react';
-import Gallery from '../components/gallery';
+import Exhibition from '../components/exhibition';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Share2 } from 'lucide-react';
 import Image from 'next/image';
 
-const galleryData = {
+const exhibitionData = {
 	title: "Modern Art Exhibition",
 	author: "John Doe",
 	date: "31.1.2025",
@@ -14,19 +14,14 @@ const galleryData = {
 	backgroundImage: "https://res.cloudinary.com/djvlldzih/image/upload/v1738920776/gallery/arts/phiadv4m1kbsxidfostr.jpg",
 };
 
-export default function ExhibitionPage({ params }: {
-	params: {
-		id: string;
-	}
-}) {
+export default function ExhibitionPage() {
 	const [isStarted, setIsStarted] = useState(false);
-	const { id } = params;
 	if (!isStarted) {
 		return (
 			<div className='relative h-screen w-full'>
 				<div className='absolute inset-0'>
 					<Image
-						src={galleryData.backgroundImage}
+						src={exhibitionData.backgroundImage}
 						alt='Gallery Background'
 						fill
 						className='object-cover'
@@ -39,8 +34,8 @@ export default function ExhibitionPage({ params }: {
 						<div className='space-y-8'>
 							<div className='relative aspect-video w-full rounded-3xl overflow-hidden'>
 								<Image
-									src={galleryData.thumbnail}
-									alt={galleryData.title}
+									src={exhibitionData.thumbnail}
+									alt={exhibitionData.title}
 									fill
 									className='object-cover'
 								/>
@@ -51,18 +46,18 @@ export default function ExhibitionPage({ params }: {
 										<Share2 className='w-4 h-4' />
 									</div>
 									<div className='flex items-center gap-1'>
-										<span>{galleryData.date}</span>
+										<span>{exhibitionData.date}</span>
 									</div>
 								</div>
 
 								<div className='h-px bg-gray-200' />
 
 								<h1 className='text-2xl font-bold text-gray-900'>
-									{galleryData.title}
+									{exhibitionData.title}
 								</h1>
 
 								<p className='text-sm text-gray-600'>
-									{galleryData.description}
+									{exhibitionData.description}
 								</p>
 
 								<Button
@@ -82,7 +77,7 @@ export default function ExhibitionPage({ params }: {
 
 	return (
 		<div>
-			<Gallery roomId={id} />
+			<Exhibition/>
 		</div>
 	);
 }

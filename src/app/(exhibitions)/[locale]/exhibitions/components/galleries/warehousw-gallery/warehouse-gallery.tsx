@@ -1,25 +1,25 @@
 import React, { useMemo } from 'react';
-import { BaseRoom } from './base-room';
-import { Wall } from './wall';
-import { RoomFloor } from './room-floor';
-import { DoorWall } from './door-wall';
-import { ArtworkMesh } from './art-work-mesh';
+import { BaseRoom } from '../../base-room';
+import { Wall } from '../../wall';
+import { RoomFloor } from '../../room-floor';
+import { DoorWall } from '../../door-wall';
+import { ArtworkMesh } from '../../art-work-mesh';
 import { GALLERY_CONFIG } from '@/utils/gallery-config';
 import { calculateWallArtworkPositions } from '@/utils/room-helper';
 import { Vec3 } from '@/types/gallery';
 
-import GlassWindow from './model/glass-window';
+import GlassWindow from '../../model/glass-window';
 
-import GLASS_WINDOWS_2 from './model/glass-window-2';
-import { Railing } from './model/railing';
-import { StairLowPoly } from './model/stair_low_poly';
+import GLASS_WINDOWS_2 from '../../model/glass-window-2';
+import { Railing } from '../../model/railing';
+import { StairLowPoly } from '../../model/stair_low_poly';
 import { LIGHT_PRESETS } from '@/utils/light-config';
-import { RoomLights } from './room-light';
+import { RoomLights } from '../../room-light';
 import { useCloudinaryAsset } from '@/hooks/useCloudinaryAsset';
 import { ARTWORK_URL, TEXTURE_URL } from '@/utils/constants';
 import { Environment } from '@react-three/drei';
 
-export function GalleryRoom() {
+export function WareHouseRoom() {
     const { X_AXIS, Y_AXIS, Z_AXIS } = GALLERY_CONFIG.ROOM;
     const roomDimensions = { X_AXIS, Y_AXIS, Z_AXIS };
     
@@ -297,7 +297,7 @@ export function GalleryRoom() {
 
     return (
         <>
-            <Environment preset='apartment' />
+            <Environment near={100} far={100000} preset='forest' background/>
             <group>
                 <RoomLights config={LIGHT_PRESETS.GALLERY} />
                 {rooms.map((room, index) => (

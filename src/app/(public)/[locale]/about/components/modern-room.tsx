@@ -1,13 +1,13 @@
 import React, { useMemo } from "react";
-import { BaseRoom } from "../base-room";
-import { Wall } from "../wall";
-import { RoomFloor } from "../room-floor";
+import { BaseRoom } from "../../../../(exhibitions)/[locale]/exhibitions/components/base-room";
+import { Wall } from "../../../../(exhibitions)/[locale]/exhibitions/components/wall";
+import { RoomFloor } from "../../../../(exhibitions)/[locale]/exhibitions/components/room-floor";
 import { GALLERY_CONFIG } from "@/utils/gallery-config";
 import { Vec3 } from "@/types/gallery";
-import { ArtworkMesh } from "../art-work-mesh";
+import { ArtworkMesh } from "../../../../(exhibitions)/[locale]/exhibitions/components/art-work-mesh";
 // import GlassWindow from "./model/glass-window";
 
-import { RoomLights } from '../room-light';
+import { RoomLights } from '../../../../(exhibitions)/[locale]/exhibitions/components/room-light';
 
 import { LIGHT_PRESETS } from '@/utils/light-config';
 import { ARTWORK_URL, TEXTURE_URL } from '@/utils/constants';

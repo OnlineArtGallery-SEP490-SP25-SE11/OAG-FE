@@ -65,8 +65,18 @@ export const GALLERY_CONFIG = {
 	ARTWORKS: {
 		WALL_Z_POSITION: -9.8,
 		VERTICAL_POSITION: 3
-	}
+	},
+
 };
+
+export const BUILDING_ROOM_CONFIG = {
+	DIMENSION: {
+		X_AXIS: 18.8, // X_AXIS
+		Y_AXIS: 14, // Y_AXIS
+		Z_AXIS: 30 // Z_AXIS
+	},
+}
+
 
 export const M2_ROOM_CONFIG = {
 	DIMENSION: {
@@ -74,12 +84,24 @@ export const M2_ROOM_CONFIG = {
 		Y_AXIS: 10, // Y_AXIS
 		Z_AXIS: 40 // Z_AXIS
 	},
+	LIGHTING: {
+		AMBIENT: {
+			INTENSITY: 0.3,
+			COLOR: '#ffffff'
+		}
+	},
 };
 
-export const COSY_A1_ROOM_CONFIG = {
+export const COZY_A1_ROOM_CONFIG = {
 	DIMENSION: {
 		X_AXIS: 20, // X_AXIS
 		Y_AXIS: 10, // Y_AXIS
 		Z_AXIS: 30 // Z_AXIS
+	},
+	LIGHTING: {
+		AMBIENT: {
+			INTENSITY: 4,
+			COLOR: '#ffffff'
+		}
 	},
 };

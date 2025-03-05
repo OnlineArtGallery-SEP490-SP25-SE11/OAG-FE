@@ -2,20 +2,11 @@
 import { Physics } from '@react-three/cannon';
 import { PerspectiveCamera, Preload } from '@react-three/drei';
 import { GALLERY_CONFIG } from '@/utils/gallery-config';
-// import { Floor } from "./floor";
-// import { GalleryRoom } from "./gallery-room";
-// import Light from "./light";
 import Player from './player';
 import { PointerLockControls } from '@react-three/drei';
 import { Crosshair } from './crosshair';
 import { useThree } from '@react-three/fiber';
-// import { GalleryRoom2 } from "./gallery-room-2";
-// import { ModernRoom } from "./modern-room";
-// import { GalleryRoom } from './gallery-room';
-// import { M2Room } from './rooms/m2-room/m2-room';
-// import Light from './light';
-// import LightControl from './light-control';
-import { CozyA1Room } from './rooms/cozy-a1-room/cozy-a1-room';
+import ModernA1Gallery from './galleries/modern-a1-gallery/modern-a1-gallery';
 export default function Scene() {
 	const { set } = useThree();
 	const props = {
@@ -44,12 +35,13 @@ export default function Scene() {
 				<Player />
 				{/* <GalleryRoom /> */}
 				{/* <M2Room /> */}
-				<CozyA1Room />
+				<ModernA1Gallery/>
+				{/* <CozyA1Room /> */}
 				{/* <ModernRoom /> */}
 			</Physics>
 
 			<Preload all />
-			<axesHelper position={[0, 0, 0]} args={[55]} />
+			{/* <axesHelper position={[0, 0, 0]} args={[55]} /> */}
 			<PointerLockControls {...props} />
 			<Crosshair />
 		</>

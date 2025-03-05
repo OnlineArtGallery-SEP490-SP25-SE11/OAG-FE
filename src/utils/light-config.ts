@@ -1,4 +1,4 @@
-import { Vec3 } from '@/types/gallery';
+	import { Vec3 } from '@/types/gallery';
 
 export interface LightConfig {
 	ambient?: {
