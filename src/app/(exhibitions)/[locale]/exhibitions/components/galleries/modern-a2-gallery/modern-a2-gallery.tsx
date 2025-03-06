@@ -1,25 +1,37 @@
 import React, { useMemo } from 'react';
 import { BaseRoom } from '../../base-room';
 import { ArtworkMesh } from '../../art-work-mesh';
-import { MODERN_A1_GALLERY_CONFIG } from '@/utils/gallery-config';
+import { MODERN_A2_GALLERY_CONFIG } from '@/utils/gallery-config';
 import { calculateWallArtworkPositions } from '@/utils/room-helper';
 import { Vec3 } from '@/types/gallery';
 import { ARTWORK_URL } from '@/utils/constants';
 import GalleryModel from '../../gallery-model';
 
+/*  Todo
+    - props artworks {id, url, position}
+    - props room {dimensions, ambientLight}
+    
+*/
+
 const MODEL_GALLERY_CONFIG = {
     dimension: {
-        xAxis: MODERN_A1_GALLERY_CONFIG.DIMENSION.X_AXIS,
-        yAxis: MODERN_A1_GALLERY_CONFIG.DIMENSION.Y_AXIS,
-        zAxis: MODERN_A1_GALLERY_CONFIG.DIMENSION.Z_AXIS,
+        xAxis: MODERN_A2_GALLERY_CONFIG.DIMENSION.X_AXIS,
+        yAxis: MODERN_A2_GALLERY_CONFIG.DIMENSION.Y_AXIS,
+        zAxis: MODERN_A2_GALLERY_CONFIG.DIMENSION.Z_AXIS,
     },
     wallThickness: 0.2,
-    modelPath: "/modern-a1-gallery.glb",
-    modelScale: 3,
+    wallHeight: 3,
+    modelPath: "/modern-a2-gallery.glb",
+    modelScale: 4,
+    customElement: {
+        shape: 'box',
+        args: [4,4,4] as [number, number, number],
+        position: [0, 1.5, 0] as [number, number, number]
+    },
 } as const;
 
-export default function ModernA1Gallery() {
-    const { X_AXIS, Y_AXIS, Z_AXIS } = MODERN_A1_GALLERY_CONFIG.DIMENSION;
+export default function ModernA2Gallery() {
+    const { X_AXIS, Y_AXIS, Z_AXIS } = MODERN_A2_GALLERY_CONFIG.DIMENSION;
     const roomDimensions = { X_AXIS, Y_AXIS, Z_AXIS };
 
     // Calculate positions for all four walls
@@ -27,12 +39,6 @@ export default function ModernA1Gallery() {
         wallType: 'back',
         wallDimension: X_AXIS,
         artworkCount: 3,
-        roomDimensions
-    });
-    const frontWallResult = calculateWallArtworkPositions({
-        wallType: 'front',
-        wallDimension: X_AXIS,
-        artworkCount: 1,
         roomDimensions
     });
     const leftWallResult = calculateWallArtworkPositions({
@@ -109,40 +115,27 @@ export default function ModernA1Gallery() {
                     position: rightWallResult.positions[1],
                     rotation: rightWallResult.rotations[1],
                 }
-            ],
-            frontWallArtworks: [
-                {
-                    id: 8,
-                    url: ARTWORK_URL.ARTWORK_1,
-                    position: frontWallResult.positions[0],
-                    rotation: frontWallResult.rotations[0],
-                    frame: { color: '#121212', thickness: 0.05 }
-                }
             ]
         }),
-        [frontWallResult.positions, frontWallResult.rotations, leftWallResult.positions, leftWallResult.rotations, mainWallResult.positions, mainWallResult.rotations, rightWallResult.positions, rightWallResult.rotations]
+        [leftWallResult.positions, leftWallResult.rotations, mainWallResult.positions, mainWallResult.rotations, rightWallResult.positions, rightWallResult.rotations]
     );
 
     // Exhibition-specific features and furniture
     const exhibitionFeatures = useMemo(
         () => [
             <GalleryModel
-                key="modern-a1-gallery-model"
+                key={'modern-a2-gallery-model'}
                 config={MODEL_GALLERY_CONFIG}
                 visible={false}
-            />,
-           
-
-
-        ], []
+            />
+        ],[]
     );
+
     return (
         <>
-            {/* <Environment preset='warehouse' /> */}
             <group>
-                {/* <RoomLights config={exhibitionLighting} /> */}
                 <BaseRoom
-                    key="modern-exhibition"
+                    key="moderna-a2-exhibition"
                     position={exhibitionRoom.position}
                     dimensions={{
                         width: X_AXIS,
@@ -174,15 +167,7 @@ export default function ModernA1Gallery() {
                         />
                     ))}
 
-                    {/* Front wall artworks */}
-                    {exhibitionRoom.frontWallArtworks.map((artwork) => (
-                        <ArtworkMesh
-                            key={artwork.id}
-                            artwork={artwork}
-                        />
-                    ))}
-
-                    {/* Exhibition features and furniture */}
+                    {/* Exhibition models */}
                     {exhibitionFeatures}
                 </BaseRoom>
             </group>

@@ -5,8 +5,8 @@ import { PhysicalCollider } from "@/app/(exhibitions)/[locale]/exhibitions/compo
 import * as THREE from "three";
 import { useMemo } from "react";
 
-export default function BuildingRoomModel() {
-    const { scene } = useGLTF("/v1_room.glb");
+export default function ModernA1GalleryModel() {
+    const { scene } = useGLTF("/modern-a1-gallery.glb");
     const clonedScene = useMemo(() => scene.clone(), [scene]);
 
     // Add invisible floor

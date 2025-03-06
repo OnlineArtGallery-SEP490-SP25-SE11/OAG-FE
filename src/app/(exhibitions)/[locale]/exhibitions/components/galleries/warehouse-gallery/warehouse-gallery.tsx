@@ -19,7 +19,7 @@ import { useCloudinaryAsset } from '@/hooks/useCloudinaryAsset';
 import { ARTWORK_URL, TEXTURE_URL } from '@/utils/constants';
 import { Environment } from '@react-three/drei';
 
-export function WareHouseRoom() {
+export default function WareHouseRoom() {
     const { X_AXIS, Y_AXIS, Z_AXIS } = GALLERY_CONFIG.ROOM;
     const roomDimensions = { X_AXIS, Y_AXIS, Z_AXIS };
     

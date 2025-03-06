@@ -3,7 +3,7 @@ import { useCloudinaryAsset } from "@/hooks/useCloudinaryAsset";
 import { TEXTURE_URL } from "@/utils/constants";
 import { M2_ROOM_CONFIG } from "@/utils/gallery-config";
 
-export default function M2RoomCeilling() {
+export default function ClassicA1GalleryCeilling() {
     const { X_AXIS, Y_AXIS, Z_AXIS } = M2_ROOM_CONFIG.DIMENSION;
     const ceilingTexture = useCloudinaryAsset(TEXTURE_URL.CELLING_GYPSUM);
 

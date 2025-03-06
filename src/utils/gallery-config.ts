@@ -69,11 +69,20 @@ export const GALLERY_CONFIG = {
 
 };
 
-export const BUILDING_ROOM_CONFIG = {
+export const MODERN_A1_GALLERY_CONFIG = {
 	DIMENSION: {
 		X_AXIS: 18.8, // X_AXIS
 		Y_AXIS: 14, // Y_AXIS
 		Z_AXIS: 30 // Z_AXIS
+	},
+}
+
+
+export const MODERN_A2_GALLERY_CONFIG = {
+	DIMENSION: {
+		X_AXIS: 40, // X_AXIS
+		Y_AXIS: 40, // Y_AXIS
+		Z_AXIS: 40 // Z_AXIS
 	},
 }
 

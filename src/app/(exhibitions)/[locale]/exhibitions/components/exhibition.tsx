@@ -9,7 +9,6 @@ export default function Exhibition() {
 		ssr: false,
 		loading: () => <Loader />
 	});
-
 	return (
 		<div className='w-full h-screen'>
 			<Canvas

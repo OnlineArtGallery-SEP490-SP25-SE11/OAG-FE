@@ -103,12 +103,7 @@ export async function updateBlog({
 	try {
 		const res: ApiResponse = await createApi(accessToken).put(
 			`/blog/${updateData._id}`,
-			payload,
-			{
-				headers: {
-					Authorization: `Bearer ${accessToken}`
-				}
-			}
+			payload
 		);
 		console.log(res.data, 'update blog res');
 		return res.data;

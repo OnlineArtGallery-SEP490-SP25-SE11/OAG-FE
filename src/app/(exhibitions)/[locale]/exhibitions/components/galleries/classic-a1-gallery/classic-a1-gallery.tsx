@@ -6,47 +6,41 @@ import { ArtworkMesh } from '../../art-work-mesh';
 import { M2_ROOM_CONFIG } from '@/utils/gallery-config';
 import { calculateWallArtworkPositions } from '@/utils/room-helper';
 import { Vec3 } from '@/types/gallery';
-
-// import { GlassCeiling } from './model/glass-ceiling';
-// import { TrackLighting } from './model/track-lighting';
-// import { InformationKiosk } from './model/information-kiosk';
-// import { MinimalistBench } from './model/minimalist-bench';
-// import { LIGHT_PRESETS } from '@/utils/light-config';
-// import { RoomLights } from '../../room-light';
 import { useCloudinaryAsset } from '@/hooks/useCloudinaryAsset';
 import { ARTWORK_URL, TEXTURE_URL } from '@/utils/constants';
-import M2RoomCeilling from './classic-gallery-ceilling';
+import M2RoomCeilling from './classic--a1-gallery-ceilling';
 import { Environment } from '@react-three/drei';
+import { CurvedPhysicalCollider } from '../../curved-physical-collider';
 
-export function ClassicGallery() {
+export default function ClassicA1Gallery() {
     const { X_AXIS, Y_AXIS, Z_AXIS } = M2_ROOM_CONFIG.DIMENSION;
     const roomDimensions = { X_AXIS, Y_AXIS, Z_AXIS };
 
     // Calculate positions for all four walls
-        const mainWallResult = calculateWallArtworkPositions({
-            wallType: 'back',
-            wallDimension: X_AXIS,
-            artworkCount: 3,
-            roomDimensions
-        });
-        const frontWallResult = calculateWallArtworkPositions({
-            wallType: 'front',
-            wallDimension: X_AXIS,
-            artworkCount: 1,
-            roomDimensions
-        });
-        const leftWallResult = calculateWallArtworkPositions({
-            wallType: 'left',
-            wallDimension: Z_AXIS,
-            artworkCount: 2,
-            roomDimensions
-        });
-        const rightWallResult = calculateWallArtworkPositions({
-            wallType: 'right',
-            wallDimension: Z_AXIS,
-            artworkCount: 2,
-            roomDimensions
-        });
+    const mainWallResult = calculateWallArtworkPositions({
+        wallType: 'back',
+        wallDimension: X_AXIS,
+        artworkCount: 3,
+        roomDimensions
+    });
+    const frontWallResult = calculateWallArtworkPositions({
+        wallType: 'front',
+        wallDimension: X_AXIS,
+        artworkCount: 1,
+        roomDimensions
+    });
+    const leftWallResult = calculateWallArtworkPositions({
+        wallType: 'left',
+        wallDimension: Z_AXIS,
+        artworkCount: 2,
+        roomDimensions
+    });
+    const rightWallResult = calculateWallArtworkPositions({
+        wallType: 'right',
+        wallDimension: Z_AXIS,
+        artworkCount: 2,
+        roomDimensions
+    });
     // High-quality textures for modern gallery
     const polishedConcreteFloor = useCloudinaryAsset(TEXTURE_URL.WHITE_WALL || TEXTURE_URL.FLOOR);
     const museumWallTexture = useCloudinaryAsset(TEXTURE_URL.WHITE_WALL || TEXTURE_URL.WHITE_WALL);
@@ -223,7 +217,7 @@ export function ClassicGallery() {
             mainWallResult,
             leftWallResult,
             rightWallResult,
-            frontWallResult,    
+            frontWallResult,
             polishedConcreteFloor,
             museumWallTexture
         ]
@@ -232,131 +226,23 @@ export function ClassicGallery() {
     // Exhibition-specific features and furniture
     const exhibitionFeatures = useMemo(
         () => [
-            //   // Track lighting system that follows artwork positions
-            //   <TrackLighting
-            //     key="main-wall-track"
-            //     position={[0, Y_AXIS - 0.5, -Z_AXIS / 2 + 1]}
-            //     width={X_AXIS * 0.8}
-            //     numberOfLights={5}
-            //     intensity={0.8}
-            //     color="#ffffff"
-            //   />,
-            //   <TrackLighting
-            //     key="left-wall-track"
-            //     position={[-X_AXIS / 2 + 1, Y_AXIS - 0.5, 0]}
-            //     width={Z_AXIS * 0.8}
-            //     rotation={[0, Math.PI / 2, 0]}
-            //     numberOfLights={4}
-            //     intensity={0.8}
-            //     color="#ffffff"
-            //   />,
-            //   <TrackLighting
-            //     key="right-wall-track"
-            //     position={[X_AXIS / 2 - 1, Y_AXIS - 0.5, 0]}
-            //     width={Z_AXIS * 0.8}
-            //     rotation={[0, Math.PI / 2, 0]}
-            //     numberOfLights={4}
-            //     intensity={0.8}
-            //     color="#ffffff"
-            //   />,
-
-            //   // Central seating for exhibition visitors
-            //   <MinimalistBench
-            //     key="bench-1"
-            //     position={[-X_AXIS / 6, 0.3, 0]}
-            //     rotation={[0, Math.PI / 2, 0]}
-            //     scale={[1.2, 1, 1.2]}
-            //     material={{ color: '#f0f0f0', roughness: 0.5 }}
-            //   />,
-            //   <MinimalistBench
-            //     key="bench-2"
-            //     position={[X_AXIS / 6, 0.3, 0]}
-            //     rotation={[0, Math.PI / 2, 0]}
-            //     scale={[1.2, 1, 1.2]}
-            //     material={{ color: '#f0f0f0', roughness: 0.5 }}
-            //   />,
-
-            //   // Information kiosk near entrance
-            //   <InformationKiosk
-            //     key="info-kiosk"
-            //     position={[0, 0.6, Z_AXIS / 3]}
-            //     rotation={[0, Math.PI, 0]}
-            //     scale={[0.8, 0.8, 0.8]}
-            //   />,
-
-            // Subtle floor guides
-            <mesh
-                key="floor-guide"
-                position={[0, 0.01, 0]}
-                rotation={[-Math.PI / 2, 0, 0]}
-                receiveShadow
-            >
-                <planeGeometry args={[X_AXIS - 0.5, Z_AXIS - 0.5]} />
-                <meshStandardMaterial
-                    color="#f5f5f5"
-                    transparent={true}
-                    opacity={0.3}
-                    roughness={0.2}
-                />
-                {/* Exhibition path indicators */}
-                {[0, 1, 2].map((i) => (
-                    <mesh
-                        key={`path-${i}`}
-                        position={[0, -Z_AXIS / 4 + i * Z_AXIS / 4, 0.005]}
-                    >
-                        <ringGeometry args={[0.1, 0.15, 32]} />
-                        <meshStandardMaterial color="#e0e0e0" />
-                    </mesh>
-                ))}
-            </mesh>
+            <CurvedPhysicalCollider
+            key="modern-a1-gallery-collider"
+            position={[0, 1.5, 0]}
+            rotation={[0, Math.PI / 2, 0]}
+            radius={2}
+            height={3}
+            arc={Math.PI} // Half circle
+            segments={16}
+            visible={true}
+        />
         ],
-        [X_AXIS, Y_AXIS, Z_AXIS]
+        []
     );
-
-    // Enhanced lighting for art exhibition
-    // const exhibitionLighting = {
-    //     ...LIGHT_PRESETS.GALLERY,
-    //     ambientLight: {
-    //         intensity: 0.4,
-    //         color: '#ffffff'
-    //     },
-    //     directionalLights: [
-    //         {
-    //             position: [0, Y_AXIS, 0],
-    //             intensity: 0.5,
-    //             color: '#fcfcfc',
-    //             castShadow: true
-    //         }
-    //     ],
-    //     pointLights: [
-    //         // Supplementary lighting for artwork areas
-    //         {
-    //             position: [0, Y_AXIS * 0.8, -Z_AXIS / 3],
-    //             intensity: 0.6,
-    //             color: '#fff8f0', // Warm gallery lighting
-    //             distance: 10,
-    //             decay: 2
-    //         },
-    //         {
-    //             position: [-X_AXIS / 3, Y_AXIS * 0.8, 0],
-    //             intensity: 0.6,
-    //             color: '#fff8f0',
-    //             distance: 10,
-    //             decay: 2
-    //         },
-    //         {
-    //             position: [X_AXIS / 3, Y_AXIS * 0.8, 0],
-    //             intensity: 0.6,
-    //             color: '#fff8f0',
-    //             distance: 10,
-    //             decay: 2
-    //         }
-    //     ]
-    // };
 
     return (
         <>
-            <Environment preset='warehouse' />
+            <Environment preset='warehouse' environmentIntensity={.6} />
             <group>
                 {/* <RoomLights config={exhibitionLighting} /> */}
                 <BaseRoom

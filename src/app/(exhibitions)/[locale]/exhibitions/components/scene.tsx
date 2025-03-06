@@ -6,7 +6,8 @@ import Player from './player';
 import { PointerLockControls } from '@react-three/drei';
 import { Crosshair } from './crosshair';
 import { useThree } from '@react-three/fiber';
-import ModernA1Gallery from './galleries/modern-a1-gallery/modern-a1-gallery';
+import { RoomSelector } from './room-selector';
+// import  LightControl from './light-control';
 export default function Scene() {
 	const { set } = useThree();
 	const props = {
@@ -20,24 +21,19 @@ export default function Scene() {
 	};
 	return (
 		<>
-			{/* <color attach='background' args={['#f0f0f0']} /> */}
 			<PerspectiveCamera
 				makeDefault
 				position={GALLERY_CONFIG.CAMERA.INITIAL_POSITION}
 			/>
 			{/* <Light /> */}
 			{/* <LightControl /> */}
-
+			
 			<Physics
 				gravity={GALLERY_CONFIG.PHYSICS.GRAVITY}
 				defaultContactMaterial={GALLERY_CONFIG.PHYSICS.CONTACT_MATERIAL}
 			>
 				<Player />
-				{/* <GalleryRoom /> */}
-				{/* <M2Room /> */}
-				<ModernA1Gallery/>
-				{/* <CozyA1Room /> */}
-				{/* <ModernRoom /> */}
+				<RoomSelector roomId={'modern-a1'} />
 			</Physics>
 
 			<Preload all />

@@ -60,3 +60,26 @@ export interface DoorWallProps {
 	};
 	material: WallMaterial;
 }
+
+
+export interface BaseColliderConfig {
+	position: [number, number, number];
+	rotation: [number, number, number];
+	type?: 'Static' | 'Dynamic' | 'Kinematic';
+	visible?: boolean;
+}
+
+export interface BoxColliderConfig extends BaseColliderConfig {
+	shape: 'box';
+	args: [number, number, number];
+}
+
+export interface CurvedColliderConfig extends BaseColliderConfig {
+	shape: 'curved';
+	radius: number;
+	height: number;
+	segments?: number;
+	arc?: number;
+}
+
+export type ColliderConfig = BoxColliderConfig | CurvedColliderConfig;
