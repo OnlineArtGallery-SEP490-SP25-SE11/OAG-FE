@@ -1,6 +1,43 @@
 'use client'
+import { useRouter } from 'next/navigation';
+import { createPayment } from '@/service/payment.service';
+import { useToast } from '@/hooks/use-toast';
+import React, { useState } from "react";
+import { useServerAction } from 'zsa-react';
+import { createPaymentAction } from '../../payment/actions';
 
-export default function SubscriptionOptions(){
+export default function SubscriptionOptions() {
+  const router = useRouter();
+
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const { execute: createPayment, isPending } = useServerAction(createPaymentAction);
+
+  const handleSubscribe = async () => {
+    try {
+      setLoading(true);
+      // Create payment
+      const paymentUrl = await createPayment({ amount: 4000 });
+
+      // Redirect to payment page
+      const [paymentData, error] = paymentUrl;
+      if (paymentData?.paymentUrl) {
+       router.push(paymentData.paymentUrl);
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      setError('Failed to process payment');
+      toast({
+        title: 'Error',
+        description: 'Failed to process payment',
+        variant: 'destructive'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -19,7 +56,7 @@ export default function SubscriptionOptions(){
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {/* Empty column for centering */}
           <div className="hidden md:block"></div>
-          
+
           {/* Premium Plan */}
           <div className="relative group transform hover:scale-105 transition-all duration-300">
             <div className="absolute inset-0 bg-gradient-to-r from-violet-300 to-purple-500 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
@@ -43,10 +80,15 @@ export default function SubscriptionOptions(){
                 <FeatureItem text="Cancel anytime" />
               </div>
 
-              <button className="w-full bg-gradient-to-r from-violet-500 to-purple-600 text-white py-4 px-6 rounded-xl font-semibold 
+              <button
+                onClick={handleSubscribe}
+                className="w-full bg-gradient-to-r from-violet-500 to-purple-600 text-white py-4 px-6 rounded-xl font-semibold 
                 hover:from-violet-600 hover:to-purple-700 transform hover:-translate-y-1 transition-all duration-300 shadow-lg hover:shadow-purple-200">
                 Buy Now
               </button>
+              {error && (
+                <p className="text-red-500 text-sm mt-2">{error}</p>
+              )}
             </div>
           </div>
 
