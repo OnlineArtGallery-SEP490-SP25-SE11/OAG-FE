@@ -14,7 +14,7 @@ export function calculateWallArtworkPositions(
     // Number of artworks to place on the wall
     artworkCount: number;
     // Room dimensions
-    roomDimensions: { X_AXIS: number; Y_AXIS: number; Z_AXIS: number };
+    roomDimensions: { xAxis: number; yAxis: number; zAxis: number };
     // Wall offset (distance from wall surface)
     wallOffset?: number;
     // Height position for artworks
@@ -40,7 +40,7 @@ export function calculateWallArtworkPositions(
   } = options;
   
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { X_AXIS, Y_AXIS, Z_AXIS } = roomDimensions;
+  const { xAxis, yAxis, zAxis } = roomDimensions;
   const spacing = wallDimension / (artworkCount + 1);
 
   // Calculate base positions along wall
@@ -56,19 +56,19 @@ export function calculateWallArtworkPositions(
   if (wallType !== 'custom') {
     switch (wallType) {
       case 'back':
-        positions = basePositions.map(pos => [pos, heightPosition, -Z_AXIS / 2 + wallOffset] as Vec3);
+        positions = basePositions.map(pos => [pos, heightPosition, -zAxis / 2 + wallOffset] as Vec3);
         rotations = Array(artworkCount).fill([0, 0, 0] as Vec3);
         break;
       case 'front':
-        positions = basePositions.map(pos => [pos, heightPosition, Z_AXIS / 2 - wallOffset] as Vec3);
+        positions = basePositions.map(pos => [pos, heightPosition, zAxis / 2 - wallOffset] as Vec3);
         rotations = Array(artworkCount).fill([0, Math.PI, 0] as Vec3);
         break;
       case 'left':
-        positions = basePositions.map(pos => [-X_AXIS / 2 + wallOffset, heightPosition, pos] as Vec3);
+        positions = basePositions.map(pos => [-xAxis / 2 + wallOffset, heightPosition, pos] as Vec3);
         rotations = Array(artworkCount).fill([0, Math.PI / 2, 0] as Vec3);
         break;
       case 'right':
-        positions = basePositions.map(pos => [X_AXIS / 2 - wallOffset, heightPosition, pos] as Vec3);
+        positions = basePositions.map(pos => [xAxis / 2 - wallOffset, heightPosition, pos] as Vec3);
         rotations = Array(artworkCount).fill([0, -Math.PI / 2, 0] as Vec3);
         break;
     }

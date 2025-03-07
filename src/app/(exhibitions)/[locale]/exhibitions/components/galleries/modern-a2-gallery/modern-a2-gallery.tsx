@@ -62,21 +62,21 @@ export default function ModernA2Gallery() {
             // Artwork configuration for main wall
             mainWallArtworks: [
                 {
-                    id: 1,
+                    id: '1',
                     url: ARTWORK_URL.ARTWORK_1,
                     position: mainWallResult.positions[0],
                     rotation: mainWallResult.rotations[0],
 
                 },
                 {
-                    id: 2,
+                    id: '2',
                     url: ARTWORK_URL.ARTWORK_2,
                     position: mainWallResult.positions[1],
                     rotation: mainWallResult.rotations[1],
 
                 },
                 {
-                    id: 3,
+                    id: '3',
                     url: ARTWORK_URL.ARTWORK_3,
                     position: mainWallResult.positions[2],
                     rotation: mainWallResult.rotations[2],
@@ -86,14 +86,14 @@ export default function ModernA2Gallery() {
             // Artwork configuration for left wall
             leftWallArtworks: [
                 {
-                    id: 4,
+                    id: '4',
                     url: ARTWORK_URL.ARTWORK_2,
                     position: leftWallResult.positions[0],
                     rotation: leftWallResult.rotations[0],
 
                 },
                 {
-                    id: 5,
+                    id: '5',
                     url: ARTWORK_URL.ARTWORK_3,
                     position: leftWallResult.positions[1],
                     rotation: leftWallResult.rotations[1],
@@ -103,14 +103,14 @@ export default function ModernA2Gallery() {
             // Artwork configuration for right wall
             rightWallArtworks: [
                 {
-                    id: 6,
+                    id: '6',
                     url: ARTWORK_URL.ARTWORK_4,
                     position: rightWallResult.positions[0],
                     rotation: rightWallResult.rotations[0],
 
                 },
                 {
-                    id: 7,
+                    id: '7',
                     url: ARTWORK_URL.ARTWORK_3,
                     position: rightWallResult.positions[1],
                     rotation: rightWallResult.rotations[1],

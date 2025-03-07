@@ -68,9 +68,13 @@ export default function GalleryModel({
 
   const walls = useMemo(() => {
     const baseWalls: ColliderConfig[] = [
+      //back wall
       { shape: "box", position: [0, wallY, -halfZ], rotation: [0, 0, 0], args: [xAxis, yAxis, wallThickness] },
+      //front wall
       { shape: "box", position: [0, wallY, halfZ], rotation: [0, 0, 0], args: [xAxis, yAxis, wallThickness] },
+      //left wall
       { shape: "box", position: [-halfX, wallY, 0], rotation: [0, 0, 0], args: [wallThickness, yAxis, zAxis] },
+      //right wall
       { shape: "box", position: [halfX, wallY, 0], rotation: [0, 0, 0], args: [wallThickness, yAxis, zAxis] },
     ];
 

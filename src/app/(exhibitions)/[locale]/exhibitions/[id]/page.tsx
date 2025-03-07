@@ -14,7 +14,10 @@ const exhibitionData = {
 	backgroundImage: "https://res.cloudinary.com/djvlldzih/image/upload/v1738920776/gallery/arts/phiadv4m1kbsxidfostr.jpg",
 };
 
-export default function ExhibitionPage() {
+export default function ExhibitionPage(params: {
+	id: string;
+}) {
+	const { id = '6071b3e5c1b4d82edc4eda30' } = params;
 	const [isStarted, setIsStarted] = useState(false);
 	if (!isStarted) {
 		return (
@@ -77,7 +80,7 @@ export default function ExhibitionPage() {
 
 	return (
 		<div>
-			<Exhibition/>
+			<Exhibition exhibitionId={id} />
 		</div>
 	);
 }
