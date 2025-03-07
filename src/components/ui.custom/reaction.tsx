@@ -11,9 +11,11 @@ const Reaction = React.forwardRef<
 		initialCount?: number;
 		onReactionChange?: (reaction: ReactionType) => void;
 	}
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 >(({ initialCount = 0, onReactionChange, className, ...props }, ref) => {
 	const [count, setCount] = useState(initialCount);
 	const [currentReaction, setCurrentReaction] = useState<ReactionType>(null);
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [showReactions, setShowReactions] = useState(false);
 
 	const reactionConfig = {
