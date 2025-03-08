@@ -10,6 +10,10 @@ import eventService from '@/service/event-service';
 import { EventStatus } from '@/utils/enums';
 import { useState } from 'react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import useAuthClient from '@/hooks/useAuth-client';
+import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
+import { AuthDialog } from '@/components/ui.custom/auth-dialog';
 
 export interface Event {
   _id: string;
@@ -21,13 +25,18 @@ export interface Event {
   organizer: string;
   startDate: string;
   endDate: string;
-  participants: {}[];
+  participants: {
+    userId: string
+  }[];
 }
 
 export function EventFeed() {
+  const { user, status } = useAuthClient();
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const { toast } = useToast();
   const [hoveredDescription, setHoveredDescription] = useState<string | null>(null);
-
+  const [isOpen, setIsOpen] = useState(false);
   const { data, isLoading } = useQuery({
     queryKey: ['events'],
     queryFn: async () => {
@@ -42,26 +51,82 @@ export function EventFeed() {
     staleTime: 5 * 60 * 1000, // 5 phút
   });
 
-  const mutation = useMutation({
+
+
+  // Kiểm tra xem người dùng đã tham gia sự kiện hay chưa
+  const isParticipated = (event: Event) => {
+    if (!user) return false;
+    if (!user.id) return false;
+    return event.participants.some(participant =>
+      participant.userId === user.id
+    );
+  };
+
+  const mutationRegister = useMutation({
     mutationFn: (eventId: string) => eventService.participate(eventId),
     onSuccess: () => {
       toast({
         title: "Đăng ký thành công",
         description: "Bạn đã đăng ký thành công sự kiện",
+        className: 'bg-green-500 text-white border-green-600'
       })
+      queryClient.invalidateQueries({ queryKey: ['events'] });
     },
     onError: (error) => {
       toast({
         title: "Đăng ký thất bại",
         description: "Bạn đã đăng ký thất bại sự kiện",
+        className: 'bg-red-500 text-white border-red-600'
       })
+
     }
   })
 
-  const onParticipate = (eventId: string) => {
-    mutation.mutate(eventId)
+  const mutationCancel = useMutation({
+    mutationFn: (eventId: string) => eventService.participate(eventId),
+    onSuccess: () => {
+      toast({
+        title: "Hủy đăng ký thành công",
+        description: "Bạn đã hủy đăng ký thành công sự kiện",
+        className: 'bg-red-500 text-white border-red-600'
+      })
+      queryClient.invalidateQueries({ queryKey: ['events'] });
+      
+    },
+    onError: (error) => {
+      toast({
+        title: "Hủy đăng ký thất bại",
+        description: "Bạn đã hủy đăng ký thất bại sự kiện",
+        className: 'bg-red-500 text-white border-red-600'
+      })
+
+
+    }
+  })
+
+  
+
+  const handleParticipate = (eventId: string) => {
+    if (!user) {
+      setIsOpen(true);
+      return;
+    };
+    const event = data?.find((event: Event) => event._id === eventId)
+    if (isParticipated(event)) {
+      cancelParticipate(eventId)
+    } else {
+      onParticipate(eventId)
+    }
   }
 
+  // Hàm để đăng ký tham gia sự kiện
+  const onParticipate = (eventId: string) => {
+    mutationRegister.mutate(eventId)
+  }
+  // Hàm để hủy đăng ký tham gia sự kiện
+  const cancelParticipate = (eventId: string) => {
+    mutationCancel.mutate(eventId)
+  }
 
 
   // Format date and time functions
@@ -96,9 +161,10 @@ export function EventFeed() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-8 place-items-center max-w-7xl mx-auto px-4">
+      <AuthDialog isOpen={isOpen} setIsOpen={setIsOpen} />
       {data?.map((event: Event) => (
-        <Card 
-          key={event._id} 
+        <Card
+          key={event._id}
           className="overflow-hidden w-full max-w-[700px] transition-all duration-300 hover:shadow-lg"
         >
           <div className="relative aspect-[16/9]">
@@ -131,9 +197,9 @@ export function EventFeed() {
                     <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-primary/20 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
                   </div>
                 </TooltipTrigger>
-                <TooltipContent 
-                  side="top" 
-                  align="start" 
+                <TooltipContent
+                  side="top"
+                  align="start"
                   className="max-w-sm p-4 bg-sky-400 border border-sky-500 shadow-lg text-black rounded-lg transition-all duration-300"
                   sideOffset={5}
                 >
@@ -200,8 +266,8 @@ export function EventFeed() {
               <div className="flex items-center space-x-2 text-xs sm:text-sm text-muted-foreground">
                 <p>
                   Bạn muốn quảng bá sản phẩm/ cá nhân, hãy liên hệ OGA{' '}
-                  <Link 
-                    href="/contact" 
+                  <Link
+                    href="/contact"
                     className="text-primary font-medium hover:underline inline-flex items-center"
                   >
                     tại đây
@@ -214,8 +280,8 @@ export function EventFeed() {
                   <Share2 className="h-4 w-4 mr-2" />
                   Chia sẻ
                 </Button>
-                <Button size="sm" className="flex-1 sm:flex-none" onClick={() => onParticipate(event._id)}>
-                  Đăng ký ngay
+                <Button size="sm" className="flex-1 sm:flex-none" onClick={() => handleParticipate(event._id)}>
+                  {isParticipated(event) ? 'Hủy đăng ký' : 'Đăng ký ngay'}
                 </Button>
               </div>
             </div>
