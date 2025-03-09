@@ -82,4 +82,73 @@ export interface CurvedColliderConfig extends BaseColliderConfig {
 	arc?: number;
 }
 
+export interface ExhibitionType {
+  id: string;
+  name: string;
+  title: string;
+  author: string;
+  date: string;
+  description: string;
+  thumbnail: string;
+  backgroundImage: string;
+  galleryModel: {
+	id: string;
+	name: string;
+	description: string;
+	dimension: {
+	  xAxis: number;
+	  yAxis: number;
+	  zAxis: number;
+	};
+	wallThickness: number;
+	wallHeight: number;
+	modelPath: string;
+	modelScale: number;
+	customElement?: {
+	  shape: 'box';
+	  args: [number, number, number];
+	  position: [number, number, number];
+	};
+  };
+  walls: {
+	back?: {
+	  artworkCount?: number;
+	  artworks: Array<{ 
+		id: string; 
+		url: string;
+		position?: Vec3;
+		rotation?: Vec3;
+	  }>;
+	};
+	front?: {
+	  artworkCount?: number;
+	  artworks: Array<{ 
+		id: string; 
+		url: string;
+		position?: Vec3;
+		rotation?: Vec3;
+	  }>;
+	};
+	left?: {
+	  artworkCount?: number;
+	  artworks: Array<{ 
+		id: string; 
+		url: string;
+		position?: Vec3;
+		rotation?: Vec3;
+	  }>;
+	};
+	right?: {
+	  artworkCount?: number;
+	  artworks: Array<{ 
+		id: string; 
+		url: string;
+		position?: Vec3;
+		rotation?: Vec3;
+	  }>;
+	};
+  };
+}
+
+
 export type ColliderConfig = BoxColliderConfig | CurvedColliderConfig;

@@ -1,5 +1,3 @@
-'use client';
-
 import { Physics } from '@react-three/cannon';
 import { PerspectiveCamera, Preload } from '@react-three/drei';
 import { GALLERY_CONFIG } from '@/utils/gallery-config';
@@ -7,12 +5,10 @@ import Player from './player';
 import { PointerLockControls } from '@react-three/drei';
 import { Crosshair } from './crosshair';
 import { useThree } from '@react-three/fiber';
-import { getExhibitions, getGalleryModel } from '@/service/gallery';
-import Gallery from './gallery';
-import { useQuery } from '@tanstack/react-query';
-import { Text } from '@react-three/drei';
+import Gallery, { GalleryConfig } from './gallery';
+import { ExhibitionType } from '@/types/gallery';
 
-export default function Scene({ exhibitionId }: { exhibitionId: string }) {
+export default function Scene({ exhibition }: { exhibition: ExhibitionType }) {
   const { set } = useThree();
   const props = {
     maxPolarAngle: Math.PI * 0.7, // Limit looking up
@@ -24,77 +20,30 @@ export default function Scene({ exhibitionId }: { exhibitionId: string }) {
     }
   };
 
-  // Fetch exhibition data
-  const { 
-    data: exhibition,
-    isLoading: isLoadingExhibition,
-    error: exhibitionError
-  } = useQuery({
-    queryKey: ['exhibition', exhibitionId],
-    queryFn: () => getExhibitions(exhibitionId)
-  });
+  const transformWall = (wall: typeof exhibition.walls.back) => {
+    if (!wall) return undefined;
 
-  // Fetch gallery model, but only after exhibition data is available
-  const {
-    data: galleryModel,
-    isLoading: isLoadingGalleryModel,
-    error: galleryModelError
-  } = useQuery({
-    queryKey: ['galleryModel', exhibition?.galleryModelId],
-    queryFn: () => {
-      // Add a check to ensure exhibition is defined
-      if (!exhibition) {
-        throw new Error("Exhibition data not available");
-      }
-      return getGalleryModel(exhibition.galleryModelId);
-    },
-    // Only run this query when we have the exhibition data
-    enabled: !!exhibition?.galleryModelId,
-  });
+    return {
+      artworkCount: wall.artworkCount,
+      artworks: wall.artworks.map(artwork => ({
+        ...artwork,
+        position: artwork.position || [0, 0, 0],
+        rotation: artwork.rotation || [0, 0, 0]
+      }))
+    };
+  };
 
-  // Show loading state
-  if (isLoadingExhibition || isLoadingGalleryModel) {
-    return (
-      <>
-        <PerspectiveCamera
-          makeDefault
-          position={GALLERY_CONFIG.CAMERA.INITIAL_POSITION}
-        />
-        <ambientLight intensity={0.5} />
-        <Text
-          position={[0, 1.5, -3]}
-          color="black"
-          fontSize={0.5}
-          anchorX="center"
-          anchorY="middle"
-        >
-          Loading Exhibition...
-        </Text>
-      </>
-    );
-  }
-
-  // Show error state
-  if (exhibitionError || galleryModelError) {
-    return (
-      <>
-        <PerspectiveCamera
-          makeDefault
-          position={GALLERY_CONFIG.CAMERA.INITIAL_POSITION}
-        />
-        <ambientLight intensity={0.5} />
-        <Text
-          position={[0, 1.5, -3]}
-          color="red"
-          fontSize={0.5}
-          anchorX="center"
-          anchorY="middle"
-        >
-          Error loading exhibition data
-        </Text>
-      </>
-    );
-  }
+  const galleryConfig: GalleryConfig = {
+    id: exhibition.id,
+    name: exhibition.name,
+    galleryModel: exhibition.galleryModel,
+    walls: {
+      back: transformWall(exhibition.walls.back),
+      front: transformWall(exhibition.walls.front),
+      left: transformWall(exhibition.walls.left),
+      right: transformWall(exhibition.walls.right)
+    }
+  };
 
   return (
     <>
@@ -104,16 +53,16 @@ export default function Scene({ exhibitionId }: { exhibitionId: string }) {
       />
       {/* <Light /> */}
       {/* <LightControl /> */}
-
+      {/* frame art color */}
+      <ambientLight intensity={2} color={'ffffff'} /> 
       <Physics
         gravity={GALLERY_CONFIG.PHYSICS.GRAVITY}
         defaultContactMaterial={GALLERY_CONFIG.PHYSICS.CONTACT_MATERIAL}
       >
         <Player />
-        {exhibition && galleryModel && (
+        {exhibition && (
           <Gallery
-            config={exhibition}
-            galleryModel={galleryModel}
+            config={galleryConfig}
             visible={false}
           />
         )}

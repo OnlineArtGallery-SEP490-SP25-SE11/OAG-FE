@@ -17,7 +17,7 @@ export interface WallArtwork {
 export interface GalleryConfig {
   id: string;
   name: string;
-  galleryModelId: string;
+  galleryModel: GalleryModelConfig;
   walls: {
     back?: {
       artworkCount?: number;
@@ -40,13 +40,12 @@ export interface GalleryConfig {
 
 interface ExhibitionProps {
   config: GalleryConfig;
-  galleryModel: GalleryModelConfig;
   visible?: boolean;
   children?: React.ReactNode;
 }
 
-export default function Gallery({ config, galleryModel, visible = false, children }: ExhibitionProps) {
-  const { xAxis, yAxis, zAxis } = galleryModel.dimension;
+export default function Gallery({ config, visible = false, children }: ExhibitionProps) {
+  const { xAxis, yAxis, zAxis } = config.galleryModel.dimension;
   
   // Calculate wall artwork positions if needed
   const wallResults = useMemo(() => {
@@ -119,7 +118,7 @@ export default function Gallery({ config, galleryModel, visible = false, childre
           ))}
           
           {/* Gallery Model */}
-          <GalleryModelBase model={galleryModel} visible={visible} />
+          <GalleryModelBase model={config.galleryModel} visible={visible} />
           
           {/* Additional elements */}
           {children}
