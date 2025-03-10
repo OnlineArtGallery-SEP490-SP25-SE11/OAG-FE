@@ -31,9 +31,9 @@ export default function GalleryCreatorPage({ params }: { params: { locale: strin
       setSavedTemplate(templateData);
       console.log('Saved template:', templateData);
       // Navigate to the template management page or display success
-      if (!templateData.id) { // If this was a new template
-        // router.push(`/${params.locale}/exhibitions/templates/${templateData.id}`);
-      }
+      // if (!templateData.id) { // If this was a new template
+      //   // router.push(`/${params.locale}/exhibitions/templates/${templateData.id}`);
+      // }
       toast({
         title: 'Gallery template saved',
         description: 'Your gallery template has been saved successfully.',
@@ -44,6 +44,7 @@ export default function GalleryCreatorPage({ params }: { params: { locale: strin
   // Handler for saving the template
   const handleSaveTemplate = async (templateData: GalleryTemplateData) => {
       const finalTemplateData = { ...templateData };
+      console.log('Saving gallery template:', finalTemplateData);
       await execute(finalTemplateData);
 
   };
