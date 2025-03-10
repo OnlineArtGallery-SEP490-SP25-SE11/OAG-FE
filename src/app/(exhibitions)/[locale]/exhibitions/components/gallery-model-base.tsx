@@ -1,5 +1,6 @@
 import React from 'react';
 import GalleryModel from './gallery-model';
+import { Vec3 } from '@/types/gallery';
 
 export interface GalleryModelConfig {
   id: string;
@@ -12,16 +13,18 @@ export interface GalleryModelConfig {
   };
   wallThickness: number;
   modelPath: string;
+  modelPosition: Vec3;
+  modelRotation: Vec3;
   modelScale: number;
-  customElement?: {
+  customCollider?: {
     shape: 'box' | 'curved';
-    args?: [number, number, number];
+    args?: Vec3;
     radius?: number;
     height?: number;
     segments?: number;
     arc?: number;
-    position: [number, number, number];
-    rotation?: [number, number, number];
+    position: Vec3;
+    rotation?: Vec3;
   };
 }
 
@@ -35,23 +38,25 @@ export default function GalleryModelBase({ model, visible = false }: GalleryMode
     dimension: model.dimension,
     wallThickness: model.wallThickness,
     modelPath: model.modelPath,
+    modelPosition: model.modelPosition,
+    modelRotation: model.modelRotation,
     modelScale: model.modelScale,
-    ...(model.customElement && { 
-      customElement: model.customElement.shape === 'box' 
+    ...(model.customCollider && { 
+      customCollider: model.customCollider.shape === 'box' 
         ? {
             shape: 'box' as const,
-            args: model.customElement.args || [0, 0, 0],
-            position: model.customElement.position,
-            rotation: model.customElement.rotation
+            args: model.customCollider.args || [0, 0, 0],
+            position: model.customCollider.position,
+            rotation: model.customCollider.rotation
           }
         : {
             shape: 'curved' as const,
-            radius: model.customElement.radius || 0,
-            height: model.customElement.height || 0,
-            segments: model.customElement.segments,
-            arc: model.customElement.arc,
-            position: model.customElement.position,
-            rotation: model.customElement.rotation
+            radius: model.customCollider.radius || 0,
+            height: model.customCollider.height || 0,
+            segments: model.customCollider.segments,
+            arc: model.customCollider.arc,
+            position: model.customCollider.position,
+            rotation: model.customCollider.rotation
           }
     })
   };

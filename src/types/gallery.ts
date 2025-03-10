@@ -63,15 +63,15 @@ export interface DoorWallProps {
 
 
 export interface BaseColliderConfig {
-	position: [number, number, number];
-	rotation: [number, number, number];
+	position: Vec3;
+	rotation: Vec3;
 	type?: 'Static' | 'Dynamic' | 'Kinematic';
 	visible?: boolean;
 }
 
 export interface BoxColliderConfig extends BaseColliderConfig {
 	shape: 'box';
-	args: [number, number, number];
+	args: Vec3;
 }
 
 export interface CurvedColliderConfig extends BaseColliderConfig {
@@ -103,25 +103,28 @@ export interface ExhibitionType {
 	wallThickness: number;
 	wallHeight: number;
 	modelPath: string;
+	modelPosition: Vec3;
+	modelRotation: Vec3;
 	modelScale: number;
-	customElement?: {
+	customCollider?: {
 	  shape: 'box';
-	  args: [number, number, number];
-	  position: [number, number, number];
+	  args: Vec3;
+	  position: Vec3;
 	};
   };
   walls: {
 	back?: {
-	  artworkCount?: number;
+	  artworkCount: number;
 	  artworks: Array<{ 
 		id: string; 
 		url: string;
+		positionIndex?: number;  // Thêm positionIndex
 		position?: Vec3;
 		rotation?: Vec3;
 	  }>;
 	};
 	front?: {
-	  artworkCount?: number;
+	  artworkCount: number;
 	  artworks: Array<{ 
 		id: string; 
 		url: string;
@@ -130,7 +133,7 @@ export interface ExhibitionType {
 	  }>;
 	};
 	left?: {
-	  artworkCount?: number;
+	  artworkCount: number;
 	  artworks: Array<{ 
 		id: string; 
 		url: string;
@@ -139,7 +142,7 @@ export interface ExhibitionType {
 	  }>;
 	};
 	right?: {
-	  artworkCount?: number;
+	  artworkCount: number;
 	  artworks: Array<{ 
 		id: string; 
 		url: string;

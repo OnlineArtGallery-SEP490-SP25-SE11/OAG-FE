@@ -7,6 +7,7 @@ import { Crosshair } from './crosshair';
 import { useThree } from '@react-three/fiber';
 import Gallery, { GalleryConfig } from './gallery';
 import { ExhibitionType } from '@/types/gallery';
+import { calculateWallArtworkPositions } from '@/utils/room-helper';
 
 export default function Scene({ exhibition }: { exhibition: ExhibitionType }) {
   const { set } = useThree();
@@ -20,16 +21,58 @@ export default function Scene({ exhibition }: { exhibition: ExhibitionType }) {
     }
   };
 
-  const transformWall = (wall: typeof exhibition.walls.back) => {
+  const transformWall = (wall: typeof exhibition.walls.back, wallType: 'back' | 'front' | 'left' | 'right') => {
     if (!wall) return undefined;
+
+    // Tính toán vị trí tự động cho các artwork dựa trên cấu hình phòng
+    const roomDimensions = {
+      xAxis: exhibition.galleryModel.dimension.xAxis,
+      yAxis: exhibition.galleryModel.dimension.yAxis,
+      zAxis: exhibition.galleryModel.dimension.zAxis
+    };
+    
+    const wallDimension = 
+      (wallType === 'left' || wallType === 'right') 
+        ? exhibition.galleryModel.dimension.zAxis
+        : exhibition.galleryModel.dimension.xAxis;
+    
+    const positionData = calculateWallArtworkPositions({
+      wallType,
+      wallDimension,
+      artworkCount: wall.artworkCount,
+      roomDimensions
+    });
 
     return {
       artworkCount: wall.artworkCount,
-      artworks: wall.artworks.map(artwork => ({
-        ...artwork,
-        position: artwork.position || [0, 0, 0],
-        rotation: artwork.rotation || [0, 0, 0]
-      }))
+      artworks: wall.artworks.map(artwork => {
+        // Nếu artwork đã có vị trí tùy chỉnh, giữ nguyên
+        if (artwork.position && artwork.rotation) {
+          return {
+            ...artwork,
+            position: artwork.position,
+            rotation: artwork.rotation
+          };
+        }
+        
+        // Nếu artwork có positionIndex, sử dụng vị trí đã tính từ positionIndex
+        if (artwork.positionIndex !== undefined && 
+            artwork.positionIndex >= 0 && 
+            artwork.positionIndex < positionData.positions.length) {
+          return {
+            ...artwork,
+            position: positionData.positions[artwork.positionIndex],
+            rotation: positionData.rotations[artwork.positionIndex]
+          };
+        }
+        
+        // Fallback: sử dụng vị trí mặc định
+        return {
+          ...artwork,
+          position: [0, 0, 0] as [number, number, number],
+          rotation: [0, 0, 0] as [number, number, number]
+        };
+      })
     };
   };
 
@@ -38,10 +81,10 @@ export default function Scene({ exhibition }: { exhibition: ExhibitionType }) {
     name: exhibition.name,
     galleryModel: exhibition.galleryModel,
     walls: {
-      back: transformWall(exhibition.walls.back),
-      front: transformWall(exhibition.walls.front),
-      left: transformWall(exhibition.walls.left),
-      right: transformWall(exhibition.walls.right)
+      back: transformWall(exhibition.walls.back, 'back'),
+      front: transformWall(exhibition.walls.front, 'front'),
+      left: transformWall(exhibition.walls.left, 'left'),
+      right: transformWall(exhibition.walls.right, 'right')
     }
   };
 

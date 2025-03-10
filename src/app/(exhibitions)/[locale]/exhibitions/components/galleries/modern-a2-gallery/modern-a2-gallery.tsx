@@ -23,7 +23,7 @@ const MODEL_GALLERY_CONFIG = {
     wallHeight: 3,
     modelPath: "/modern-a2-gallery.glb",
     modelScale: 4,
-    customElement: {
+    customCollider: {
         shape: 'box',
         args: [4,4,4] as [number, number, number],
         position: [0, 1.5, 0] as [number, number, number]

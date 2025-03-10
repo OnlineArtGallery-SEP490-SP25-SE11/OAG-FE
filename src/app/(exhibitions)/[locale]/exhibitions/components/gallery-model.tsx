@@ -3,7 +3,7 @@ import { useGLTF } from "@react-three/drei";
 import { usePlane } from "@react-three/cannon";
 import * as THREE from "three";
 import { useMemo } from "react";
-import { ColliderConfig } from "@/types/gallery";
+import { ColliderConfig, Vec3 } from "@/types/gallery";
 import { Collider } from "./collider";
 
 interface Dimensions {
@@ -14,9 +14,9 @@ interface Dimensions {
 
 interface BoxElement {
   shape: "box";
-  args: [number, number, number];
-  position: [number, number, number];
-  rotation?: [number, number, number];
+  args: Vec3;
+  position: Vec3;
+  rotation?: Vec3;
 }
 
 interface CurvedElement {
@@ -25,18 +25,20 @@ interface CurvedElement {
   height: number;
   segments?: number;
   arc?: number;
-  position: [number, number, number];
-  rotation?: [number, number, number];
+  position: Vec3;
+  rotation?: Vec3;
 }
 
-type CustomElement = BoxElement | CurvedElement;
+type customCollider = BoxElement | CurvedElement;
 
 interface GalleryConfig {
   dimension: Dimensions;
   wallThickness: number;
   modelPath: string;
   modelScale: number;
-  customElement?: CustomElement;
+  modelPosition: Vec3;
+  modelRotation: Vec3;
+  customCollider?: customCollider;
 }
 
 interface GalleryModelProps {
@@ -54,7 +56,7 @@ export default function GalleryModel({
   const clonedScene = useMemo(() => scene.clone(), [scene]);
 
   const { xAxis, yAxis, zAxis } = config.dimension;
-  const { wallThickness, modelScale, customElement } = config;
+  const { wallThickness, modelScale, customCollider, modelPosition, modelRotation } = config;
 
   const halfX = xAxis / 2;
   const halfZ = zAxis / 2;
@@ -78,30 +80,30 @@ export default function GalleryModel({
       { shape: "box", position: [halfX, wallY, 0], rotation: [0, 0, 0], args: [wallThickness, yAxis, zAxis] },
     ];
 
-    if (customElement) {
-      const { position, rotation = [0, 0, 0] } = customElement;
-      if (customElement.shape === "box") {
+    if (customCollider) {
+      const { position, rotation = [0, 0, 0] } = customCollider;
+      if (customCollider.shape === "box") {
         baseWalls.push({
           shape: "box",
           position,
           rotation,
-          args: customElement.args,
+          args: customCollider.args,
         });
       } else {
-        const { radius, height, segments = 32, arc = Math.PI * 2 } = customElement;
+        const { radius, height, segments = 32, arc = Math.PI * 2 } = customCollider;
         baseWalls.push({ shape: "curved", position, rotation, radius, height, segments, arc });
       }
     }
 
     return baseWalls;
-  }, [wallY, halfZ, halfX, xAxis, yAxis, zAxis, wallThickness, customElement]);
+  }, [wallY, halfZ, halfX, xAxis, yAxis, zAxis, wallThickness, customCollider]);
 
   const allColliders = customColliders ? [...walls, ...customColliders] : walls;
 
   return (
     <>
       <mesh ref={ref} visible={visible} />
-      <primitive object={clonedScene} scale={modelScale} position={[0, 0, 0]} />
+      <primitive object={clonedScene} scale={modelScale} position={modelPosition} rotation={modelRotation}/>
       {allColliders.map((collider, index) => (
         <Collider key={`collider-${index}`} {...collider} visible={visible} />
       ))}

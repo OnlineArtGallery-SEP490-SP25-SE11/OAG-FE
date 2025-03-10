@@ -1,5 +1,5 @@
 import { ARTWORK_URL } from '@/utils/constants';
-
+import { GalleryTemplateData } from '@/app/(exhibitions)/[locale]/exhibitions/creator/gallery-template-creator';
 
 const exhibitions = [
     {
@@ -17,8 +17,10 @@ const exhibitions = [
             wallThickness: 0.2,
             wallHeight: 3,
             modelPath: '/modern-a2-gallery.glb',
+            modelRotation: [0, 0, 0] as [number, number, number],
+            modelPosition: [0, 0, 0] as [number, number, number],
             modelScale: 4,
-            customElement: {
+            customCollider: {
                 shape: 'box' as const,
                 args: [4, 4, 4] as [number, number, number],
                 position: [0, 1.5, 0] as [number, number, number],
@@ -34,23 +36,52 @@ const exhibitions = [
             back: {
                 artworkCount: 3,
                 artworks: [
-                    { id: "1", url: ARTWORK_URL.ARTWORK_1 },
-                    { id: "2", url: ARTWORK_URL.ARTWORK_2 },
-                    { id: "3", url: ARTWORK_URL.ARTWORK_3 }
+                    {
+                        id: "1",
+                        url: ARTWORK_URL.ARTWORK_1,
+                        positionIndex: 0, // Vị trí trái
+                        frame: { color: '#4a2c12', thickness: 0.05 }
+                    },
+                    {
+                        id: "2",
+                        url: ARTWORK_URL.ARTWORK_2,
+                        positionIndex: 1, // Vị trí giữa
+                    },
+                    {
+                        id: "3",
+                        url: ARTWORK_URL.ARTWORK_3,
+                        positionIndex: 2, // Vị trí phải
+                        frame: { color: '#4a2c12', thickness: 0.05 }
+                    }
                 ]
             },
             left: {
                 artworkCount: 2,
                 artworks: [
-                    { id: "4", url: ARTWORK_URL.ARTWORK_4 },
-                    { id: "5", url: ARTWORK_URL.ARTWORK_2 }
+                    {
+                        id: "4",
+                        url: ARTWORK_URL.ARTWORK_4,
+                        positionIndex: 0, // Vị trí trước
+                        frame: { color: '#4a2c12', thickness: 0.05 }
+                    },
+                    {
+                        id: "5",
+                        url: ARTWORK_URL.ARTWORK_2,
+                        positionIndex: 1, // Vị trí sau
+                        frame: { color: '#3d2815', thickness: 0.05 }
+                    }
                 ]
             },
             right: {
-                artworkCount: 2,
+                artworkCount: 2, // Tổng số vị trí có sẵn
                 artworks: [
-                    { id: "6", url: ARTWORK_URL.ARTWORK_1 },
-                    { id: "7", url: ARTWORK_URL.ARTWORK_3 }
+                    {
+                        id: "6",
+                        url: ARTWORK_URL.ARTWORK_1,
+                        positionIndex: 1,
+                        frame: { color: '#4a2c12', thickness: 0.05 }
+                    }
+                    // Không đặt tranh ở vị trí thứ hai (positionIndex: 1)
                 ]
             }
         }
@@ -70,6 +101,8 @@ const exhibitions = [
             wallThickness: 0.2,
             wallHeight: 3,
             modelPath: '/modern-a1-gallery.glb',
+            modelPosition: [0, 0, 0] as [number, number, number],
+            modelRotation: [0, 0, 0] as [number, number, number],
             modelScale: 3,
         },
         title: "Contemporary Art Showcase",
@@ -82,29 +115,48 @@ const exhibitions = [
             back: {
                 artworkCount: 3,
                 artworks: [
-                    { id: "1", url: ARTWORK_URL.ARTWORK_1 },
-                    { id: "2", url: ARTWORK_URL.ARTWORK_2 },
-                    { id: "3", url: ARTWORK_URL.ARTWORK_3 }
+                    {
+                        id: "2",
+                        url: ARTWORK_URL.ARTWORK_2,
+                        positionIndex: 1
+                    }
                 ]
             },
             front: {
                 artworkCount: 1,
                 artworks: [
-                    { id: "8", url: ARTWORK_URL.ARTWORK_1 }
+                    {
+                        id: "8",
+                        url: ARTWORK_URL.ARTWORK_1,
+                        positionIndex: 0,
+                    }
                 ]
             },
             left: {
                 artworkCount: 2,
                 artworks: [
-                    { id: "4", url: ARTWORK_URL.ARTWORK_2 },
-                    { id: "5", url: ARTWORK_URL.ARTWORK_3 }
+                    {
+                        id: "4",
+                        url: ARTWORK_URL.ARTWORK_2,
+                        positionIndex: 0,
+                    },
+                    {
+                        id: "5",
+                        url: ARTWORK_URL.ARTWORK_3,
+                        positionIndex: 1,
+                    }
                 ]
             },
             right: {
                 artworkCount: 2,
                 artworks: [
-                    { id: "6", url: ARTWORK_URL.ARTWORK_4 },
-                    { id: "7", url: ARTWORK_URL.ARTWORK_3 }
+                    // Vị trí tùy chỉnh hoàn toàn (không sử dụng positionIndex)
+                    {
+                        id: "6",
+                        url: ARTWORK_URL.ARTWORK_4,
+                        position: [19.9, 2.5, -6], // Tọa độ tùy chỉnh
+                        rotation: [0, -Math.PI / 2, 0], // Xoay tùy chỉnh                   
+                    }
                 ]
             }
         }
@@ -113,11 +165,9 @@ const exhibitions = [
 
 export async function getExhibitions(id: string) {
     console.log('Fetching exhibitions:', id);
-    //delay 2 seconds
     await new Promise(resolve => setTimeout(resolve, 2000));
     try {
         const data = exhibitions.find(exhibition => exhibition.id === id);
-
         return data;
     } catch (error) {
         console.error('Error fetching exhibitions:', error);
@@ -126,34 +176,140 @@ export async function getExhibitions(id: string) {
 }
 
 
-export async function getGalleryModel(id: string) {
-    console.log('Fetching gallery model:', id);
-    //delay 2 seconds
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    try {
-        const data = {
-            id: 'modern-a2',
-            name: 'Modern A2 Gallery',
-            description: 'A spacious modern gallery with open layout',
-            dimension: {
-                xAxis: 40,
-                yAxis: 40,
-                zAxis: 40
-            },
-            wallThickness: 0.2,
-            wallHeight: 3,
-            modelPath: '/modern-a2-gallery.glb',
-            modelScale: 4,
-            customElement: {
-                shape: 'box' as const,
-                args: [4, 4, 4] as [number, number, number],
-                position: [0, 1.5, 0] as [number, number, number],
-            },
-        };
 
-        return data;
-    } catch (error) {
-        console.error('Error fetching gallery model:', error);
-        throw error;
+// Function to upload an asset to cloud storage
+export async function uploadAsset(file: File) {
+  // Create a FormData object to send the file
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', 'gallery_assets'); // Your Cloudinary upload preset
+
+  try {
+    // Replace with your actual upload endpoint
+    const response = await fetch('https://api.cloudinary.com/v1_1/your-cloud-name/upload', {
+      method: 'POST',
+      body: formData,
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Upload failed with status ${response.status}`);
     }
+    
+    const data = await response.json();
+    
+    return {
+      url: data.secure_url,
+      publicId: data.public_id,
+      width: data.width,
+      height: data.height,
+      format: data.format,
+    };
+  } catch (error) {
+    console.error('Error uploading asset:', error);
+    throw new Error('Failed to upload asset');
+  }
+}
+
+// Function to save or update a gallery template
+export async function saveGalleryTemplate(templateData: GalleryTemplateData): Promise<GalleryTemplateData> {
+  try {
+    // For new templates (no ID)
+    if (!templateData.id) {
+      // In a real app, call your API endpoint
+      // const response = await fetch('/api/gallery/templates', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(templateData),
+      // });
+      
+      // For this example, we'll simulate an API response
+      console.log('Creating new template:', templateData);
+      
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Return mock response with generated ID
+      return {
+        ...templateData,
+        id: `template_${Date.now()}`,
+      };
+    } 
+    // For updating existing templates
+    else {
+      // const response = await fetch(`/api/gallery/templates/${templateData.id}`, {
+      //   method: 'PUT',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(templateData),
+      // });
+      
+      console.log('Updating template:', templateData);
+      
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Return the updated template
+      return templateData;
+    }
+  } catch (error) {
+    console.error('Error saving gallery template:', error);
+    throw new Error('Failed to save gallery template');
+  }
+}
+
+// Function to get a list of gallery templates
+export async function getGalleryTemplates() {
+  try {
+    // Replace with actual API call
+    // const response = await fetch('/api/gallery/templates');
+    // return await response.json();
+    
+    // Mock response for demo
+    return [
+      {
+        id: 'template_1',
+        name: 'Modern Gallery',
+        description: 'A sleek, contemporary space with clean lines',
+        previewImage: 'https://example.com/gallery-preview.jpg',
+        dimensions: { xAxis: 40, yAxis: 10, zAxis: 40 },
+        modelPath: '/modern-gallery.glb'
+      },
+      {
+        id: 'template_2',
+        name: 'Classic Museum',
+        description: 'Traditional museum layout with elegant architecture',
+        previewImage: 'https://example.com/museum-preview.jpg',
+        dimensions: { xAxis: 50, yAxis: 15, zAxis: 50 },
+        modelPath: '/classic-museum.glb'
+      }
+    ];
+  } catch (error) {
+    console.error('Error getting gallery templates:', error);
+    throw new Error('Failed to fetch gallery templates');
+  }
+}
+
+// Function to get a single gallery template by ID
+export async function getGalleryTemplate(id: string) {
+  try {
+    // Replace with actual API call
+    // const response = await fetch(`/api/gallery/templates/${id}`);
+    // return await response.json();
+    
+    // Mock response
+    return {
+      id,
+      name: 'Modern Gallery',
+      description: 'A sleek, contemporary space with clean lines',
+      previewImage: 'https://example.com/gallery-preview.jpg',
+      dimensions: { xAxis: 40, yAxis: 10, zAxis: 40 },
+      wallThickness: 0.2,
+      wallHeight: 3,
+      modelPath: '/modern-gallery.glb',
+      modelScale: 3,
+      customColliders: []
+    };
+  } catch (error) {
+    console.error(`Error getting gallery template ${id}:`, error);
+    throw new Error('Failed to fetch gallery template');
+  }
 }
