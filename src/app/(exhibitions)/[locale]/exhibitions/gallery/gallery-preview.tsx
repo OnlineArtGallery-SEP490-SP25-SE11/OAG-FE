@@ -83,6 +83,30 @@ export default function GalleryPreview({ showColliders }: { showColliders: boole
   const halfZ = dimensions.zAxis / 2;
   const wallY = wallHeight / 2;
 
+  // Update to use the new artworks array (replace the artworkPositions calculation)
+
+  // Remove the existing useMemo block for calculating artworkPositions and add this simpler version:
+  const artworks = useMemo(() => {
+    return templateData.artworks || [];
+  }, [templateData.artworks]);
+
+  // Replace the renderArtworkPositions function
+  const renderArtworkPositions = () => {
+    return artworks.map((artwork, index) => (
+      <mesh
+        key={`artwork-pos-${index}`}
+        position={artwork.position}
+        rotation={artwork.rotation}
+      >
+        <boxGeometry args={[1, 1, 0.05]} />
+        <meshStandardMaterial color="yellow" transparent opacity={0.7} />
+      </mesh>
+    ));
+  };
+
+  // Render custom walls based on custom artwork positions
+  
+
   // Create floor plane - this hook is now properly used inside the parent's Canvas and Physics components
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [ref] = usePlane<THREE.Mesh>(() => ({
@@ -93,7 +117,6 @@ export default function GalleryPreview({ showColliders }: { showColliders: boole
 
   return (
     <>
-
       {/* Floor */}
       {/* Floor - View Helper Grid */}
       <gridHelper
@@ -106,31 +129,34 @@ export default function GalleryPreview({ showColliders }: { showColliders: boole
         rotation={[0, Math.PI / 2, 0]}
       />
 
-
       {/* Walls - if no model is loaded */}
-      {/* {!modelPath && ( */}
       <>
         {/* Back wall */}
         <mesh position={[0, wallY, -halfZ]} castShadow receiveShadow>
           <boxGeometry args={[dimensions.xAxis, wallHeight, wallThickness]} />
-          <meshStandardMaterial color="#ffffff" transparent opacity={0.5} />          </mesh>
+          <meshStandardMaterial color="#ffffff" transparent opacity={0.5} />          
+        </mesh>
 
         {/* Front wall */}
         <mesh position={[0, wallY, halfZ]} castShadow receiveShadow>
           <boxGeometry args={[dimensions.xAxis, wallHeight, wallThickness]} />
-          <meshStandardMaterial color="#ffffff" transparent opacity={0.5} />          </mesh>
+          <meshStandardMaterial color="#ffffff" transparent opacity={0.5} />          
+        </mesh>
 
         {/* Left wall */}
         <mesh position={[-halfX, wallY, 0]} castShadow receiveShadow>
           <boxGeometry args={[wallThickness, wallHeight, dimensions.zAxis]} />
-          <meshStandardMaterial color="#ffffff" transparent opacity={0.5} />          </mesh>
+          <meshStandardMaterial color="#ffffff" transparent opacity={0.5} />          
+        </mesh>
 
         {/* Right wall */}
         <mesh position={[halfX, wallY, 0]} castShadow receiveShadow>
           <boxGeometry args={[wallThickness, wallHeight, dimensions.zAxis]} />
-          <meshStandardMaterial color="#ffffff" transparent opacity={0.5} />          </mesh>
+          <meshStandardMaterial color="#ffffff" transparent opacity={0.5} />          
+        </mesh>
+        
+        {/* Custom walls based on artwork positions */}
       </>
-      {/* )} */}
 
       {/* Custom colliders - visible if showColliders is true */}
       {showColliders && customColliders.map((collider, index) => {
@@ -170,6 +196,9 @@ export default function GalleryPreview({ showColliders }: { showColliders: boole
         }
         return null;
       })}
+
+      {/* Artwork position visualizers */}
+      {showColliders && renderArtworkPositions()}
 
       {/* Load 3D model if available */}
       {modelPath && (

@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, createContext } from 'react';
+import React, { useState, createContext, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import { Physics } from '@react-three/cannon';
@@ -16,6 +16,7 @@ import { ColliderConfig } from '@/types/gallery';
 import GalleryPreview from './gallery-preview';
 import ColliderEditor from './collider-editor';
 import Image from 'next/image';
+import ArtworkPositionEditor from './artwork-position-editor';
 
 // Types
 export interface GalleryTemplateData {
@@ -35,12 +36,20 @@ export interface GalleryTemplateData {
   modelPosition: [number, number, number];
   previewImage: string;
   customColliders: ColliderConfig[];
+  // Add artwork positions configuration
+  artworks: {
+    position: [number, number, number];
+    rotation: [number, number, number];
+  }[];
 }
 
 // Add this to your props interface at the top
 interface GalleryTemplateCreatorProps {
   onSave?: (templateData: GalleryTemplateData) => Promise<void>;
+  onUpdate?: (templateData: GalleryTemplateData) => void;
   initialData?: Partial<GalleryTemplateData>;
+  isSaving?: boolean;
+  validationErrors?: Record<string, string>;
 }
 
 // Context
@@ -68,7 +77,9 @@ const defaultTemplate: GalleryTemplateData = {
   modelRotation: [0, 0, 0],
   modelPosition: [0, 0, 0],
   previewImage: '',
-  customColliders: []
+  customColliders: [],
+  // Default artwork positions
+  artworks: []
 };
 
 export const GalleryTemplateContext = createContext<GalleryTemplateContextType>({
@@ -83,7 +94,11 @@ export const GalleryTemplateContext = createContext<GalleryTemplateContextType>(
 // Update the component signature to accept props
 export default function GalleryTemplateCreator({
   onSave,
-  initialData = {}
+  onUpdate,
+  initialData = {},
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  isSaving = false,
+  validationErrors
 }: GalleryTemplateCreatorProps) {
   // Merge initial data with defaults
   const [templateData, setTemplateData] = useState<GalleryTemplateData>({
@@ -98,6 +113,13 @@ export default function GalleryTemplateCreator({
   const updateTemplate = (data: Partial<GalleryTemplateData>) => {
     setTemplateData(prev => ({ ...prev, ...data }));
   };
+
+  // Add this effect to call onUpdate when template changes
+  useEffect(() => {
+    if (onUpdate) {
+      onUpdate(templateData);
+    }
+  }, [templateData, onUpdate]);
 
   // Collider management functions
   const addCollider = (collider: ColliderConfig) => {
@@ -230,19 +252,23 @@ export default function GalleryTemplateCreator({
               <TabsTrigger value="basic" className="flex-1">Basic Info</TabsTrigger>
               <TabsTrigger value="dimensions" className="flex-1">Dimensions</TabsTrigger>
               <TabsTrigger value="model" className="flex-1">Model</TabsTrigger>
+              <TabsTrigger value="artworks" className="flex-1">Artworks</TabsTrigger>
               <TabsTrigger value="colliders" className="flex-1">Colliders</TabsTrigger>
             </TabsList>
 
             {/* Basic Info Tab */}
             <TabsContent value="basic" className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="template-name">Template Name</Label>
+              <div className="mb-4">
+                <Label htmlFor="name">Template Name</Label>
                 <Input
-                  id="template-name"
-                  value={templateData.name}
+                  id="name"
+                  value={templateData.name || ''}
                   onChange={(e) => updateTemplate({ name: e.target.value })}
-                  placeholder="Enter template name"
+                  className={validationErrors?.name ? "border-red-500" : ""}
                 />
+                {validationErrors?.name && (
+                  <p className="text-sm text-red-500 mt-1">{validationErrors.name}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="template-description">Description</Label>
@@ -371,7 +397,7 @@ export default function GalleryTemplateCreator({
                       onValueChange={(value) => updateTemplate({ modelScale: value[0] })}
                     />
                   </div>
-                  
+
                   <Card>
                     <CardContent className="pt-6">
                       <h3 className="font-medium mb-3">Model Position</h3>
@@ -380,8 +406,8 @@ export default function GalleryTemplateCreator({
                           <Label htmlFor="posX">Position X: {templateData.modelPosition[0].toFixed(2)}</Label>
                           <Slider
                             id="posX"
-                            min={-templateData.dimensions.xAxis/2}
-                            max={templateData.dimensions.xAxis/2}
+                            min={-templateData.dimensions.xAxis / 2}
+                            max={templateData.dimensions.xAxis / 2}
                             step={0.5}
                             value={[templateData.modelPosition[0]]}
                             onValueChange={(value) => {
@@ -412,8 +438,8 @@ export default function GalleryTemplateCreator({
                           <Label htmlFor="posZ">Position Z: {templateData.modelPosition[2].toFixed(2)}</Label>
                           <Slider
                             id="posZ"
-                            min={-templateData.dimensions.zAxis/2}
-                            max={templateData.dimensions.zAxis/2}
+                            min={-templateData.dimensions.zAxis / 2}
+                            max={templateData.dimensions.zAxis / 2}
                             step={0.5}
                             value={[templateData.modelPosition[2]]}
                             onValueChange={(value) => {
@@ -427,7 +453,7 @@ export default function GalleryTemplateCreator({
                       </div>
                     </CardContent>
                   </Card>
-                  
+
                   <Card>
                     <CardContent className="pt-6">
                       <h3 className="font-medium mb-3">Model Rotation</h3>
@@ -485,6 +511,9 @@ export default function GalleryTemplateCreator({
                   </Card>
                 </>
               )}
+            </TabsContent>
+            <TabsContent value="artworks" className="space-y-4">
+              <ArtworkPositionEditor />
             </TabsContent>
 
             {/* Colliders Tab */}

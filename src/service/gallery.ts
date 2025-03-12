@@ -1,5 +1,5 @@
 import { ARTWORK_URL } from '@/utils/constants';
-import { GalleryTemplateData } from '@/app/(exhibitions)/[locale]/exhibitions/creator/gallery-template-creator';
+import { GalleryTemplateData } from '@/app/(exhibitions)/[locale]/exhibitions/gallery/gallery-template-creator';
 
 const exhibitions = [
     {
@@ -263,23 +263,35 @@ export async function getGalleryTemplates() {
     // const response = await fetch('/api/gallery/templates');
     // return await response.json();
     
-    // Mock response for demo
+    // Mock response for demo - Now with all required properties
     return [
       {
         id: 'template_1',
         name: 'Modern Gallery',
         description: 'A sleek, contemporary space with clean lines',
-        previewImage: 'https://example.com/gallery-preview.jpg',
+        previewImage: '/gallery-preview.jpg',
         dimensions: { xAxis: 40, yAxis: 10, zAxis: 40 },
-        modelPath: '/modern-gallery.glb'
+        wallThickness: 0.2,
+        wallHeight: 3,
+        modelPath: '/modern-a1-gallery.glb',
+        modelScale: 3,
+        modelRotation: [0, 0, 0] as [number, number, number],
+        modelPosition: [0, 0, 0] as [number, number, number],
+        customColliders: []
       },
       {
         id: 'template_2',
         name: 'Classic Museum',
         description: 'Traditional museum layout with elegant architecture',
-        previewImage: 'https://example.com/museum-preview.jpg',
+        previewImage: '/gallery-preview.jpg',
         dimensions: { xAxis: 50, yAxis: 15, zAxis: 50 },
-        modelPath: '/classic-museum.glb'
+        wallThickness: 0.2,
+        wallHeight: 4,
+        modelPath: '/modern-a2-gallery.glb',
+        modelScale: 4,
+        modelRotation: [0, 0, 0] as [number, number, number],
+        modelPosition: [0, 0, 0] as [number, number, number],
+        customColliders: []
       }
     ];
   } catch (error) {
@@ -289,25 +301,32 @@ export async function getGalleryTemplates() {
 }
 
 // Function to get a single gallery template by ID
-export async function getGalleryTemplate(id: string) {
+export async function getGalleryTemplate(id: string): Promise<GalleryTemplateData> {
   try {
-    // Replace with actual API call
-    // const response = await fetch(`/api/gallery/templates/${id}`);
-    // return await response.json();
+    // Fetch data or use mock data
+    const templates = await getGalleryTemplates();
+    const foundTemplate = templates.find(template => template.id === id);
     
-    // Mock response
-    return {
-      id,
-      name: 'Modern Gallery',
-      description: 'A sleek, contemporary space with clean lines',
-      previewImage: 'https://example.com/gallery-preview.jpg',
-      dimensions: { xAxis: 40, yAxis: 10, zAxis: 40 },
-      wallThickness: 0.2,
-      wallHeight: 3,
-      modelPath: '/modern-gallery.glb',
-      modelScale: 3,
-      customColliders: []
-    };
+    if (foundTemplate) {
+      // Return all required properties, adding default values if missing
+      return {
+        id: foundTemplate.id,
+        name: foundTemplate.name,
+        description: foundTemplate.description,
+        dimensions: foundTemplate.dimensions || { xAxis: 30, yAxis: 10, zAxis: 40 },
+        wallThickness: foundTemplate.wallThickness || 0.2,
+        wallHeight: foundTemplate.wallHeight || 3,
+        modelPath: foundTemplate.modelPath || '',
+        modelScale: foundTemplate.modelScale || 1,
+        // Add these two required properties with default values
+        modelRotation: foundTemplate.modelRotation || [0, 0, 0] as [number, number, number],
+        modelPosition: foundTemplate.modelPosition || [0, 0, 0] as [number, number, number],
+        previewImage: foundTemplate.previewImage || '',
+        customColliders: foundTemplate.customColliders || []
+      };
+    }
+    
+    throw new Error(`Gallery template with ID "${id}" not found`);
   } catch (error) {
     console.error(`Error getting gallery template ${id}:`, error);
     throw new Error('Failed to fetch gallery template');

@@ -76,48 +76,39 @@ export function calculateWallArtworkPositions(
   }
 
   // Handle custom wall (e.g., interior divider walls)
-  // Determine the primary axis based on wall rotation
-  let primaryAxis: 'x' | 'z';
-  let rotationY: number;
-
-  // Determine wall orientation based on Y rotation
-  // This assumes the wall is vertical and only rotated around Y axis
-  const yRotation = wallRotation[1] % (2 * Math.PI);
-  
-  // Check if wall is more aligned with X or Z axis
-  if (Math.abs(Math.sin(yRotation)) > Math.abs(Math.cos(yRotation))) {
-    // Wall normal is more aligned with X axis (wall runs along Z)
-    primaryAxis = 'z';
-    rotationY = yRotation;
-  } else {
-    // Wall normal is more aligned with Z axis (wall runs along X)
-    primaryAxis = 'x';
-    rotationY = yRotation;
-  }
-
-  // Calculate positions for artwork along the wall
+  // For custom walls, artworks should have the same rotation as the wall
   positions = basePositions.map(pos => {
-    // Position along primary wall axis
-    const x = primaryAxis === 'x' ? pos : wallPosition[0];
-    const z = primaryAxis === 'z' ? pos : wallPosition[2];
+    // Position along primary axis based on wall orientation
+    let primaryAxisValue: number;
+    let secondaryAxisValue: number;
     
-    // Apply offset in direction of wall normal
-    const offsetX = offsetDirection[0] * wallOffset;
-    const offsetZ = offsetDirection[2] * wallOffset;
-    
-    return [
-      x + offsetX,  // X position with offset
-      heightPosition, // Y position (height)
-      z + offsetZ   // Z position with offset
-    ] as Vec3;
+    if (Math.abs(Math.sin(wallRotation[1])) > Math.abs(Math.cos(wallRotation[1]))) {
+      // Wall runs along Z axis
+      primaryAxisValue = pos;
+      secondaryAxisValue = wallPosition[0];
+      
+      // Calculate position with proper offset from wall
+      return [
+        secondaryAxisValue + offsetDirection[0] * wallOffset,
+        heightPosition,
+        wallPosition[2] + primaryAxisValue
+      ] as Vec3;
+    } else {
+      // Wall runs along X axis
+      primaryAxisValue = pos;
+      secondaryAxisValue = wallPosition[2];
+      
+      // Calculate position with proper offset from wall
+      return [
+        wallPosition[0] + primaryAxisValue,
+        heightPosition,
+        secondaryAxisValue + offsetDirection[2] * wallOffset
+      ] as Vec3;
+    }
   });
 
-  // All artworks on this wall share the same rotation
-  rotations = Array(artworkCount).fill([
-    wallRotation[0],
-    rotationY,
-    wallRotation[2]
-  ] as Vec3);
+  // Set all artwork rotations to match the wall rotation
+  rotations = Array(artworkCount).fill([...wallRotation] as Vec3);
 
   return { positions, rotations };
 }
