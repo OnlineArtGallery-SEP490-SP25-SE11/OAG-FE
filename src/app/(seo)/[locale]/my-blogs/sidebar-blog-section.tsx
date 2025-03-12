@@ -173,9 +173,15 @@ const BlogSection = ({ title, blogs }: { title: string; blogs: Blog[] }) => (
 				{title}
 			</AccordionTrigger>
 			<AccordionContent>
-				{blogs.map((blog) => (
-					<BlogEntry key={blog._id} blog={blog} />
-				))}
+				{blogs.length === 0 ? (
+					<div className="py-2 px-3 text-sm text-gray-500 italic">
+						No blogs yet
+					</div>
+				) : (
+					blogs.map((blog) => (
+						<BlogEntry key={blog._id} blog={blog} />
+					))
+				)}
 			</AccordionContent>
 		</AccordionItem>
 	</Accordion>
@@ -186,8 +192,8 @@ interface BlogSectionProps {
 }
 
 export function SidebarBlogSection({ blogs }: BlogSectionProps) {
-	const publishedBlogs = blogs.filter((blog) => blog.status === 'PUBLISHED');
-	const draftBlogs = blogs.filter((blog) => blog.status !== 'PUBLISHED' ); // DRAFT , PENDING_REVIEW, REJECTED
+	const publishedBlogs = blogs?.filter((blog) => blog.status === 'PUBLISHED') ?? [];
+	const draftBlogs = blogs?.filter((blog) => blog.status !== 'PUBLISHED' ) ?? []; // DRAFT , PENDING_REVIEW, REJECTED
 
 	return (
 		<div>
