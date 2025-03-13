@@ -1,6 +1,6 @@
 'use client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Bar, Doughnut, Line } from 'react-chartjs-2';
+import { vietnamCurrency } from '@/utils/converters';
 import {
 	ArcElement,
 	BarElement,
@@ -13,10 +13,10 @@ import {
 	Title,
 	Tooltip
 } from 'chart.js';
-import { useEffect, useState } from 'react';
-import { vietnamCurrency } from '@/utils/converters';
-import TabChart from './tab-chart';
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { Bar, Doughnut, Line } from 'react-chartjs-2';
+import TabChart from './tab-chart';
 
 ChartJS.register(
 	ArcElement,
@@ -252,10 +252,10 @@ export default function Dashboard() {
 					<CardContent className='p-3 md:p-6 h-[200px] md:h-[300px]'>
 						<Doughnut
 							data={statusData}
-							options={{
-								...getChartOptions(isMobile),
-								cutout: isMobile ? '40%' : '60%'
-							}}
+						// options={{
+						// 	...getChartOptions(isMobile),
+						// 	cutout: isMobile ? '40%' : '60%'
+						// }}
 						/>
 					</CardContent>
 				</Card>
@@ -269,7 +269,7 @@ export default function Dashboard() {
 					<CardContent className='p-3 md:p-6 h-[200px] md:h-[300px]'>
 						<Line
 							data={salesData}
-							options={getChartOptions(isMobile)}
+						// options={getChartOptions(isMobile)}
 						/>
 					</CardContent>
 				</Card>
@@ -296,7 +296,7 @@ export default function Dashboard() {
 				<CardContent className='p-3 md:p-6 h-[250px] md:h-[350px]'>
 					<Bar
 						data={revenueData}
-						options={getChartOptions(isMobile)}
+					// options={getChartOptions(isMobile)}
 					/>
 				</CardContent>
 			</Card>

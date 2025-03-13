@@ -1,7 +1,10 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { vietnamCurrency } from '@/utils/converters';
+import { Eye, Heart } from 'lucide-react';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import {
 	Bar,
 	BarChart,
@@ -13,9 +16,6 @@ import {
 	XAxis,
 	YAxis
 } from 'recharts';
-import { vietnamCurrency } from '@/utils/converters';
-import { Eye, Heart } from 'lucide-react';
-import Image from 'next/image';
 
 export default function TabChart() {
 	const [isMobile, setIsMobile] = useState(false);

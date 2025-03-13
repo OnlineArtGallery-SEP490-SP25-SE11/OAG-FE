@@ -29,31 +29,12 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import EditArtworkForm from '../components/artist-update';
 import ConfirmationDialog from '../components/confirmation-dialog';
+import { ITEMS_PER_PAGE, STATUS_OPTIONS } from '../constant';
+import { Artwork } from '../interface';
 
-export type Artwork = {
-	_id: string;
-	title: string;
-	description: string;
-	category: string[];
-	dimensions: { width: number; height: number; _id: string };
-	url: string;
-	status: 'Available' | 'Sold' | 'Hidden' | 'Selling';
 
-	views: number;
-	price: number;
-	createdAt: string;
-	updatedAt: string;
-	__v: number;
-};
 
-const ITEMS_PER_PAGE = 12;
-export const STATUS_OPTIONS = [
-	{ value: 'all', label: 'Tất cả', color: 'bg-gray-500' },
-	{ value: 'available', label: 'Có sẵn', color: 'bg-emerald-500' },
-	{ value: 'sold', label: 'Đã bán', color: 'bg-red-500' },
-	{ value: 'hidden', label: 'Ẩn', color: 'bg-gray-700' },
-	{ value: 'selling', label: 'Đang bán', color: 'bg-teal-500' },
-];
+
 
 export default function ManageArtworks() {
 	const router = useRouter();
@@ -116,13 +97,13 @@ export default function ManageArtworks() {
 		mutationFn: (id: string) => artworkService.delete(id),
 		onSuccess: () => {
 			// Sửa đổi 1: Thay đổi cách invalidate query để khớp với queryKey chính xác
-			queryClient.invalidateQueries({ 
-				queryKey: ['artworks', currentPage, debouncedSearch, statusFilter] 
+			queryClient.invalidateQueries({
+				queryKey: ['artworks', currentPage, debouncedSearch, statusFilter]
 			});
-			
+
 			// Thêm refetch để đảm bảo dữ liệu được cập nhật ngay lập tức
 			refetch();
-			
+
 			setDeleteConfirmOpen(false);
 			setDeleteArtworkId(null);
 		},

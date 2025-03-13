@@ -7,7 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Artwork, STATUS_OPTIONS } from "../manage/page";
+
+import { STATUS_OPTIONS } from "../constant";
+import { Artwork } from "../interface";
 import { artworkService } from "../queries";
 import { artworkFormUpdateSchema } from "../schema";
 

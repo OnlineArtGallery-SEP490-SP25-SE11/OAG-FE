@@ -114,3 +114,12 @@ const demo = [
 		viewCount: 95
 	}
 ];
+
+export const ITEMS_PER_PAGE = 12;
+export const STATUS_OPTIONS = [
+	{ value: 'all', label: 'Tất cả', color: 'bg-gray-500' },
+	{ value: 'available', label: 'Có sẵn', color: 'bg-emerald-500' },
+	{ value: 'sold', label: 'Đã bán', color: 'bg-red-500' },
+	{ value: 'hidden', label: 'Ẩn', color: 'bg-gray-700' },
+	{ value: 'selling', label: 'Đang bán', color: 'bg-teal-500' },
+];
