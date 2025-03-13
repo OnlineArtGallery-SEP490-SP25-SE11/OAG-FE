@@ -1,13 +1,17 @@
 'use client';
-import { useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { motion } from 'framer-motion';
-import { useMutation } from '@tanstack/react-query';
-import { useTranslations } from 'next-intl';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { artworkService } from '@/app/(public)/[locale]/artists/queries';
+import {
+	ArtworkFormData,
+	artworkFormSchema
+} from '@/app/(public)/[locale]/artists/schema';
+import FileUploader from '@/components/ui.custom/file-uploader';
 import { Button } from '@/components/ui/button';
+import {
+	Card,
+	CardContent,
+	CardFooter,
+	CardHeader
+} from '@/components/ui/card';
 import {
 	Form,
 	FormControl,
@@ -17,6 +21,8 @@ import {
 	FormLabel,
 	FormMessage
 } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
 	Select,
 	SelectContent,
@@ -24,33 +30,27 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/components/ui/select';
-import {
-	Card,
-	CardContent,
-	CardFooter,
-	CardHeader
-} from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { toast } from '@/hooks/use-toast';
+import { Textarea } from '@/components/ui/textarea';
 import { Toaster } from '@/components/ui/toaster';
-import {
-	ArtworkFormData,
-	artworkFormSchema
-} from '@/app/(public)/[locale]/artists/schema';
-import { artworkService } from '@/app/(public)/[locale]/artists/queries';
-import FileUploader from '@/components/ui.custom/file-uploader';
+import { toast } from '@/hooks/use-toast';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { useMemo, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
-const CATEGORIES = [
-	'Nature',
-	'Landscape',
-	'Portrait',
-	'Abstract',
-	'Modern',
-	'Classic',
-	'Urban',
-	'Wildlife'
-];
+// const CATEGORIES = [
+// 	'Nature',
+// 	'Landscape',
+// 	'Portrait',
+// 	'Abstract',
+// 	'Modern',
+// 	'Classic',
+// 	'Urban',
+// 	'Wildlife'
+// ];
 
 export default function UploadArtwork() {
 	const [file, setFile] = useState<File | null>(null);
@@ -64,12 +64,18 @@ export default function UploadArtwork() {
 			categories: [],
 			width: '',
 			height: '',
-			price: '0',
+			price: 0,
 			status: 'Available',
 			imageUrl: ''
 		}
 	});
 
+	const { data, error, isLoading } = useQuery({
+		queryKey: ['categories'],
+		queryFn: () => artworkService.getCategories(),
+		placeholderData: (previousData) => previousData,
+	});
+	const CATEGORIES = data?.data || []
 	const mutation = useMutation({
 		mutationFn: artworkService.upload,
 		onSuccess: () => {
@@ -237,70 +243,98 @@ export default function UploadArtwork() {
 								<motion.div variants={itemVariants}>
 									<FormField
 										control={form.control}
-										name='categories'
-										render={() => (
+										name="categories"
+										render={({ field }) => (
 											<FormItem>
-												<div className='flex items-center justify-between mb-2'>
-													<FormLabel className='text-sm md:text-base font-medium text-emerald-700 dark:text-emerald-200'>
+												<div className="flex items-center justify-between mb-2">
+													<FormLabel className="text-sm md:text-base font-medium text-emerald-700 dark:text-emerald-200">
 														{t('field.categories')}
 													</FormLabel>
-													<FormDescription className='text-xs text-teal-600 dark:text-teal-400'>
+													<FormDescription className="text-xs text-teal-600 dark:text-teal-400">
 														{t('helper.categories')}
 													</FormDescription>
 												</div>
-												<div className='grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3'>
-													{CATEGORIES.map(
-														(category) => (
-															<FormField
-																key={category}
-																control={
-																	form.control
+												<div className="relative">
+													<Input
+														placeholder={t('placeholder.categories')}
+														className="rounded-lg border-gray-200 dark:border-gray-700 shadow-sm focus:ring-2 focus:ring-teal-500 h-10 text-sm md:text-base bg-gray-50 dark:bg-gray-700/30"
+														onKeyDown={(e) => {
+															if (e.key === 'Enter' || e.key === ',') {
+																e.preventDefault();
+																const value = e.currentTarget.value.trim();
+																if (value && !field.value.includes(value)) {
+																	field.onChange([...field.value, value]);
+																	e.currentTarget.value = '';
 																}
-																name='categories'
-																render={({
-																	field
-																}) => (
-																	<FormItem className='flex items-center space-x-2'>
-																		<FormControl>
-																			<Checkbox
-																				checked={field.value?.includes(
-																					category
-																				)}
-																				onCheckedChange={(
-																					checked
-																				) =>
-																					checked
-																						? field.onChange(
-																								[
-																									...field.value,
-																									category
-																								]
-																						  )
-																						: field.onChange(
-																								field.value.filter(
-																									(
-																										value
-																									) =>
-																										value !==
-																										category
-																								)
-																						  )
-																				}
-																				className='rounded border-teal-300 dark:border-teal-600'
-																			/>
-																		</FormControl>
-																		<FormLabel className='text-sm font-medium text-gray-700 dark:text-gray-200'>
-																			{
-																				category
-																			}
-																		</FormLabel>
-																	</FormItem>
-																)}
-															/>
-														)
-													)}
+															}
+														}}
+													/>
+													<div className="absolute right-2 top-2">
+														<Button
+															type="button"
+															variant="ghost"
+															size="sm"
+															className="h-6 w-6 p-0"
+															onClick={() => {
+																const input = document.querySelector('input[name="categoryInput"]') as HTMLInputElement;
+																if (input && input.value.trim() && !field.value.includes(input.value.trim())) {
+																	field.onChange([...field.value, input.value.trim()]);
+																	input.value = '';
+																}
+															}}
+														>
+															<span className="sr-only">{t('button.add')}</span>
+															<span className="font-bold">+</span>
+														</Button>
+													</div>
 												</div>
-												<FormMessage className='text-xs text-red-500 dark:text-red-400 mt-1' />
+												<div className="mt-3">
+													<div className="flex flex-wrap gap-2">
+														{field.value.map((category, index) => (
+															<div
+																key={index}
+																className="flex items-center gap-1 bg-teal-100 dark:bg-teal-800/50 text-teal-700 dark:text-teal-300 px-2 py-1 rounded-md text-sm"
+															>
+																<span>{category}</span>
+																<button
+																	type="button"
+																	className="text-teal-500 hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-200"
+																	onClick={() => {
+																		const newCategories = [...field.value];
+																		newCategories.splice(index, 1);
+																		field.onChange(newCategories);
+																	}}
+																>
+																	<span className="sr-only">{t('button.remove')}</span>
+																	<span className="font-bold">×</span>
+																</button>
+															</div>
+														))}
+													</div>
+												</div>
+												<div className="mt-3">
+													<p className="text-xs text-teal-600 dark:text-teal-400">{t('helper.suggestedCategories')}</p>
+													<ScrollArea
+														className='max-h-24 overflow-auto'
+													>
+
+														<div className="flex flex-wrap gap-2 mt-1">
+															{CATEGORIES.filter((cat: string) => !field.value.includes(cat)).map((category: string) => (
+																<button
+																	key={category}
+																	type="button"
+																	className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-md text-xs hover:bg-teal-100 dark:hover:bg-teal-800/50 hover:text-teal-700 dark:hover:text-teal-300 transition-colors"
+																	onClick={() => {
+																		field.onChange([...field.value, category]);
+																	}}
+																>
+																	{category}
+																</button>
+															))}
+														</div>
+													</ScrollArea>
+												</div>
+												<FormMessage className="text-xs text-red-500 dark:text-red-400 mt-1" />
 											</FormItem>
 										)}
 									/>

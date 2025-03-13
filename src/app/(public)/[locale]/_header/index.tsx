@@ -66,6 +66,7 @@ export default function Header() {
 
 	useEffect(() => {
 		setIsMenuOpen(false);
+		return () => setIsMenuOpen(false);
 	}, [pathname]);
 
 	useEffect(() => {
@@ -194,7 +195,7 @@ export default function Header() {
 							{/* Close Button Inside Menu */}
 							<button
 								onClick={toggleMenu}
-								className='absolute top-4 right-16 p-2 rounded-full text-white hover:bg-white/20 dark:hover:bg-gray-800/20 transition-colors'
+								className='absolute top-4 right-16 p-2 rounded-full dark:text-white text-black hover:bg-white/20 dark:hover:bg-gray-800/20 transition-colors'
 								aria-label='Close menu'
 							>
 								<X className='h-6 w-6' />

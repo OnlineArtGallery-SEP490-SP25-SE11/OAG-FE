@@ -1,5 +1,5 @@
-import { Artwork } from '@/types/marketplace';
 import { createAxiosInstance } from '@/lib/axios';
+import { Artwork } from '@/types/marketplace';
 
 function getRandomSize() {
 	return {
@@ -127,12 +127,12 @@ export async function fetchArtPiecesByRange(
 ): Promise<Artwork[]> {
 	const skip = startIndex;
 	const take = stopIndex - startIndex + 1;
-	const url = `http://localhost:5000/api/artwork?skip=${skip}&take=${take}`;
+	// const url = `http://localhost:5000/api/`;
 	try {
 		const axios = await createAxiosInstance({ useToken: false });
 		if (!axios) throw new Error('Failed to create Axios instance');
-		const response = await axios.get(url);
-		console.log(response.data.data.artworks);
+		const response = await axios.get(`/artwork?skip=${skip}&take=${take}&status=selling&status=available&status=sold`);
+		// console.log(response.data.data.artworks);
 		return response.data.data.artworks;
 	} catch {
 		throw new Error('Error fetching artworks');
@@ -140,11 +140,11 @@ export async function fetchArtPiecesByRange(
 }
 
 export async function fetchArtworkById(id: string): Promise<Artwork> {
-	const url = `http://localhost:5000/api/artwork/${id}`;
+	// const url = `http://localhost:5000/api/artwork/${id}`;
 	try {
 		const axios = await createAxiosInstance({ useToken: false });
 		if (!axios) throw new Error('Failed to create Axios instance');
-		const response = await axios.get(url);
+		const response = await axios.get(`/artwork/${id}`);
 		return response.data;
 	} catch {
 		throw new Error('Error fetching artwork');

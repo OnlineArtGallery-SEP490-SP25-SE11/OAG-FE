@@ -14,17 +14,16 @@ import ArtFilter from '@/app/(public)/[locale]/artworks/components/art-filter';
 import { useWindowSize } from '@react-hook/window-size';
 import ArtSidebar from '@/app/(public)/[locale]/artworks/components/art-sidebar';
 
-// Memo hóa MasonryLayout (giữ nguyên với masonic)
 const MasonryLayout = memo(
 	({
-		items,
-		loadMore
-	}: {
+		 items,
+		 loadMore
+	 }: {
 		items: Artwork[];
 		loadMore: LoadMoreItemsCallback<unknown>;
 	}) => {
 		const [windowWidth] = useWindowSize();
-		const isMobile = windowWidth < 768; // Breakpoint cho mobile
+		const isMobile = windowWidth < 768;
 
 		const animation = {
 			variants: {
@@ -40,17 +39,14 @@ const MasonryLayout = memo(
 			}
 		};
 
-		// Tính toán columnWidth dựa trên màn hình
 		const getColumnWidth = () => {
 			if (isMobile) {
-				// Chia đôi chiều rộng màn hình, trừ gutter
-				return (windowWidth - 30) / 2; // 30 là columnGutter
+				return (windowWidth - 30) / 2;
 			}
-			return 380; // Giá trị mặc định cho desktop
+			return 380;
 		};
 
-		// Tính số cột (chỉ áp dụng nếu Masonry hỗ trợ columnCount trực tiếp)
-		const columnCount = isMobile ? 2 : undefined; // Nếu không set columnCount thì dựa vào columnWidth
+		const columnCount = isMobile ? 2 : undefined;
 
 		return (
 			<motion.div
@@ -68,23 +64,20 @@ const MasonryLayout = memo(
 					columnWidth={getColumnWidth()}
 					overscanBy={1.5}
 					render={ArtCard}
-					columnCount={columnCount} // Chỉ thêm nếu Masonry hỗ trợ, nếu không thì xóa dòng này
+					columnCount={columnCount}
 				/>
 			</motion.div>
 		);
 	}
 );
 
-// Tự viết ListLayout kiểu TikTok/Reels
 const ListLayout = memo(
 	({
-		items,
-		setArtPieces
-	}: // loadMore
-	{
+		 items,
+		 setArtPieces
+	 }: {
 		items: Artwork[];
 		setArtPieces: (items: Artwork[]) => void;
-		// loadMore: any;
 	}) => {
 		const animation = {
 			variants: {
@@ -107,7 +100,6 @@ const ListLayout = memo(
 		const itemHeight = window.innerHeight - 80;
 		const threshold = 100;
 
-		// Infinite Loader thủ công
 		const triggerLoadMore = useCallback(async () => {
 			if (loadingMore) return;
 			setLoadingMore(true);
@@ -119,7 +111,6 @@ const ListLayout = memo(
 				stopIndex
 			)) as Artwork[];
 
-			// Use a Set to filter out duplicate items
 			const newItems = Array.from(
 				new Set([...items, ...nextArtWorks].map((item) => item?._id))
 			)
@@ -129,7 +120,6 @@ const ListLayout = memo(
 				.filter((item): item is Artwork => item !== undefined);
 			console.log('New items length:', newItems.length);
 
-			// If the new array is different from the current array, update the state
 			if (JSON.stringify(items) !== JSON.stringify(newItems)) {
 				setArtPieces(newItems);
 			}
@@ -138,7 +128,6 @@ const ListLayout = memo(
 			setLoadingMore(false);
 		}, [loadingMore, startIndex, items, setArtPieces]);
 
-		// Scroll-based infinite loading
 		useEffect(() => {
 			if (!containerRef.current) return;
 
@@ -162,7 +151,6 @@ const ListLayout = memo(
 				);
 		}, [items, triggerLoadMore, loadingMore]);
 
-		// Intersection Observer để snap item
 		useEffect(() => {
 			if (!containerRef.current) return;
 
@@ -204,13 +192,13 @@ const ListLayout = memo(
 				variants={animation.variants}
 				transition={animation.transition}
 				ref={containerRef}
-				className='w-full h-[calc(100vh-80px)] overflow-y-auto snap-y snap-mandatory scrollbar-hide'
+				className='w-full h-[calc(100vh-80px)] overflow-y-auto snap-y snap-mandatory scrollbar-hide scroll-py-0'
 			>
 				{items.map((item, index) => (
 					<div
 						key={index}
 						data-index={index}
-						className='snap-item w-full h-[calc(100vh-80px)] snap-center flex items-center justify-center'
+						className='snap-item w-full h-full snap-center p-0 m-0'
 					>
 						<ArtFeed data={item} index={index} />
 					</div>
@@ -230,8 +218,9 @@ export default function Artworks({ artworks }: { artworks: Artwork[] }) {
 	const [masonryLayout, setMasonryLayout] = useState<boolean>(true);
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	const scrollPositionRef = useRef<number>(0);
+	const [windowWidth] = useWindowSize();
+	const isMobile = windowWidth < 768;
 
-	// Memo hóa loadMore để tránh tạo lại hàm
 	const loadMore = useCallback(
 		useInfiniteLoader(
 			async (startIndex, stopIndex, currentItems) => {
@@ -255,67 +244,94 @@ export default function Artworks({ artworks }: { artworks: Artwork[] }) {
 		[]
 	);
 
-	// Quản lý modal và vị trí cuộn
 	useEffect(() => {
-		const id = searchParams.get('id');
-		if (id !== selectedId) {
-			if (id && scrollContainerRef.current) {
-				scrollPositionRef.current =
-					scrollContainerRef.current.scrollTop;
-				document.body.style.overflow = 'hidden'; // Khóa cuộn toàn trang
-			} else if (!id && scrollContainerRef.current) {
-				document.body.style.overflow = '';
-				scrollContainerRef.current.scrollTop =
-					scrollPositionRef.current;
+		if (masonryLayout) {
+			const id = searchParams.get('id');
+			if (id !== selectedId) {
+				if (id && scrollContainerRef.current) {
+					scrollPositionRef.current = scrollContainerRef.current.scrollTop;
+					document.body.style.overflow = 'hidden';
+				} else if (!id && scrollContainerRef.current) {
+					document.body.style.overflow = '';
+					scrollContainerRef.current.scrollTop = scrollPositionRef.current;
+				}
+				setSelectedId(id);
 			}
-			setSelectedId(id);
+		} else {
+			setSelectedId(null);
+			document.body.style.overflow = '';
 		}
-	}, [searchParams, selectedId]);
+	}, [searchParams, selectedId, masonryLayout]);
 
-	// Memo hóa layout component
 	const CurrentLayout = useMemo(() => {
 		return masonryLayout ? (
 			<MasonryLayout items={artPieces} loadMore={loadMore} />
 		) : (
-			<ListLayout
-				items={artPieces}
-				setArtPieces={setArtPieces}
-				// loadMore={loadMore}
-			/>
+			<ListLayout items={artPieces} setArtPieces={setArtPieces} />
 		);
 	}, [masonryLayout, artPieces, loadMore]);
 
 	return (
-		<>
-			{/* Chỉ hiển thị ArtCategory và ArtFilter khi ở chế độ MasonryLayout */}
+		<div className='flex flex-col min-h-screen  m-0'>
+			{/* Header Section */}
 			{masonryLayout && (
-				<>
+				<div className='flex-shrink-0'>
 					<ArtCategory />
-					<ArtFilter />
-				</>
+					{!isMobile && (
+						<div style={{ height: '80px' }}>
+							<ArtFilter
+								onLayoutChange={(isGrid) => setMasonryLayout(!isGrid)}
+								headerHeight={80}
+							/>
+						</div>
+					)}
+				</div>
 			)}
-			<ArtSidebar
-				changeLayout={() => {
-					setMasonryLayout(!masonryLayout);
-				}}
-			/>
-			<div className='p-0' ref={scrollContainerRef}>
+
+			{/* Main Content */}
+			<div
+				className='flex-grow p-0 m-0'
+				ref={scrollContainerRef}>
+				{/* <ArtSidebar changeLayout={() => setMasonryLayout(!masonryLayout)} /> */}
 				<AnimatePresence mode='wait'>
 					<motion.div layout>{CurrentLayout}</motion.div>
 				</AnimatePresence>
 			</div>
-			{selectedId && <ArtModal id={selectedId} setId={setSelectedId} />}
-			{/* CSS toàn cục để ẩn scrollbar */}
-			<style jsx global>{`
-				.scrollbar-hide::-webkit-scrollbar {
-					display: none;
-				}
 
-				.scrollbar-hide {
-					-ms-overflow-style: none; /* IE và Edge */
-					scrollbar-width: none; /* Firefox */
-				}
+			{/* Bottom Bar */}
+			{(isMobile || !masonryLayout) && (
+				<div className='fixed bottom-0 left-0 right-0 z-50 bg-white shadow-lg border-t border-gray-200'>
+					<div className='max-w-7xl mx-auto px-4' style={{ height: '80px' }}>
+						<ArtFilter
+							onLayoutChange={(isGrid) => setMasonryLayout(!isGrid)}
+							headerHeight={80}
+						/>
+					</div>
+				</div>
+			)}
+
+			{/* Modal - chỉ hiển thị ở masonry layout */}
+			{masonryLayout && selectedId && <ArtModal id={selectedId} setId={setSelectedId} />}
+
+			<style jsx global>{`
+                .scrollbar-hide::-webkit-scrollbar {
+                    display: none;
+                }
+                .scrollbar-hide {
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
+                @media (max-width: 767px) {
+                    .flex-grow {
+                        padding-bottom: 80px;
+                    }
+                }
+                @media (min-width: 768px) {
+                    .flex-grow {
+                        padding-bottom: ${!masonryLayout ? '80px' : '0'};
+                    }
+                }
 			`}</style>
-		</>
+		</div>
 	);
 }

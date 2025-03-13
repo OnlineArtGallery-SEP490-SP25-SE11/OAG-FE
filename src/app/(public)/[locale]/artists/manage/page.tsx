@@ -1,17 +1,8 @@
 'use client';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Card } from '@/components/ui/card';
+import { artworkService } from '@/app/(public)/[locale]/artists/queries';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select';
-import Image from 'next/image';
 import {
 	Pagination,
 	PaginationContent,
@@ -21,21 +12,33 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from '@/components/ui/pagination';
-import { vietnamCurrency } from '@/utils/converters';
-import { artworkService } from '@/app/(public)/[locale]/artists/queries';
-import { FilterX, Loader2, Search } from 'lucide-react';
-import { AnimatePresence, motion } from 'framer-motion';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
+import { vietnamCurrency } from '@/utils/converters';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Edit2, FilterX, Loader2, Search, Trash2 } from 'lucide-react';
+import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import EditArtworkForm from '../components/artist-update';
+import ConfirmationDialog from '../components/confirmation-dialog';
 
-type Artwork = {
+export type Artwork = {
 	_id: string;
 	title: string;
 	description: string;
 	category: string[];
 	dimensions: { width: number; height: number; _id: string };
 	url: string;
-	status: string;
+	status: 'Available' | 'Sold' | 'Hidden' | 'Selling';
+
 	views: number;
 	price: number;
 	createdAt: string;
@@ -44,7 +47,7 @@ type Artwork = {
 };
 
 const ITEMS_PER_PAGE = 12;
-const STATUS_OPTIONS = [
+export const STATUS_OPTIONS = [
 	{ value: 'all', label: 'Tất cả', color: 'bg-gray-500' },
 	{ value: 'available', label: 'Có sẵn', color: 'bg-emerald-500' },
 	{ value: 'sold', label: 'Đã bán', color: 'bg-red-500' },
@@ -56,12 +59,16 @@ export default function ManageArtworks() {
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
+	const queryClient = useQueryClient();
 	const [isMobile, setIsMobile] = useState(false);
-
 	const [searchTerm, setSearchTerm] = useState(searchParams?.get('search') || '');
 	const [currentPage, setCurrentPage] = useState(Number(searchParams?.get('page')) || 1);
 	const [statusFilter, setStatusFilter] = useState(searchParams?.get('status') || 'all');
 	const [debouncedSearch, setDebouncedSearch] = useState(searchTerm);
+	const [isEditModalOpen, setEditModalOpen] = useState(false);
+	const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
+	const [isDeleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+	const [deleteArtworkId, setDeleteArtworkId] = useState<string | null>(null);
 	const searchTimeoutRef = useRef<number | null>(null);
 
 	useEffect(() => {
@@ -99,10 +106,27 @@ export default function ManageArtworks() {
 		[debouncedSearch, statusFilter]
 	);
 
-	const { data, error, isLoading, isFetching } = useQuery({
+	const { data, error, isLoading, isFetching, refetch } = useQuery({
 		queryKey: ['artworks', currentPage, debouncedSearch, statusFilter],
 		queryFn: () => artworkService.get(queryOptions, currentPage),
 		placeholderData: (previousData) => previousData,
+	});
+
+	const deleteArtworkMutation = useMutation({
+		mutationFn: (id: string) => artworkService.delete(id),
+		onSuccess: () => {
+			// Sửa đổi 1: Thay đổi cách invalidate query để khớp với queryKey chính xác
+			queryClient.invalidateQueries({ 
+				queryKey: ['artworks', currentPage, debouncedSearch, statusFilter] 
+			});
+			
+			// Thêm refetch để đảm bảo dữ liệu được cập nhật ngay lập tức
+			refetch();
+			
+			setDeleteConfirmOpen(false);
+			setDeleteArtworkId(null);
+		},
+		onError: (error) => console.error('Deletion failed:', error),
 	});
 
 	const artworks: Artwork[] = data?.data.artworks || [];
@@ -209,7 +233,6 @@ export default function ManageArtworks() {
 
 	const renderArtworkCard = useCallback(
 		(artwork: Artwork, index: number) => {
-			// const artworkId = artwork._id;
 			const imageUrl = artwork.url || '/placeholder.svg';
 			const statusColor = getStatusColor(artwork.status);
 
@@ -253,18 +276,28 @@ export default function ManageArtworks() {
 									)}
 								</div>
 								<div className="mt-2 flex gap-1">
+									{/* Sửa đổi 3: Cập nhật màu và thêm icon cho nút Sửa */}
 									<Button
 										size="sm"
-										className="flex-1 bg-teal-500/20 text-teal-100 hover:bg-teal-500/30 backdrop-blur-sm text-xs md:text-sm"
+										className="flex-1 bg-teal-600 hover:bg-teal-700 text-white backdrop-blur-sm text-xs md:text-sm flex items-center justify-center gap-1"
+										onClick={() => {
+											setSelectedArtwork(artwork);
+											setEditModalOpen(true);
+										}}
 									>
-										Sửa
+										<Edit2 className="h-3 w-3" /> Sửa
 									</Button>
+									{/* Sửa đổi 3: Cập nhật màu và thêm icon cho nút Xóa */}
 									<Button
 										size="sm"
 										variant="destructive"
-										className="flex-1 bg-red-500/20 hover:bg-red-500/30 backdrop-blur-sm text-xs md:text-sm"
+										className="flex-1 bg-red-600 hover:bg-red-700 text-white backdrop-blur-sm text-xs md:text-sm flex items-center justify-center gap-1"
+										onClick={() => {
+											setDeleteArtworkId(artwork._id);
+											setDeleteConfirmOpen(true);
+										}}
 									>
-										Xóa
+										<Trash2 className="h-3 w-3" /> Xóa
 									</Button>
 								</div>
 							</motion.div>
@@ -284,6 +317,7 @@ export default function ManageArtworks() {
 		[isMobile]
 	);
 
+	// Sửa đổi 2: Cải thiện skeleton loading để match với layout card thực tế
 	const renderSkeletons = useCallback(() =>
 		Array.from({ length: ITEMS_PER_PAGE }).map((_, index) => (
 			<motion.div
@@ -291,9 +325,19 @@ export default function ManageArtworks() {
 				initial={{ opacity: 0, y: 15 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.4, delay: index * 0.05, ease: 'easeOut' }}
-				className={isMobile ? 'aspect-[4/5]' : 'aspect-[2/3]'}
+				className="group relative"
 			>
-				<Skeleton className="w-full h-full rounded-lg" />
+				<Card className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
+					<div className={`relative ${isMobile ? 'aspect-[4/5]' : 'aspect-[2/3]'}`}>
+						<Skeleton className="w-full h-full rounded-lg absolute inset-0" />
+						<div className="absolute bottom-0 left-0 right-0 p-2 space-y-1">
+							<Skeleton className="h-4 w-3/4" />
+							<Skeleton className="h-3 w-5/6" />
+							<Skeleton className="h-3 w-1/2" />
+						</div>
+						<Skeleton className="absolute top-2 right-2 h-4 w-16 rounded-full" />
+					</div>
+				</Card>
 			</motion.div>
 		)), [isMobile]);
 
@@ -532,6 +576,36 @@ export default function ManageArtworks() {
 					</motion.div>
 				)}
 			</AnimatePresence>
+
+			{/* Edit Modal */}
+			{isEditModalOpen && selectedArtwork && (
+				<motion.div
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					exit={{ opacity: 0 }}
+					className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
+				>
+					<motion.div
+						initial={{ scale: 0.7, opacity: 0 }}
+						animate={{ scale: 1, opacity: 1 }}
+						exit={{ scale: 0.7, opacity: 0 }}
+						className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md"
+					>
+						<h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Edit Artwork</h2>
+						<EditArtworkForm artwork={selectedArtwork} onClose={() => setEditModalOpen(false)} />
+					</motion.div>
+				</motion.div>
+			)}
+
+			{/* Delete Confirmation Dialog */}
+			<ConfirmationDialog
+				isOpen={isDeleteConfirmOpen}
+				onClose={() => setDeleteConfirmOpen(false)}
+				onConfirm={() => {
+					if (deleteArtworkId) deleteArtworkMutation.mutate(deleteArtworkId);
+				}}
+				message="Are you sure you want to delete this artwork?"
+			/>
 		</motion.div>
 	);
 }

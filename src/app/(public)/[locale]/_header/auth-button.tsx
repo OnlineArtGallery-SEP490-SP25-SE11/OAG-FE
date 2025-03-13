@@ -52,18 +52,13 @@ export default function AuthButton() {
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<HeaderButton
-						isGradient={true}
+						isGradient
 						isArtist={user.role.includes('artist')}
 						isPremium={user.role.includes('premium')}
 					>
-						<Avatar className='w-full h-full'>
-							{user.image ? (
-								<AvatarImage src={user.image} />
-							) : (
-								<AvatarFallback>
-									{user.name?.[0]?.toUpperCase() || 'U'}
-								</AvatarFallback>
-							)}
+						<Avatar className="w-full h-full">
+							<AvatarImage src={user.image as string} />
+							<AvatarFallback>{user.name?.[0]?.toUpperCase() || 'U'}</AvatarFallback>
 						</Avatar>
 					</HeaderButton>
 				</DropdownMenuTrigger>

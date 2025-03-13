@@ -1,5 +1,5 @@
-import { createAxiosInstance } from '@/lib/axios';
 import { ArtworkFormData } from '@/app/(public)/[locale]/artists/schema';
+import { createAxiosInstance } from '@/lib/axios';
 
 const ITEMS_PER_PAGE = 12;
 export const artworkService = {
@@ -19,6 +19,8 @@ export const artworkService = {
 			status: formData.status.toLowerCase(),
 			price: Number(formData.price)
 		});
+
+
 
 		if (response.status === 201) {
 			console.log(response.data);
@@ -55,6 +57,53 @@ export const artworkService = {
 		}
 
 		return response.data;
+	},
+	update: async (id: string, updatedData: Partial<ArtworkFormData>): Promise<any> => {
+		const axios = await createAxiosInstance({ useToken: true });
+		if (!axios) throw new Error('Failed to create Axios instance');
+
+		const response = await axios.put(`/artwork/${id}`, {
+			title: updatedData.title,
+			description: updatedData.description,
+			category: updatedData.categories,
+			status: updatedData.status?.toLowerCase(),
+			price: updatedData.price ? Number(updatedData.price) : undefined
+		});
+
+		if (response.status === 200) {
+			console.log('Artwork updated successfully:', response.data);
+			return response.data;
+		} else {
+			throw new Error('Failed to update artwork');
+		}
+	},
+	delete: async (id: string): Promise<any> => {
+		const axios = await createAxiosInstance({ useToken: true });
+		if (!axios) throw new Error('Failed to create Axios instance');
+
+		const response = await axios.delete(`/artwork/${id}`);
+
+		if (response.status === 200) {
+			console.log('Artwork deleted successfully');
+			return response.data;
+		} else {
+			throw new Error('Failed to delete artwork');
+		}
+	},
+	async getCategories(): Promise<any> {
+		const axios = await createAxiosInstance({ useToken: false });
+		if (!axios) throw new Error('Failed to create Axios instance');
+
+		const response = await axios.get('/artwork/categories');
+
+		if (response.status === 200) {
+			console.log('Category get successfully');
+			return response.data;
+		} else {
+			throw new Error('Failed to get category');
+		}
+
 	}
+
 
 };

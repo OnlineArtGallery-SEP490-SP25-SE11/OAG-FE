@@ -1,10 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, ChevronDown, ChevronUp, Filter, Search } from 'lucide-react';
+import {
+	Check,
+	ChevronDown,
+	ChevronUp,
+	Filter,
+	Grid,
+	LayoutGrid,
+	List,
+	Search
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { vietnamCurrency } from '@/utils/converters';
 
@@ -51,8 +60,13 @@ interface CheckboxItemProps {
 	description?: string;
 }
 
+interface HeaderFilterProps {
+	onLayoutChange: (isGrid: boolean) => void;
+	headerHeight?: number; // Optional prop for header height (default 80px)
+}
+
 // Data Constants
-const artists = [
+const artists: { id: string; name: string }[] = [
 	{ id: 'following', name: 'Artists you follow' },
 	{ id: '1', name: 'Leonardo da Vinci' },
 	{ id: '2', name: 'Vincent van Gogh' },
@@ -61,7 +75,7 @@ const artists = [
 	{ id: '5', name: 'Andy Warhol' }
 ];
 
-const categories = [
+const categories: string[] = [
 	'Paintings',
 	'Sculptures',
 	'Photography',
@@ -70,7 +84,7 @@ const categories = [
 	'Drawing'
 ];
 
-const materials = [
+const materials: string[] = [
 	'Acrylic',
 	'Oil',
 	'Watercolor',
@@ -81,13 +95,13 @@ const materials = [
 	'Paper'
 ];
 
-const waysToBuy = [
+const waysToBuy: { id: string; label: string }[] = [
 	{ id: 'offer', label: 'Make an Offer' },
 	{ id: 'bid', label: 'Bid' },
 	{ id: 'contact', label: 'Contact Gallery' }
 ];
 
-const sizes = [
+const sizes: { id: string; label: string; description: string }[] = [
 	{
 		id: 'small',
 		label: 'Small (under 40cm)',
@@ -106,65 +120,58 @@ const sizes = [
 ];
 
 // Reusable Components
-const FilterSection = ({
-	title,
-	isExpanded,
-	onToggle,
-	children
-}: FilterSectionProps) => (
-	<div className='space-y-4 border-b border-gray-200 dark:border-gray-700 pb-4'>
-		<motion.div
-			className='flex justify-between items-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-lg transition-colors'
-			onClick={onToggle}
-			whileTap={{ scale: 0.98 }}
-		>
-			<h3 className='font-medium text-gray-900 dark:text-gray-100'>
-				{title}
-			</h3>
-			<AnimatePresence mode='wait' initial={false}>
-				{isExpanded ? (
+const FilterSection = memo(
+	({ title, isExpanded, onToggle, children }: FilterSectionProps) => (
+		<div className='space-y-3 border-b border-gray-200 dark:border-gray-700 pb-3'>
+			<motion.div
+				className='flex justify-between items-center cursor-pointer p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200'
+				onClick={onToggle}
+				whileTap={{ scale: 0.98 }}
+				layout
+			>
+				<h3 className='font-medium text-gray-900 dark:text-gray-100'>
+					{title}
+				</h3>
+				<AnimatePresence mode='wait' initial={false}>
+					{isExpanded ? (
+						<motion.div
+							key='up'
+							animate={{ rotate: 0 }}
+							transition={{ duration: 0.15 }}
+						>
+							<ChevronUp className='h-4 w-4 text-gray-500' />
+						</motion.div>
+					) : (
+						<motion.div
+							key='down'
+							animate={{ rotate: 0 }}
+							transition={{ duration: 0.15 }}
+						>
+							<ChevronDown className='h-4 w-4 text-gray-500' />
+						</motion.div>
+					)}
+				</AnimatePresence>
+			</motion.div>
+			<AnimatePresence>
+				{isExpanded && (
 					<motion.div
-						key='up'
-						initial={{ rotate: 0 }}
-						animate={{ rotate: 0 }}
-						exit={{ rotate: 180 }}
-						transition={{ duration: 0.2 }}
+						initial={{ opacity: 0, height: 0 }}
+						animate={{ opacity: 1, height: 'auto' }}
+						exit={{ opacity: 0, height: 0 }}
+						transition={{ duration: 0.2, ease: 'easeOut' }}
 					>
-						<ChevronUp className='h-4 w-4 text-gray-500' />
-					</motion.div>
-				) : (
-					<motion.div
-						key='down'
-						initial={{ rotate: 180 }}
-						animate={{ rotate: 0 }}
-						exit={{ rotate: 180 }}
-						transition={{ duration: 0.2 }}
-					>
-						<ChevronDown className='h-4 w-4 text-gray-500' />
+						{children}
 					</motion.div>
 				)}
 			</AnimatePresence>
-		</motion.div>
-		<AnimatePresence>
-			{isExpanded && (
-				<motion.div
-					className='pl-2'
-					initial={{ opacity: 0, height: 0 }}
-					animate={{ opacity: 1, height: 'auto' }}
-					exit={{ opacity: 0, height: 0 }}
-					transition={{ duration: 0.2 }}
-				>
-					{children}
-				</motion.div>
-			)}
-		</AnimatePresence>
-	</div>
+		</div>
+	)
 );
+FilterSection.displayName = 'FilterSection';
 
-const CheckboxItem = ({ id, label, description }: CheckboxItemProps) => (
+const CheckboxItem = memo(({ id, label, description }: CheckboxItemProps) => (
 	<motion.div
-		className='flex items-start space-x-3 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-lg transition-colors'
-		whileHover={{ backgroundColor: 'rgba(0,0,0,0.05)' }}
+		className='flex items-start space-x-2 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200'
 		whileTap={{ scale: 0.98 }}
 	>
 		<Checkbox
@@ -174,159 +181,167 @@ const CheckboxItem = ({ id, label, description }: CheckboxItemProps) => (
 		<div>
 			<label
 				htmlFor={id}
-				className='text-sm font-semibold leading-none cursor-pointer text-gray-900 dark:text-gray-50'
+				className='text-sm font-medium cursor-pointer text-gray-900 dark:text-gray-50'
 			>
 				{label}
 			</label>
 			{description && (
-				<p className='text-xs text-gray-600 dark:text-gray-400 mt-1'>
+				<p className='text-xs text-gray-600 dark:text-gray-400 mt-0.5'>
 					{description}
 				</p>
 			)}
 		</div>
 	</motion.div>
-);
+));
+CheckboxItem.displayName = 'CheckboxItem';
 
-// Category Selector Component
-const CategorySelector = ({
-	showCategorySelect,
-	setShowCategorySelect,
-	selectedCategories,
-	setSelectedCategories,
-	isScrolled
-}: {
-	showCategorySelect: boolean;
-	setShowCategorySelect: (show: boolean) => void;
-	selectedCategories: string[];
-	setSelectedCategories: (categories: string[]) => void;
-	isScrolled: boolean;
-}) => (
-	<div className='relative'>
-		<motion.div whileTap={{ scale: 0.97 }}>
-			<Button
-				variant='outline'
-				className={cn(
-					'rounded-full flex items-center gap-2 font-medium transition-colors duration-300',
-					isScrolled
-						? 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900 dark:text-white'
-						: 'hover:bg-white/10 dark:hover:bg-gray-800/20 text-gray-900 dark:text-white'
-				)}
-				onClick={() => setShowCategorySelect(!showCategorySelect)}
-			>
-				Categories
-				{selectedCategories.length > 0 && (
-					<Badge variant='secondary' className='ml-1'>
-						{selectedCategories.length}
-					</Badge>
-				)}
-			</Button>
-		</motion.div>
-		<AnimatePresence>
-			{showCategorySelect && (
-				<motion.div
-					className='absolute z-50 w-64 mt-2 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg'
-					initial={{ opacity: 0, y: -10 }}
-					animate={{ opacity: 1, y: 0 }}
-					exit={{ opacity: 0, y: -10 }}
-					transition={{ duration: 0.15 }}
-				>
-					{categories.map((category) => (
-						<motion.div
-							key={category}
-							className='flex items-center px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors'
-							whileHover={{ backgroundColor: 'rgba(0,0,0,0.05)' }}
-							whileTap={{ scale: 0.98 }}
-							onClick={() => {
-								if (selectedCategories.includes(category)) {
-									setSelectedCategories(
-										selectedCategories.filter(
-											(c) => c !== category
-										)
-									);
-								} else {
-									setSelectedCategories([
-										...selectedCategories,
-										category
-									]);
-								}
-							}}
-						>
-							<div className='w-4 h-4 border rounded mr-2 flex items-center justify-center'>
-								<AnimatePresence>
-									{selectedCategories.includes(category) && (
-										<motion.div
-											initial={{ scale: 0 }}
-											animate={{ scale: 1 }}
-											exit={{ scale: 0 }}
-										>
-											<Check className='w-3 h-3' />
-										</motion.div>
-									)}
-								</AnimatePresence>
-							</div>
-							<span className='text-gray-900 dark:text-gray-100 text-sm font-medium'>
-								{category}
-							</span>
-						</motion.div>
-					))}
-				</motion.div>
-			)}
-		</AnimatePresence>
-	</div>
-);
-
-// Price Filter Component
-const PriceFilter = ({
-	priceRange,
-	setPriceRange,
-	isScrolled
-}: {
-	priceRange: number[];
-	setPriceRange: (range: number[]) => void;
-	isScrolled: boolean;
-}) => (
-	<Popover>
-		<PopoverTrigger asChild>
-			<motion.div whileTap={{ scale: 0.97 }}>
+const CategorySelector = memo(
+	({
+		showCategorySelect,
+		setShowCategorySelect,
+		selectedCategories,
+		setSelectedCategories,
+		isScrolled
+	}: {
+		showCategorySelect: boolean;
+		setShowCategorySelect: (show: boolean) => void;
+		selectedCategories: string[];
+		setSelectedCategories: (categories: string[]) => void;
+		isScrolled: boolean;
+	}) => (
+		<div className='relative'>
+			<motion.div whileTap={{ scale: 0.95 }}>
 				<Button
 					variant='outline'
+					size='sm'
 					className={cn(
-						'rounded-full font-medium transition-colors duration-300',
+						'rounded-full flex items-center gap-1 text-sm transition-colors duration-200',
 						isScrolled
-							? 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900 dark:text-white'
-							: 'hover:bg-white/10 dark:hover:bg-gray-800/20 text-gray-900 dark:text-white'
+							? 'bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800'
+							: 'bg-white/80 dark:bg-gray-900/80 hover:bg-white dark:hover:bg-gray-800'
 					)}
+					onClick={() => setShowCategorySelect(!showCategorySelect)}
 				>
-					Price Range
+					Categories
+					{selectedCategories.length > 0 && (
+						<Badge variant='secondary' className='ml-1 text-xs'>
+							{selectedCategories.length}
+						</Badge>
+					)}
 				</Button>
 			</motion.div>
-		</PopoverTrigger>
-		<PopoverContent className='w-80 p-4 backdrop-blur-sm bg-white/95 dark:bg-gray-900/95 border-gray-200 dark:border-gray-700'>
-			<div className='space-y-4'>
-				<div className='space-y-2'>
+			<AnimatePresence>
+				{showCategorySelect && (
+					<motion.div
+						className='absolute z-50 mt-2 w-56 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg overflow-hidden'
+						initial={{ opacity: 0, y: -10 }}
+						animate={{ opacity: 1, y: 0 }}
+						exit={{ opacity: 0, y: -10 }}
+						transition={{ duration: 0.15, ease: 'easeOut' }}
+					>
+						<ScrollArea className='max-h-64'>
+							{categories.map((category) => (
+								<motion.div
+									key={category}
+									className='flex items-center px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors duration-200'
+									whileTap={{ scale: 0.98 }}
+									onClick={() =>
+										setSelectedCategories(
+											selectedCategories.includes(
+												category
+											)
+												? selectedCategories.filter(
+														(c) => c !== category
+												  )
+												: [
+														...selectedCategories,
+														category
+												  ]
+										)
+									}
+								>
+									<div className='w-4 h-4 border rounded mr-2 flex items-center justify-center'>
+										<AnimatePresence>
+											{selectedCategories.includes(
+												category
+											) && (
+												<motion.div
+													initial={{ scale: 0 }}
+													animate={{ scale: 1 }}
+													exit={{ scale: 0 }}
+													transition={{
+														duration: 0.1
+													}}
+												>
+													<Check className='w-3 h-3 text-gray-900 dark:text-white' />
+												</motion.div>
+											)}
+										</AnimatePresence>
+									</div>
+									<span className='text-sm font-medium text-gray-900 dark:text-gray-100'>
+										{category}
+									</span>
+								</motion.div>
+							))}
+						</ScrollArea>
+					</motion.div>
+				)}
+			</AnimatePresence>
+		</div>
+	)
+);
+CategorySelector.displayName = 'CategorySelector';
+
+const PriceFilter = memo(
+	({
+		priceRange,
+		setPriceRange,
+		isScrolled
+	}: {
+		priceRange: number[];
+		setPriceRange: (range: number[]) => void;
+		isScrolled: boolean;
+	}) => (
+		<Popover>
+			<PopoverTrigger asChild>
+				<motion.div whileTap={{ scale: 0.95 }}>
+					<Button
+						variant='outline'
+						size='sm'
+						className={cn(
+							'rounded-full text-sm transition-colors duration-200',
+							isScrolled
+								? 'bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800'
+								: 'bg-white/80 dark:bg-gray-900/80 hover:bg-white dark:hover:bg-gray-800'
+						)}
+					>
+						Price Range
+					</Button>
+				</motion.div>
+			</PopoverTrigger>
+			<PopoverContent className='w-80 p-4 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-lg shadow-lg'>
+				<div className='space-y-4'>
 					<Label className='text-base font-semibold text-gray-900 dark:text-gray-50'>
 						Price Range
 					</Label>
 					<Slider
-						defaultValue={priceRange}
-						max={10000000}
-						step={100000}
 						value={priceRange}
 						onValueChange={setPriceRange}
-						className='my-6'
+						max={10000000}
+						step={100000}
+						className='my-4'
 					/>
-					<div className='flex items-center justify-between text-sm font-medium text-gray-700 dark:text-gray-300'>
+					<div className='flex justify-between text-sm text-gray-700 dark:text-gray-300'>
 						<span>{vietnamCurrency(priceRange[0])}</span>
 						<span>{vietnamCurrency(priceRange[1])}</span>
 					</div>
-					<div className='flex gap-4 mt-4'>
+					<div className='flex gap-3'>
 						<div className='flex-1'>
-							<Label className='text-xs mb-1 text-gray-800 dark:text-gray-200'>
-								Min Price
+							<Label className='text-xs text-gray-800 dark:text-gray-200'>
+								Min
 							</Label>
 							<Input
 								type='number'
-								placeholder='Min $USD'
 								value={priceRange[0]}
 								onChange={(e) =>
 									setPriceRange([
@@ -334,16 +349,15 @@ const PriceFilter = ({
 										priceRange[1]
 									])
 								}
-								className='mt-1'
+								className='mt-1 text-sm'
 							/>
 						</div>
 						<div className='flex-1'>
-							<Label className='text-xs mb-1 text-gray-800 dark:text-gray-200'>
-								Max Price
+							<Label className='text-xs text-gray-800 dark:text-gray-200'>
+								Max
 							</Label>
 							<Input
 								type='number'
-								placeholder='Max $USD'
 								value={priceRange[1]}
 								onChange={(e) =>
 									setPriceRange([
@@ -351,127 +365,202 @@ const PriceFilter = ({
 										Number(e.target.value)
 									])
 								}
-								className='mt-1'
+								className='mt-1 text-sm'
 							/>
 						</div>
 					</div>
 				</div>
-			</div>
-		</PopoverContent>
-	</Popover>
+			</PopoverContent>
+		</Popover>
+	)
 );
+PriceFilter.displayName = 'PriceFilter';
 
 // Main Component
-const HeaderFilter = () => {
+const HeaderFilter = ({
+	onLayoutChange,
+	headerHeight = 80
+}: HeaderFilterProps) => {
 	const t = useTranslations('filter');
 	const pathname = usePathname();
-	const [isOpen, setIsOpen] = useState(false);
-	const [showCategorySelect, setShowCategorySelect] = useState(false);
+	const [isOpen, setIsOpen] = useState<boolean>(false);
+	const [showCategorySelect, setShowCategorySelect] =
+		useState<boolean>(false);
 	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-	const [expandedSections, setExpandedSections] = useState({
-		artists: true,
-		categories: true,
-		materials: true,
-		waysToBuy: true,
-		sizes: true,
-		price: true
+	const [expandedSections, setExpandedSections] = useState<
+		Record<SectionName, boolean>
+	>({
+		artists: false,
+		categories: false,
+		materials: false,
+		waysToBuy: false,
+		sizes: false,
+		price: false
 	});
-	const [priceRange, setPriceRange] = useState([0, 10000000]);
-	const [isScrolled, setIsScrolled] = useState(false);
+	const [priceRange, setPriceRange] = useState<number[]>([0, 10000000]);
+	const [isSticky, setIsSticky] = useState<boolean>(false);
+	const [isGridLayout, setIsGridLayout] = useState<boolean>(true);
+	const [isMobile, setIsMobile] = useState<boolean>(false);
+	const filterRef = useRef<HTMLDivElement>(null);
+	const initialTopRef = useRef<number | null>(null);
 
-	// Add scroll effect (sync with header)
+	// Detect mobile
 	useEffect(() => {
-		const handleScroll = () => {
-			setIsScrolled(window.scrollY > 10);
-		};
-
-		window.addEventListener('scroll', handleScroll);
-		return () => {
-			window.removeEventListener('scroll', handleScroll);
-		};
+		const handleResize = () => setIsMobile(window.innerWidth < 768);
+		handleResize();
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
 	}, []);
 
-	// Close mobile menu when changing routes (sync with header)
+	// Set initial position and handle sticky behavior
+	useEffect(() => {
+		if (filterRef.current) {
+			// Get the initial top position of the filter bar relative to the viewport
+			const rect = filterRef.current.getBoundingClientRect();
+			initialTopRef.current = rect.top + window.scrollY;
+		}
+
+		let timeout: ReturnType<typeof setTimeout>;
+		const handleScroll = () => {
+			clearTimeout(timeout);
+			timeout = setTimeout(() => {
+				const scrollY = window.scrollY;
+				if (initialTopRef.current !== null && filterRef.current) {
+					if (!isMobile) {
+						// Desktop: Sticky when scrolled past initial position
+						if (scrollY > initialTopRef.current - headerHeight) {
+							setIsSticky(true);
+							filterRef.current.style.position = 'fixed';
+							filterRef.current.style.top = `${headerHeight}px`;
+							filterRef.current.style.left = '0';
+							filterRef.current.style.right = '0';
+						} else {
+							setIsSticky(false);
+							filterRef.current.style.position = 'static';
+							filterRef.current.style.top = 'auto';
+							filterRef.current.style.left = 'auto';
+							filterRef.current.style.right = 'auto';
+						}
+					} else {
+						// Mobile: Always sticky at top-20
+						setIsSticky(true);
+						filterRef.current.style.position = 'sticky';
+						filterRef.current.style.top = '80px';
+					}
+				}
+			}, 50);
+		};
+		window.addEventListener('scroll', handleScroll, { passive: true });
+		handleScroll(); // Initial call to set position
+		return () => {
+			clearTimeout(timeout);
+			window.removeEventListener('scroll', handleScroll);
+		};
+	}, [isMobile, headerHeight]);
+
+	// Close menus on route change
 	useEffect(() => {
 		setIsOpen(false);
 		setShowCategorySelect(false);
 	}, [pathname]);
 
-	const toggleSection = (section: SectionName) => {
-		setExpandedSections((prev) => ({
-			...prev,
-			[section]: !prev[section]
-		}));
-	};
-
-	// Close category dropdown when clicking outside
+	// Click outside handler
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
-			if (showCategorySelect) {
-				const target = event.target as HTMLElement;
-				if (!target.closest('.category-dropdown-container')) {
-					setShowCategorySelect(false);
-				}
+			if (
+				filterRef.current &&
+				event.target instanceof Element &&
+				!filterRef.current.contains(event.target) &&
+				!event.target.closest('.category-dropdown-container')
+			) {
+				setShowCategorySelect(false);
+				setIsOpen(false);
 			}
 		};
-
 		document.addEventListener('mousedown', handleClickOutside);
-		return () => {
+		return () =>
 			document.removeEventListener('mousedown', handleClickOutside);
-		};
-	}, [showCategorySelect]);
+	}, []);
+
+	const toggleSection = (section: SectionName) =>
+		setExpandedSections((prev) => ({ ...prev, [section]: !prev[section] }));
+
+	const toggleLayout = () => {
+		setIsGridLayout((prev) => {
+			const newLayout = !prev;
+			onLayoutChange(newLayout);
+			return newLayout;
+		});
+	};
 
 	return (
 		<motion.div
+			ref={filterRef}
 			className={cn(
-				'sticky top-20 left-0 right-0 z-40 transition-all duration-300 ease-in-out border-b',
-				isScrolled
-					? 'bg-white/25 dark:bg-gray-900/30 backdrop-blur-sm shadow-sm dark:shadow-gray-800/20 border-gray-200/40 dark:border-gray-700/40'
-					: 'bg-transparent backdrop-blur-[1px] border-transparent'
+				'z-40 border-b transition-all duration-300',
+				isSticky
+					? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm border-gray-200/50 dark:border-gray-700/50'
+					: 'bg-transparent border-transparent'
 			)}
-			initial={{ opacity: 0, y: -10 }}
+			initial={{ opacity: 0, y: -20 }}
 			animate={{ opacity: 1, y: 0 }}
-			transition={{ duration: 0.3, delay: 0.1 }}
+			transition={{ duration: 0.3, ease: 'easeOut' }}
 		>
-			<div className='container mx-auto px-4 sm:px-6 lg:px-8'>
-				<div className='flex items-center h-16'>
+			<div className='container mx-auto px-4 py-2 sm:px-6 lg:px-8'>
+				<div className='flex items-center gap-2 sm:gap-3'>
+					{/* Filter Trigger */}
 					<Sheet open={isOpen} onOpenChange={setIsOpen}>
 						<SheetTrigger asChild>
-							<motion.div whileTap={{ scale: 0.97 }}>
+							<motion.div whileTap={{ scale: 0.95 }}>
 								<Button
 									variant='outline'
+									size='sm'
 									className={cn(
-										'rounded-full flex items-center gap-2 font-medium transition-colors duration-300',
-										isScrolled
-											? 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900 dark:text-white'
-											: 'hover:bg-white/10 dark:hover:bg-gray-800/20 text-gray-900 dark:text-white'
+										'flex items-center gap-1 rounded-full transition-colors duration-200',
+										isSticky
+											? 'bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800'
+											: 'bg-white/80 dark:bg-gray-900/80 hover:bg-white dark:hover:bg-gray-800'
 									)}
 								>
 									<Filter className='h-4 w-4' />
-									{t('filters')}
+									<span className='hidden sm:inline text-sm'>
+										{t('filters')}
+									</span>
 								</Button>
 							</motion.div>
 						</SheetTrigger>
 						<SheetContent
-							side='left'
-							className='w-[400px] backdrop-blur-md bg-white/95 dark:bg-gray-900/95'
+							side={isMobile ? 'bottom' : 'left'}
+							className={cn(
+								'bg-white dark:bg-gray-900 p-0',
+								isMobile
+									? 'h-[80vh] rounded-t-xl max-h-[80vh]'
+									: 'w-full max-w-[90vw] sm:max-w-[400px]'
+							)}
 						>
-							<SheetHeader>
-								<SheetTitle className='text-xl font-bold text-gray-900 dark:text-gray-50'>
+							<SheetHeader className='px-4 py-3 border-b border-gray-200 dark:border-gray-700'>
+								<SheetTitle className='text-lg font-semibold text-gray-900 dark:text-gray-50'>
 									{t('filters')}
 								</SheetTitle>
 							</SheetHeader>
-							<div className='py-4'>
+							<div className='px-4 py-3'>
 								<div className='relative'>
-									<Search className='absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400' />
+									<Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400' />
 									<Input
 										placeholder={t('searchPlaceholder')}
-										className='pl-10'
+										className='pl-10 text-sm h-9'
 									/>
 								</div>
 							</div>
-							<ScrollArea className='h-[calc(100vh-8rem)] px-4'>
-								<div className='space-y-6'>
+							<ScrollArea
+								className={cn(
+									'px-4',
+									isMobile
+										? 'h-[calc(80vh-8rem)]'
+										: 'h-[calc(100vh-10rem)]'
+								)}
+							>
+								<div className='space-y-4'>
 									<FilterSection
 										title={t('artists')}
 										isExpanded={expandedSections.artists}
@@ -479,17 +568,14 @@ const HeaderFilter = () => {
 											toggleSection('artists')
 										}
 									>
-										<div className='space-y-2'>
-											{artists.map((artist) => (
-												<CheckboxItem
-													key={artist.id}
-													id={artist.id}
-													label={artist.name}
-												/>
-											))}
-										</div>
+										{artists.map((artist) => (
+											<CheckboxItem
+												key={artist.id}
+												id={artist.id}
+												label={artist.name}
+											/>
+										))}
 									</FilterSection>
-
 									<FilterSection
 										title={t('categories')}
 										isExpanded={expandedSections.categories}
@@ -497,17 +583,14 @@ const HeaderFilter = () => {
 											toggleSection('categories')
 										}
 									>
-										<div className='space-y-2'>
-											{categories.map((category) => (
-												<CheckboxItem
-													key={category}
-													id={category}
-													label={category}
-												/>
-											))}
-										</div>
+										{categories.map((category) => (
+											<CheckboxItem
+												key={category}
+												id={category}
+												label={category}
+											/>
+										))}
 									</FilterSection>
-
 									<FilterSection
 										title={t('materials')}
 										isExpanded={expandedSections.materials}
@@ -515,17 +598,14 @@ const HeaderFilter = () => {
 											toggleSection('materials')
 										}
 									>
-										<div className='space-y-2'>
-											{materials.map((material) => (
-												<CheckboxItem
-													key={material}
-													id={material}
-													label={material}
-												/>
-											))}
-										</div>
+										{materials.map((material) => (
+											<CheckboxItem
+												key={material}
+												id={material}
+												label={material}
+											/>
+										))}
 									</FilterSection>
-
 									<FilterSection
 										title={t('waysToBuy')}
 										isExpanded={expandedSections.waysToBuy}
@@ -533,62 +613,47 @@ const HeaderFilter = () => {
 											toggleSection('waysToBuy')
 										}
 									>
-										<div className='space-y-2'>
-											{waysToBuy.map((way) => (
-												<CheckboxItem
-													key={way.id}
-													id={way.id}
-													label={way.label}
-												/>
-											))}
-										</div>
+										{waysToBuy.map((way) => (
+											<CheckboxItem
+												key={way.id}
+												id={way.id}
+												label={way.label}
+											/>
+										))}
 									</FilterSection>
-
 									<FilterSection
 										title={t('size')}
 										isExpanded={expandedSections.sizes}
 										onToggle={() => toggleSection('sizes')}
 									>
-										<div className='space-y-3'>
-											{sizes.map((size) => (
-												<CheckboxItem
-													key={size.id}
-													id={size.id}
-													label={size.label}
-													description={
-														size.description
-													}
-												/>
-											))}
-										</div>
+										{sizes.map((size) => (
+											<CheckboxItem
+												key={size.id}
+												id={size.id}
+												label={size.label}
+												description={size.description}
+											/>
+										))}
 									</FilterSection>
-
 									<FilterSection
 										title={t('price')}
 										isExpanded={expandedSections.price}
 										onToggle={() => toggleSection('price')}
 									>
-										<div className='space-y-4 px-2'>
-											<Slider
-												defaultValue={priceRange}
-												max={10000000}
-												step={100000}
-												value={priceRange}
-												onValueChange={setPriceRange}
-												className='my-6'
-											/>
-											<div className='flex items-center justify-between text-sm font-medium text-gray-700 dark:text-gray-300'>
-												<span>
-													{vietnamCurrency(
-														priceRange[0]
-													)}
-												</span>
-												<span>
-													{vietnamCurrency(
-														priceRange[1]
-													)}
-												</span>
-											</div>
+										<Slider
+											value={priceRange}
+											onValueChange={setPriceRange}
+											max={10000000}
+											step={100000}
+											className='my-4'
+										/>
+										<div className='flex justify-between text-sm text-gray-700 dark:text-gray-300'>
+											<span>
+												{vietnamCurrency(priceRange[0])}
+											</span>
+											<span>
+												{vietnamCurrency(priceRange[1])}
+											</span>
 										</div>
 									</FilterSection>
 								</div>
@@ -596,72 +661,68 @@ const HeaderFilter = () => {
 						</SheetContent>
 					</Sheet>
 
-					<div className='mx-4 h-6 w-px bg-gray-300/40 dark:bg-gray-700/40' />
-
-					<div className='flex gap-3 overflow-x-auto no-scrollbar category-dropdown-container'>
+					{/* Desktop Controls */}
+					<div className='hidden sm:flex items-center gap-3 flex-1 overflow-x-auto no-scrollbar'>
 						<CategorySelector
 							showCategorySelect={showCategorySelect}
 							setShowCategorySelect={setShowCategorySelect}
 							selectedCategories={selectedCategories}
 							setSelectedCategories={setSelectedCategories}
-							isScrolled={isScrolled}
+							isScrolled={isSticky}
 						/>
-
 						<PriceFilter
 							priceRange={priceRange}
 							setPriceRange={setPriceRange}
-							isScrolled={isScrolled}
+							isScrolled={isSticky}
 						/>
 					</div>
 
-					<div className='flex-1' />
-
-					{/* Search component for desktop */}
-					<div className='hidden md:flex relative items-center'>
+					{/* Search Bar */}
+					<div className='flex-1 sm:flex-none'>
 						<div
 							className={cn(
-								'relative rounded-full overflow-hidden transition-all duration-300',
-								isScrolled
-									? 'bg-gray-100/50 dark:bg-gray-800/50'
+								'relative rounded-full overflow-hidden transition-all duration-200',
+								isSticky
+									? 'bg-gray-100 dark:bg-gray-800'
 									: 'bg-white/10 dark:bg-gray-800/20'
 							)}
 						>
-							<Search className='absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400' />
+							<Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400' />
 							<Input
 								placeholder={t('quickSearch')}
 								className={cn(
-									'border-none bg-transparent pl-10 pr-4 h-9 w-48 focus:w-64 transition-all duration-300',
-									isScrolled
-										? 'text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400'
-										: 'text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-300'
+									'border-none bg-transparent pl-10 pr-4 h-9 w-full sm:w-48 lg:w-64 focus:ring-0 text-sm',
+									isSticky
+										? 'text-gray-900 dark:text-white placeholder:text-gray-500'
+										: 'text-gray-900 dark:text-white placeholder:text-gray-400'
 								)}
 							/>
 						</div>
 					</div>
+
+					{/* Layout Toggle Button */}
+					<motion.div whileTap={{ scale: 0.95 }}>
+						<Button
+							variant="outline"
+							size="sm"
+							className={cn(
+								"rounded-full p-2 transition-colors duration-200",
+								isSticky
+									? "bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800"
+									: "bg-white/80 dark:bg-gray-900/80 hover:bg-white dark:hover:bg-gray-800"
+							)}
+							onClick={toggleLayout}
+						>
+							{isGridLayout ? (
+								<List className="h-4 w-4" /> // Single Thread (linear layout)
+							) : (
+								<LayoutGrid className="h-4 w-4" /> // Masonry (grid layout)
+							)}
+						</Button>
+					</motion.div>
 				</div>
 			</div>
 
-			{/* Global typography settings applied to text without ảnh hưởng đến background */}
-			<style jsx global>{`
-				.prose {
-					font-family: 'Inter', sans-serif;
-					line-height: 1.6;
-					font-size: 1rem;
-				}
-
-				.prose h1,
-				.prose h2,
-				.prose h3,
-				.prose h4,
-				.prose p,
-				.prose li,
-				.prose span {
-					margin: 0.5rem 0;
-					color: inherit;
-				}
-			`}</style>
-
-			{/* Custom styles for enhanced shadows and filters */}
 			<style jsx global>{`
 				.no-scrollbar::-webkit-scrollbar {
 					display: none;
@@ -672,36 +733,23 @@ const HeaderFilter = () => {
 					scrollbar-width: none;
 				}
 
-				/* Optimize for transparent behavior with backdrop-filter */
-				@supports (backdrop-filter: blur(10px)) {
-					.bg-transparent {
-						background-color: rgba(255, 255, 255, 0);
-						backdrop-filter: blur(1px);
-					}
-
-					.dark .bg-transparent {
-						background-color: rgba(17, 24, 39, 0);
-						backdrop-filter: blur(1px);
-					}
-
-					.bg-white\\/25 {
-						background-color: rgba(255, 255, 255, 0.25);
-					}
-
-					.dark .bg-gray-900\\/30 {
-						background-color: rgba(17, 24, 39, 0.3);
-					}
+				/* Smooth drawer transition */
+				.sheet-bottom-enter {
+					transform: translateY(100%);
 				}
 
-				/* Fallback for browsers without backdrop-filter support */
-				@supports not (backdrop-filter: blur(10px)) {
-					.bg-transparent {
-						background-color: rgba(255, 255, 255, 0.05);
-					}
+				.sheet-bottom-enter-active {
+					transform: translateY(0);
+					transition: transform 300ms ease-out;
+				}
 
-					.dark .bg-transparent {
-						background-color: rgba(17, 24, 39, 0.05);
-					}
+				.sheet-bottom-exit {
+					transform: translateY(0);
+				}
+
+				.sheet-bottom-exit-active {
+					transform: translateY(100%);
+					transition: transform 300ms ease-in;
 				}
 			`}</style>
 		</motion.div>

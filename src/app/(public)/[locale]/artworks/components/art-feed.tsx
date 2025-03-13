@@ -24,7 +24,7 @@ const ArtFeed: React.FC<ArtFeedProps> = ({ data }) => {
 	const [hasError, setHasError] = useState(false);
 	const [isInfoOpen, setIsInfoOpen] = useState(false);
 	const [heartPosition, setHeartPosition] = useState<{ x: number; y: number } | null>(null);
-	const headerHeight = 81;
+	const headerHeight = 162;
 	const isMobile = windowWidth < 768; // Breakpoint cho mobile
 
 	const calculateContainerSize = useCallback(() => {
@@ -84,7 +84,8 @@ const ArtFeed: React.FC<ArtFeedProps> = ({ data }) => {
 	const [activeTab, setActiveTab] = useState('info');
 
 	return (
-		<div className="relative w-full h-[calc(100vh-80px)] flex bg-gray-100 dark:bg-gray-900 rounded-md shadow-md select-none overflow-hidden">
+		<div
+			className="relative w-full h-[calc(100vh-160px)] flex bg-gray-100 dark:bg-gray-900 rounded-md shadow-md select-none overflow-hidden">
 			{/* Image Section */}
 			<motion.div
 				{...bind}
