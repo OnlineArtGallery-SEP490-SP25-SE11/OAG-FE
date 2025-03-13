@@ -1,14 +1,14 @@
 'use client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchUser } from '@/app/(public)/[locale]/_header/queries';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Avatar } from '@/components/ui.custom/Avatar';
 import {
-	Pencil,
-	Settings,
+
 	CircleUser,
 	Heart,
 	Image,
-	Grid,
+
 	Camera
 } from 'lucide-react';
 import EditProfileDialog from './EditProfileDialog';
@@ -16,31 +16,55 @@ import { motion } from 'framer-motion';
 import { UploadButton } from '@/components/ui.custom/upload-button';
 import { useToast } from '@/hooks/use-toast';
 import { updateAvatar } from '../queries';
+import { useEffect } from 'react';
+import { subscribeToUserUpdates } from '@/lib/user-updates';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
-import {
-	ResizableHandle,
-	ResizablePanel,
-	ResizablePanelGroup
-} from '@/components/ui/resizable';
 
 function ProfilePage() {
+	const { data: session, status } = useSession();
+	const router = useRouter();
 	const { isLoading, error, data } = useQuery({
 		queryKey: ['currentUser'],
 		queryFn: fetchUser
 	});
 
+	const queryClient = useQueryClient();
+
 	const { toast } = useToast();
 
-	const handleAvatarUpload = async (base64Image: string) => {
+	const handleAvatarUpload = async (file: File) => {
+		if (status !== 'authenticated') {
+			toast({
+				title: 'Authentication Error',
+				description: 'Please sign in to update your avatar',
+				variant: 'destructive'
+			});
+			router.push('/auth/signin');
+			return;
+		}
+
 		try {
-			const result = await updateAvatar(base64Image);
-			// Assuming queryClient is not imported or defined in this context
-			// queryClient.invalidateQueries(['currentUser']); // This line is commented out due to the error
+			const response = await updateAvatar(file, session?.user?.accessToken);
+			console.log('Avatar update response:', response);
+
+			// Invalidate and refetch user data
+			await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+
+			// Force refetch the user data
+			const updatedUser = await queryClient.fetchQuery({
+				queryKey: ['currentUser'],
+				queryFn: fetchUser
+			});
+			console.log('Updated user data:', updatedUser);
+
 			toast({
 				title: 'Success',
 				description: 'Avatar updated successfully'
 			});
 		} catch (error) {
+			console.error('Error updating avatar:', error);
 			toast({
 				title: 'Error',
 				description: 'Failed to update avatar',
@@ -48,6 +72,33 @@ function ProfilePage() {
 			});
 		}
 	};
+
+
+	// const handlePremiumStatusChange = async () => {
+	// 	await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+	// 	toast({
+	// 		title: 'Premium Status Updated',
+	// 		description: data?.isPremium
+	// 			? 'Welcome to Premium! Enjoy your new benefits.'
+	// 			: 'Your premium status has been updated.',
+	// 		variant: data?.isPremium ? 'success' : 'default'
+	// 	});
+	// };
+
+	useEffect(() => {
+		// Subscribe to premium status changes
+		const subscription = subscribeToUserUpdates((updatedUser) => {
+			if (updatedUser.isPremium !== data?.isPremium) {
+				queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+			}
+		});
+
+		return () => {
+			// Cleanup subscription
+			subscription.unsubscribe();
+		};
+	}, [queryClient, data?.isPremium]);
+	console.log(data);
 
 	if (isLoading) {
 		return (
@@ -82,42 +133,49 @@ function ProfilePage() {
 				{/* Profile Info */}
 				<div className='relative px-8 pb-8'>
 					{/* Avatar */}
-					<div className='relative -mt-16 mb-4'>
-						<div className='w-32 h-32 bg-white rounded-full p-2 shadow-lg mx-auto relative group'>
-							{data.avatar ? (
-								<img
-									src={data.avatar}
-									alt='Avatar'
-									className='w-full h-full rounded-full object-cover'
-								/>
-							) : (
-								<div className='w-full h-full bg-gradient-to-r from-purple-200 to-pink-200 rounded-full flex items-center justify-center'>
-									<CircleUser className='w-16 h-16 text-purple-500' />
-								</div>
-							)}
+					<div className="flex flex-col items-center justify-center space-y-4">
+						{/* Avatar Section */}
+						<div className="relative">
+							<Avatar
+								user={{
+									image: data.image,
+									googleImage: data.googleImage,
+									isPremium: data.isPremium || false
+								}}
+								size="lg"
+							/>
 
-							{/* Upload Button với icon */}
-							<div className='absolute bottom-0 right-0 transform translate-x-1/4 translate-y-1/4'>
+							{/* Upload Button */}
+							<div className="absolute bottom-0 right-0 transform translate-x-1/4 translate-y-1/4">
 								<UploadButton
 									onUpload={handleAvatarUpload}
-									className='w-8 h-8 rounded-full bg-purple-500 hover:bg-purple-600 flex items-center justify-center p-0 shadow-lg border-2 border-white'
+									className="w-8 h-8 rounded-full bg-purple-500 hover:bg-purple-600 flex items-center justify-center p-0 shadow-lg border-2 border-white"
 								>
-									<Camera className='w-4 h-4 text-white' />
+									<Camera className="w-4 h-4 text-white" />
 								</UploadButton>
 							</div>
 						</div>
-					</div>
 
-					{/* User Details */}
-					{/* User Details */}
-					<div className='text-center mb-8 relative'>
-						<div className='absolute right-0 top-0'>
-							<EditProfileDialog name={name} email={email} />
+						{/* User Info Section */}
+						<div className="text-center">
+							<div className="flex items-center gap-2 justify-center">
+								<h2 className="text-2xl font-bold">{name}</h2>
+								{data.isPremium && (
+									<span className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white text-xs px-2 py-1 rounded-full">
+										Premium
+									</span>
+								)}
+							</div>
+							<p className="text-gray-600">{email}</p>
+
+							{/* Add Edit Profile Button Here */}
+							<div className="mt-4">
+								<EditProfileDialog
+									name={data.name}
+									address={data.address || ''}
+								/>
+							</div>
 						</div>
-						<h1 className='text-3xl font-bold text-gray-800 mb-2'>
-							{name}
-						</h1>
-						<p className='text-gray-600'>{email}</p>
 					</div>
 
 					{/* Stats */}
@@ -141,19 +199,15 @@ function ProfilePage() {
 							<p className='text-gray-600'>Following</p>
 						</div>
 					</div>
+
+
 				</div>
 			</div>
 
 			{/* Tabs Section */}
 			<Tabs defaultValue='artworks' className='w-full'>
 				<TabsList className='flex justify-center space-x-2 border-b border-gray-200 pb-2'>
-					{/* <TabsTrigger
-                        value="artworks"
-                        className="flex items-center space-x-2 px-4 py-2 rounded-lg transition-all"
-                    >
-                        <Grid className="w-4 h-4" />
-                        <span>Artworks</span>
-                    </TabsTrigger> */}
+
 					<TabsTrigger
 						value='favorites'
 						className='flex items-center space-x-2 px-4 py-2 rounded-lg transition-all'
@@ -170,28 +224,7 @@ function ProfilePage() {
 					</TabsTrigger>
 				</TabsList>
 
-				{/* <TabsContent value="artworks" className="mt-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        
-                        {[1, 2, 3, 4, 5, 6].map((item) => (
-                            <motion.div
-                                key={item}
-                                whileHover={{ scale: 1.02 }}
-                                className="bg-white rounded-xl shadow-md overflow-hidden"
-                            >
-                                <img
-                                    src={`https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg`}
-                                    alt={`Artwork ${item}`}
-                                    className="w-full h-48 object-cover"
-                                />
-                                <div className="p-4">
-                                    <h3 className="font-semibold text-lg">Artwork Title {item}</h3>
-                                    <p className="text-gray-600 text-sm mt-1">Created on March 2024</p>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
-                </TabsContent> */}
+
 
 				<TabsContent value='favorites' className='mt-6'>
 					<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>

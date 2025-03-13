@@ -1,32 +1,93 @@
 import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 import {
 	Dialog,
 	DialogContent,
 	DialogHeader,
 	DialogTitle,
-	DialogClose,
+
 	DialogFooter
 } from '@/components/ui/dialog';
 import { Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
+import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { updateProfile } from '../queries';
+import { revalidateProfilePages } from '../actions';
+import { AxiosError } from 'axios';
 
 interface EditProfileDialogProps {
 	name: string;
-	email: string;
+	address: string;
+}
+
+interface ApiErrorResponse {
+	message: string;
 }
 
 const EditProfileDialog: React.FC<EditProfileDialogProps> = ({
 	name,
-	email
+	address
 }) => {
+	const { data: session, status } = useSession();
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
-	const [formData, setFormData] = useState({ name, email });
+	const [formData, setFormData] = useState({ name, address });
+	const [isLoading, setIsLoading] = useState(false);
+	const { toast } = useToast();
+	const queryClient = useQueryClient();
+	const router = useRouter();
 
-	const handleSubmit = () => {
-		// Xử lý logic cập nhật profile ở đây
-		setIsDialogOpen(false);
+	const handleSubmit = async () => {
+		if (status !== 'authenticated') {
+			toast({
+				title: 'Authentication Error',
+				description: 'Please sign in to update your profile',
+				variant: 'destructive'
+			});
+			router.push('/auth/signin');
+			return;
+		}
+
+		try {
+			setIsLoading(true);
+
+			await updateProfile(formData, session?.user?.accessToken);
+
+			// Invalidate and refetch user data
+			await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+
+			// Call server action to revalidate pages
+			await revalidateProfilePages();
+
+			toast({
+				title: 'Success',
+				description: 'Profile updated successfully'
+			});
+			setIsDialogOpen(false);
+		} catch (error) {
+			console.error('Error updating profile:', error);
+
+			if ((error as AxiosError).response?.status === 401) {
+				toast({
+					title: 'Authentication Error',
+					description: 'Your session has expired. Please sign in again.',
+					variant: 'destructive'
+				});
+				router.push('/auth/signin');
+				return;
+			}
+
+			toast({
+				title: 'Error',
+				description: ((error as AxiosError<ApiErrorResponse>).response?.data?.message) || 'Failed to update profile',
+				variant: 'destructive'
+			});
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	return (
@@ -61,7 +122,7 @@ const EditProfileDialog: React.FC<EditProfileDialogProps> = ({
 								id='name'
 								type='text'
 								placeholder='Enter your name'
-								defaultValue={formData.name}
+								value={formData.name}
 								onChange={(e) =>
 									setFormData({
 										...formData,
@@ -74,19 +135,20 @@ const EditProfileDialog: React.FC<EditProfileDialogProps> = ({
 
 						<div className='space-y-2'>
 							<Label
-								htmlFor='Address'
+								htmlFor='address'
 								className='text-sm font-medium'
 							>
 								Address
 							</Label>
 							<Input
-								id='Address'
-								type='Address'
-								placeholder='Enter your Address'
+								id='address'
+								type='text'
+								placeholder='Enter your address'
+								value={formData.address}
 								onChange={(e) =>
 									setFormData({
 										...formData,
-										email: e.target.value
+										address: e.target.value
 									})
 								}
 								className='w-full'
@@ -99,14 +161,16 @@ const EditProfileDialog: React.FC<EditProfileDialogProps> = ({
 							variant='outline'
 							onClick={() => setIsDialogOpen(false)}
 							className='flex-1'
+							disabled={isLoading}
 						>
 							Cancel
 						</Button>
 						<Button
 							onClick={handleSubmit}
 							className='flex-1 bg-primary hover:bg-primary/90'
+							disabled={isLoading}
 						>
-							Save Changes
+							{isLoading ? 'Saving...' : 'Save Changes'}
 						</Button>
 					</DialogFooter>
 				</DialogContent>
