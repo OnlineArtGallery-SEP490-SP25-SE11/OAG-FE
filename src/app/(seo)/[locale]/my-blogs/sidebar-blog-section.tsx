@@ -141,7 +141,7 @@ const BlogEntry = ({ blog }: { blog: Blog }) => {
 			<div className='flex items-center justify-between w-full space-x-4'>
 				<Link href={`/my-blogs/${blog._id}`} className='flex-grow'>
 					<div className='flex items-center space-x-3 group'>
-						{blog.published ? (
+						{blog.status === 'PUBLISHED' ? (
 							<FileCheck
 								className='text-secondary-600 group-hover:text-secondary-800 transition-colors duration-200'
 								size={20}
@@ -160,7 +160,7 @@ const BlogEntry = ({ blog }: { blog: Blog }) => {
 						</span>
 					</div>
 				</Link>
-				<BlogEntryDropdown isPublished={blog.published} id={blog._id} />
+				<BlogEntryDropdown isPublished={blog.status === 'PUBLISHED'} id={blog._id} />
 			</div>
 		</div>
 	);
@@ -186,8 +186,8 @@ interface BlogSectionProps {
 }
 
 export function SidebarBlogSection({ blogs }: BlogSectionProps) {
-	const publishedBlogs = blogs.filter((blog) => blog.published === true);
-	const draftBlogs = blogs.filter((blog) => blog.published !== true);
+	const publishedBlogs = blogs.filter((blog) => blog.status === 'PUBLISHED');
+	const draftBlogs = blogs.filter((blog) => blog.status !== 'PUBLISHED' ); // DRAFT , PENDING_REVIEW, REJECTED
 
 	return (
 		<div>

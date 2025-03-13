@@ -14,9 +14,13 @@ const galleryData = {
 	backgroundImage: "https://res.cloudinary.com/djvlldzih/image/upload/v1738920776/gallery/arts/phiadv4m1kbsxidfostr.jpg",
 };
 
-export default function ExhibitionPage() {
+export default function ExhibitionPage({ params }: {
+	params: {
+		id: string;
+	}
+}) {
 	const [isStarted, setIsStarted] = useState(false);
-
+	const { id } = params;
 	if (!isStarted) {
 		return (
 			<div className='relative h-screen w-full'>
@@ -78,7 +82,7 @@ export default function ExhibitionPage() {
 
 	return (
 		<div>
-			<Gallery />
+			<Gallery roomId={id} />
 		</div>
 	);
 }

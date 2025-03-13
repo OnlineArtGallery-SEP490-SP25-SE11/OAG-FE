@@ -22,11 +22,12 @@
     "haveAccount": "Already have an account? Login",
     "needAccount": "Need an account? Sign up",
     "signinDescription": "Sign in to your account using one of the options below.",
-    "googleLogin": "Login with Google",
-    "phoneLogin": "Sign in with phone number",
+    "googleLogin": "Continue with Google",
+    "phoneLogin": "Continue with phone number",
     "back": "Back",
     "notification": "Notification",
-    "success": "Success"
+    "success": "Success",
+    "error": "Error"
   },
   "header": {
     "home": "Home",
@@ -90,7 +91,7 @@
   },
   "blog": {
     "preview_draft": "Preview Draft",
-    "publish": "Publish",
+    "public": "Publish",
     "private": "Private",
     "close": "Close",
     "desktop": "Desktop",
@@ -106,7 +107,14 @@
     "upload_image": "Upload Image",
     "creating": "Creating...",
     "create_draft": "Create Draft",
-    "preview": "Preview"
+    "preview": "Preview",
+    "create_request": "Request to publish has been sent",
+    "cancel": "Cancel Request",
+    "cancel_request": "Request to publish has been canceled",
+    "publish_success": "Blog has been published",
+    "private_success": "Blog has been privated",
+    "pending": "Pending",
+    "draft_create_error": "An error occurred while creating blog"
   },
   "premium": {
     "feature_comparison": {

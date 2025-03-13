@@ -1,13 +1,13 @@
 import React, { useMemo } from "react";
-import { BaseRoom } from "./base-room";
-import { Wall } from "./wall";
-import { RoomFloor } from "./room-floor";
+import { BaseRoom } from "../base-room";
+import { Wall } from "../wall";
+import { RoomFloor } from "../room-floor";
 import { GALLERY_CONFIG } from "@/utils/gallery-config";
 import { Vec3 } from "@/types/gallery";
-import { ArtworkMesh } from "./art-work-mesh";
+import { ArtworkMesh } from "../art-work-mesh";
 // import GlassWindow from "./model/glass-window";
 
-import { RoomLights } from './room-light';
+import { RoomLights } from '../room-light';
 
 import { LIGHT_PRESETS } from '@/utils/light-config';
 import { ARTWORK_URL, TEXTURE_URL } from '@/utils/constants';
@@ -15,13 +15,13 @@ import { useCloudinaryAsset } from '@/hooks/useCloudinaryAsset';
 // import OveralLight from "./overal-light";
 
 export function ModernRoom() {
-	const { X_AXIS, Y_AXIS, Z_AXIS } = GALLERY_CONFIG.ROOM;
+    const { X_AXIS, Y_AXIS, Z_AXIS } = GALLERY_CONFIG.ROOM;
 
-	// Load textures
-	const marbleFloorTexture = useCloudinaryAsset(
-		TEXTURE_URL.PINE_WOOD_TEXTURE
-	);
-	const concreteWallTexture = useCloudinaryAsset(TEXTURE_URL.BRICK_WALL);
+    // Load textures
+    const marbleFloorTexture = useCloudinaryAsset(
+        TEXTURE_URL.PINE_WOOD_TEXTURE
+    );
+    const concreteWallTexture = useCloudinaryAsset(TEXTURE_URL.BRICK_WALL);
 
     // Room configuration
     const room = useMemo(() => ({
@@ -122,54 +122,73 @@ export function ModernRoom() {
             ),
         },
         artworks: [
-            { id: 1, url: ARTWORK_URL.ARTWORK_1, position: [-X_AXIS / 2 + 1, Y_AXIS / 2, -Z_AXIS / 4] },
-            { id: 2, url: ARTWORK_URL.ARTWORK_2, position: [-X_AXIS / 2 + 1, Y_AXIS / 2, Z_AXIS / 4] },
+            {
+                id: 1,
+                url: ARTWORK_URL.ARTWORK_1,
+                position: [-X_AXIS / 2 + 0.2, Y_AXIS / 2, -Z_AXIS / 4],
+                rotation: [0, Math.PI / 2, 0]
+            },
+            { 
+                id: 2, 
+                url: ARTWORK_URL.ARTWORK_2, 
+                position: [-X_AXIS / 2 + 0.2, Y_AXIS / 2, Z_AXIS / 4],
+                rotation: [0, Math.PI / 2, 0]
+            },
 
-				{
-					id: 3,
-					url: ARTWORK_URL.ARTWORK_3,
-					position: [X_AXIS / 2 - 0.2, Y_AXIS / 2, -Z_AXIS / 3]
-				},
-				{
-					id: 4,
-					url: ARTWORK_URL.ARTWORK_4,
-					position: [X_AXIS / 2 - 0.2, Y_AXIS / 2, Z_AXIS / 3]
-				}
-			]
-		}),
-		[X_AXIS, Y_AXIS, Z_AXIS, marbleFloorTexture, concreteWallTexture]
-	);
+            {
+                id: 3,
+                url: ARTWORK_URL.ARTWORK_3,
+                position: [X_AXIS / 2 - 0.2, Y_AXIS / 2, -Z_AXIS / 3],
+                rotation: [0, -Math.PI / 2, 0]
 
-	return (
-		<>
-			<RoomLights config={LIGHT_PRESETS.MODERN} />
-			{/* <OveralLight /> */}
-			<BaseRoom
-				position={room.position}
-				dimensions={{
-					width: X_AXIS,
-					height: Y_AXIS,
-					depth: Z_AXIS
-				}}
-				floor={room.floor.component}
-				ceiling={room.ceiling.component}
-				walls={room.walls}
-			>
-				{/* Artworks */}
-				{room.artworks.map((artwork) => (
-					<ArtworkMesh
-						key={artwork.id}
-						artwork={{
-							...artwork,
-							position: artwork.position as [
-								number,
-								number,
-								number
-							] // Type assertion to Vec3
-						}}
-					/>
-				))}
-			</BaseRoom>
-		</>
-	);
+            },
+            {
+                id: 4,
+                url: ARTWORK_URL.ARTWORK_4,
+                position: [X_AXIS / 2 - 0.2, Y_AXIS / 2, Z_AXIS / 3],
+                rotation: [0, -Math.PI / 2, 0]
+
+            }
+        ]
+    }),
+        [X_AXIS, Y_AXIS, Z_AXIS, marbleFloorTexture, concreteWallTexture]
+    );
+
+    return (
+        <>
+            <RoomLights config={LIGHT_PRESETS.MODERN} />
+            {/* <OveralLight /> */}
+            <BaseRoom
+                position={room.position}
+                dimensions={{
+                    width: X_AXIS,
+                    height: Y_AXIS,
+                    depth: Z_AXIS
+                }}
+                floor={room.floor.component}
+                ceiling={room.ceiling.component}
+                walls={room.walls}
+            >
+                {/* Artworks */}
+                {room.artworks.map((artwork) => (
+                    <ArtworkMesh
+                        key={artwork.id}
+                        artwork={{
+                            ...artwork,
+                            position: artwork.position as [
+                                number,
+                                number,
+                                number
+                            ] // Type assertion to Vec3
+                            , rotation: artwork.rotation as [
+                                number,
+                                number,
+                                number
+                            ] // Type assertion to Vec3
+                        }}
+                    />
+                ))}
+            </BaseRoom>
+        </>
+    );
 }

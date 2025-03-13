@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
-import { getCurrentUser, getTokens } from './session';
+import { getTokens } from './session';
 
 const apiClient: AxiosInstance = axios.create({
 	baseURL: process.env.NEXT_PUBLIC_API_URL,

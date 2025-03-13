@@ -5,8 +5,9 @@ import { z } from 'zod';
 // import sanitizeHtml from "sanitize-html";
 import { InvalidFileError } from '@/lib/errors';
 import { validateImage } from '@/lib/utils';
-import { createBlog, updateBlog } from '@/service/blog';
+import { createBlog, createPublicRequest, updateBlog } from '@/service/blog';
 import { uploadToCloudinary } from '@/lib/cloudinary';
+import { BlogStatus } from '@/utils/enums';
 
 export const createBlogAction = authenticatedAction
 	.createServerAction()
@@ -46,7 +47,8 @@ export const updateBlogAction = authenticatedAction
 			title: z.string().optional(),
 			content: z.string().optional(),
 			image: z.instanceof(FormData).optional(),
-			published: z.boolean().optional()
+			published: z.boolean().optional(),
+			status: z.nativeEnum(BlogStatus).optional() // Changed to enum
 		})
 	)
 	.handler(async ({ input, ctx }) => {
@@ -56,13 +58,13 @@ export const updateBlogAction = authenticatedAction
 			content?: string;
 			image?: string;
 			published?: boolean;
+			status?: BlogStatus;
 		} = {
 			_id: input.id
 		};
 		if (input.title) updateData.title = input.title;
 
 		if (input.content) {
-			// updateData.content = sanitizeHtml(input.content);
 			updateData.content = input.content;
 		}
 		if (input.image) {
@@ -78,6 +80,8 @@ export const updateBlogAction = authenticatedAction
 		}
 		if (input.published !== undefined)
 			updateData.published = input.published;
+		if (input.status)
+			updateData.status = input.status;
 		const updatedBlog = await updateBlog({
 			accessToken: ctx.user.accessToken,
 			updateData
@@ -86,34 +90,66 @@ export const updateBlogAction = authenticatedAction
 		return { id: updatedBlog.id };
 	});
 
-export const publishBlogAction = authenticatedAction
+export const createPublicRequestAction = authenticatedAction
 	.createServerAction()
 	.input(
 		z.object({
-			_id: z.string()
+			id: z.string()
 		})
 	)
 	.handler(async ({ input, ctx }) => {
-		const updatedBlog = await updateBlog({
+		const updatedBlog = await createPublicRequest({
 			accessToken: ctx.user.accessToken,
-			updateData: { _id: input._id, published: true }
+			id: input.id
 		});
-		revalidatePath(`/blogs/${updatedBlog._id}`);
-		return { id: updatedBlog.id };
-	});
+		revalidatePath(`/blogs/${updatedBlog?._id}`);
+		return updateBlog;
+	}
+);
 
-export const unpublishBlogAction = authenticatedAction
+export const cancelPublicRequestAction = authenticatedAction
 	.createServerAction()
 	.input(
 		z.object({
-			_id: z.string()
+			id: z.string()
 		})
 	)
 	.handler(async ({ input, ctx }) => {
 		const updatedBlog = await updateBlog({
 			accessToken: ctx.user.accessToken,
-			updateData: { _id: input._id, published: false }
+			updateData: { _id: input.id, status: BlogStatus.DRAFT }
 		});
-		revalidatePath(`/blogs/${updatedBlog._id}`);
+		revalidatePath(`/blogs/${updatedBlog.id}`);
 		return { id: updatedBlog.id };
-	});
+});
+// export const publishBlogAction = authenticatedAction
+// 	.createServerAction()
+// 	.input(
+// 		z.object({
+// 			_id: z.string()
+// 		})
+// 	)
+// 	.handler(async ({ input, ctx }) => {
+// 		const updatedBlog = await updateBlog({
+// 			accessToken: ctx.user.accessToken,
+// 			updateData: { _id: input._id, published: true }
+// 		});
+// 		revalidatePath(`/blogs/${updatedBlog._id}`);
+// 		return { id: updatedBlog.id };
+// 	});
+
+// export const unpublishBlogAction = authenticatedAction
+// 	.createServerAction()
+// 	.input(
+// 		z.object({
+// 			_id: z.string()
+// 		})
+// 	)
+// 	.handler(async ({ input, ctx }) => {
+// 		const updatedBlog = await updateBlog({
+// 			accessToken: ctx.user.accessToken,
+// 			updateData: { _id: input._id, published: false }
+// 		});
+// 		revalidatePath(`/blogs/${updatedBlog._id}`);
+// 		return { id: updatedBlog.id };
+// 	});
