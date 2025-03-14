@@ -139,7 +139,7 @@ export async function fetchArtPiecesByRange(
 	}
 }
 
-export async function fetchArtworkById(id: string): Promise<Artwork> {
+export async function fetchArtworkById(id: string): Promise<BaseResponse<Artwork>> {
 	// const url = `http://localhost:5000/api/artwork/${id}`;
 	try {
 		const axios = await createAxiosInstance({ useToken: false });
@@ -149,4 +149,12 @@ export async function fetchArtworkById(id: string): Promise<Artwork> {
 	} catch {
 		throw new Error('Error fetching artwork');
 	}
+}
+
+type BaseResponse<T = null> = {
+	data: T;
+	message: string;
+	statusCode: number;
+	errorCode: string | null;
+	details: unknown | null;
 }
