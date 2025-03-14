@@ -1,17 +1,14 @@
 import axios, { createApi } from '@/lib/axios';
 
-export const updateAvatar = async (imageFile: File, token: string) => {
+export const updateAvatar = async (imageUrl: string, token: string) => {
 	if (!token) {
 		throw new Error('No authentication token available');
 	}
 
-	const formData = new FormData();
-	formData.append('avatar', imageFile);
-
 	console.log('Sending avatar update request');
-	const response = await createApi(token).put('user/avatar', formData, {
+	const response = await createApi(token).put('user/avatar', { avatar: imageUrl }, {
 		headers: {
-			'Content-Type': 'multipart/form-data'
+			'Content-Type': 'application/json'
 		}
 	});
 
@@ -34,13 +31,26 @@ export const updateCollection = async (collectionId: string, image: string) => {
 };
 
 export const updateProfile = async (
-	data: { name: string; address: string },
+	data: {
+		name?: string;
+		address?: string;
+		image?: string,
+		artistProfile?: {
+			bio?: string,
+			genre?: string[]
+		}
+	},
 	token?: string
 ) => {
 	if (!token) {
 		throw new Error('No authentication token available');
 	}
 
+	console.log('Updating profile with data:', data);
+
 	const response = await createApi(token).put('user', data);
 	return response.data;
 };
+
+
+

@@ -175,5 +175,51 @@
         "vat": "* Giá đã bao gồm VAT. Thanh toán an toàn qua các cổng thanh toán được bảo mật."
       }
     }
+  },
+  "profile": {
+    "common": {
+      "joined": "Tham gia {date}",
+      "artworks": "Tác phẩm",
+      "followers": "Người theo dõi",
+      "following": "Đang theo dõi",
+      "artist_badge": "Nghệ sĩ",
+      "premium_badge": "Premium"
+    },
+    "view": {
+      "edit_profile": "Chỉnh sửa hồ sơ",
+      "favorites": "Yêu thích",
+      "collections": "Bộ sưu tập",
+      "professional_artist": "Nghệ sĩ chuyên nghiệp",
+      "view_profile": "Xem hồ sơ",
+      "collection_title": "Bộ sưu tập {number}"
+    },
+    "edit": {
+      "title": "Chỉnh sửa hồ sơ",
+      "basic_info": "Thông tin cơ bản",
+      "artist_profile": "Hồ sơ nghệ sĩ",
+      "name": "Tên",
+      "name_placeholder": "Nhập tên của bạn",
+      "address": "Địa chỉ",
+      "address_placeholder": "Nhập địa chỉ của bạn",
+      "biography": "Tiểu sử",
+      "art_styles": "Phong cách nghệ thuật",
+      "select_art_style": "Chọn phong cách nghệ thuật",
+      "no_art_styles": "Chưa chọn phong cách nghệ thuật nào",
+      "buttons": {
+        "cancel": "Hủy",
+        "save": "Lưu thay đổi",
+        "saving": "Đang lưu..."
+      },
+      "toast": {
+        "login_required": "Bạn phải đăng nhập để cập nhật hồ sơ",
+        "style_added": "Thêm phong cách nghệ thuật thành công",
+        "style_add_error": "Không thể thêm phong cách nghệ thuật",
+        "style_removed": "Xóa phong cách nghệ thuật thành công",
+        "style_remove_error": "Không thể xóa phong cách nghệ thuật",
+        "auth_error": "Vui lòng đăng nhập để cập nhật hồ sơ",
+        "update_success": "Cập nhật hồ sơ thành công",
+        "update_error": "Không thể cập nhật hồ sơ"
+      }
+    }
   }
 }
