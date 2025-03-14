@@ -38,6 +38,7 @@ export const BioEditor = ({ initialBio, isEditable, onChange }: BioEditorProps) 
     });
   }, [execute, onChange]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSave = useCallback(
     debounce(() => saveContent(), 500),
     [saveContent]

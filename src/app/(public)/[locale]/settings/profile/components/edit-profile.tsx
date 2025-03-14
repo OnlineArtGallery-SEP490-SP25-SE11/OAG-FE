@@ -56,6 +56,7 @@ const AVAILABLE_GENRES = [
 ] as const;
 
 const EditProfile = ({ initialData }: EditProfileProps) => {
+ console.log('cac', initialData);
  const { data: session, status } = useSession();
  const [formData, setFormData] = useState({
   name: initialData.name,
