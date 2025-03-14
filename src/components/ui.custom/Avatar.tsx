@@ -1,9 +1,9 @@
+import Image from 'next/image';
 import { PremiumBadge } from './PremiumBadge';
 
 interface AvatarProps {
   user: {
-    image?: string;
-    googleImage?: string;
+    image: string;
     isPremium: boolean;
   };
   size?: 'sm' | 'md' | 'lg';
@@ -21,15 +21,15 @@ export const Avatar = ({ user, size = 'md' }: AvatarProps) => {
   // Finally, use default avatar
   const avatarSrc = user.image
     ? user.image
-    : user.googleImage
-      ? user.googleImage
-      : 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg';
+    : 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg';
 
   return (
     <div className="relative inline-block">
-      <img
+      <Image
         src={avatarSrc}
         alt="Avatar"
+        width={64}
+        height={64}
         className={`rounded-full ${sizeClasses[size]} object-cover`}
       />
 

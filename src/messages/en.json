@@ -235,5 +235,51 @@
       "priceRequired": "Price is required",
       "statusRequired": "Status is required"
     }
+  },
+  "profile": {
+    "common": {
+      "joined": "Joined {date}",
+      "artworks": "Artworks",
+      "followers": "Followers",
+      "following": "Following",
+      "artist_badge": "Artist",
+      "premium_badge": "Premium"
+    },
+    "view": {
+      "edit_profile": "Edit Profile",
+      "favorites": "Favorites",
+      "collections": "Collections",
+      "professional_artist": "Professional Artist",
+      "view_profile": "View Profile",
+      "collection_title": "Collection {number}"
+    },
+    "edit": {
+      "title": "Edit Profile",
+      "basic_info": "Basic Information",
+      "artist_profile": "Artist Profile",
+      "name": "Name",
+      "name_placeholder": "Enter your name",
+      "address": "Address",
+      "address_placeholder": "Enter your address",
+      "biography": "Biography",
+      "art_styles": "Art Styles",
+      "select_art_style": "Select an art style",
+      "no_art_styles": "No art styles selected",
+      "buttons": {
+        "cancel": "Cancel",
+        "save": "Save Changes",
+        "saving": "Saving..."
+      },
+      "toast": {
+        "login_required": "You must be logged in to update your profile",
+        "style_added": "Art style added successfully",
+        "style_add_error": "Failed to add art style",
+        "style_removed": "Art style removed successfully",
+        "style_remove_error": "Failed to remove art style",
+        "auth_error": "Please sign in to update your profile",
+        "update_success": "Profile updated successfully",
+        "update_error": "Failed to update profile"
+      }
+    }
   }
 }

@@ -1,4 +1,4 @@
-import axios, { axiosWithAuth } from '@/lib/axios';
+import axios, { axiosWithAuth, createApi } from '@/lib/axios';
 interface User {
 	provider: string; // google, facebook, phone, etc.
 	providerId?: string; // ID của user từ provider
@@ -12,7 +12,7 @@ interface User {
 
 export async function getUser(token: string): Promise<User> {
 	try {
-		const res = await axiosWithAuth(token).get('/user');
+		const res = await createApi(token).get('/user');
 
 		return res.data;
 	} catch (error) {
