@@ -1,7 +1,6 @@
 'use client';
 
 // import { Button } from '@/components/ui/button';
-import DivWithEffect from '@/components/ui.custom/div-effect';
 import { Lightbox } from '@/components/ui.custom/lightbox';
 import useFileUpload, {
 	FileUpload,
@@ -82,7 +81,7 @@ const DropZone = memo(
 			return isDragActive ? 'text-primary' : 'text-gray-500';
 		};
 		return (
-			<DivWithEffect className='rounded-lg'>
+			<div className='rounded-lg'>
 				<motion.div
 					className={`p-4 sm:p-8 border-2 border-dashed rounded-lg text-center cursor-pointer transition-colors duration-200 ${getDropzoneColor()}`}
 					{...motionProps}
@@ -109,12 +108,12 @@ const DropZone = memo(
 					>
 						{multiple
 							? `Up to ${maxFiles} files, each up to ${formatFileSize(
-									maxSize
-							  )}`
+								maxSize
+							)}`
 							: `One file up to ${formatFileSize(maxSize)}`}
 					</p>
 				</motion.div>
-			</DivWithEffect>
+			</div>
 		);
 	}
 );
@@ -200,36 +199,36 @@ const Preview = memo(
 														upload.file.name ===
 														item.file.name
 												) && (
-													<motion.div
-														className='flex items-center justify-center space-x-2 w-full h-full absolute inset-0 bg-black/50'
-														initial={{ opacity: 0 }}
-														animate={{ opacity: 1 }}
-														exit={{ opacity: 0 }}
-														transition={{
-															duration: 0.3
-														}}
-													>
-														{/* Spinning Loader */}
 														<motion.div
-															className='w-5 h-5 border-4 border-t-transparent border-white rounded-full animate-spin'
-															style={{
-																animationDuration:
-																	'0.75s'
-															}}
-														/>
-														<motion.p
-															className='text-white text-sm font-medium'
+															className='flex items-center justify-center space-x-2 w-full h-full absolute inset-0 bg-black/50'
+															initial={{ opacity: 0 }}
+															animate={{ opacity: 1 }}
+															exit={{ opacity: 0 }}
 															transition={{
-																repeat: Infinity,
-																repeatType:
-																	'reverse',
-																duration: 0.5
+																duration: 0.3
 															}}
 														>
-															Uploading...
-														</motion.p>
-													</motion.div>
-												)}
+															{/* Spinning Loader */}
+															<motion.div
+																className='w-5 h-5 border-4 border-t-transparent border-white rounded-full animate-spin'
+																style={{
+																	animationDuration:
+																		'0.75s'
+																}}
+															/>
+															<motion.p
+																className='text-white text-sm font-medium'
+																transition={{
+																	repeat: Infinity,
+																	repeatType:
+																		'reverse',
+																	duration: 0.5
+																}}
+															>
+																Uploading...
+															</motion.p>
+														</motion.div>
+													)}
 
 												<motion.div
 													className='absolute inset-0 bg-black/50 flex items-center justify-center opacity-0'
@@ -279,35 +278,35 @@ const Preview = memo(
 												upload.file.name ===
 												item.file.name
 										) && (
-											<motion.div
-												className='flex items-center justify-center space-x-2 w-full h-full border rounded-lg absolute inset-0 bg-black/50'
-												initial={{ opacity: 0 }}
-												animate={{ opacity: 1 }}
-												exit={{ opacity: 0 }}
-												transition={{
-													duration: 0.3
-												}}
-											>
-												{/* Spinning Loader */}
 												<motion.div
-													className='w-5 h-5 border-4 border-t-transparent border-white rounded-full animate-spin'
-													style={{
-														animationDuration:
-															'0.75s'
-													}}
-												/>
-												<motion.p
-													className='text-white text-sm font-medium'
+													className='flex items-center justify-center space-x-2 w-full h-full border rounded-lg absolute inset-0 bg-black/50'
+													initial={{ opacity: 0 }}
+													animate={{ opacity: 1 }}
+													exit={{ opacity: 0 }}
 													transition={{
-														repeat: Infinity,
-														repeatType: 'reverse',
-														duration: 0.5
+														duration: 0.3
 													}}
 												>
-													Uploading...
-												</motion.p>
-											</motion.div>
-										)}
+													{/* Spinning Loader */}
+													<motion.div
+														className='w-5 h-5 border-4 border-t-transparent border-white rounded-full animate-spin'
+														style={{
+															animationDuration:
+																'0.75s'
+														}}
+													/>
+													<motion.p
+														className='text-white text-sm font-medium'
+														transition={{
+															repeat: Infinity,
+															repeatType: 'reverse',
+															duration: 0.5
+														}}
+													>
+														Uploading...
+													</motion.p>
+												</motion.div>
+											)}
 										<div className='flex items-start space-x-2 sm:space-x-3'>
 											<div className='flex-shrink-0'>
 												<File className='h-6 w-6 sm:h-8 sm:w-8 text-blue-500' />
