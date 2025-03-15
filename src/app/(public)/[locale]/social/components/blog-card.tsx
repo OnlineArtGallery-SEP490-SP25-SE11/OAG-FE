@@ -43,6 +43,7 @@ interface BlogCardProps {
   coverImage: string;
   content: string;
   author: {
+    _id: string
     name: string;
     image: string;
   };
@@ -60,6 +61,7 @@ interface Comment {
   content: string;
   createdAt: string;
   author: {
+    _id: string;
     name: string;
     avatar: string;
   };
@@ -247,7 +249,7 @@ export function BlogCard({
                 <DrawerHeader>
                   <DrawerTitle>Comments</DrawerTitle>
                   <DrawerDescription>
-                    View, add, and edit comments for this blog
+                    Write your thoughts about this blog.
                   </DrawerDescription>
                 </DrawerHeader>
 
@@ -279,8 +281,8 @@ export function BlogCard({
                               </span>
                             </div>
 
-                            {comment.author?.name === currentUser?.name ||
-                            author.name === currentUser?.name ? (
+                            {comment.author?._id === currentUser?._id ||
+                            author._id === currentUser?._id ? (
                               <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                   <Button variant="ghost" size="icon">
