@@ -1,5 +1,6 @@
 import { ARTWORK_URL } from '@/utils/constants';
 import { GalleryTemplateData } from '@/app/(exhibitions)/[locale]/exhibitions/gallery/gallery-template-creator';
+import { Vec3 } from '@/types/gallery';
 
 const exhibitions = [
     {
@@ -277,7 +278,13 @@ export async function getGalleryTemplates() {
         modelScale: 3,
         modelRotation: [0, 0, 0] as [number, number, number],
         modelPosition: [0, 0, 0] as [number, number, number],
-        customColliders: []
+        customColliders: [],
+        artworks: [
+            {
+                position : [0, 0, 0] as Vec3,
+                rotation : [0, 0, 0] as Vec3
+            }
+        ]
       },
       {
         id: 'template_2',
@@ -291,7 +298,8 @@ export async function getGalleryTemplates() {
         modelScale: 4,
         modelRotation: [0, 0, 0] as [number, number, number],
         modelPosition: [0, 0, 0] as [number, number, number],
-        customColliders: []
+        customColliders: [],
+        artworks: []
       }
     ];
   } catch (error) {
@@ -318,11 +326,11 @@ export async function getGalleryTemplate(id: string): Promise<GalleryTemplateDat
         wallHeight: foundTemplate.wallHeight || 3,
         modelPath: foundTemplate.modelPath || '',
         modelScale: foundTemplate.modelScale || 1,
-        // Add these two required properties with default values
         modelRotation: foundTemplate.modelRotation || [0, 0, 0] as [number, number, number],
         modelPosition: foundTemplate.modelPosition || [0, 0, 0] as [number, number, number],
         previewImage: foundTemplate.previewImage || '',
-        customColliders: foundTemplate.customColliders || []
+        customColliders: foundTemplate.customColliders || [],
+        artworks: foundTemplate.artworks || [] // Ensure artworks array exists
       };
     }
     

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -25,12 +25,14 @@ type WallConfigs = {
   right: WallSettings;
 };
 
+type Artwork = {
+  position: [number, number, number];
+  rotation: [number, number, number];
+};
+
 export default function ArtworkEditor() {
   const { templateData, updateTemplate } = useContext(GalleryTemplateContext);
-  
-  // Initialize the artworks array if it doesn't exist
-  const artworks = templateData.artworks || [];
-  
+ 
   // Wall configurations for standard walls with defaults
   const [wallConfigs, setWallConfigs] = React.useState<WallConfigs>({
     front: { count: 0, heightPosition: templateData.wallHeight / 2 },
@@ -39,11 +41,20 @@ export default function ArtworkEditor() {
     right: { count: 0, heightPosition: templateData.wallHeight / 2 }
   });
 
-  // Track custom artworks separately
-  const [customArtworks, setCustomArtworks] = React.useState<Array<{
-    position: [number, number, number];
-    rotation: [number, number, number];
-  }>>([]);
+  // Track custom artworks separately - Khởi tạo từ templateData.artworks
+  const [customArtworks, setCustomArtworks] = useState<Artwork[]>(() => {
+    // Sử dụng dữ liệu có sẵn từ template
+    return [...(templateData.artworks || [])];
+  });
+
+  // Effect để chạy một lần khi component mount, xóa bỏ các artwork từ wall configs
+  useEffect(() => {
+    // Chỉ chạy khi khởi tạo component
+    if (customArtworks.length > 0) {
+      // Đảm bảo các artwork hiện tại được giữ lại
+      updateTemplate({ artworks: customArtworks });
+    }
+  }, []);
   
   // Update wall configurations and regenerate positions
   const updateWallConfig = (
@@ -66,10 +77,7 @@ export default function ArtworkEditor() {
   
   // Generate all artwork positions based on wall configurations and custom artworks
   const regenerateArtworkPositions = () => {
-    const generatedArtworks: Array<{
-      position: [number, number, number];
-      rotation: [number, number, number];
-    }> = [];
+    const generatedArtworks: Artwork[] = [];
     
     // Generate positions for each standard wall
     Object.entries(wallConfigs).forEach(([wallType, config]) => {
@@ -112,9 +120,9 @@ export default function ArtworkEditor() {
     const updatedCustomArtworks = [...customArtworks, newArtwork];
     setCustomArtworks(updatedCustomArtworks);
     
-    // Regenerate all artworks
+    // Cập nhật template với tất cả artworks
     updateTemplate({
-      artworks: [...artworks, newArtwork]
+      artworks: [...(templateData.artworks || []), newArtwork]
     });
   };
   
@@ -123,31 +131,10 @@ export default function ArtworkEditor() {
     const updatedCustomArtworks = customArtworks.filter((_, i) => i !== index);
     setCustomArtworks(updatedCustomArtworks);
     
-    // Calculate positions of all wall artworks
-    const allArtworks = [...updatedCustomArtworks];
-    Object.entries(wallConfigs).forEach(([wallType, config]) => {
-      if (config.count > 0) {
-        const result = calculateWallArtworkPositions({
-          wallType: wallType as 'front' | 'back' | 'left' | 'right',
-          wallDimension: (wallType === 'front' || wallType === 'back')
-            ? templateData.dimensions.xAxis
-            : templateData.dimensions.zAxis,
-          artworkCount: config.count,
-          roomDimensions: templateData.dimensions,
-          heightPosition: config.heightPosition
-        });
-        
-        for (let i = 0; i < result.positions.length; i++) {
-          allArtworks.push({
-            position: result.positions[i],
-            rotation: result.rotations[i]
-          });
-        }
-      }
+    // Cập nhật template với custom artworks mới
+    updateTemplate({ 
+      artworks: updatedCustomArtworks 
     });
-    
-    // Update the template with all artworks
-    updateTemplate({ artworks: allArtworks });
   };
   
   // Update custom artwork position
@@ -161,7 +148,9 @@ export default function ArtworkEditor() {
     };
     
     setCustomArtworks(updatedCustomArtworks);
-    regenerateArtworkPositions();
+    
+    // Cập nhật template với custom artworks mới
+    updateTemplate({ artworks: updatedCustomArtworks });
   };
   
   // Update custom artwork rotation
@@ -175,7 +164,9 @@ export default function ArtworkEditor() {
     };
     
     setCustomArtworks(updatedCustomArtworks);
-    regenerateArtworkPositions();
+    
+    // Cập nhật template với custom artworks mới
+    updateTemplate({ artworks: updatedCustomArtworks });
   };
   
   // Render a wall configuration section
@@ -215,7 +206,7 @@ export default function ArtworkEditor() {
   
   return (
     <div className="space-y-6">
-      <Tabs defaultValue="back">
+      <Tabs defaultValue="custom">
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="back">Back Wall</TabsTrigger>
           <TabsTrigger value="front">Front Wall</TabsTrigger>
@@ -319,7 +310,7 @@ export default function ArtworkEditor() {
       
       <div className="p-4 border-t border-gray-200">
         <h4 className="text-sm font-medium text-gray-600 mb-2">
-          Total Artwork Count: {artworks.length}
+          Total Artwork Count: {customArtworks.length}
         </h4>
       </div>
     </div>

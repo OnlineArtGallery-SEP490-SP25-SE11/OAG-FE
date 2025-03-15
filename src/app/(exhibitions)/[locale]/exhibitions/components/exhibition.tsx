@@ -15,19 +15,19 @@ export default function Exhibition({ exhibition }: { exhibition: ExhibitionType 
         <div className='w-full h-screen'>
             <Canvas
                  shadows
-                 dpr={[0.5, 1]} // Limit max DPR to 2
+                //  dpr={[0.5, 1]} // Limit max DPR to 2
                  performance={{
-                   min: 0.5, // Render at minimum 50% resolution
-                   max: 1,   // Maximum 100% resolution
-                   debounce: 200 // Wait 200ms before adjusting quality
+                //    min: 0.5, // Render at minimum 50% resolution
+                //    max: 1,   // Maximum 100% resolution
+                //    debounce: 200 // Wait 200ms before adjusting quality
                  }}
-                gl={{
-                    antialias: false,
-                    powerPreference: 'high-performance',
-                    alpha: false,
-                    stencil: false,
-                    depth: true
-                }}
+                // gl={{
+                //     antialias: false,
+                //     powerPreference: 'high-performance',
+                //     alpha: false,
+                //     stencil: false,
+                //     depth: true
+                // }}
             >
                 <Stats />
                 <Scene exhibition={exhibition} />
