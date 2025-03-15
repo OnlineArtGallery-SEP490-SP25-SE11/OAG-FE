@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import { useSession } from 'next-auth/react';
-import { useToast } from '@/hooks/use-toast';
-import { useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 import { Avatar } from '@/components/ui.custom/Avatar';
 import FileUploader from '@/components/ui.custom/file-uploader';
-import { updateAvatarAction } from '../actions';
 import {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { useToast } from '@/hooks/use-toast';
+import { useQueryClient } from '@tanstack/react-query';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { updateAvatarAction } from '../actions';
 
 interface UpdateAvatarProps {
     user: {
@@ -27,7 +27,7 @@ const UpdateAvatar: React.FC<UpdateAvatarProps> = ({ user }) => {
     const queryClient = useQueryClient();
     const router = useRouter();
 
-    const handleAvatarUpload = async (url: string | string[]) => {
+    const handleAvatarUpload = async (files: { url: string; width?: number; height?: number; _id?: string }[]) => {
         if (status !== 'authenticated') {
             toast({
                 title: 'Authentication Error',
@@ -40,15 +40,16 @@ const UpdateAvatar: React.FC<UpdateAvatarProps> = ({ user }) => {
 
         try {
             if (session?.user?.accessToken) {
-                const imageUrl = Array.isArray(url) ? url[0] : url;
+                // Use the url from the first file in the array
+                const imageUrl = files[0].url;
                 await updateAvatarAction({ url: imageUrl });
                 await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
-                router.push('/settings/profile'); // This triggers a revalidation of the current page
+                router.push('/settings/profile');
                 toast({
                     title: 'Success',
                     description: 'Avatar updated successfully'
                 });
-                setIsDialogOpen(false); // Close dialog after successful update
+                setIsDialogOpen(false);
             }
         } catch (error) {
             console.error('Error updating avatar:', error);

@@ -1,227 +1,285 @@
 {
-	"common": {
-		"languages": {
-			"english": "English",
-			"vietnamese": "Vietnamese"
-		},
-		"login": "Login",
-		"signup": "Sign up",
-		"signin": "Sign in",
-		"logout": "Logout",
-		"email": "Email",
-		"password": "Password",
-		"name": "Name",
-		"phone": "Phone Number",
-		"confirmPassword": "Confirm Password",
-		"forgotPassword": "Forgot Password",
-		"or": "Or",
-		"phonePlaceholder": "Enter your phone number",
-		"namePlaceholder": "Enter your name",
-		"passwordPlaceholder": "Enter your password",
-		"confirmPasswordPlaceholder": "Enter your confirm password",
-		"haveAccount": "Already have an account? Login",
-		"needAccount": "Need an account? Sign up",
-		"signinDescription": "Sign in to your account using one of the options below.",
-		"googleLogin": "Continue with Google",
-		"phoneLogin": "Continue with phone number",
-		"back": "Back",
-		"notification": "Notification",
-		"success": "Success",
-		"error": "Error"
-	},
-	"header": {
-		"home": "Home",
-		"about": "About",
-		"contact": "Contact",
-		"profile": "Profile",
-		"settings": "Settings",
-		"darkmode": "Dark Mode",
-		"lightmode": "Light Mode",
-		"creator": "Creator",
-		"artworks": "Artworks",
-		"discover": "Discover",
-		"community": "Community",
-		"artists": "Artists",
-		"wallet": "Wallet",
-		"messages": "Messages",
-		"my_blogs": "My Blogs",
-		"premium": "Premium"
-	},
-	"auth": {
-		"loginTitle": "Login to your account",
-
-		"signupTitle": "Create new account",
-		"googleLogin": "Login with Google"
-	},
-	"validation": {
-		"name": "Name",
-		"phone": "Phone Number",
-		"password": "Password",
-		"required": "{field} is required",
-		"minLength": "{field} must be at least {length} characters",
-		"passwordMatch": "Passwords don't match",
-		"invalidPhoneNumber": "Invalid phone number format",
-		"otpLength": "OTP must be 6 digits",
-		"passwordLength": "Password must be at least 8 characters",
-		"invalidPassword": "Invalid password format"
-	},
-	"signup": {
-		"otpSent": "OTP sent",
-		"otpSentDescription": "Please check your phone for the OTP code",
-		"verifyOtp": "Verify OTP",
-		"resendOtp": "Resend OTP",
-		"resendOtpIn": "Resend OTP in",
-		"validFor": "Valid for"
-	},
-	"error": {
-		"error": "Error",
-		"unknownError": "An unknown error occurred",
-		"tokenExpired": "Session has expired, please try again",
-		"userExists": "Phone number already registered",
-		"invalidOtp": "Invalid OTP code",
-		"otpExpired": "OTP code has expired",
-		"rateLimit": "Too many attempts, please try again later",
-		"validationError": "Please check your input",
-		"authenticationError": "You must be logged in to view this content",
-		"authorizationError": "You are not authorized to view this content",
-		"rateLimitExceeded": "Too many attempts, please try again later",
-		"somethingWentWrong": "Something went wrong",
-		"registerError": "Register failed",
-		"accessDenied": "Access denied",
-		"credentialsSignin": "Invalid credentials"
-	},
-	"blog": {
-		"preview_draft": "Preview Draft",
-		"public": "Publish",
-		"private": "Private",
-		"close": "Close",
-		"desktop": "Desktop",
-		"mobile": "Mobile",
-		"draft_create_success": "Draft created successfully",
-		"draft_create_fail": "Failed to create draft",
-		"type_content": "Type content...",
-		"new_draft": "New Draft",
-		"create_new_draft": "Create New Draft",
-		"title": "Title",
-		"enter_draft_title": "Enter draft title",
-		"image": "Image",
-		"upload_image": "Upload Image",
-		"creating": "Creating...",
-		"create_draft": "Create Draft",
-		"preview": "Preview",
-		"create_request": "Request to publish has been sent",
-		"cancel": "Cancel Request",
-		"cancel_request": "Request to publish has been canceled",
-		"publish_success": "Blog has been published",
-		"private_success": "Blog has been privated",
-		"pending" : "Pending",
-		"draft_create_error": "An error occurred while creating blog"
-	},
-	"premium": {
-		"feature_comparison": {
-		  "title": "Compare Plan Features",
-		  "subtitle": "Experience unlimited art with Premium",
-		  "features": {
-			"gallery_views": "3D Gallery Views",
-			"image_quality": "Image Quality",
-			"artist_follows": "Artist Follow Limit",
-			"favorite_artworks": "Save Favorite Artworks",
-			"free_plan": "Free Plan",
-			"premium_plan": "Premium Plan"
-		  },
-		  "limits": {
-			"per_day": "5 turn/day",
-			"unlimited": "Unlimited",
-			"hd": "HD (1080p)",
-			"ultra_hd": "4K Ultra HD",
-			"artists_limit": "10 artists",
-			"artworks_limit": "3 artworks"
-		  }
-		},
-		"payment": {
-		  "title": "Affordable Plans for Everyone",
-		  "subtitle": "Choose a Premium plan for unlimited art experience. Pay as you need. Cancel anytime."
-		},
-		"interview": {
-		  "banner": {
-			"title": "40,000 VND for unlimited art experiences",
-			"subtitle": "Enjoy the highest quality images, unlimited gallery views and more benefits. Cancel anytime."
-		  },
-		  "benefits": {
-			"title": "Benefits of all Premium plans",
-			"items": {
-			  "gallery": "Unlimited 3D gallery views",
-			  "quality": "4K ultra HD image quality",
-			  "follows": "Unlimited artist follows",
-			  "favorites": "Unlimited favorite artworks"
-			}
-		  }
-		},
-		"subscription": {
-		  "title": "Choose the Premium plan that's right for you",
-		  "subtitle": "Experience unlimited art with Premium. Enjoy the highest quality and exclusive features.",
-		  "plan": {
-			"price": "40,000 VND",
-			"period": "/month",
-			"features": {
-			  "gallery": "Unlimited 3D gallery views",
-			  "quality": "4K ultra HD image quality", 
-			  "follows": "Unlimited artist follows",
-			  "favorites": "Unlimited favorite artworks",
-			  "cancel": "Cancel anytime"
-			},
-			"cta": "Buy Now"
-		  },
-		  "footer": {
-			"terms": "Terms and conditions apply. Offer not valid for previous Premium subscribers.",
-			"vat": "* Price includes VAT. Secure payment through encrypted payment gateways."
-		  }
-		}
-	  },
-	"profile": {
-		"common": {
-			"joined": "Joined {date}",
-			"artworks": "Artworks",
-			"followers": "Followers",
-			"following": "Following",
-			"artist_badge": "Artist",
-			"premium_badge": "Premium"
-		},
-		"view": {
-			"edit_profile": "Edit Profile",
-			"favorites": "Favorites",
-			"collections": "Collections",
-			"professional_artist": "Professional Artist",
-			"view_profile": "View Profile",
-			"collection_title": "Collection {number}"
-		},
-		"edit": {
-			"title": "Edit Profile",
-			"basic_info": "Basic Information",
-			"artist_profile": "Artist Profile",
-			"name": "Name",
-			"name_placeholder": "Enter your name",
-			"address": "Address",
-			"address_placeholder": "Enter your address",
-			"biography": "Biography",
-			"art_styles": "Art Styles",
-			"select_art_style": "Select an art style",
-			"no_art_styles": "No art styles selected",
-			"buttons": {
-				"cancel": "Cancel",
-				"save": "Save Changes",
-				"saving": "Saving..."
-			},
-			"toast": {
-				"login_required": "You must be logged in to update your profile",
-				"style_added": "Art style added successfully",
-				"style_add_error": "Failed to add art style",
-				"style_removed": "Art style removed successfully",
-				"style_remove_error": "Failed to remove art style",
-				"auth_error": "Please sign in to update your profile",
-				"update_success": "Profile updated successfully",
-				"update_error": "Failed to update profile"
-			}
-		}
-	}
+  "common": {
+    "languages": {
+      "english": "English",
+      "vietnamese": "Vietnamese"
+    },
+    "login": "Login",
+    "signup": "Sign up",
+    "signin": "Sign in",
+    "logout": "Logout",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "phone": "Phone Number",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot Password",
+    "or": "Or",
+    "phonePlaceholder": "Enter your phone number",
+    "namePlaceholder": "Enter your name",
+    "passwordPlaceholder": "Enter your password",
+    "confirmPasswordPlaceholder": "Enter your confirm password",
+    "haveAccount": "Already have an account? Login",
+    "needAccount": "Need an account? Sign up",
+    "signinDescription": "Sign in to your account using one of the options below.",
+    "googleLogin": "Continue with Google",
+    "phoneLogin": "Continue with phone number",
+    "back": "Back",
+    "notification": "Notification",
+    "success": "Success",
+    "error": "Error"
+  },
+  "header": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "profile": "Profile",
+    "settings": "Settings",
+    "darkmode": "Dark Mode",
+    "lightmode": "Light Mode",
+    "creator": "Creator",
+    "artworks": "Artworks",
+    "discover": "Discover",
+    "community": "Community",
+    "artists": "Artists",
+    "wallet": "Wallet",
+    "messages": "Messages",
+    "my_blogs": "My Blogs",
+    "premium": "Premium"
+  },
+  "auth": {
+    "loginTitle": "Login to your account",
+    "signupTitle": "Create new account",
+    "googleLogin": "Login with Google"
+  },
+  "validation": {
+    "name": "Name",
+    "phone": "Phone Number",
+    "password": "Password",
+    "required": "{field} is required",
+    "minLength": "{field} must be at least {length} characters",
+    "passwordMatch": "Passwords don't match",
+    "invalidPhoneNumber": "Invalid phone number format",
+    "otpLength": "OTP must be 6 digits",
+    "passwordLength": "Password must be at least 8 characters",
+    "invalidPassword": "Invalid password format"
+  },
+  "signup": {
+    "otpSent": "OTP sent",
+    "otpSentDescription": "Please check your phone for the OTP code",
+    "verifyOtp": "Verify OTP",
+    "resendOtp": "Resend OTP",
+    "resendOtpIn": "Resend OTP in",
+    "validFor": "Valid for"
+  },
+  "error": {
+    "error": "Error",
+    "unknownError": "An unknown error occurred",
+    "tokenExpired": "Session has expired, please try again",
+    "userExists": "Phone number already registered",
+    "invalidOtp": "Invalid OTP code",
+    "otpExpired": "OTP code has expired",
+    "rateLimit": "Too many attempts, please try again later",
+    "validationError": "Please check your input",
+    "authenticationError": "You must be logged in to view this content",
+    "authorizationError": "You are not authorized to view this content",
+    "rateLimitExceeded": "Too many attempts, please try again later",
+    "somethingWentWrong": "Something went wrong",
+    "registerError": "Register failed",
+    "accessDenied": "Access denied",
+    "credentialsSignin": "Invalid credentials"
+  },
+  "blog": {
+    "preview_draft": "Preview Draft",
+    "public": "Publish",
+    "private": "Private",
+    "close": "Close",
+    "desktop": "Desktop",
+    "mobile": "Mobile",
+    "draft_create_success": "Draft created successfully",
+    "draft_create_fail": "Failed to create draft",
+    "type_content": "Type content...",
+    "new_draft": "New Draft",
+    "create_new_draft": "Create New Draft",
+    "title": "Title",
+    "enter_draft_title": "Enter draft title",
+    "image": "Image",
+    "upload_image": "Upload Image",
+    "creating": "Creating...",
+    "create_draft": "Create Draft",
+    "preview": "Preview",
+    "create_request": "Request to publish has been sent",
+    "cancel": "Cancel Request",
+    "cancel_request": "Request to publish has been canceled",
+    "publish_success": "Blog has been published",
+    "private_success": "Blog has been privated",
+    "pending": "Pending",
+    "draft_create_error": "An error occurred while creating blog"
+  },
+  "premium": {
+    "feature_comparison": {
+      "title": "Compare Plan Features",
+      "subtitle": "Experience unlimited art with Premium",
+      "features": {
+        "gallery_views": "3D Gallery Views",
+        "image_quality": "Image Quality",
+        "artist_follows": "Artist Follow Limit",
+        "favorite_artworks": "Save Favorite Artworks",
+        "free_plan": "Free Plan",
+        "premium_plan": "Premium Plan"
+      },
+      "limits": {
+        "per_day": "5 turn/day",
+        "unlimited": "Unlimited",
+        "hd": "HD (1080p)",
+        "ultra_hd": "4K Ultra HD",
+        "artists_limit": "10 artists",
+        "artworks_limit": "3 artworks"
+      }
+    },
+    "payment": {
+      "title": "Affordable Plans for Everyone",
+      "subtitle": "Choose a Premium plan for unlimited art experience. Pay as you need. Cancel anytime."
+    },
+    "interview": {
+      "banner": {
+        "title": "40,000 VND for unlimited art experiences",
+        "subtitle": "Enjoy the highest quality images, unlimited gallery views and more benefits. Cancel anytime."
+      },
+      "benefits": {
+        "title": "Benefits of all Premium plans",
+        "items": {
+          "gallery": "Unlimited 3D gallery views",
+          "quality": "4K ultra HD image quality",
+          "follows": "Unlimited artist follows",
+          "favorites": "Unlimited favorite artworks"
+        }
+      }
+    },
+    "subscription": {
+      "title": "Choose the Premium plan that's right for you",
+      "subtitle": "Experience unlimited art with Premium. Enjoy the highest quality and exclusive features.",
+      "plan": {
+        "price": "40,000 VND",
+        "period": "/month",
+        "features": {
+          "gallery": "Unlimited 3D gallery views",
+          "quality": "4K ultra HD image quality",
+          "follows": "Unlimited artist follows",
+          "favorites": "Unlimited favorite artworks",
+          "cancel": "Cancel anytime"
+        },
+        "cta": "Buy Now"
+      },
+      "footer": {
+        "terms": "Terms and conditions apply. Offer not valid for previous Premium subscribers.",
+        "vat": "* Price includes VAT. Secure payment through encrypted payment gateways."
+      }
+    }
+  },
+  "artwork": {
+    "title": "Upload Artwork",
+    "subtitle": "Enter details about your artwork piece",
+    "field": {
+      "title": "Title",
+      "description": "Description",
+      "categories": "Categories",
+      "width": "Width (px)",
+      "height": "Height (px)",
+      "price": "Price",
+      "status": "Status",
+      "image": "Image"
+    },
+    "placeholder": {
+      "title": "Enter artwork title",
+      "description": "Describe your artwork in detail",
+      "width": "Enter width",
+      "height": "Enter height",
+      "price": "Enter price",
+      "status": "Select status"
+    },
+    "helper": {
+      "description": "Description should include style, theme and meaning of the artwork",
+      "categories": "Select all categories that apply to this artwork",
+      "image": "Image should be high resolution and clearly display the artwork"
+    },
+    "status": {
+      "available": "Available",
+      "sold": "Sold",
+      "selling": "Selling",
+      "hidden": "Hidden"
+    },
+    "upload": {
+      "fileSelected": "Selected: {name}",
+      "fileSize": "Size: {size} MB",
+      "dropHere": "Drop file here...",
+      "dragAndDrop": "Drag and drop image here, or click to select",
+      "acceptedFormats": "(Accepts JPG, PNG, GIF formats)"
+    },
+    "button": {
+      "upload": "Upload Artwork",
+      "uploading": "Uploading..."
+    },
+    "toast": {
+      "successTitle": "Upload Successful!",
+      "successDescription": "Your artwork has been uploaded successfully.",
+      "errorTitle": "Upload Failed!",
+      "errorDescription": "There was an error uploading your artwork. Please try again."
+    },
+    "validation": {
+      "titleRequired": "Title is required",
+      "descriptionMinLength": "Description must be at least 10 characters",
+      "categoryRequired": "At least one category must be selected",
+      "widthRequired": "Width is required",
+      "heightRequired": "Height is required",
+      "priceRequired": "Price is required",
+      "statusRequired": "Status is required"
+    }
+  },
+  "profile": {
+    "common": {
+      "joined": "Joined {date}",
+      "artworks": "Artworks",
+      "followers": "Followers",
+      "following": "Following",
+      "artist_badge": "Artist",
+      "premium_badge": "Premium"
+    },
+    "view": {
+      "edit_profile": "Edit Profile",
+      "favorites": "Favorites",
+      "collections": "Collections",
+      "professional_artist": "Professional Artist",
+      "view_profile": "View Profile",
+      "collection_title": "Collection {number}"
+    },
+    "edit": {
+      "title": "Edit Profile",
+      "basic_info": "Basic Information",
+      "artist_profile": "Artist Profile",
+      "name": "Name",
+      "name_placeholder": "Enter your name",
+      "address": "Address",
+      "address_placeholder": "Enter your address",
+      "biography": "Biography",
+      "art_styles": "Art Styles",
+      "select_art_style": "Select an art style",
+      "no_art_styles": "No art styles selected",
+      "buttons": {
+        "cancel": "Cancel",
+        "save": "Save Changes",
+        "saving": "Saving..."
+      },
+      "toast": {
+        "login_required": "You must be logged in to update your profile",
+        "style_added": "Art style added successfully",
+        "style_add_error": "Failed to add art style",
+        "style_removed": "Art style removed successfully",
+        "style_remove_error": "Failed to remove art style",
+        "auth_error": "Please sign in to update your profile",
+        "update_success": "Profile updated successfully",
+        "update_error": "Failed to update profile"
+      }
+    }
+  }
 }
