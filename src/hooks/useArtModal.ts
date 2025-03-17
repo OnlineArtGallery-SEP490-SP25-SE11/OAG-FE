@@ -1,9 +1,9 @@
 import { create } from 'zustand';
-import { ArtPiece } from '@/types/marketplace';
+import { Artwork } from '@/types/marketplace';
 
 interface ArtModalState {
-	selected: ArtPiece | null;
-	setSelected: (item: ArtPiece | null) => void;
+	selected: Artwork | null;
+	setSelected: (item: Artwork | null) => void;
 }
 
 export const useArtModal = create<ArtModalState>((set) => ({

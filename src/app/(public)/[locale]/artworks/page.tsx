@@ -1,5 +1,5 @@
 import { fetchArtPiecesByRange } from '@/app/(public)/[locale]/artworks/api';
-import { ArtPiece } from '@/types/marketplace';
+import { Artwork } from '@/types/marketplace';
 import dynamic from 'next/dynamic';
 import { LoadingComponent } from '@/components/ui.custom/loading';
 import ArtFilter from './components/art-filter';
@@ -23,12 +23,12 @@ const Artworks = dynamic(
 );
 
 const ArtworksPage = async () => {
-	const initialData = (await fetchArtPiecesByRange(0, 20)) as ArtPiece[];
+	const initialData = (await fetchArtPiecesByRange(0, 20)) as Artwork[];
 	return (
 		<>
-			<ArtCategory />
-			<ArtFilter />
+
 			<Artworks artworks={initialData} />
+
 		</>
 	);
 };

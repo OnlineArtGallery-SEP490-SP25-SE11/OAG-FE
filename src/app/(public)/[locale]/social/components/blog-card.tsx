@@ -27,7 +27,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
-import axios, { createApi } from "@/lib/axios";
+import axios from "@/lib/axios";
 import { useEffect, useState } from "react";
 import { createComment, deleteComment, updateComment } from "@/service/comment";
 import { getCurrentUser } from "@/lib/session";

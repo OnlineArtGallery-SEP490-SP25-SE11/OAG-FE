@@ -51,15 +51,14 @@ export default function AuthButton() {
 			<Notification />
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
-					<HeaderButton isGradient={true}>
-						<Avatar className='w-full h-full'>
-							{user.image ? (
-								<AvatarImage src={user.image} />
-							) : (
-								<AvatarFallback>
-									{user.name?.[0]?.toUpperCase() || 'U'}
-								</AvatarFallback>
-							)}
+					<HeaderButton
+						isGradient
+						isArtist={user.role.includes('artist')}
+						isPremium={user.role.includes('premium')}
+					>
+						<Avatar className="w-full h-full">
+							<AvatarImage src={user.image as string} />
+							<AvatarFallback>{user.name?.[0]?.toUpperCase() || 'U'}</AvatarFallback>
 						</Avatar>
 					</HeaderButton>
 				</DropdownMenuTrigger>
@@ -74,16 +73,26 @@ export default function AuthButton() {
 						text={t('settings')}
 						href='/settings'
 					/>
-					<DropdownItemWithIcon
-						icon={<UserRoundPen className='w-6 h-6' />}
-						text={t('artists')}
-						href='/artists'
-					/>
-					<DropdownItemWithIcon
-						icon={<Palette className='w-6 h-6' />}
-						text={t('creator')}
-						href='/creator'
-					/>
+					{user.role.includes('artist') && (
+						<>
+							<DropdownItemWithIcon
+								icon={<UserRoundPen className='w-6 h-6' />}
+								text={t('artists')}
+								href='/artists'
+							/>
+							<DropdownItemWithIcon
+								icon={<Palette className='w-6 h-6' />}
+								text={t('creator')}
+								href='/creator'
+							/>
+							<DropdownItemWithIcon
+								icon={<BookOpen className='w-6 h-6' />}
+								text={t('my_blogs')}
+								href='/my-blogs'
+							/>
+						</>
+					)}
+
 					<DropdownItemWithIcon
 						icon={<WalletMinimal className='w-6 h-6' />}
 						text={t('wallet')}
@@ -93,11 +102,6 @@ export default function AuthButton() {
 						icon={<MessageCircle className='w-6 h-6' />}
 						text={t('messages')}
 						href='/messages'
-					/>
-					<DropdownItemWithIcon
-						icon={<BookOpen className='w-6 h-6' />}
-						text={t('my_blogs')}
-						href='/my-blogs'
 					/>
 
 					<Separator className='mt-6' />
