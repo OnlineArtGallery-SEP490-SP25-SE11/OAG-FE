@@ -14,3 +14,28 @@ export enum EventStatus {
   COMPLETED = 'COMPLETED'
 }
 
+export enum ReportStatus {
+  PENDING = 'PENDING',
+  RESOLVED = 'RESOLVED',
+  DISMISSED = 'DISMISSED'
+}
+
+export enum ReasonReport {
+	INAPPROPRIATE = 'INAPPROPRIATE',
+	COPYRIGHT = 'COPYRIGHT',
+	HARASSMENT = 'HARASSMENT',
+	SPAM = 'SPAM',
+	Other = 'Other',
+}
+//type of report
+export enum RefType{
+  BLOG = 'BLOG',
+  ARTWORK = 'ARTWORK',
+  USER = 'USER'
+}
+
+export enum Role{
+  ADMIN = 'ADMIN',
+  USER = 'USER',
+  ARTIST = 'ARTIST'
+}
