@@ -31,7 +31,7 @@ const exhibitions = [
         author: "Jane Smith",
         date: "31.1.2025",
         description: "Experience a stunning collection of contemporary abstract artworks in this immersive virtual gallery.",
-        thumbnail: "https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg",
+        thumbnail: "https://images.unsplash.com/photo-1561214115-f2f134cc4912",
         backgroundImage: "https://res.cloudinary.com/djvlldzih/image/upload/v1738920776/gallery/arts/phiadv4m1kbsxidfostr.jpg",
         walls: {
             back: {
@@ -110,7 +110,7 @@ const exhibitions = [
         author: "Alex Johnson",
         date: "15.3.2025",
         description: "A curated selection of contemporary masterpieces from emerging artists around the world.",
-        thumbnail: "https://res.cloudinary.com/djvlldzih/image/upload/v1738920776/gallery/arts/phiadv4m1kbsxidfostr.jpg",
+        thumbnail: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5",
         backgroundImage: "https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg",
         walls: {
             back: {

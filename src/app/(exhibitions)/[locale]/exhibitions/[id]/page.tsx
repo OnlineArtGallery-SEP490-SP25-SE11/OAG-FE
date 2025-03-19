@@ -23,5 +23,6 @@ type PageProps = {
 	if (!exhibitionData) {
 	  return notFound();
 	}
-	return <ExhibitionContent exhibitionData={exhibitionData} />;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	return <ExhibitionContent exhibitionData={exhibitionData as any} />;
   }

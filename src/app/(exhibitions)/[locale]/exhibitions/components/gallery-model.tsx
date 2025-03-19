@@ -65,7 +65,7 @@ export default function GalleryModel({
   const [ref] = usePlane<THREE.Mesh>(() => ({
     rotation: [-Math.PI / 2, 0, 0],
     position: [0, 0, 0],
-    material: { friction: 0.1 },
+    material: { friction: 0 },
   }));
 
   const walls = useMemo(() => {

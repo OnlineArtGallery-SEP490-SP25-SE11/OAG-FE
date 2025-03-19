@@ -1,4 +1,4 @@
-import axios, { axiosWithAuth, createApi } from '@/lib/axios';
+import axios, {createApi } from '@/lib/axios';
 interface User {
 	provider: string; // google, facebook, phone, etc.
 	providerId?: string; // ID của user từ provider

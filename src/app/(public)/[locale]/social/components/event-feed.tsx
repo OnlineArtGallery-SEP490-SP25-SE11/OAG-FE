@@ -11,7 +11,6 @@ import { EventStatus } from '@/utils/enums';
 import { useState } from 'react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import useAuthClient from '@/hooks/useAuth-client';
-import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { AuthDialog } from '@/components/ui.custom/auth-dialog';
 
@@ -31,11 +30,9 @@ export interface Event {
 }
 
 export function EventFeed() {
-  const { user, status } = useAuthClient();
-  const router = useRouter();
+  const { user } = useAuthClient();
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  const [hoveredDescription, setHoveredDescription] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const { data, isLoading } = useQuery({
     queryKey: ['events'],
@@ -48,12 +45,10 @@ export function EventFeed() {
       }));
     },
     placeholderData: [],
-    staleTime: 5 * 60 * 1000, // 5 phút
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-
-
-  // Kiểm tra xem người dùng đã tham gia sự kiện hay chưa
+  // Check if user has participated in the event
   const isParticipated = (event: Event) => {
     if (!user) return false;
     if (!user.id) return false;
@@ -66,19 +61,18 @@ export function EventFeed() {
     mutationFn: (eventId: string) => eventService.participate(eventId),
     onSuccess: () => {
       toast({
-        title: "Đăng ký thành công",
-        description: "Bạn đã đăng ký thành công sự kiện",
+        title: "Registration successful",
+        description: "You have successfully registered for the event",
         className: 'bg-green-500 text-white border-green-600'
       })
       queryClient.invalidateQueries({ queryKey: ['events'] });
     },
-    onError: (error) => {
+    onError: () => {
       toast({
-        title: "Đăng ký thất bại",
-        description: "Bạn đã đăng ký thất bại sự kiện",
+        title: "Registration failed",
+        description: "Failed to register for the event",
         className: 'bg-red-500 text-white border-red-600'
       })
-
     }
   })
 
@@ -86,25 +80,20 @@ export function EventFeed() {
     mutationFn: (eventId: string) => eventService.participate(eventId),
     onSuccess: () => {
       toast({
-        title: "Hủy đăng ký thành công",
-        description: "Bạn đã hủy đăng ký thành công sự kiện",
+        title: "Cancellation successful",
+        description: "You have successfully cancelled your registration",
         className: 'bg-red-500 text-white border-red-600'
       })
       queryClient.invalidateQueries({ queryKey: ['events'] });
-      
     },
-    onError: (error) => {
+    onError: () => {
       toast({
-        title: "Hủy đăng ký thất bại",
-        description: "Bạn đã hủy đăng ký thất bại sự kiện",
+        title: "Cancellation failed",
+        description: "Failed to cancel your registration",
         className: 'bg-red-500 text-white border-red-600'
       })
-
-
     }
   })
-
-  
 
   const handleParticipate = (eventId: string) => {
     if (!user) {
@@ -119,19 +108,19 @@ export function EventFeed() {
     }
   }
 
-  // Hàm để đăng ký tham gia sự kiện
+  // Function to register for an event
   const onParticipate = (eventId: string) => {
     mutationRegister.mutate(eventId)
   }
-  // Hàm để hủy đăng ký tham gia sự kiện
+  
+  // Function to cancel event registration
   const cancelParticipate = (eventId: string) => {
     mutationCancel.mutate(eventId)
   }
 
-
   // Format date and time functions
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString('vi-VN', {
+    return date.toLocaleDateString('en-US', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric'
@@ -139,7 +128,7 @@ export function EventFeed() {
   };
 
   const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('vi-VN', {
+    return date.toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit'
     });
@@ -210,14 +199,14 @@ export function EventFeed() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-3">
-                <h3 className="text-sm font-medium mb-2">Thời gian sự kiện</h3>
+                <h3 className="text-sm font-medium mb-2">Event Schedule</h3>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <div className="flex items-center">
                       <CalendarDays className="mr-2 h-4 w-4 text-primary mt-0.5" />
                       <div>
                         <div className="mb-1">
-                          <span className="font-medium">Ngày bắt đầu:</span> {formatDate(new Date(event.startDate))}
+                          <span className="font-medium">Start date:</span> {formatDate(new Date(event.startDate))}
                         </div>
                       </div>
                     </div>
@@ -225,7 +214,7 @@ export function EventFeed() {
                       <CalendarDays className="mr-2 h-4 w-4 text-primary mt-0.5" />
                       <div>
                         <div className="mb-1">
-                          <span className="font-medium">Ngày kết thúc:</span> {formatDate(new Date(event.endDate))}
+                          <span className="font-medium">End date:</span> {formatDate(new Date(event.endDate))}
                         </div>
                       </div>
                     </div>
@@ -233,29 +222,29 @@ export function EventFeed() {
                   <div className="flex items-center justify-between text-sm">
                     <div className="flex items-center">
                       <Clock className="mr-2 h-4 w-4 text-primary" />
-                      <span className="font-medium">Bắt đầu:</span> {formatTime(new Date(event.startDate))}
+                      <span className="font-medium">Start:</span> {formatTime(new Date(event.startDate))}
                     </div>
                     <div className="flex items-center">
                       <Clock className="mr-2 h-4 w-4 text-primary" />
-                      <span className="font-medium">Kết thúc:</span> {formatTime(new Date(event.endDate))}
+                      <span className="font-medium">End:</span> {formatTime(new Date(event.endDate))}
                     </div>
                   </div>
                 </div>
               </div>
 
               <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-3">
-                <h3 className="text-sm font-medium mb-2">Thông tin khác</h3>
+                <h3 className="text-sm font-medium mb-2">Additional Info</h3>
                 <div className="space-y-2">
                   <div className="flex items-center text-sm">
                     <Users className="mr-2 h-4 w-4 text-primary" />
                     <div>
-                      <span className="font-medium">Người tham dự:</span> {event.participants.length}
+                      <span className="font-medium">Attendees:</span> {event.participants.length}
                     </div>
                   </div>
                   <div className="flex items-center text-sm">
                     <MapPin className="mr-2 h-4 w-4 text-primary" />
                     <div>
-                      <span className="font-medium">Người tổ chức:</span> {event.organizer}
+                      <span className="font-medium">Organizer:</span> {event.organizer}
                     </div>
                   </div>
                 </div>
@@ -265,12 +254,12 @@ export function EventFeed() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-4 pt-4 border-t gap-4">
               <div className="flex items-center space-x-2 text-xs sm:text-sm text-muted-foreground">
                 <p>
-                  Bạn muốn quảng bá sản phẩm/ cá nhân, hãy liên hệ OGA{' '}
+                  Want to promote your product/personal brand? Contact OGA{' '}
                   <Link
                     href="/contact"
                     className="text-primary font-medium hover:underline inline-flex items-center"
                   >
-                    tại đây
+                    here
                     <ExternalLink className="h-3 w-3 ml-0.5" />
                   </Link>
                 </p>
@@ -278,10 +267,10 @@ export function EventFeed() {
               <div className="flex space-x-2 w-full sm:w-auto">
                 <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
                   <Share2 className="h-4 w-4 mr-2" />
-                  Chia sẻ
+                  Share
                 </Button>
                 <Button size="sm" className="flex-1 sm:flex-none" onClick={() => handleParticipate(event._id)}>
-                  {isParticipated(event) ? 'Hủy đăng ký' : 'Đăng ký ngay'}
+                  {isParticipated(event) ? 'Cancel Registration' : 'Register Now'}
                 </Button>
               </div>
             </div>

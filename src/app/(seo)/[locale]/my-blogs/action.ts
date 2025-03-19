@@ -98,11 +98,13 @@ export const createPublicRequestAction = authenticatedAction
 		})
 	)
 	.handler(async ({ input, ctx }) => {
-		const updatedBlog = await createPublicRequest({
+		const response = await createPublicRequest({
 			accessToken: ctx.user.accessToken,
 			id: input.id
 		});
-		revalidatePath(`/blogs/${updatedBlog?._id}`);
+
+		const { blog } = response.data;
+		revalidatePath(`/blogs/${blog?._id}`);
 		return updateBlog;
 	}
 );

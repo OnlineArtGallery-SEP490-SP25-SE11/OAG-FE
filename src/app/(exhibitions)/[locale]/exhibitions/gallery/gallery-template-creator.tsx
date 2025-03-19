@@ -167,9 +167,10 @@ export default function GalleryTemplateCreator({
   };
 
   // Handle model upload completion
-  const handleModelUploadComplete = (urls: string | string[]) => {
-    const modelUrl = Array.isArray(urls) ? urls[0] : urls;
-    updateTemplate({ modelPath: modelUrl });
+  const handleModelUploadComplete = (files: { url: string; width?: number; height?: number; _id?: string }[]) => {
+    if (files.length > 0) {
+      updateTemplate({ modelPath: files[0].url });
+    }
     setIsLoading(false);
     // toast.success('Model uploaded successfully');
   };
@@ -183,9 +184,10 @@ export default function GalleryTemplateCreator({
   };
 
   // Handle preview image upload completion
-  const handlePreviewUploadComplete = (urls: string | string[]) => {
-    const imageUrl = Array.isArray(urls) ? urls[0] : urls;
-    updateTemplate({ previewImage: imageUrl });
+  const handlePreviewUploadComplete = (files: { url: string; width?: number; height?: number; _id?: string }[]) => {
+    if (files.length > 0) {
+      updateTemplate({ previewImage: files[0].url });
+    }
     setIsLoading(false);
     // toast.success('Preview image uploaded');
   };

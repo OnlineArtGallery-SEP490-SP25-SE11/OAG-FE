@@ -1,5 +1,5 @@
 import { Physics } from '@react-three/cannon';
-import { PerspectiveCamera, Preload } from '@react-three/drei';
+import { KeyboardControls, PerspectiveCamera, Preload } from '@react-three/drei';
 import { GALLERY_CONFIG } from '@/utils/gallery-config';
 import Player from './player';
 import { PointerLockControls } from '@react-three/drei';
@@ -14,7 +14,7 @@ export default function Scene({ exhibition }: { exhibition: ExhibitionType }) {
   const props = {
     maxPolarAngle: Math.PI * 0.7, // Limit looking up
     minPolarAngle: Math.PI * 0.3, // Limit looking down
-    pointerSpeed: 0.05,
+    pointerSpeed: 0.5,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onUpdate: (controls: any) => {
       set({ controls });
@@ -90,6 +90,15 @@ export default function Scene({ exhibition }: { exhibition: ExhibitionType }) {
 
   return (
     <>
+    
+    <KeyboardControls
+                  map={[
+                      { name: 'forward', keys: ['ArrowUp', 'w', 'W'] },
+                      { name: 'backward', keys: ['ArrowDown', 's', 'S'] },
+                      { name: 'left', keys: ['ArrowLeft', 'a', 'A'] },
+                      { name: 'right', keys: ['ArrowRight', 'd', 'D'] }
+                  ]}
+              >
       <PerspectiveCamera
         makeDefault
         position={GALLERY_CONFIG.CAMERA.INITIAL_POSITION}
@@ -115,6 +124,7 @@ export default function Scene({ exhibition }: { exhibition: ExhibitionType }) {
       {/* <axesHelper position={[0, 0, 0]} args={[55]} /> */}
       <PointerLockControls {...props} />
       <Crosshair />
+      </KeyboardControls>
     </>
   );
 }

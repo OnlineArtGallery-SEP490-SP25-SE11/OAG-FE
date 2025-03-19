@@ -12,6 +12,8 @@ export interface FileUpload {
 	url: string;
 	publicId: string;
 	file: File;
+	width: number;
+	height: number;
 }
 export interface FileUploadProgress {
 	file: File;
@@ -137,10 +139,12 @@ function useFileUpload(options: FileUploadOptions = {}) {
 				...results
 					.filter((res) => res !== null && res !== undefined)
 					.map((res) => ({
-						id: res.id,
+						id: res.id, //TODO: check if id is always available
 						url: res.url,
 						publicId: res.publicId,
-						file: res.file
+						file: res.file,
+						width: res.width,
+						height: res.height
 					}))
 			]);
 			return results;
