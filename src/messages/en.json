@@ -114,7 +114,8 @@
     "publish_success": "Blog has been published",
     "private_success": "Blog has been privated",
     "pending": "Pending",
-    "draft_create_error": "An error occurred while creating blog"
+    "draft_create_error": "An error occurred while creating blog",
+    "update_status_error": "An error occurred while updating blog status"
   },
   "premium": {
     "feature_comparison": {

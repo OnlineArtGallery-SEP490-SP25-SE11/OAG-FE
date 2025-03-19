@@ -58,24 +58,27 @@ export default function CreateDraftButton() {
 	const { execute, error, isPending } = useServerAction(createBlogAction, {
 		onSuccess: (draft) => {
 			toast({
-				title: `${tCommon('success')}`,
-				description: `${tBlog('draft_create_success')}`,
+				title: tCommon('success'),
+				description: tBlog('draft_create_success'),
 				variant: 'success'
 			});
+
+			// Group related state updates together
 			setIsOpen(false);
 			setIsOverlayOpen(false);
+
+			// Navigation after successful creation
 			router.push(`/my-blogs/${draft.data.id}`);
 			router.refresh();
 		},
 		onError: () => {
 			toast({
-				title: `${tCommon('error')}`,
-				description: `${tBlog('draft_create_error')}`,
+				title: tCommon('error'),
+				description: tBlog('draft_create_error'),
 				variant: 'destructive'
 			});
 		}
 	});
-
 	const form = useForm<z.infer<typeof createDraftSchema>>({
 		resolver: zodResolver(createDraftSchema),
 		defaultValues: {
@@ -204,8 +207,8 @@ export default function CreateDraftButton() {
 							isLoading={isPending}
 							className='w-full'
 						>
-						
-								{tBlog('create_draft')}
+
+							{tBlog('create_draft')}
 						</LoaderButton>
 					</form>
 				</Form>
