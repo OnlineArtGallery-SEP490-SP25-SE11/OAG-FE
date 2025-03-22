@@ -3,17 +3,12 @@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { TransactionData } from '@/types/payment';
 
-interface Transaction {
-    _id: string;
-    amount: number;
-    status: string;
-    orderCode: string;
-    createdAt: string;
-}
+
 
 interface TransactionHistoryProps {
-    transactions?: Transaction[];
+    transactions?: TransactionData[];
     totalItems: number;
     isLoading: boolean;
     onPageChange: (page: number) => void;
@@ -103,8 +98,8 @@ export function TransactionHistory({
                                             key={i}
                                             onClick={() => onPageChange(i + 1)}
                                             className={`px-3 py-2 rounded ${i + 1 === Math.ceil(totalItems / pageSize) / pageSize
-                                                    ? 'bg-primary text-primary-foreground'
-                                                    : 'bg-muted hover:bg-muted/80'
+                                                ? 'bg-primary text-primary-foreground'
+                                                : 'bg-muted hover:bg-muted/80'
                                                 }`}
                                         >
                                             {i + 1}

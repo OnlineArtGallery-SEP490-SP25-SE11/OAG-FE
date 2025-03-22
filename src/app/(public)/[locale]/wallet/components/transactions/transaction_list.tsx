@@ -1,58 +1,81 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
+import { useQuery } from '@tanstack/react-query';
 import { ArrowDownLeft, ArrowUpRight } from 'lucide-react';
+import { useState } from 'react';
+import { walletService } from '../../queries';
+
+export interface ApiTransaction {
+    _id: string;
+    walletId: string;
+    amount: number;
+    type: 'DEPOSIT' | 'WITHDRAWAL' | 'PAYMENT';
+    status: 'PENDING' | 'PAID' | 'FAILED';
+    orderCode: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+}
+
+export interface ApiResponse {
+    data: {
+        transactions: ApiTransaction[];
+        total: number;
+    };
+    message: string;
+    statusCode: number;
+    errorCode: null | string;
+    details: null | any;
+}
 
 export interface Transaction {
     id: string;
-    type: 'deposit' | 'payment' | 'withdrawal';
+    type: 'DEPOSIT' | 'WITHDRAWAL' | 'PAYMENT';
     amount: number;
     date: string;
     description: string;
-    status: 'pending' | 'success' | 'failed';
+    status: 'PENDING' | 'PAID' | 'FAILED';
+    orderCode?: string;
 }
 
 interface TransactionListContentProps {
     transactions?: Transaction[];
     limit?: number;
+    isLoading?: boolean;
 }
 
-interface TransactionListProps extends TransactionListContentProps {
+interface TransactionListProps {
     showCard?: boolean;
     title?: string;
+    limit?: number;
 }
 
-const DEFAULT_TRANSACTIONS: Transaction[] = [
-    {
-        id: '1',
-        type: 'deposit',
-        amount: 500000,
-        date: '2024-02-06T13:45:00',
-        description: 'Bank Transfer Deposit',
-        status: 'success'
-    },
-    {
-        id: '2',
-        type: 'payment',
-        amount: -200000,
-        date: '2024-02-06T10:30:00',
-        description: 'Service Payment',
-        status: 'success'
-    },
-    {
-        id: '3',
-        type: 'deposit',
-        amount: 1000000,
-        date: '2024-02-05T15:20:00',
-        description: 'Credit Card Deposit',
-        status: 'success'
-    }
-];
+const mapApiToTransaction = (apiTransaction: ApiTransaction): Transaction => {
+    return {
+        id: apiTransaction._id,
+        type: apiTransaction.type,
+        amount: apiTransaction.amount,
+        date: apiTransaction.createdAt,
+        description: `${apiTransaction.type === 'DEPOSIT' ? 'Deposit' : 'Withdrawal'} - ${apiTransaction.orderCode}`,
+        status: apiTransaction.status,
+        orderCode: apiTransaction.orderCode
+    };
+};
 
-export function TransactionListContent({ transactions = DEFAULT_TRANSACTIONS, limit }: TransactionListContentProps) {
+export function TransactionListContent({ transactions = [], limit, isLoading }: TransactionListContentProps) {
+    if (isLoading) {
+        return <TransactionListSkeleton />;
+    }
+
     const displayedTransactions = limit ? transactions.slice(0, limit) : transactions;
+
+    if (displayedTransactions.length === 0) {
+        return <div className="text-center py-4 text-muted-foreground">No transactions found</div>;
+    }
 
     return (
         <div className='space-y-4'>
@@ -63,7 +86,7 @@ export function TransactionListContent({ transactions = DEFAULT_TRANSACTIONS, li
                 >
                     <div className='flex items-center space-x-4'>
                         <div className='rounded-full border p-2'>
-                            {transaction.type === 'deposit' ? (
+                            {transaction.type === 'DEPOSIT' ? (
                                 <ArrowDownLeft className='h-4 w-4 text-green-500' />
                             ) : (
                                 <ArrowUpRight className='h-4 w-4 text-red-500' />
@@ -76,17 +99,20 @@ export function TransactionListContent({ transactions = DEFAULT_TRANSACTIONS, li
                             <p className='text-sm text-muted-foreground'>
                                 {new Date(transaction.date).toLocaleString()}
                             </p>
+                            <p className='text-xs text-muted-foreground'>
+                                Status: {transaction.status}
+                            </p>
                         </div>
                     </div>
                     <div
                         className={cn(
                             'text-sm font-medium',
-                            transaction.type === 'deposit'
+                            transaction.type === 'DEPOSIT'
                                 ? 'text-green-500'
                                 : 'text-red-500'
                         )}
                     >
-                        {transaction.type === 'deposit' ? '+' : '-'}
+                        {transaction.type === 'DEPOSIT' ? '+' : '-'}
                         {Math.abs(transaction.amount).toLocaleString()} VND
                     </div>
                 </div>
@@ -96,13 +122,71 @@ export function TransactionListContent({ transactions = DEFAULT_TRANSACTIONS, li
 }
 
 export function TransactionList({
-    transactions,
     showCard = true,
     title = "Recent Transactions",
     limit
 }: TransactionListProps) {
+    const [page, setPage] = useState(1);
+    const pageSize = 10;
+
+    // Calculate skip based on page
+    const skip = (page - 1) * pageSize;
+    const take = pageSize;
+
+    const { data, error, isLoading, isFetching } = useQuery({
+        queryKey: ['transactions', skip, take],
+        queryFn: () => walletService.getTransaction(skip, take)
+    });
+
+    const transactions = data?.data?.transactions?.map(mapApiToTransaction) || [];
+    const totalPages = data?.data?.total ? Math.ceil(data.data.total / pageSize) : 0;
+
+    console.log(data)
+    const handlePrevPage = () => {
+        setPage((prev) => Math.max(prev - 1, 1));
+    };
+
+    const handleNextPage = () => {
+        setPage((prev) => (prev < totalPages ? prev + 1 : prev));
+    };
+
+    const content = (
+        <>
+            <TransactionListContent
+                transactions={transactions}
+                limit={limit}
+                isLoading={isLoading}
+            />
+
+            {totalPages > 1 && (
+                <Pagination className="mt-4">
+                    <PaginationContent>
+                        <PaginationItem>
+                            <PaginationPrevious
+                                onClick={handlePrevPage}
+
+                                isActive={!(page === 1) || !isLoading}
+                            />
+                        </PaginationItem>
+                        <PaginationItem className="flex items-center">
+                            <span className="text-sm">
+                                Page {page} of {totalPages}
+                            </span>
+                        </PaginationItem>
+                        <PaginationItem>
+                            <PaginationNext
+                                onClick={handleNextPage}
+                                isActive={!(page === totalPages) || !isLoading}
+                            />
+                        </PaginationItem>
+                    </PaginationContent>
+                </Pagination>
+            )}
+        </>
+    );
+
     if (!showCard) {
-        return <TransactionListContent transactions={transactions} limit={limit} />;
+        return content;
     }
 
     return (
@@ -111,7 +195,7 @@ export function TransactionList({
                 <CardTitle>{title}</CardTitle>
             </CardHeader>
             <CardContent>
-                <TransactionListContent transactions={transactions} limit={limit} />
+                {content}
             </CardContent>
         </Card>
     );

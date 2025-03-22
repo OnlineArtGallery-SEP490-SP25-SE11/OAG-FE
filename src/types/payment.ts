@@ -34,3 +34,41 @@ export interface PresetAmount {
     value: number;
     label: string;
 }
+
+
+export interface PaymentData {
+    userId: string;
+    amount: number;
+    description: string;
+    status: string;
+    paymentUrl: string;
+    orderCode: string;
+    _id: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+}
+
+export interface WalletData {
+    balance: number;
+    transactions: any[]
+}
+
+export interface TransactionData {
+    _id: string;
+    walletId: string;
+    amount: number;
+    type: "DEPOSIT" | "WITHDRAWAL" | "TRANSFER" | string;
+    status: "PENDING" | "PAID" | "FAILED" | string;
+    orderCode: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+  }
+export interface TotalData {
+    "total": number;
+}
+export interface Transaction {
+    transactions: TransactionData[];
+    total: number;
+}
