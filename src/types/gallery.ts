@@ -83,22 +83,83 @@ export interface CurvedColliderConfig extends BaseColliderConfig {
 }
 
 export interface ExhibitionType {
-  id: string;
-  name: string;
-  title: string;
-  author: string;
-  date: string;
-  description: string;
-  thumbnail: string;
-  backgroundImage: string;
-  galleryModel: {
 	id: string;
 	name: string;
+	title: string;
+	author: string;
+	date: string;
 	description: string;
-	dimension: {
-	  xAxis: number;
-	  yAxis: number;
-	  zAxis: number;
+	thumbnail: string;
+	backgroundImage: string;
+	galleryModel: {
+		id: string;
+		name: string;
+		description: string;
+		dimension: {
+			xAxis: number;
+			yAxis: number;
+			zAxis: number;
+		};
+		wallThickness: number;
+		wallHeight: number;
+		modelPath: string;
+		modelPosition: Vec3;
+		modelRotation: Vec3;
+		modelScale: number;
+		customCollider?: {
+			shape: 'box';
+			args: Vec3;
+			position: Vec3;
+		};
+	};
+	walls: {
+		back?: {
+			artworkCount: number;
+			artworks: Array<{
+				id: string;
+				url: string;
+				positionIndex?: number;  // Thêm positionIndex
+				position?: Vec3;
+				rotation?: Vec3;
+			}>;
+		};
+		front?: {
+			artworkCount: number;
+			artworks: Array<{
+				id: string;
+				url: string;
+				position?: Vec3;
+				rotation?: Vec3;
+			}>;
+		};
+		left?: {
+			artworkCount: number;
+			artworks: Array<{
+				id: string;
+				url: string;
+				position?: Vec3;
+				rotation?: Vec3;
+			}>;
+		};
+		right?: {
+			artworkCount: number;
+			artworks: Array<{
+				id: string;
+				url: string;
+				position?: Vec3;
+				rotation?: Vec3;
+			}>;
+		};
+	};
+}
+export interface Gallery {
+	_id: string;
+	name: string;
+	description: string;
+	dimensions: {
+		xAxis: number;
+		yAxis: number;
+		zAxis: number;
 	};
 	wallThickness: number;
 	wallHeight: number;
@@ -106,52 +167,35 @@ export interface ExhibitionType {
 	modelPosition: Vec3;
 	modelRotation: Vec3;
 	modelScale: number;
+	previewImage: string;
+	planImage: string;
+	isPremium: boolean;
+	artworkPlacements: {
+		position: Vec3;
+		rotation: Vec3;
+	}[];
 	customCollider?: {
-	  shape: 'box';
-	  args: Vec3;
-	  position: Vec3;
+		shape: 'box' | 'curved';
+		args: Vec3;
+		position: Vec3;
 	};
-  };
-  walls: {
-	back?: {
-	  artworkCount: number;
-	  artworks: Array<{ 
-		id: string; 
-		url: string;
-		positionIndex?: number;  // Thêm positionIndex
-		position?: Vec3;
-		rotation?: Vec3;
-	  }>;
-	};
-	front?: {
-	  artworkCount: number;
-	  artworks: Array<{ 
-		id: string; 
-		url: string;
-		position?: Vec3;
-		rotation?: Vec3;
-	  }>;
-	};
-	left?: {
-	  artworkCount: number;
-	  artworks: Array<{ 
-		id: string; 
-		url: string;
-		position?: Vec3;
-		rotation?: Vec3;
-	  }>;
-	};
-	right?: {
-	  artworkCount: number;
-	  artworks: Array<{ 
-		id: string; 
-		url: string;
-		position?: Vec3;
-		rotation?: Vec3;
-	  }>;
-	};
-  };
 }
 
 
 export type ColliderConfig = BoxColliderConfig | CurvedColliderConfig;
+export type GetGalleriesResponse = {
+	galleries: Gallery[];
+	pagination: {
+		total: number;
+		page: number;
+		limit: number;
+		pages: number;
+		hasNext: boolean;
+		hasPrev: boolean;
+	};
+};
+
+
+export type GalleryRequestResponse = {
+	gallery: Gallery;
+}

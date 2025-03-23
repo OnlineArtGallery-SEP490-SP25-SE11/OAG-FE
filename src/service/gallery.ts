@@ -1,6 +1,9 @@
 import { ARTWORK_URL } from '@/utils/constants';
 import { GalleryTemplateData } from '@/app/(exhibitions)/[locale]/exhibitions/gallery/gallery-template-creator';
-import { Vec3 } from '@/types/gallery';
+import { GetGalleriesResponse } from '@/types/gallery';
+import { ApiResponse } from '@/types/response';
+import { createApi } from '@/lib/axios';
+import { handleApiError } from '@/utils/error-handler';
 
 const exhibitions = [
     {
@@ -257,86 +260,41 @@ export async function saveGalleryTemplate(templateData: GalleryTemplateData): Pr
   }
 }
 
-// Function to get a list of gallery templates
-export async function getGalleryTemplates() {
+export async function getGalleryTemplates(params?: {
+  page?: number;
+  limit?: number;
+  sort?: Record<string, 1 | -1>;
+  search?: string;
+}): Promise<ApiResponse<GetGalleriesResponse>> {
   try {
-    // Replace with actual API call
-    // const response = await fetch('/api/gallery/templates');
-    // return await response.json();
-    
-    // Mock response for demo - Now with all required properties
-    return [
-      {
-        id: 'template_1',
-        name: 'Modern Gallery',
-        description: 'A sleek, contemporary space with clean lines',
-        previewImage: '/gallery-preview.jpg',
-        dimensions: { xAxis: 40, yAxis: 10, zAxis: 40 },
-        wallThickness: 0.2,
-        wallHeight: 3,
-        modelPath: '/modern-a1-gallery.glb',
-        modelScale: 3,
-        modelRotation: [0, 0, 0] as [number, number, number],
-        modelPosition: [0, 0, 0] as [number, number, number],
-        customColliders: [],
-        artworks: [
-            {
-                position : [0, 0, 0] as Vec3,
-                rotation : [0, 0, 0] as Vec3
-            }
-        ]
-      },
-      {
-        id: 'template_2',
-        name: 'Classic Museum',
-        description: 'Traditional museum layout with elegant architecture',
-        previewImage: '/gallery-preview.jpg',
-        dimensions: { xAxis: 50, yAxis: 15, zAxis: 50 },
-        wallThickness: 0.2,
-        wallHeight: 4,
-        modelPath: '/modern-a2-gallery.glb',
-        modelScale: 4,
-        modelRotation: [0, 0, 0] as [number, number, number],
-        modelPosition: [0, 0, 0] as [number, number, number],
-        customColliders: [],
-        artworks: []
-      }
-    ];
+      const queryParams = new URLSearchParams();
+      if (params?.page) queryParams.set('page', params.page.toString());
+      if (params?.limit) queryParams.set('limit', params.limit.toString());
+      if (params?.sort) queryParams.set('sort', JSON.stringify(params.sort));
+      if (params?.search) queryParams.set('search', params.search);
+
+      const url = `/gallery${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+      const res = await createApi().get(url);
+      return res.data;
   } catch (error) {
-    console.error('Error getting gallery templates:', error);
-    throw new Error('Failed to fetch gallery templates');
+      console.error('Error getting gallery templates:', error);
+      return handleApiError<GetGalleriesResponse>(
+          error,
+          'Failed to fetch gallery templates'
+      );
   }
 }
 
 // Function to get a single gallery template by ID
-export async function getGalleryTemplate(id: string): Promise<GalleryTemplateData> {
+export async function getGalleryTemplate(id: string): Promise<ApiResponse<GalleryTemplateData>> {
   try {
-    // Fetch data or use mock data
-    const templates = await getGalleryTemplates();
-    const foundTemplate = templates.find(template => template.id === id);
-    
-    if (foundTemplate) {
-      // Return all required properties, adding default values if missing
-      return {
-        id: foundTemplate.id,
-        name: foundTemplate.name,
-        description: foundTemplate.description,
-        dimensions: foundTemplate.dimensions || { xAxis: 30, yAxis: 10, zAxis: 40 },
-        wallThickness: foundTemplate.wallThickness || 0.2,
-        wallHeight: foundTemplate.wallHeight || 3,
-        modelPath: foundTemplate.modelPath || '',
-        modelScale: foundTemplate.modelScale || 1,
-        modelRotation: foundTemplate.modelRotation || [0, 0, 0] as [number, number, number],
-        modelPosition: foundTemplate.modelPosition || [0, 0, 0] as [number, number, number],
-        previewImage: foundTemplate.previewImage || '',
-        customColliders: foundTemplate.customColliders || [],
-        artworks: foundTemplate.artworks || [] // Ensure artworks array exists
-      };
-    }
-    
-    throw new Error(`Gallery template with ID "${id}" not found`);
+      const res = await createApi().get(`/gallery/${id}`);
+      return res.data;
   } catch (error) {
-    console.error(`Error getting gallery template ${id}:`, error);
-    throw new Error('Failed to fetch gallery template');
+      console.error(`Error getting gallery template ${id}:`, error);
+      return handleApiError<GalleryTemplateData>(
+          error,
+          'Failed to fetch gallery template'
+      );
   }
 }
