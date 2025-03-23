@@ -47,6 +47,7 @@ export default async function DraftPage({
 					_id={blogId}
 					blogTitle={blog.title}
 					isAdminOrAuthor={!!user}
+					status={blog.status}
 				/>
 			</div>
 		</>
