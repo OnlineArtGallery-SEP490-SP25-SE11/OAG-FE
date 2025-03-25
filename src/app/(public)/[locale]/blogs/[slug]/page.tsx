@@ -14,10 +14,11 @@ export default async function BlogPage({
 }) {
 	const blogId = params.slug.split('.')[1];
 	console.log(blogId, 'dcm');
-	const [user, blog] = await Promise.all([
+	const [user, res] = await Promise.all([
 		getCurrentUser(),
 		getBlogById(blogId)
 	]);
+	const blog = res.data;
 	if (!blog) {
 		throw new NotFoundError('Blog not found');
 	}

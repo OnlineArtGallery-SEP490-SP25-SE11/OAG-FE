@@ -10,8 +10,12 @@ import { getCurrentUser } from '@/lib/session';
 
 const BlogSidebar: React.FC = async () => {
 	const user = await getCurrentUser();
+	let blogs = [];
 	if (!user) redirect('/');
-	const {blogs} = await getUserBlogs(user.accessToken);
+
+	const response = await getUserBlogs(user.accessToken);
+
+	blogs = response.data?.blogs || [];
 
 	const header = (
 		<Link href='/' className='mx-auto '>
@@ -39,11 +43,11 @@ const BlogSidebar: React.FC = async () => {
       </Link> */}
 			<Link
 				href={
-						user?.role.includes('admin')
+					user?.role.includes('admin')
 						? '/admin/dashboard'
 						: user?.role.includes('artist')
-						? '/'
-						: '/sign-in'
+							? '/'
+							: '/sign-in'
 				}
 				className='flex items-center py-3 px-4 transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-slate-900 rounded-md'
 			>

@@ -21,7 +21,7 @@ const BlogStatusButton = ({ blogId, initialStatus }: BlogStatusButtonProps) => {
     const { toast } = useToast();
     const tBlog = useTranslations('blog');
     const tCommon = useTranslations('common');
-    console.log(status, 'status of b');
+    console.log(status, 'status of blog');
     // For making blog private (from PUBLISHED to DRAFT)
     const { execute: executeSetPrivate, isPending: isPrivatePending } = useServerAction(
         updateBlogAction,

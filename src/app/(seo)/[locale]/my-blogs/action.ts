@@ -27,7 +27,7 @@ export const createBlogAction = authenticatedAction
 		const { secure_url } = await uploadToCloudinary(image, {
 			folder: 'blog'
 		});
-		const newDraft = await createBlog({
+		const res = await createBlog({
 			accessToken: ctx.user.accessToken,
 			blogData: {
 				title: input.title,
@@ -35,8 +35,9 @@ export const createBlogAction = authenticatedAction
 				image: secure_url
 			}
 		});
-		revalidatePath(`/blogs/${newDraft._id}`);
-		return { id: newDraft._id };
+		const { blog } = res.data!;
+		revalidatePath(`/blogs/${blog._id}`);
+		return { id: blog._id };
 	});
 
 export const updateBlogAction = authenticatedAction
@@ -82,12 +83,13 @@ export const updateBlogAction = authenticatedAction
 			updateData.published = input.published;
 		if (input.status)
 			updateData.status = input.status;
-		const updatedBlog = await updateBlog({
+		const res = await updateBlog({
 			accessToken: ctx.user.accessToken,
 			updateData
 		});
-		revalidatePath(`/blogs/${updatedBlog.id}`);
-		return { id: updatedBlog.id };
+		const { blog } = res.data!;
+		revalidatePath(`/blogs/${blog._id}`);
+		return { id: blog._id };
 	});
 
 export const createPublicRequestAction = authenticatedAction
@@ -98,14 +100,16 @@ export const createPublicRequestAction = authenticatedAction
 		})
 	)
 	.handler(async ({ input, ctx }) => {
-		const updatedBlog = await createPublicRequest({
+		const response = await createPublicRequest({
 			accessToken: ctx.user.accessToken,
 			id: input.id
 		});
-		revalidatePath(`/blogs/${updatedBlog?._id}`);
+
+		const { blog } = response.data!;
+		revalidatePath(`/blogs/${blog?._id}`);
 		return updateBlog;
 	}
-);
+	);
 
 export const cancelPublicRequestAction = authenticatedAction
 	.createServerAction()
@@ -115,13 +119,15 @@ export const cancelPublicRequestAction = authenticatedAction
 		})
 	)
 	.handler(async ({ input, ctx }) => {
-		const updatedBlog = await updateBlog({
+		const res = await updateBlog({
 			accessToken: ctx.user.accessToken,
 			updateData: { _id: input.id, status: BlogStatus.DRAFT }
 		});
-		revalidatePath(`/blogs/${updatedBlog.id}`);
-		return { id: updatedBlog.id };
-});
+		console.log('cancelPublicRequestAction', res);
+		const { blog } = res.data!;
+		revalidatePath(`/blogs/${blog._id}`);
+		return { id: blog._id };
+	});
 // export const publishBlogAction = authenticatedAction
 // 	.createServerAction()
 // 	.input(

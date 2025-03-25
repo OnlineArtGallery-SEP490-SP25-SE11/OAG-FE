@@ -15,10 +15,9 @@ export default async function BlogsPage() {
 async function BlogContent() {
 	const user = await getCurrentUser();
 	if (!user) redirect('/');
-
-	const lastBlogId = await getLastEditedBlogId(user.accessToken);
+	const res = await getLastEditedBlogId(user.accessToken);
+	const { _id: lastBlogId } = res.data;
 	if (lastBlogId) redirect(`/my-blogs/${lastBlogId}`);
-
 	return (
 		<div className="flex flex-col items-center justify-center h-[70vh] p-6 text-center">
 			<div className="bg-secondary/30 rounded-full p-6 mb-6">
