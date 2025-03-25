@@ -45,5 +45,4 @@ app/test/
 
 bun.lockb
 
-public/*.glb        # Ignore all .glb files directly in public folder
-public/**/*.glb     # Ignore all .glb files in all subfolders of public
+public
