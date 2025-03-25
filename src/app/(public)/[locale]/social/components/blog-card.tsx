@@ -37,6 +37,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@radix-ui/react-dropdown-menu";
+import FollowButton from "@/components/follow-button";
 
 interface BlogCardProps {
   id: string;
@@ -44,6 +45,7 @@ interface BlogCardProps {
   coverImage: string;
   content: string;
   author: {
+    id: string;
     name: string;
     image: string;
   };
@@ -95,11 +97,18 @@ export function BlogCard({
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [replyTo, setReplyTo] = useState("");
   const [replyContent, setReplyContent] = useState("");
+  const [token, setToken] = useState("");
+  const [userId, setUserId] = useState("");
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
       const user = await getCurrentUser();
-      setCurrentUser(user);
+
+      if (user) {
+        setToken(user.accessToken);
+        setUserId(user.id);
+        setCurrentUser(user);
+      }
     };
     fetchCurrentUser();
   }, []);
@@ -111,7 +120,6 @@ export function BlogCard({
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/comments/blog/${id}`
       );
-      console.log("CMT", response);
       setComments(response.data);
     } catch (error) {
       console.error("Error fetching comments:", error);
@@ -235,22 +243,27 @@ export function BlogCard({
   return (
     <div className="w-full max-w-[700px] rounded-xl overflow-hidden border bg-white dark:bg-gray-800 transition-all duration-300 hover:shadow-xl flex flex-col">
       <div className="px-4 py-2">
-        <div className="flex items-center">
-          <Avatar className="h-8 w-8 mr-3">
-            <AvatarImage src={author.image} alt={author.name} />
-            <AvatarFallback>{author.name.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-              {author.name}
-            </p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              {formatDistanceToNow(publishedAt, {
-                addSuffix: true,
-              })}{" "}
-              · {readTime} min read
-            </p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <Avatar className="h-8 w-8 mr-3">
+              <AvatarImage src={author.image} alt={author.name} />
+              <AvatarFallback>{author.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                {author.name}
+              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                {formatDistanceToNow(publishedAt, { addSuffix: true })} ·{" "}
+                {readTime} min read
+              </p>
+            </div>
           </div>
+
+          {/* Nút Follow */}
+          {currentUser && currentUser.id !== author.id && (
+            <FollowButton targetUserId={author.id} initialIsFollowing={false} />
+          )}
         </div>
       </div>
       <Link href={`/${locale}/blogs/${slug}`}>
@@ -460,9 +473,11 @@ export function BlogCard({
 
           {isSignedIn ? (
             <ToggleHeartButton
-              blogId={slug}
+              blogId={id}
+              userId={userId}
               initialHearted={isHearted}
               initialHeartCount={heartCount}
+              token={token}
             />
           ) : (
             <Link href="/sign-in">

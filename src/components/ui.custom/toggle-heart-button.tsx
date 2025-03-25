@@ -1,127 +1,110 @@
-'use client';
-import { useState } from 'react';
-import { toggleHeartBlogAction } from '@/app/(public)/[locale]/blogs/actions';
-import { Button } from '@/components/ui/button';
-import { Heart } from 'lucide-react';
-import { toast } from '@/hooks/use-toast';
-import { useQueryClient } from '@tanstack/react-query';
-import { TooltipCustom } from './tooltip-custom';
-import { useServerAction } from 'zsa-react';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { Button } from "@/components/ui/button";
+import { Heart } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
+import { TooltipCustom } from "./tooltip-custom";
+import {
+  checkIsUserHeartedBlog,
+  addHeartToBlog,
+  removeHeartFromBlog,
+} from "@/service/blog"; // Import service đã sửa
+
 interface ToggleHeartButtonProps {
-	blogId: string;
-	initialHearted: boolean;
-	initialHeartCount: number;
+  blogId: string;
+  userId: string;
+  initialHearted: boolean;
+  initialHeartCount: number;
+  token: string;
 }
 
-// export function ToggleHeartButton({ blogId, initialHearted }: ToggleHeartButtonProps) {
-//     const [isHearted, setIsHearted] = useState(initialHearted);
-//     // const [heartCount, setHeartCount] = useState(initialHeartCount);
-//     const [isPending, startTransition] = useTransition();
-
-//     const queryClient = useQueryClient();
-
-//     const handleToggleHeart = async () => {
-//         startTransition(async () => {
-//             try {
-//                 const result = await toggleHeartBlogAction({ blogId });
-//                 if (result[1]) {
-//                     throw new Error(result[1].message);
-//                 }
-//                 setIsHearted(prevState => {
-//                     const newState = !prevState;
-//                     toast({
-//                         title: "Success",
-//                         description: newState ? "Post liked" : "Post unliked",
-//                         variant: "success",
-//                     });
-//                     // Invalidate the relevant query
-//                     queryClient.invalidateQueries({
-//                         queryKey: ['postInteractions', blogId]
-//                     });
-//                     return newState;
-//                 });
-//             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//             } catch (error: any) {
-//                 console.error("Error in handleToggleHeart:", error);
-//                 toast({
-//                     title: "Error",
-//                     description: error.message || "Failed to toggle like. Please try again.",
-//                     variant: "destructive",
-//                 });
-//             }
-//         });
-//     };
-
-//     return (
-//         <TooltipCustom tooltipText={isHearted ? "Unlike" : "Like the Article"}>
-//             <Button
-//                 variant="ghost"
-//                 size="sm"
-//                 onClick={handleToggleHeart}
-//                 disabled={isPending}
-//             >
-//                 <Heart className={`${isHearted ? "fill-red-500 text-red-500" : "text-gray-600 dark:text-gray-300"}`} />
-//                 {/* <span className="ml-1">{heartCount}</span> */}
-//             </Button>
-//         </TooltipCustom>
-//     );
-// }
+// 🛠 API Fetch heart count
+async function getHeartCount(blogId: string): Promise<number> {
+  try {
+    const res = await axios.get(
+      `http://localhost:5000/api/blog/${blogId}/heart-count`
+    );
+    return res.data?.count ?? 0;
+  } catch (error) {
+    console.error(`Error getting heart count for blogId ${blogId}:`, error);
+    return 0;
+  }
+}
 
 export function ToggleHeartButton({
-	blogId,
-	initialHearted
+  blogId,
+  userId,
+  initialHearted,
+  initialHeartCount,
+  token,
 }: ToggleHeartButtonProps) {
-	const [isHearted, setIsHearted] = useState(initialHearted);
-	const queryClient = useQueryClient();
+  const [isHearted, setIsHearted] = useState(initialHearted);
+  const [heartCount, setHeartCount] = useState(initialHeartCount);
+  const queryClient = useQueryClient();
 
-	const { execute, isPending } = useServerAction(toggleHeartBlogAction, {
-		onSuccess() {
-			setIsHearted((prevState) => {
-				const newState = !prevState;
-				toast({
-					title: 'Success',
-					description: newState ? 'Post liked' : 'Post unliked',
-					variant: 'success'
-				});
-				// Invalidate the relevant query
-				queryClient.invalidateQueries({
-					queryKey: ['postInteractions', blogId]
-				});
-				return newState;
-			});
-		},
-		onError(error) {
-			console.error('Error in handleToggleHeart:', error);
-			toast({
-				title: 'Error',
-				description:
-					error?.err?.message ||
-					'Failed to toggle like. Please try again.',
-				variant: 'destructive'
-			});
-		}
-	});
+  useEffect(() => {
+    async function fetchHeartStatus() {
+      if (!token) return;
+      try {
+        const [count, hearted] = await Promise.all([
+          getHeartCount(blogId),
+          checkIsUserHeartedBlog(blogId, userId, token),
+        ]);
+        setHeartCount(count);
+        setIsHearted(hearted);
+      } catch (error) {
+        console.error("Error in fetchHeartStatus:", error);
+      }
+    }
 
-	const handleToggleHeart = () => {
-		execute({ blogId });
-	};
+    fetchHeartStatus();
+  }, [blogId, userId, token]);
 
-	return (
-		<TooltipCustom tooltipText={isHearted ? 'Unlike' : 'Like the Article'}>
-			<Button
-				variant='ghost'
-				size='sm'
-				onClick={handleToggleHeart}
-				disabled={isPending}
-			>
-				<Heart
-					className={`${
-						isHearted
-							? 'fill-red-500 text-red-500'
-							: 'text-gray-600 dark:text-gray-300'
-					}`}
-				/>
-			</Button>
-		</TooltipCustom>
-	);
+  // 🛠 Xử lý toggle like
+  const handleToggleHeart = async () => {
+    try {
+      if (isHearted) {
+        await removeHeartFromBlog(token, blogId, userId); // Gửi userId trong body
+        setHeartCount((prevCount) => Math.max(prevCount - 1, 0));
+      } else {
+        await addHeartToBlog(token, blogId, userId); // Gửi userId trong body
+        setHeartCount((prevCount) => prevCount + 1);
+      }
+
+      setIsHearted((prevState) => !prevState);
+
+      toast({
+        title: "Success",
+        description: isHearted ? "Post unliked" : "Post liked",
+        variant: "success",
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["postInteractions", blogId],
+      });
+    } catch (error) {
+      console.error("Error toggling heart:", error);
+      toast({
+        title: "Error",
+        description: "Failed to toggle like. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  return (
+    <TooltipCustom tooltipText={isHearted ? "Unlike" : "Like the Article"}>
+      <Button variant="ghost" size="sm" onClick={handleToggleHeart}>
+        <Heart
+          className={`${
+            isHearted
+              ? "fill-red-500 text-red-500"
+              : "text-gray-600 dark:text-gray-300"
+          }`}
+        />
+        <span className="ml-1">{heartCount}</span>
+      </Button>
+    </TooltipCustom>
+  );
 }
