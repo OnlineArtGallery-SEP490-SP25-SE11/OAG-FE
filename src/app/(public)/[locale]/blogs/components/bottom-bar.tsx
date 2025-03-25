@@ -1,3 +1,5 @@
+"use client"; // 🔹 Thêm dòng này vào đầu file
+
 import { useEffect, useState } from "react";
 import { Heart, MessageCircle, Bookmark, MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,7 +10,6 @@ import { ToggleBookmarkButton } from "@/components/ui.custom/toggle-bookmark-but
 import { TooltipCustom } from "@/components/ui.custom/tooltip-custom";
 import { getCurrentUser } from "@/lib/session";
 
-// BottomBar.tsx
 export function BottomBar({
   isBookmarked,
   userId,
