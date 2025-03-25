@@ -21,7 +21,7 @@ const ENV_MAP_INTENSITY = 0.5;
 
 // Định nghĩa interface cho dữ liệu tranh
 interface Artwork {
-	id: number; // ID duy nhất của tranh
+	id: string; // ID duy nhất của tranh
 	url: string; // Đường dẫn đến hình ảnh tranh
 	position: Vec3; // Vị trí trong không gian 3D (x, y, z)
 	rotation?: Vec3; // Góc quay của tranh (tùy chọn)

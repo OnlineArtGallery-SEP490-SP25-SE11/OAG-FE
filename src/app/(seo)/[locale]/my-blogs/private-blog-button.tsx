@@ -12,7 +12,7 @@ import { BlogStatus } from '@/utils/enums';
 interface PrivateBlogButtonProps {
   blogId: string;
 }
-
+  
 const PrivateBlogButton = ({ blogId }: PrivateBlogButtonProps) => {
   const [isPending, setIsPending] = useState(false);
   const { toast } = useToast();

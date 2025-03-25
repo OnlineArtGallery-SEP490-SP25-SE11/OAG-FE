@@ -30,7 +30,7 @@ export function useCameraTransition() {
 
     // Find the clicked artwork in the scene to get its rotation
     let artworkRotation = new Euler(0, 0, 0);
-    const viewDistance = 2; // Distance from artwork
+    const viewDistance = 2.5; // Distance from artwork
     
     // Try to find the artwork object in the scene
     scene.traverse((object) => {

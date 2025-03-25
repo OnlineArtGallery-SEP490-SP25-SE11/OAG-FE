@@ -1,4 +1,4 @@
-import { Vec3 } from '@/types/gallery';
+	import { Vec3 } from '@/types/gallery';
 
 export interface LightConfig {
 	ambient?: {
@@ -85,69 +85,55 @@ export const LIGHT_PRESETS = {
 			color: '#ffffff'
 		},
 		directional: {
-			position: [10, 15, 10] as Vec3,
-			intensity: 0.7,
-			color: '#faf4e6',
-			castShadow: true,
-			shadow: {
-				mapSize: {
-					width: 2048,
-					height: 2048
-				},
-				camera: {
-					near: 0.5,
-					far: 50,
-					top: 20,
-					bottom: -20,
-					left: -20,
-					right: 20
-				}
-			}
-		},
-		spots: [
-			{
-				position: [0, 10, 0] as Vec3,
-				intensity: 0.8,
-				color: '#ffffff',
-				angle: Math.PI / 4,
-				penumbra: 0.3,
-				castShadow: true
-			}
-		],
-		points: [
-			{
-				position: [-8, 6, -15] as Vec3,
-				intensity: 0.6,
-				color: '#ffeeb3',
-				distance: 20,
-				decay: 2
-			},
-			{
-				position: [8, 6, -15] as Vec3,
-				intensity: 0.6,
-				color: '#ffeeb3',
-				distance: 20,
-				decay: 2
-			},
-			{
-				position: [-10, 5, 0] as Vec3,
-				intensity: 0.4,
-				color: '#b3d9ff',
-				distance: 15,
-				decay: 2
-			},
-			{
-				position: [-10, 5, -10] as Vec3,
-				intensity: 0.4,
-				color: '#b3d9ff',
-				distance: 15,
-				decay: 2
-			}
-		],
-		hemisphere: {
-			intensity: 0.3,
+			position: [0, 5, 0] as Vec3,
+			intensity: 0.8,
 			color: '#ffffff',
-			groundColor: '#444444'
-		}
+			
+		},
+	// 	spots: [
+	// 		{
+	// 			position: [0, 10, 0] as Vec3,
+	// 			intensity: 0.8,
+	// 			color: '#ffffff',
+	// 			angle: Math.PI / 4,
+	// 			penumbra: 0.3,
+	// 			castShadow: true
+	// 		}
+	// 	],
+	// 	points: [
+	// 		{
+	// 			position: [-8, 6, -15] as Vec3,
+	// 			intensity: 0.6,
+	// 			color: '#ffeeb3',
+	// 			distance: 20,
+	// 			decay: 2
+	// 		},
+	// 		{
+	// 			position: [8, 6, -15] as Vec3,
+	// 			intensity: 0.6,
+	// 			color: '#ffeeb3',
+	// 			distance: 20,
+	// 			decay: 2
+	// 		},
+	// 		{
+	// 			position: [-10, 5, 0] as Vec3,
+	// 			intensity: 0.4,
+	// 			color: '#b3d9ff',
+	// 			distance: 15,
+	// 			decay: 2
+	// 		},
+	// 		{
+	// 			position: [-10, 5, -10] as Vec3,
+	// 			intensity: 0.4,
+	// 			color: '#b3d9ff',
+	// 			distance: 15,
+	// 			decay: 2
+	// 		}
+	// 	],
+	// 	hemisphere: {
+	// 		intensity: 0.3,
+	// 		color: '#ffffff',
+	// 		groundColor: '#444444'
+	// 	}
 	}
 };

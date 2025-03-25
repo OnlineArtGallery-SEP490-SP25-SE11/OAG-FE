@@ -63,6 +63,7 @@ interface Comment {
   content: string;
   createdAt: string;
   author: {
+    _id: string;
     name: string;
     avatar: string;
   };
@@ -94,6 +95,7 @@ export function BlogCard({
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState("");
   const [loading, setLoading] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [replyTo, setReplyTo] = useState("");
   const [replyContent, setReplyContent] = useState("");
@@ -302,7 +304,7 @@ export function BlogCard({
                 <DrawerHeader>
                   <DrawerTitle>Comments</DrawerTitle>
                   <DrawerDescription>
-                    View, add, and edit comments for this blog
+                    Write your thoughts about this blog.
                   </DrawerDescription>
                 </DrawerHeader>
 
