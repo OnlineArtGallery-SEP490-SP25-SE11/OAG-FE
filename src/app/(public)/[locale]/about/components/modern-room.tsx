@@ -123,27 +123,27 @@ export function ModernRoom() {
         },
         artworks: [
             {
-                id: 1,
+                id: '1',
                 url: ARTWORK_URL.ARTWORK_1,
                 position: [-X_AXIS / 2 + 0.2, Y_AXIS / 2, -Z_AXIS / 4],
                 rotation: [0, Math.PI / 2, 0]
             },
             { 
-                id: 2, 
+                id: '2', 
                 url: ARTWORK_URL.ARTWORK_2, 
                 position: [-X_AXIS / 2 + 0.2, Y_AXIS / 2, Z_AXIS / 4],
                 rotation: [0, Math.PI / 2, 0]
             },
 
             {
-                id: 3,
+                id: '3',
                 url: ARTWORK_URL.ARTWORK_3,
                 position: [X_AXIS / 2 - 0.2, Y_AXIS / 2, -Z_AXIS / 3],
                 rotation: [0, -Math.PI / 2, 0]
 
             },
             {
-                id: 4,
+                id: '4',
                 url: ARTWORK_URL.ARTWORK_4,
                 position: [X_AXIS / 2 - 0.2, Y_AXIS / 2, Z_AXIS / 3],
                 rotation: [0, -Math.PI / 2, 0]

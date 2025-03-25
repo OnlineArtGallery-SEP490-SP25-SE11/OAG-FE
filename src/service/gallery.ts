@@ -1,5 +1,5 @@
 import { ARTWORK_URL } from '@/utils/constants';
-import { GalleryTemplateData } from '@/app/(exhibitions)/[locale]/exhibitions/gallery/gallery-template-creator';
+import { GalleryTemplateData } from '@/types/gallery';
 import { GetGalleriesResponse } from '@/types/gallery';
 import { ApiResponse } from '@/types/response';
 import { createApi } from '@/lib/axios';

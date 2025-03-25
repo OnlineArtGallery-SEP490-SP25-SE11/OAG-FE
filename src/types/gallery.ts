@@ -82,6 +82,32 @@ export interface CurvedColliderConfig extends BaseColliderConfig {
 	arc?: number;
 }
 
+export interface GalleryTemplateData {
+	id?: string;
+	name: string;
+	description: string;
+	dimensions: {
+	  xAxis: number;
+	  yAxis: number;
+	  zAxis: number;
+	};
+	wallThickness: number;
+	wallHeight: number;
+	modelPath: string;
+	modelScale: number;
+	modelRotation: [number, number, number];
+	modelPosition: [number, number, number];
+	previewImage: string;
+	planImage: string;
+	isPremium: boolean;
+	customColliders: ColliderConfig[];
+	// Add artwork positions configuration
+	artworkPlacements: {
+	  position: [number, number, number];
+	  rotation: [number, number, number];
+	}[];
+  }
+
 export interface ExhibitionType {
 	id: string;
 	name: string;
