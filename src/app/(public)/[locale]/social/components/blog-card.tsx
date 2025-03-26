@@ -14,7 +14,7 @@ import { createExcerpt, sanitizeBlogContent } from "@/app/utils";
 import { ToggleBookmarkButton } from "@/components/ui.custom/toggle-bookmark-button";
 import { ToggleHeartButton } from "@/components/ui.custom/toggle-heart-button";
 import { useParams } from "next/navigation";
-import { ReportButton } from "@/components/ui.custom/report-button";
+// import { ReportButton } from "@/components/ui.custom/report-button";
 import {
   Drawer,
   DrawerClose,
@@ -392,8 +392,6 @@ export function BlogCard({
           </Link>
         )}
       </div>
-
-      <ReportButton />
     </div>
   );
 }
