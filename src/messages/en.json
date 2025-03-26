@@ -252,7 +252,9 @@
       "collections": "Collections",
       "professional_artist": "Professional Artist",
       "view_profile": "View Profile",
-      "collection_title": "Collection {number}"
+      "collection_title": "Collection {number}",
+      "followers": "Followers",
+      "following" : "Following"
     },
     "edit": {
       "title": "Edit Profile",

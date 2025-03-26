@@ -250,7 +250,9 @@
       "collections": "Bộ sưu tập",
       "professional_artist": "Nghệ sĩ chuyên nghiệp",
       "view_profile": "Xem hồ sơ",
-      "collection_title": "Bộ sưu tập {number}"
+      "collection_title": "Bộ sưu tập {number}",
+      "followers": "Người theo dõi",
+      "following": "Đang theo dõi"
     },
     "edit": {
       "title": "Chỉnh sửa hồ sơ",

@@ -92,7 +92,7 @@ export default function BlogList({
                 // heartCount={0}
                 isHearted={false}
                 author={{
-                  _id: post.author._id,
+                  id: post.author._id,
                   name: `${post.author.name}`,
                   image: post.author.image || "/default-avatar.jpg",
                 }}
