@@ -2,26 +2,25 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CalendarDays, MapPin, Users, Clock } from 'lucide-react';
 import Image from 'next/image';
-
 const mockEvents = [
 	{
 		id: '1',
 		title: 'Modern Art Exhibition',
-		date: new Date('2024-04-15'),
+		date: new Date('2025-04-15'),
 		time: '14:00 - 18:00',
-		location: 'Main Gallery Hall',
+		location: 'Virtual Event',
 		attendees: 156,
-		image: 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg',
+		image: 'https://images.unsplash.com/photo-1545987796-200677ee1011',
 		price: 'Free Entry'
 	},
 	{
 		id: '2',
 		title: 'Digital Art Workshop',
-		date: new Date('2024-04-20'),
+		date: new Date('2025-04-12'),
 		time: '10:00 - 12:00',
 		location: 'Virtual Event',
 		attendees: 89,
-		image: 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg',
+		image: 'https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8',
 		price: '$25'
 	}
 ];

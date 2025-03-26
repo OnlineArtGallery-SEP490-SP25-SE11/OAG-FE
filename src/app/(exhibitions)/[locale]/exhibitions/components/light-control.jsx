@@ -10,7 +10,7 @@ function LightControl() {
 
 	useControls('Ambient Light', {
 		visible: {
-			value: false,
+			value: true,
 			onChange: (v) => {
 				ambientRef.current.visible = v;
 			}
@@ -20,20 +20,29 @@ function LightControl() {
 			onChange: (v) => {
 				ambientRef.current.color = new THREE.Color(v);
 			}
+		},
+		intensity: {
+			value: 0.4,
+			min: 0,
+			max: 1,
+			step: 0.05,
+			onChange: (v) => {
+			  ambientRef.current.intensity = v;
+			}
 		}
 	});
 
 	useControls('Directional Light', {
 		visible: {
-			value: true,
+			value: false,
 			onChange: (v) => {
 				directionalRef.current.visible = v;
 			}
 		},
 		position: {
-			x: 1,
-			y: 1,
-			z: 1,
+			x: 0,
+			y: 3,
+			z: 0,
 			onChange: (v) => {
 				directionalRef.current.position.copy(v);
 			}
@@ -42,6 +51,15 @@ function LightControl() {
 			value: 'white',
 			onChange: (v) => {
 				directionalRef.current.color = new THREE.Color(v);
+			}
+		},
+		intensity: {
+			value: 0.8,
+			min: 0,
+			max: 1,
+			step: 0.05,
+			onChange: (v) => {
+			  directionalRef.current.intensity = v;
 			}
 		}
 	});

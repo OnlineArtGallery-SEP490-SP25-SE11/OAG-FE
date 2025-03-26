@@ -19,7 +19,7 @@ interface PlayerProps {
 }
 
 const Player: React.FC<PlayerProps> = memo(
-	({ initialPosition = [0, 2, 5], speed = 10, smoothFactor = 0.05 }) => {
+	({ initialPosition = [0, 2.5, 5], speed = 10, smoothFactor = 0.05 }) => {
 		const { camera } = useThree();
 		const [ref, api] = useSphere<Mesh>(() => ({
 			...PHYSICS_CONFIG,

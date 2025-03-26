@@ -9,7 +9,6 @@ import {
 	ChevronDown,
 	ChevronUp,
 	Filter,
-	Grid,
 	LayoutGrid,
 	List,
 	Search
@@ -208,87 +207,91 @@ const CategorySelector = memo(
 		selectedCategories: string[];
 		setSelectedCategories: (categories: string[]) => void;
 		isScrolled: boolean;
-	}) => (
-		<div className='relative'>
-			<motion.div whileTap={{ scale: 0.95 }}>
-				<Button
-					variant='outline'
-					size='sm'
-					className={cn(
-						'rounded-full flex items-center gap-1 text-sm transition-colors duration-200',
-						isScrolled
-							? 'bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800'
-							: 'bg-white/80 dark:bg-gray-900/80 hover:bg-white dark:hover:bg-gray-800'
-					)}
-					onClick={() => setShowCategorySelect(!showCategorySelect)}
-				>
-					Categories
-					{selectedCategories.length > 0 && (
-						<Badge variant='secondary' className='ml-1 text-xs'>
-							{selectedCategories.length}
-						</Badge>
-					)}
-				</Button>
-			</motion.div>
-			<AnimatePresence>
-				{showCategorySelect && (
-					<motion.div
-						className='absolute z-50 mt-2 w-56 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg overflow-hidden'
-						initial={{ opacity: 0, y: -10 }}
-						animate={{ opacity: 1, y: 0 }}
-						exit={{ opacity: 0, y: -10 }}
-						transition={{ duration: 0.15, ease: 'easeOut' }}
+	}) => {
+		const t = useTranslations('artworkPage.filter');
+		
+		return (
+			<div className='relative'>
+				<motion.div whileTap={{ scale: 0.95 }}>
+					<Button
+						variant='outline'
+						size='sm'
+						className={cn(
+							'rounded-full flex items-center gap-1 text-sm transition-colors duration-200',
+							isScrolled
+								? 'bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800'
+								: 'bg-white/80 dark:bg-gray-900/80 hover:bg-white dark:hover:bg-gray-800'
+							)}
+						onClick={() => setShowCategorySelect(!showCategorySelect)}
 					>
-						<ScrollArea className='max-h-64'>
-							{categories.map((category) => (
-								<motion.div
-									key={category}
-									className='flex items-center px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors duration-200'
-									whileTap={{ scale: 0.98 }}
-									onClick={() =>
-										setSelectedCategories(
-											selectedCategories.includes(
-												category
-											)
-												? selectedCategories.filter(
+						{t('categories')}
+						{selectedCategories.length > 0 && (
+							<Badge variant='secondary' className='ml-1 text-xs'>
+								{selectedCategories.length}
+							</Badge>
+						)}
+					</Button>
+				</motion.div>
+				<AnimatePresence>
+					{showCategorySelect && (
+						<motion.div
+							className='absolute z-50 mt-2 w-56 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg overflow-hidden'
+							initial={{ opacity: 0, y: -10 }}
+							animate={{ opacity: 1, y: 0 }}
+							exit={{ opacity: 0, y: -10 }}
+							transition={{ duration: 0.15, ease: 'easeOut' }}
+						>
+							<ScrollArea className='max-h-64'>
+								{categories.map((category) => (
+									<motion.div
+										key={category}
+										className='flex items-center px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors duration-200'
+										whileTap={{ scale: 0.98 }}
+										onClick={() =>
+											setSelectedCategories(
+												selectedCategories.includes(
+													category
+												)
+													? selectedCategories.filter(
 														(c) => c !== category
-												  )
-												: [
+													)
+													: [
 														...selectedCategories,
 														category
-												  ]
-										)
-									}
-								>
-									<div className='w-4 h-4 border rounded mr-2 flex items-center justify-center'>
-										<AnimatePresence>
-											{selectedCategories.includes(
-												category
-											) && (
-												<motion.div
-													initial={{ scale: 0 }}
-													animate={{ scale: 1 }}
-													exit={{ scale: 0 }}
-													transition={{
-														duration: 0.1
-													}}
-												>
-													<Check className='w-3 h-3 text-gray-900 dark:text-white' />
-												</motion.div>
-											)}
-										</AnimatePresence>
-									</div>
-									<span className='text-sm font-medium text-gray-900 dark:text-gray-100'>
-										{category}
-									</span>
-								</motion.div>
-							))}
-						</ScrollArea>
-					</motion.div>
-				)}
-			</AnimatePresence>
-		</div>
-	)
+													]
+											)
+										}
+									>
+										<div className='w-4 h-4 border rounded mr-2 flex items-center justify-center'>
+											<AnimatePresence>
+												{selectedCategories.includes(
+													category
+												) && (
+													<motion.div
+														initial={{ scale: 0 }}
+														animate={{ scale: 1 }}
+														exit={{ scale: 0 }}
+														transition={{
+															duration: 0.1
+														}}
+													>
+														<Check className='w-3 h-3 text-gray-900 dark:text-white' />
+													</motion.div>
+												)}
+											</AnimatePresence>
+										</div>
+										<span className='text-sm font-medium text-gray-900 dark:text-gray-100'>
+											{category}
+										</span>
+									</motion.div>
+								))}
+							</ScrollArea>
+						</motion.div>
+					)}
+				</AnimatePresence>
+			</div>
+		);
+	}
 );
 CategorySelector.displayName = 'CategorySelector';
 
@@ -301,78 +304,82 @@ const PriceFilter = memo(
 		priceRange: number[];
 		setPriceRange: (range: number[]) => void;
 		isScrolled: boolean;
-	}) => (
-		<Popover>
-			<PopoverTrigger asChild>
-				<motion.div whileTap={{ scale: 0.95 }}>
-					<Button
-						variant='outline'
-						size='sm'
-						className={cn(
-							'rounded-full text-sm transition-colors duration-200',
-							isScrolled
-								? 'bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800'
-								: 'bg-white/80 dark:bg-gray-900/80 hover:bg-white dark:hover:bg-gray-800'
-						)}
-					>
-						Price Range
-					</Button>
-				</motion.div>
-			</PopoverTrigger>
-			<PopoverContent className='w-80 p-4 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-lg shadow-lg'>
-				<div className='space-y-4'>
-					<Label className='text-base font-semibold text-gray-900 dark:text-gray-50'>
-						Price Range
-					</Label>
-					<Slider
-						value={priceRange}
-						onValueChange={setPriceRange}
-						max={10000000}
-						step={100000}
-						className='my-4'
-					/>
-					<div className='flex justify-between text-sm text-gray-700 dark:text-gray-300'>
-						<span>{vietnamCurrency(priceRange[0])}</span>
-						<span>{vietnamCurrency(priceRange[1])}</span>
-					</div>
-					<div className='flex gap-3'>
-						<div className='flex-1'>
-							<Label className='text-xs text-gray-800 dark:text-gray-200'>
-								Min
-							</Label>
-							<Input
-								type='number'
-								value={priceRange[0]}
-								onChange={(e) =>
-									setPriceRange([
-										Number(e.target.value),
-										priceRange[1]
-									])
-								}
-								className='mt-1 text-sm'
-							/>
+	}) => {
+		const t = useTranslations('artworkPage.filter');
+		
+		return (
+			<Popover>
+				<PopoverTrigger asChild>
+					<motion.div whileTap={{ scale: 0.95 }}>
+						<Button
+							variant='outline'
+							size='sm'
+							className={cn(
+								'rounded-full text-sm transition-colors duration-200',
+								isScrolled
+									? 'bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800'
+									: 'bg-white/80 dark:bg-gray-900/80 hover:bg-white dark:hover:bg-gray-800'
+							)}
+						>
+							{t('priceRange')}
+						</Button>
+					</motion.div>
+				</PopoverTrigger>
+				<PopoverContent className='w-80 p-4 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-lg shadow-lg'>
+					<div className='space-y-4'>
+						<Label className='text-base font-semibold text-gray-900 dark:text-gray-50'>
+							{t('priceRange')}
+						</Label>
+						<Slider
+							value={priceRange}
+							onValueChange={setPriceRange}
+							max={10000000}
+							step={100000}
+							className='my-4'
+						/>
+						<div className='flex justify-between text-sm text-gray-700 dark:text-gray-300'>
+							<span>{vietnamCurrency(priceRange[0])}</span>
+							<span>{vietnamCurrency(priceRange[1])}</span>
 						</div>
-						<div className='flex-1'>
-							<Label className='text-xs text-gray-800 dark:text-gray-200'>
-								Max
-							</Label>
-							<Input
-								type='number'
-								value={priceRange[1]}
-								onChange={(e) =>
-									setPriceRange([
-										priceRange[0],
-										Number(e.target.value)
-									])
-								}
-								className='mt-1 text-sm'
-							/>
+						<div className='flex gap-3'>
+							<div className='flex-1'>
+								<Label className='text-xs text-gray-800 dark:text-gray-200'>
+									Min
+								</Label>
+								<Input
+									type='number'
+									value={priceRange[0]}
+									onChange={(e) =>
+										setPriceRange([
+											Number(e.target.value),
+											priceRange[1]
+										])
+									}
+									className='mt-1 text-sm'
+								/>
+							</div>
+							<div className='flex-1'>
+								<Label className='text-xs text-gray-800 dark:text-gray-200'>
+									Max
+								</Label>
+								<Input
+									type='number'
+									value={priceRange[1]}
+									onChange={(e) =>
+										setPriceRange([
+											priceRange[0],
+											Number(e.target.value)
+										])
+									}
+									className='mt-1 text-sm'
+								/>
+							</div>
 						</div>
 					</div>
-				</div>
-			</PopoverContent>
-		</Popover>
-	)
+				</PopoverContent>
+			</Popover>
+		);
+	}
 );
 PriceFilter.displayName = 'PriceFilter';
 
@@ -381,7 +388,8 @@ const HeaderFilter = ({
 	onLayoutChange,
 	headerHeight = 80
 }: HeaderFilterProps) => {
-	const t = useTranslations('filter');
+	// Change the translation namespace to use artworkPage.filter
+	const t = useTranslations('artworkPage.filter');
 	const pathname = usePathname();
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [showCategorySelect, setShowCategorySelect] =
@@ -547,7 +555,7 @@ const HeaderFilter = ({
 								<div className='relative'>
 									<Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400' />
 									<Input
-										placeholder={t('searchPlaceholder')}
+										placeholder={t('filterSearchPlaceholder')}
 										className='pl-10 text-sm h-9'
 									/>
 								</div>
@@ -592,7 +600,7 @@ const HeaderFilter = ({
 										))}
 									</FilterSection>
 									<FilterSection
-										title={t('materials')}
+										title={t('material')}
 										isExpanded={expandedSections.materials}
 										onToggle={() =>
 											toggleSection('materials')
@@ -607,7 +615,7 @@ const HeaderFilter = ({
 										))}
 									</FilterSection>
 									<FilterSection
-										title={t('waysToBuy')}
+										title={t('wayToBuy')}
 										isExpanded={expandedSections.waysToBuy}
 										onToggle={() =>
 											toggleSection('waysToBuy')
@@ -689,7 +697,7 @@ const HeaderFilter = ({
 						>
 							<Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400' />
 							<Input
-								placeholder={t('quickSearch')}
+								placeholder={t('filterSearchPlaceholder')}
 								className={cn(
 									'border-none bg-transparent pl-10 pr-4 h-9 w-full sm:w-48 lg:w-64 focus:ring-0 text-sm',
 									isSticky

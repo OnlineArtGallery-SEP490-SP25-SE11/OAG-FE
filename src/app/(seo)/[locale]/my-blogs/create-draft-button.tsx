@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useServerAction } from 'zsa-react';
 import { useToast } from '@/hooks/use-toast';
-import { FilePlus, LoaderCircle, Terminal, Upload } from 'lucide-react';
+import { FilePlus, Terminal, Upload } from 'lucide-react';
 import { createBlogAction } from './action';
 import { useRouter } from 'next/navigation';
 
@@ -31,12 +31,13 @@ import {
 import Image from 'next/image';
 import { ToggleContext } from '@/components/ui.custom/interactive-overlay';
 import { useTranslations } from 'next-intl';
+import { LoaderButton } from '@/components/ui.custom/loader-button';
 
 const MAX_UPLOAD_IMAGE_SIZE = 5000000; // 5MB
 const MAX_UPLOAD_IMAGE_SIZE_IN_MB = 5;
 
 const createDraftSchema = z.object({
-	title: z.string().min(1, 'Title is required'),
+	title: z.string().min(5, 'Title must be at least 5 characters'),
 	image: z
 		.instanceof(File)
 		.refine((file) => file.size < MAX_UPLOAD_IMAGE_SIZE, {
@@ -57,24 +58,27 @@ export default function CreateDraftButton() {
 	const { execute, error, isPending } = useServerAction(createBlogAction, {
 		onSuccess: (draft) => {
 			toast({
-				title: `${tCommon('success')}`,
-				description: `${tBlog('draft_create_success')}`,
+				title: tCommon('success'),
+				description: tBlog('draft_create_success'),
 				variant: 'success'
 			});
+
+			// Group related state updates together
 			setIsOpen(false);
 			setIsOverlayOpen(false);
+
+			// Navigation after successful creation
 			router.push(`/my-blogs/${draft.data.id}`);
 			router.refresh();
 		},
 		onError: () => {
 			toast({
-				title: `${tCommon('error')}`,
-				description: `${tBlog('draft_create_error')}`,
+				title: tCommon('error'),
+				description: tBlog('draft_create_error'),
 				variant: 'destructive'
 			});
 		}
 	});
-
 	const form = useForm<z.infer<typeof createDraftSchema>>({
 		resolver: zodResolver(createDraftSchema),
 		defaultValues: {
@@ -102,7 +106,7 @@ export default function CreateDraftButton() {
 			<DialogTrigger asChild>
 				<Button
 					variant='outline'
-					className='flex w-full font-medium text-primary items-center justify-center gap-2 p-3 hover:bg-secondary-200 hover:text-primary-foreground transition-colors duration-200 rounded-md'
+					className='flex w-full font-medium text-primary items-center justify-center gap-2 p-3 hover:bg-slate-100 transition-colors duration-200 rounded-md'
 				>
 					<FilePlus size={18} />
 					<span>{tBlog('new_draft')}</span>
@@ -198,20 +202,14 @@ export default function CreateDraftButton() {
 								</AlertDescription>
 							</Alert>
 						)}
-						<Button
+						<LoaderButton
 							type='submit'
+							isLoading={isPending}
 							className='w-full'
-							disabled={isPending}
 						>
-							{isPending ? (
-								<>
-									<LoaderCircle className='mr-2 h-4 w-4 animate-spin' />
-									{tBlog('creating')}
-								</>
-							) : (
-								`${tBlog('create_draft')}`
-							)}
-						</Button>
+
+							{tBlog('create_draft')}
+						</LoaderButton>
 					</form>
 				</Form>
 			</DialogContent>
