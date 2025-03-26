@@ -1,8 +1,12 @@
 export type Artwork = {
 	_id: string;
 	title: string;
-	artist: string;
 	description: string;
+	artistId?: {
+		_id: string;
+		name: string;
+		image: string;
+	};
 	category: string[];
 	dimensions: {
 		width: number;
@@ -11,8 +15,10 @@ export type Artwork = {
 	};
 	url: string;
 	status: string;
+	moderationStatus?: string;
 	views: number;
 	price: number;
 	createdAt: string;
 	updatedAt: string;
+	__v?: number;
 };

@@ -281,5 +281,17 @@
         "update_error": "Failed to update profile"
       }
     }
+  },
+  "filter": {
+    "filters": "Filters",
+    "categories": "Categories",
+    "priceRange": "Price Range",
+    "searchPlaceholder": "Search artworks...",
+    "quickSearch": "Quick search...",
+    "price": "Price",
+    "artists": "Artists",
+    "materials": "Materials",
+    "waysToBuy": "Ways to Buy",
+    "size": "Size"
   }
 }

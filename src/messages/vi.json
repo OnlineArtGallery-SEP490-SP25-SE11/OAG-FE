@@ -279,5 +279,17 @@
         "update_error": "Không thể cập nhật hồ sơ"
       }
     }
+  },
+  "filter": {
+    "filters": "Bộ lọc",
+    "categories": "Danh mục",
+    "priceRange": "Khoảng giá",
+    "searchPlaceholder": "Tìm kiếm tranh...",
+    "quickSearch": "Tìm kiếm nhanh...",
+    "price": "Giá",
+    "artists": "Nghệ sĩ",
+    "materials": "Chất liệu",
+    "waysToBuy": "Cách mua",
+    "size": "Kích thước"
   }
 }

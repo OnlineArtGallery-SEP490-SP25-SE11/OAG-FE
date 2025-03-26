@@ -44,3 +44,5 @@ app/test/
 
 
 bun.lockb
+.idea
+src/app/test/artwork/
