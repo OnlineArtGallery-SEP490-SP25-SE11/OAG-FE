@@ -3,45 +3,69 @@ import { Gallery } from "./gallery";
 import { Pagination } from "./response";
 
 
+
+interface Artwork {
+  _id: string;
+  title: string;
+  description: string;
+  category: string[];
+  dimensions: {
+    width: number;
+    height: number;
+  };
+  url: string;
+  status: string;
+  views: number;
+  price: number;
+  artistId: string;
+}
+
+export interface ArtworkPosition {
+  artwork: Artwork;
+  positionIndex: number;
+}
+
+
+export interface LanguageOption {
+  name: string;
+  code: string;
+  isDefault: boolean;
+}
+
+// Result interface for exhibition analytics
+export interface ExhibitionResult {
+  visits: number;
+  likes: { count: number; artworkId: string }[];
+  totalTime: number;
+}
+
+// Public settings interface
+export interface PublicSettings {
+  linkName: string;
+  discovery: boolean;
+}
+
+
 export interface Exhibition {
   _id: string;
   name: string;
   startDate: string;
   endDate: string;
-  title: string;
+  gallery: Gallery;
   author: {
     _id: string;
     name: string;
     email: string;
     image: string;
   };
-  date: string;
-  description: string;
-  thumbnail: string;
-  backgroundImage: string;
+  languageOptions: LanguageOption[];
+  isFeatured: boolean;
   status: ExhibitionStatus;
-  createdAt: string;
-  updatedAt: string;
-  gallery: Gallery;
-  artworks: [
-    {
-      positionIndex: number;
-      artwork: {
-        _id: string;
-        title: string;
-        url: string;
-        description: string;
-      }
-    }
-  ];
-  artworkPositions: [
-    {
-      artworkId: string;
-      positionIndex: number;
-    }
-  ]
-
+  result: ExhibitionResult;
+  public: PublicSettings;
+  artworkPositions: ArtworkPosition[];
 }
+
 
 export enum ExhibitionStatus {
   DRAFT = 'DRAFT',
@@ -75,7 +99,7 @@ const publicSchema = z.object({
 });
 
 const artworkPositionSchema = z.object({
-  artworkId: z.string(),
+  artwork: z.string(),
   positionIndex: z.number()
 });
 

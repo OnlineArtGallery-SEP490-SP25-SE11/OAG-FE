@@ -9,14 +9,13 @@ import { useServerAction } from 'zsa-react';
 import { updateExhibitionAction } from '../../actions';
 import { useExhibition } from '../../context/exhibition-provider';
 
-// Import the new components
+// Import the components
 import { ExhibitionInfoHeader } from './_components/exhibition-info-header';
 import { ExhibitionFloorPlan } from './_components/exhibition-floor-plan';
 import { ArtworkPositionsGrid } from './_components/artwork-positions-grid';
 import { ArtworkSelectionModal } from './_components/artwork-selection-modal';
 
-
-// Type for artwork (can be shared or redefined)
+// Type for artwork
 interface Artwork {
   _id: string;
   title: string;
@@ -28,14 +27,18 @@ interface Artwork {
   };
 }
 
-// Type for Artwork within Exhibition context (might be slightly different)
-interface ExhibitionArtwork {
-    artwork: Artwork;
-    positionIndex: number; 
+// Type for artwork position
+interface ArtworkPosition {
+  artwork: {
+    _id: string;
+    title: string;
+    url: string;
+  };
+  positionIndex: number;
 }
 
 export default function ArtworksPage() {
-  const { id: exhibitionId } = useParams<{ id: string }>(); // Renamed for clarity
+  const { id: exhibitionId } = useParams<{ id: string }>();
   const { toast } = useToast();
   const t = useTranslations("exhibitions");
   const tCommon = useTranslations("common");
@@ -45,78 +48,76 @@ export default function ArtworksPage() {
 
   const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
   const [isArtworkModalOpen, setIsArtworkModalOpen] = useState(false);
+  const [existingArtworkPosition, setExistingArtworkPosition] = useState<ArtworkPosition | null>(null);
 
-  // Server action hook remains in the parent orchestrator
+  // Server action hook
   const { execute: executePlacement, isPending: isPlacingArtwork } = useServerAction(updateExhibitionAction, {
     onSuccess: () => {
       toast({
         title: tCommon("success"),
-        description: t("artwork_placed_success"),
+        description: existingArtworkPosition
+          ? (selectedArtwork === null 
+              ? t("artwork_removed_success") 
+              : t("artwork_replaced_success"))
+          : t("artwork_placed_success"),
         variant: "success"
       });
       setIsArtworkModalOpen(false);
-      setSelectedPosition(null); // Reset position as well
-      refreshExhibition(); // Refresh data
+      setSelectedPosition(null);
+      setExistingArtworkPosition(null);
+      refreshExhibition();
     },
     onError: (error) => {
       toast({
         title: tCommon("error"),
-        // Provide more specific error if possible from server action
-        description: error.err.message || t("artwork_placement_failed"),
+        description: error.err.message || t("artwork_operation_failed"),
         variant: "destructive"
       });
-      console.error('Error placing artwork:', error);
-      // Keep modal open on error? Or close? User preference.
-      // setIsArtworkModalOpen(false);
+      console.error('Error with artwork operation:', error);
     },
   });
 
-  // Memoize calculation of positions and occupied positions
-  const { positions, occupiedPositions } = useMemo(() => {
-    const totalPositions = exhibition?.gallery?.artworkPlacements?.length || 68; // Default or based on gallery
-    const pos = Array.from({ length: totalPositions }, (_, i) => i + 1);
-    const occupied = exhibition?.artworkPositions?.map(p => p.positionIndex) || [];
-    return { positions: pos, occupiedPositions: occupied };
-  }, [exhibition?.gallery?.artworkPlacements, exhibition?.artworkPositions]);
+  // Memoize calculation of positions
+  const positions = useMemo(() => {
+    const totalPositions = exhibition?.gallery?.artworkPlacements?.length || 68;
+    return Array.from({ length: totalPositions }, (_, i) => i + 1);
+  }, [exhibition?.gallery?.artworkPlacements]);
 
-  // Memoize artwork lookup function to prevent unnecessary re-renders of the grid
-  const getArtworkAtPosition = useCallback((position: number): Artwork | null => {
-    if (!exhibition?.artworkPositions || !exhibition?.artworks) return null;
-
-    const artworkPosition = exhibition.artworkPositions.find(
-      pos => pos.positionIndex === position
-    );
-    if (!artworkPosition) return null;
-
-    // Find the artwork in the exhibition's artworks array
-    // Ensure the structure matches your context data (e.g., `exhibition.artworks` might be [{ artwork: {...} }, ...])
-    const foundExhibitionArtwork = exhibition.artworks.find(
-      (exhArt: ExhibitionArtwork) => exhArt.artwork._id === artworkPosition.artworkId
-    );
-    return foundExhibitionArtwork?.artwork || null;
-
-  }, [exhibition?.artworkPositions, exhibition?.artworks]);
-
+  // Track the selected artwork (for state reference)
+  const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
 
   // Handler to open the modal
   const handlePositionClick = useCallback((position: number) => {
+    // Check if position already has artwork
+    const existingPosition = exhibition?.artworkPositions?.find(
+      p => p.positionIndex === position
+    ) || null;
+    
+    setExistingArtworkPosition(existingPosition);
     setSelectedPosition(position);
     setIsArtworkModalOpen(true);
-  }, []); // Empty dependency array, relies on useState setters
+  }, [exhibition?.artworkPositions]);
 
-  // Handler to execute the server action (passed to the modal)
-  const handleConfirmArtworkSelection = useCallback((artwork: Artwork, position: number) => {
-    if (!exhibitionId || !exhibition) return; // Guard clause
+  // Handler to execute the server action
+  const handleConfirmArtworkSelection = useCallback((artwork: Artwork | null, position: number) => {
+    if (!exhibitionId || !exhibition) return;
+    setSelectedArtwork(artwork);
 
-    // Filter out any existing entry for the same position before adding the new one
-    const updatedPositions = (exhibition.artworkPositions || []).filter(
-        p => p.positionIndex !== position
-    );
+    // Filter out any existing entry for the same position
+    const updatedPositions = (exhibition.artworkPositions || [])
+      .filter(p => p.positionIndex !== position)
+      .map(p => ({
+        artwork: p.artwork._id,
+        positionIndex: p.positionIndex
+      }));
 
-    updatedPositions.push({
-        artworkId: artwork._id,
+    // Only add the new position if we're not removing
+    if (artwork) {
+      updatedPositions.push({
+        artwork: artwork._id,
         positionIndex: position
-    });
+      });
+    }
 
     executePlacement({
       id: exhibitionId,
@@ -124,37 +125,30 @@ export default function ArtworksPage() {
         artworkPositions: updatedPositions,
       }
     });
-  }, [exhibitionId, exhibition, executePlacement]); // Dependencies
+  }, [exhibitionId, exhibition, executePlacement]);
 
-  // Handle loading state for the entire exhibition data
-  // if (isLoadingExhibition) {
-  //    return (
-  //       <div className="flex justify-center items-center min-h-screen">
-  //           <Loader2 className="w-12 h-12 animate-spin text-primary" />
-  //       </div>
-  //    );
-  // }
-
-  // Handle case where exhibition data failed to load or doesn't exist
+  // Handle case where exhibition data failed to load
   if (!exhibition) {
-      return (
-          <div className="max-w-7xl mx-auto px-4 py-8 text-center">
-             <p className="text-destructive">{t('error_loading_exhibition')}</p>
-             {/* Optionally add a button to retry or go back */}
-          </div>
-      );
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-8 text-center">
+        <p className="text-destructive">{t('error_loading_exhibition')}</p>
+      </div>
+    );
   }
 
   // Prepare translations for the modal
   const modalTranslations = {
     select_artwork_for_position: t("select_artwork_for_position"),
+    replace_artwork_at_position: t("replace_artwork_at_position"),
+    remove_artwork_confirmation: t("remove_artwork_confirmation"),
     no_artworks_found: t("no_artworks_found"),
     create_artwork: t("create_artwork"),
     cancel: t("cancel"),
     place_artwork: t("place_artwork"),
+    replace_artwork: t("replace_artwork"),
+    remove_artwork: t("remove_artwork"),
     placing: t("placing"),
   };
-
 
   return (
     <div className='max-w-7xl mx-auto px-4 py-8 space-y-8'>
@@ -165,30 +159,27 @@ export default function ArtworksPage() {
         faqLinkText={t("read_faq")}
       />
 
-      {/* Wrap FloorPlan and Grid in a container if needed */}
+      {/* Container */}
       <div className='bg-white rounded-lg shadow-md'>
-         {/* Floor Plan Component */}
+        {/* Floor Plan Component */}
         <ExhibitionFloorPlan
-          // Pass the correct image URL from gallery template or context
           imageUrl={exhibition.gallery?.planImage || 'https://res.cloudinary.com/djvlldzih/image/upload/v1739374668/gallery/modern_c1_plan.png'}
-          altText={t("floor_plan_alt")} // Add translation for alt text
+          altText={t("floor_plan_alt")}
           title={t("floor_plan")}
           description={t("floor_plan_description")}
         />
 
         {/* Artwork Positions Grid Component */}
-        <div className='p-6'> {/* Added padding around the grid component */}
-            <ArtworkPositionsGrid
-                positions={positions}
-                occupiedPositions={occupiedPositions}
-                getArtworkAtPosition={getArtworkAtPosition}
-                onPositionClick={handlePositionClick}
-                title={t("artwork_positions")}
-                artworksLabel={t("artworks")} // Pass plural label
-            />
+        <div className='p-6'>
+          <ArtworkPositionsGrid
+            positions={positions}
+            artworkPositions={exhibition.artworkPositions || []}
+            onPositionClick={handlePositionClick}
+            title={t("artwork_positions")}
+            artworksLabel={t("artworks")}
+          />
         </div>
       </div>
-
 
       {/* Artwork Selection Modal Component */}
       <ArtworkSelectionModal
@@ -197,6 +188,7 @@ export default function ArtworksPage() {
         position={selectedPosition}
         onConfirm={handleConfirmArtworkSelection}
         isPlacingArtwork={isPlacingArtwork}
+        existingArtworkPosition={existingArtworkPosition}
         t={modalTranslations}
       />
     </div>

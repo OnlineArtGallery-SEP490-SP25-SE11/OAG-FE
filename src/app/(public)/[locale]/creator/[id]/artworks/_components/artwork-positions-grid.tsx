@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { ChevronDown, ChevronUp, Grid, Check } from 'lucide-react';
+import { ChevronDown, ChevronUp, Grid, Check, Replace } from 'lucide-react';
 
 // Type for Artwork simplified for this component's needs
 interface SimpleArtwork {
@@ -11,10 +11,15 @@ interface SimpleArtwork {
   url: string;
 }
 
+// Type for artwork position with embedded artwork
+interface ArtworkPosition {
+  artwork: SimpleArtwork;
+  positionIndex: number;
+}
+
 interface ArtworkPositionsGridProps {
   positions: number[];
-  occupiedPositions: number[];
-  getArtworkAtPosition: (position: number) => SimpleArtwork | null;
+  artworkPositions: ArtworkPosition[];
   onPositionClick: (position: number) => void;
   title: string;
   artworksLabel: string;
@@ -22,14 +27,17 @@ interface ArtworkPositionsGridProps {
 
 export function ArtworkPositionsGrid({
   positions,
-  occupiedPositions,
-  getArtworkAtPosition,
+  artworkPositions,
   onPositionClick,
   title,
   artworksLabel,
 }: ArtworkPositionsGridProps) {
   const [isSectionOpen, setIsSectionOpen] = useState(true);
-
+  const [hoveredPosition, setHoveredPosition] = useState<number | null>(null);
+  
+  // Calculate occupied positions from artworkPositions
+  const occupiedPositions = artworkPositions.map(pos => pos.positionIndex);
+  
   return (
     <div className='mt-8'>
       {/* Collapsible Header */}
@@ -61,38 +69,61 @@ export function ArtworkPositionsGrid({
       >
         <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4'>
           {positions.map((position) => {
-            const isOccupied = occupiedPositions.includes(position);
-            const artwork = isOccupied ? getArtworkAtPosition(position) : null;
-
+            const artworkPosition = artworkPositions.find(pos => pos.positionIndex === position);
+            const isOccupied = !!artworkPosition;
+            
+            // Get artwork data if position is occupied
+            const artwork = isOccupied && artworkPosition ? artworkPosition.artwork : null;
+            
+            // Check if this position is currently being hovered
+            const isHovered = hoveredPosition === position;
+            
             return (
               <div
                 key={position}
-                onClick={() => !isOccupied && onPositionClick(position)}
-                className={`aspect-square border-2 rounded-lg flex flex-col items-center justify-center relative overflow-hidden transition-all duration-200 ${
+                onClick={() => onPositionClick(position)}
+                onMouseEnter={() => setHoveredPosition(position)}
+                onMouseLeave={() => setHoveredPosition(null)}
+                className={`aspect-square border-2 rounded-lg flex flex-col items-center justify-center relative overflow-hidden transition-all duration-200 cursor-pointer ${
                   isOccupied
-                    ? 'border-solid border-green-500 bg-green-50 cursor-not-allowed' // Changed cursor for occupied
-                    : 'border-dashed border-gray-300 hover:border-blue-500 hover:bg-blue-50 cursor-pointer'
+                    ? 'border-solid border-green-500 hover:border-blue-500' 
+                    : 'border-dashed border-gray-300 hover:border-blue-500 hover:bg-blue-50'
                 }`}
-                role={!isOccupied ? "button" : undefined} // Accessibility
-                tabIndex={!isOccupied ? 0 : -1} // Accessibility
-                aria-label={isOccupied ? `Position ${position} occupied by ${artwork?.title}` : `Select artwork for position ${position}`} // Accessibility
+                role="button" // Always a button
+                tabIndex={0} // Always focusable
+                aria-label={isOccupied 
+                  ? `Replace artwork at position ${position}, currently ${artwork?.title}` 
+                  : `Add artwork to position ${position}`}
               >
                 {isOccupied && artwork ? (
                   <>
                     <div className="absolute inset-0" aria-hidden="true">
                       <Image
-                      src={artwork.url}
-                      alt={artwork.title}
-                      fill
-                      quality={50}
-                      sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 16.6vw"
-                      className="object-cover"
+                        src={artwork.url}
+                        alt={artwork.title}
+                        fill
+                        quality={50}
+                        sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 16.6vw"
+                        className={`object-cover transition-opacity duration-300 ${isHovered ? 'opacity-60' : 'opacity-100'}`}
                       />
-                      <div className="absolute top-1 right-1 bg-green-500 rounded-full p-1">
-                      <Check className="w-3 h-3 text-white" />
+                      
+                      {/* Status indicator in top-left corner */}
+                      <div className="absolute top-1 left-1 bg-green-500 rounded-full p-1">
+                        <Check className="w-3 h-3 text-white" />
                       </div>
+                      
+                      {/* Hover overlay for replace indication */}
+                      {isHovered && (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="bg-blue-600 text-white rounded-full p-2">
+                            <Replace className="w-5 h-5" />
+                          </div>
+                        </div>
+                      )}
                     </div>
-                     <span className='sr-only'>{`Position ${position} occupied by ${artwork.title}`}</span>
+                    <span className='sr-only'>{isHovered 
+                      ? `Replace artwork at position ${position}, currently ${artwork.title}` 
+                      : `Position ${position} occupied by ${artwork.title}`}</span>
                   </>
                 ) : (
                   <Grid className='w-6 h-6 text-gray-400' aria-hidden="true"/>
