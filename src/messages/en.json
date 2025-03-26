@@ -293,5 +293,18 @@
     "materials": "Materials",
     "waysToBuy": "Ways to Buy",
     "size": "Size"
+  },
+  "artworkPage":{
+    "filter": {
+      "priceRange": "Price Range",
+      "categories": "Categories",
+      "filters": "Filters",
+      "artists": "Artists",
+      "wayToBuy": "Ways to Buy",
+      "size": "Size",
+      "material": "Material",
+      "price": "Price",
+      "filterSearchPlaceholder": "Search for filters"
+    }
   }
 }

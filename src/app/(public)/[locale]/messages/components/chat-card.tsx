@@ -17,55 +17,68 @@ export type Chat = {
 const chatData: Chat[] = [
 	{
 	  active: true,
-	  avatar: "https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg",
-	  name: "Devid Heilo",
+	  avatar: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
+	  name: "David Heilo",
 	  text: "Hello, how are you?",
 	  time: "12 min",
 	  textCount: 3,
 	  dot: 3,
-  
 	},
 	{
 	  active: true,
-	  avatar: "https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg",
-	  name: "Henry Fisher",
+	  avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
+	  name: "Sarah Fisher",
 	  text: "I am waiting for you",
 	  time: "5:54 PM",
 	  textCount: 0,
 	  dot: 1,
-  
 	},
 	{
 	  active: false,
-	  avatar: "https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg",
-	  name: "Wilium Smith",
+	  avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
+	  name: "William Smith",
 	  text: "Where are you now?",
 	  time: "10:12 PM",
 	  textCount: 0,
 	  dot: 3,
-  
-  
 	},
 	{
 	  active: true,
 	  seen: true,
-	  avatar: "https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg",
-	  name: "Henry Deco",
+	  avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
+	  name: "Emma Chen",
 	  text: "Thank you so much!",
 	  time: "Sun",
 	  textCount: 2,
 	  dot: 6,
-  
 	},
 	{
 	  active: false,
-	  avatar: "https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg",
-	  name: "Jubin Jack",
+	  avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
+	  name: "Justin Parker",
 	  text: "Hello, how are you?",
 	  time: "Oct 23",
 	  textCount: 0,
 	  dot: 3,
-  
+	},
+	{
+	  active: true,
+	  avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
+	  name: "Olivia Martinez",
+	  text: "I've sent the artwork files",
+	  time: "Yesterday",
+	  textCount: 1,
+	  dot: 5,
+	},
+	{
+	  active: false,
+	  seen: true,
+	  avatar: "https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80",
+	  name: "Michael Johnson",
+	  text: "Let me know when you're free",
+	  time: "Monday",
+	  textCount: 0,
+	  dot: 4,
 	},
   ];
   

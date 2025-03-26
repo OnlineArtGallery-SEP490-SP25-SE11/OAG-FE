@@ -291,5 +291,18 @@
     "materials": "Chất liệu",
     "waysToBuy": "Cách mua",
     "size": "Kích thước"
+  },
+  "artworkPage":{
+    "filter": {
+      "priceRange": "Khoảng giá",
+      "categories": "Danh mục",
+      "filters": "Bộ lọc",
+      "artists": "Nghệ sĩ",
+      "wayToBuy": "Cách để mua",
+      "size": "Kích thước",
+      "material": "Chất liệu",
+      "price": "Giá",
+      "filterSearchPlaceholder": "Tìm kiếm bộ lọc"
+    }
   }
 }

@@ -1,7 +1,7 @@
 'use client'
 import { Canvas } from "@react-three/fiber";
 import { Environment, PerspectiveCamera, PointerLockControls, Preload } from "@react-three/drei";
-import { ModernRoom } from "../../../../(exhibitions)/[locale]/exhibitions/components/rooms/modern-room";
+import { ModernRoom } from "./modern-room";
 import { Suspense, useState, useCallback } from "react";
 import { Physics } from "@react-three/cannon";
 import Image from "next/image";

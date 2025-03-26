@@ -15,4 +15,12 @@ export type ApiResponse = {
 	details: unknown | null;
 }
 
+export type Pagination = {
+	total: number;
+	page: number;
+	limit: number;
+	pages: number;
+	hasNext: boolean;
+	hasPrev: boolean;
+}
 export default BaseResponse;

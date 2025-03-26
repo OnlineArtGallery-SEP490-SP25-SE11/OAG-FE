@@ -20,7 +20,7 @@ function EditArtworkForm({ artwork, onClose }: { artwork: Artwork; onClose: () =
         defaultValues: {
             title: artwork.title,
             description: artwork.description || '',
-            status: artwork.status,
+            status: artwork.status.toLowerCase() as "available" | "sold" | "hidden" | "selling",
             price: artwork.price,
         },
     });
@@ -39,7 +39,7 @@ function EditArtworkForm({ artwork, onClose }: { artwork: Artwork; onClose: () =
             title: data.title,
             description: data.description,
             status: data.status as 'Available' | 'Sold' | 'Hidden' | 'Selling',
-            price: data.price,
+            price: typeof data.price === 'string' ? Number(data.price) : data.price,
         });
     };
 
