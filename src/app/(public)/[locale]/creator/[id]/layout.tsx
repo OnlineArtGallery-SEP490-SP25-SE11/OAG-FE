@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import ExhibitionContextProvider from "../context/exhibition-provider";
+// import ExhibitionContextProvider from "../context/exhibition-provider";
 import { getExhibitionById } from "@/service/exhibition";
 import { Suspense } from "react";
 import ExhibitionHeader from "../components/exhibition-header";
@@ -20,10 +20,10 @@ export default async function CreatorLayout({
 
     const exhibition = exhibitionResponse.data.exhibition;
     return (
-        <ExhibitionContextProvider initialData={exhibition}>
+        // <ExhibitionContextProvider initialData={exhibition}>
             <div className="flex min-h-screen">
                 {/* Sidebar Navigation */}
-                <ExhibitionNavigation id={params.id} />
+                <ExhibitionNavigation exhibition={exhibition} />
 
                 {/* Main Content */}
                 <div className="flex-1 overflow-auto">
@@ -34,6 +34,6 @@ export default async function CreatorLayout({
                     <div className="p-6">{children}</div>
                 </div>
             </div>
-        </ExhibitionContextProvider>
+        // </ExhibitionContextProvider>
     )
 }

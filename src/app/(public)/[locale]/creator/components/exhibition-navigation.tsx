@@ -10,13 +10,12 @@ import {
 } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { useExhibition } from '../context/exhibition-provider';
 import { useTranslations } from 'next-intl';
+import { Exhibition } from '@/types/exhibition';
 
-export default function ExhibitionNavigation({ id }: { id: string }) {
+export default function ExhibitionNavigation({ exhibition }: { exhibition: Exhibition }) {
   const router = useRouter();
   const pathname = usePathname();
-  const { exhibition } = useExhibition();
   const t = useTranslations('exhibitions');
   
   const currentTab = pathname.split('/').pop() || 'artworks';
@@ -44,19 +43,19 @@ export default function ExhibitionNavigation({ id }: { id: string }) {
       value: 'preview', 
       label: t('preview'), 
       icon: <Earth />,
-      disabled: !exhibition?.artworks?.length
+      disabled: !exhibition?.artworkPositions?.length
     },
     { 
       value: 'publish', 
       label: t('publish'), 
       icon: <TrendingUp />,
-      disabled: !exhibition?.artworks?.length
+      disabled: !exhibition?.artworkPositions?.length
     },
     { 
       value: 'result', 
       label: t('result'), 
       icon: <Eye />,
-      disabled: !exhibition?.artworks?.length
+      disabled: !exhibition?.artworkPositions?.length
     }
   ];
 
@@ -70,7 +69,7 @@ export default function ExhibitionNavigation({ id }: { id: string }) {
           {tabs.map((tab) => (
             <button
               key={tab.value}
-              onClick={() => router.push(`/creator/${id}/${tab.value}`)}
+              onClick={() => router.push(`/creator/${exhibition._id}/${tab.value}`)}
               className={cn(
                 'w-full flex items-center space-x-3 px-4 py-3 text-left rounded-lg transition-colors hover:bg-muted',
                 currentTab === tab.value

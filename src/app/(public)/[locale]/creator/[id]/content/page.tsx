@@ -9,7 +9,7 @@ import { ImagePlus, Music, Upload, X } from 'lucide-react';
 import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useLocale } from 'next-intl';
-import { ExhibitionInfoHeader } from '../artworks/_components/exhibition-info-header';
+import { ExhibitionInfoHeader } from '../components/exhibition-info-header';
 
 // Mock data - replace with actual API call to get configured languages
 const getConfiguredLanguages = () => [

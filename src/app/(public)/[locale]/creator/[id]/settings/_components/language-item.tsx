@@ -1,92 +1,64 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { Check, MoreHorizontal, Trash2 } from 'lucide-react';
-import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { LanguageOption } from '@/types/exhibition';
+import { Button } from '@/components/ui/button';
+import { Check, Trash2 } from 'lucide-react';
 
-interface LanguageItemProps {
-  language: LanguageOption;
-  onSetDefault: (code: string) => Promise<void>;
-  onDelete: (code: string) => Promise<void>;
-  disabled?: boolean;
+interface Language {
+  code: string;
+  name: string;
+  isDefault?: boolean;
 }
 
-export function LanguageItem({ language, onSetDefault, onDelete, disabled = false }: LanguageItemProps) {
-  const [isLoading, setIsLoading] = useState(false);
+export function LanguageItem({
+  language,
+  onSetDefault,
+  onRemove,
+  canRemove
+}: {
+  language: Language;
+  onSetDefault: (code: string) => void;
+  onRemove: (code: string) => void;
+  canRemove: boolean;
+}) {
   const t = useTranslations('exhibitions');
   
-  const handleSetDefault = async () => {
-    try {
-      setIsLoading(true);
-      await onSetDefault(language.code);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
-  const handleDelete = async () => {
-    try {
-      setIsLoading(true);
-      await onDelete(language.code);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
   return (
-    <div className='flex items-center justify-between p-4 bg-muted/50 rounded-lg hover:bg-muted/70 transition-colors'>
-      <div className='flex items-center gap-4'>
-        <span className='text-lg font-medium min-w-[2.5rem]'>
-          {language.code.toUpperCase()}
-        </span>
+    <div className="flex items-center justify-between p-3 border rounded-md bg-card">
+      <div className="flex items-center gap-2">
+        <div className="w-10 h-6 flex items-center justify-center rounded border">
+          {language.code}
+        </div>
         <span>{language.name}</span>
         {language.isDefault && (
-          <span className='text-xs bg-primary/10 text-primary px-2 py-1 rounded-full font-medium'>
+          <span className="inline-flex items-center rounded-full bg-primary/10 text-primary text-xs px-2 py-0.5">
+            <Check className="w-3 h-3 mr-1" />
             {t('default')}
           </span>
         )}
       </div>
-      
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant='ghost'
-            size='icon'
-            className='hover:bg-background/80'
-            disabled={isLoading || disabled}
+
+      <div className="flex gap-2">
+        {!language.isDefault && (
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => onSetDefault(language.code)}
           >
-            <MoreHorizontal className='w-4 h-4' />
-            <span className='sr-only'>{t('language_options')}</span>
+            {t('set_as_default')}
           </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align='end' className='w-48'>
-          {!language.isDefault && (
-            <DropdownMenuItem onClick={handleSetDefault} disabled={isLoading}>
-              <Check className='w-4 h-4 mr-2' />
-              {t('set_as_default')}
-            </DropdownMenuItem>
-          )}
-          
-          {!language.isDefault && (
-            <DropdownMenuItem 
-              className='text-destructive' 
-              onClick={handleDelete}
-              disabled={isLoading}
-            >
-              <Trash2 className='w-4 h-4 mr-2' />
-              {t('delete')}
-            </DropdownMenuItem>
-          )}
-        </DropdownMenuContent>
-      </DropdownMenu>
+        )}
+        {canRemove && (
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="text-destructive"
+            onClick={() => onRemove(language.code)}
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        )}
+      </div>
     </div>
   );
 }

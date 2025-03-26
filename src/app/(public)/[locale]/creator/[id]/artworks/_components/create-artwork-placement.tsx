@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useToast } from '@/hooks/use-toast';
 import { useServerAction } from 'zsa-react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { Check, Loader2 } from 'lucide-react';
 import { updateExhibitionAction } from '../../../actions';
@@ -18,29 +18,39 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useExhibition } from '../../../context/exhibition-provider';
 import { getArtistArtworks } from '@/service/artwork';
 import { getCurrentUser } from '@/lib/session';
+import { Exhibition } from '@/types/exhibition';
 
 // Type for artwork
 interface Artwork {
   _id: string;
   title: string;
   description: string;
+  category: string[];
   url: string;
-  dimensions?: {
-    width: number;
-    height: number;
-  };
+  status: string;
+  views: number;
+  price: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Type for artwork position
+interface ArtworkPosition {
+  artwork: string;
+  positionIndex: number;
 }
 
 interface CreateArtworkPlacementProps {
+  exhibition: Exhibition; 
   position: number;
   isOccupied: boolean;
   onSuccess?: () => void;
 }
 
 export default function CreateArtworkPlacement({ 
+  exhibition,
   position, 
   isOccupied,
   onSuccess 
@@ -52,10 +62,7 @@ export default function CreateArtworkPlacement({
   const { toast } = useToast();
   const t = useTranslations("exhibitions");
   const tCommon = useTranslations("common");
-  const queryClient = useQueryClient();
   
-  // Use the exhibition context
-  const { exhibition, refreshExhibition } = useExhibition();
 
   // Fetch all artist artworks
   const { data: artworks = [], isLoading: isLoadingArtworks } = useQuery({
@@ -78,17 +85,6 @@ export default function CreateArtworkPlacement({
       });
       setIsModalOpen(false);
       setSelectedArtwork(null);
-      
-      // Force refresh exhibition data
-      refreshExhibition();
-      
-      // Invalidate queries to ensure fresh data
-      queryClient.invalidateQueries({ queryKey: ['exhibition', id] });
-      
-      // Navigate to trigger a refresh
-      router.refresh();
-      
-      // Call the success callback if provided
       if (onSuccess) {
         onSuccess();
       }
@@ -108,28 +104,32 @@ export default function CreateArtworkPlacement({
   };
 
   const handleConfirmArtworkSelection = () => {
-    if (!selectedArtwork) return;
+    if (!selectedArtwork || !exhibition) return;
     
-    // Get existing artwork positions
-    const existingPositions = exhibition?.artworkPositions || [];
+    const existingPositions = exhibition.artworkPositions || [];
     
-    // Check if this position already has an artwork
-    const positionIndex = existingPositions.findIndex(p => p.positionIndex === position);
+    // Convert incoming positions to match our local interface
+    const currentPositions = existingPositions.map(p => ({
+      artwork: typeof p.artwork === 'string' ? p.artwork : p.artwork._id,
+      positionIndex: p.positionIndex
+    }));
     
-    let newPositions;
+    let newPositions: ArtworkPosition[];
+    const positionIndex = currentPositions.findIndex(p => p.positionIndex === position);
+    
     if (positionIndex >= 0) {
       // Update existing position
-      newPositions = [...existingPositions];
+      newPositions = [...currentPositions];
       newPositions[positionIndex] = {
-        artworkId: selectedArtwork._id,
+        artwork: selectedArtwork._id,
         positionIndex: position
       };
     } else {
       // Add new position
       newPositions = [
-        ...existingPositions,
+        ...currentPositions,
         {
-          artworkId: selectedArtwork._id,
+          artwork: selectedArtwork._id,
           positionIndex: position
         }
       ];
@@ -202,9 +202,6 @@ export default function CreateArtworkPlacement({
                         <h3 className="text-white text-sm font-medium truncate">
                           {artwork.title}
                         </h3>
-                        <p className="text-white/80 text-xs truncate">
-                          {artwork.dimensions?.width}x{artwork.dimensions?.height}
-                        </p>
                       </div>
                     </div>
                     

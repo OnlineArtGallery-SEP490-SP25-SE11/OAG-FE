@@ -1,54 +1,15 @@
 'use client'
-import { useState, useEffect } from 'react';
-import { useExhibition } from '../context/exhibition-provider';
 import { useTranslations } from 'next-intl';
-import { debounce } from 'lodash';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Loader2, Save, Calendar } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { Exhibition } from '@/types/exhibition';
+import { Calendar } from 'lucide-react';
 
-export default function ExhibitionHeader({ exhibition: initialExhibition }: { exhibition: Exhibition }) {
+export default function ExhibitionHeader({ exhibition }: { exhibition: Exhibition }) {
 
-    const { exhibition, isUpdating, updateExhibition } = useExhibition();
-    const [name, setName] = useState(initialExhibition.name);
-    const t = useTranslations('exhibitions');
-    const tCommon = useTranslations('common');
-
-    useEffect(() => {
-        setName(initialExhibition.name);
-    }, [initialExhibition.name]);
-
-    const debouncedUpdateName = debounce((async (newName: string) => {
-        if (newName !== exhibition.name) {
-            await updateExhibition({ name: newName });
-        }
-    }), 1000);
-
-    useEffect(() => {
-        return () => {
-            debouncedUpdateName.cancel();
-        };
-    }, [debouncedUpdateName]);
-
-    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newName = e.target.value;
-        setName(newName);
-        debouncedUpdateName(newName);
-    };
-
+  const t = useTranslations('exhibitions');
     return (
         <div className="border-b px-6 py-4 bg-white sticky top-0 z-10">
-          <div className="flex items-center justify-between">
-            <div className="flex-1 mr-4">
-              <Input
-                value={name}
-                onChange={handleNameChange}
-                className="text-2xl font-bold h-12 bg-transparent border-none focus-visible:ring-1 px-0"
-                placeholder={t('exhibition_name')}
-              />
-            </div>
+          <div className="flex items-center justify-end">
             
             <div className="flex items-center gap-4">
               <div className="flex items-center text-sm text-muted-foreground">
@@ -69,25 +30,7 @@ export default function ExhibitionHeader({ exhibition: initialExhibition }: { ex
                     {exhibition.status === 'PUBLISHED' ? t('published') : t('draft')}
                   </span>
                 </div>
-                
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => debouncedUpdateName.flush()}
-                  disabled={isUpdating || name === exhibition.name}
-                >
-                  {isUpdating ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      {tCommon('saving')}
-                    </>
-                  ) : (
-                    <>
-                      <Save className="mr-2 h-4 w-4" />
-                      {tCommon('save')}
-                    </>
-                  )}
-                </Button>
+              
               </div>
             </div>
           </div>

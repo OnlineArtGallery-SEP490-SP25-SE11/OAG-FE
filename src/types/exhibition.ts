@@ -77,7 +77,7 @@ export enum ExhibitionStatus {
 
 // Schema definitions for nested objects
 const languageOptionSchema = z.object({
-  name: z.string().min(2).max(2),
+  name: z.string().min(1),
   code: z.string().min(2).max(2),
   isDefault: z.boolean()
 });

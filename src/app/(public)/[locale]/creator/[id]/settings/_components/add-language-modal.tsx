@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
+import { Label } from '@/components/ui/label';
 import {
   Dialog,
   DialogContent,
@@ -16,11 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useTranslations } from 'next-intl';
-import {  Loader2 } from 'lucide-react';
-import { Label } from '@/components/ui/label';
 
-// List of available languages that could be added
 const availableLanguages = [
   { code: 'en', name: 'English' },
   { code: 'vi', name: 'Vietnamese' },
@@ -34,20 +32,19 @@ const availableLanguages = [
 
 interface AddLanguageModalProps {
   isOpen: boolean;
-  onClose: () => void;
+  onOpenChange: (open: boolean) => void;
   onAddLanguage: (code: string, name: string) => Promise<void>;
   existingLanguageCodes: string[];
 }
 
 export function AddLanguageModal({ 
   isOpen, 
-  onClose,
+  onOpenChange,
   onAddLanguage,
   existingLanguageCodes 
 }: AddLanguageModalProps) {
   const [selectedLanguage, setSelectedLanguage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const t = useTranslations('exhibitions');
 
   // Filter out languages that are already added
   const availableOptions = availableLanguages.filter(
@@ -63,7 +60,7 @@ export function AddLanguageModal({
       if (selectedOption) {
         await onAddLanguage(selectedOption.code, selectedOption.name);
         setSelectedLanguage('');
-        onClose();
+        onOpenChange(false);
       }
     } finally {
       setIsSubmitting(false);
@@ -71,22 +68,22 @@ export function AddLanguageModal({
   };
   
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{t('add_language')}</DialogTitle>
+          <DialogTitle>Add New Language</DialogTitle>
         </DialogHeader>
         
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="language">{t('select_language')}</Label>
+            <Label>Select Language</Label>
             <Select
               value={selectedLanguage}
               onValueChange={setSelectedLanguage}
               disabled={isSubmitting || availableOptions.length === 0}
             >
-              <SelectTrigger id="language">
-                <SelectValue placeholder={t('select_language_placeholder')} />
+              <SelectTrigger>
+                <SelectValue placeholder="Choose a language" />
               </SelectTrigger>
               <SelectContent>
                 {availableOptions.length > 0 ? (
@@ -97,7 +94,7 @@ export function AddLanguageModal({
                   ))
                 ) : (
                   <SelectItem value="none" disabled>
-                    {t('no_languages_available')}
+                    No languages available
                   </SelectItem>
                 )}
               </SelectContent>
@@ -106,8 +103,8 @@ export function AddLanguageModal({
         </div>
         
         <DialogFooter>
-          <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
-            {t('cancel')}
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
+            Cancel
           </Button>
           <Button 
             onClick={handleSubmit} 
@@ -116,10 +113,10 @@ export function AddLanguageModal({
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {t('adding')}
+                Adding...
               </>
             ) : (
-              t('add')
+              'Add Language'
             )}
           </Button>
         </DialogFooter>

@@ -1,29 +1,25 @@
-'use client';
+import { getExhibitionById } from '@/service/exhibition';
+import { SettingsContent } from './_components/settings-content';
 
-import { LanguageSettings } from './_components/language-settings';
-import { useTranslations } from 'next-intl';
-import { ExhibitionInfoHeader } from '../artworks/_components/exhibition-info-header';
+export default async function SettingsPage({
+	params
+}: {
+	params: { id: string; locale: string }
+}) {
+	const res = await getExhibitionById(params.id);
+	const exhibition = res.data?.exhibition;
 
-export default function SettingsPage() {
-  const t = useTranslations('exhibitions');
-  
-  return (
-    <div className='max-w-7xl mx-auto px-4 py-8'>
-      {/* Header Section */}
-      <ExhibitionInfoHeader
-        title={t('settings')}
-        description={t('settings_description')}
-        faqLinkText={t('read_faq')}
-      />
+	if (!exhibition) {
+		return (
+			<div className="max-w-7xl mx-auto px-4 py-8 text-center">
+				<p className="text-destructive">Error loading exhibition settings</p>
+			</div>
+		);
+	}
 
-      <div className='grid gap-8'>
-        {/* Language Settings Component */}
-        <LanguageSettings />
-        
-        {/* <AppearanceSettings /> */}
-        {/* <VisibilitySettings /> */}
-        {/* <AdvancedSettings /> */}
-      </div>
-    </div>
-  );
+	return (
+		<SettingsContent
+			exhibition={exhibition}
+		/>
+	);
 }

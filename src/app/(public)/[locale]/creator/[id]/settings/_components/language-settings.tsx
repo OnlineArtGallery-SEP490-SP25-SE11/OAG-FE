@@ -1,165 +1,129 @@
 'use client';
 
 import { useState } from 'react';
-import { Globe, Languages } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { SettingsSection } from './settings-section';
-import { LanguageItem } from './language-item';
-import { AddLanguageModal } from './add-language-modal';
 import { useTranslations } from 'next-intl';
-import { useExhibition } from '../../../context/exhibition-provider';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { Languages } from 'lucide-react';
+import { Exhibition } from '@/types/exhibition';
+import { useServerAction } from 'zsa-react';
+import { updateExhibitionAction } from '../../../actions';
+import { LanguageAction } from './language-action';
+import { AddLanguageModal } from './add-language-modal';
 
-export function LanguageSettings() {
-  const { exhibition, updateExhibition, isUpdating } = useExhibition();
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+interface Language {
+  code: string;
+  name: string;
+  isDefault: boolean;  // Make isDefault required
+}
+
+export function LanguageSettings({
+  exhibition,
+}: {
+  exhibition: Exhibition;
+}) {
   const t = useTranslations('exhibitions');
   const tCommon = useTranslations('common');
   const { toast } = useToast();
+  
+  const [languages, setLanguages] = useState<Language[]>(
+    exhibition.languageOptions?.map(lang => ({
+      ...lang,
+      isDefault: lang.isDefault ?? false
+    })) || [{ code: 'en', name: 'English', isDefault: true }]
+  );
+  const [isAddLanguageModalOpen, setIsAddLanguageModalOpen] = useState(false);
 
-  const handleSetDefault = async (code: string) => {
-    try {
-      // Create updated language options with the new default
-      const updatedLanguageOptions = exhibition.languageOptions.map(lang => ({
-        ...lang,
-        isDefault: lang.code === code
-      }));
-      
-      await updateExhibition({ languageOptions: updatedLanguageOptions });
-      
+  const { execute: updateSettings } = useServerAction(updateExhibitionAction, {
+    onSuccess: () => {
       toast({
         title: tCommon('success'),
-        description: t('default_language_updated'),
-        variant: 'success'
+        description: t('language_settings_updated'),
+        variant: 'success',
       });
-    } catch (error) {
+    },
+    onError: (error) => {
       toast({
         title: tCommon('error'),
-        description: t('language_update_failed'),
-        variant: 'destructive'
+        description: error.err.message || t('language_settings_update_failed'),
+        variant: 'destructive',
       });
-      console.error('Error updating default language:', error);
-    }
+    },
+  });
+
+  const handleSetDefault = (code: string) => {
+    const updatedLanguages = languages.map(lang => ({
+      ...lang,
+      isDefault: lang.code === code
+    }));
+    setLanguages(updatedLanguages);
+    saveLanguages(updatedLanguages);
   };
-  
-  const handleDeleteLanguage = async (code: string) => {
-    try {
-      // Ensure we don't delete the default language
-      const languageToDelete = exhibition.languageOptions.find(lang => lang.code === code);
-      if (!languageToDelete || languageToDelete.isDefault) {
-        toast({
-          title: tCommon('error'),
-          description: t('cannot_delete_default_language'),
-          variant: 'destructive'
-        });
-        return;
-      }
-      
-      // Filter out the language to delete
-      const updatedLanguageOptions = exhibition.languageOptions.filter(
-        lang => lang.code !== code
-      );
-      
-      await updateExhibition({ languageOptions: updatedLanguageOptions });
-      
-      toast({
-        title: tCommon('success'),
-        description: t('language_deleted'),
-        variant: 'success'
-      });
-    } catch (error) {
-      toast({
-        title: tCommon('error'),
-        description: t('language_delete_failed'),
-        variant: 'destructive'
-      });
-      console.error('Error deleting language:', error);
-    }
+
+  const handleRemoveLanguage = (code: string) => {
+    const updatedLanguages = languages.filter(lang => lang.code !== code);
+    setLanguages(updatedLanguages);
+    saveLanguages(updatedLanguages);
   };
-  
+
   const handleAddLanguage = async (code: string, name: string) => {
-    try {
-      // Ensure the language isn't already added
-      if (exhibition.languageOptions.some(lang => lang.code === code)) {
-        toast({
-          title: tCommon('error'),
-          description: t('language_already_exists'),
-          variant: 'destructive'
-        });
-        return;
-      }
-      
-      // Add the new language
-      const updatedLanguageOptions = [
-        ...exhibition.languageOptions,
-        {
-          code,
-          name,
-          isDefault: false
-        }
-      ];
-      
-      await updateExhibition({ languageOptions: updatedLanguageOptions });
-      
-      toast({
-        title: tCommon('success'),
-        description: t('language_added'),
-        variant: 'success'
-      });
-    } catch (error) {
-      toast({
-        title: tCommon('error'),
-        description: t('language_add_failed'),
-        variant: 'destructive'
-      });
-      console.error('Error adding language:', error);
-    }
+    const newLanguage: Language = { code, name, isDefault: languages.length === 0 };
+    const updatedLanguages = [...languages, newLanguage];
+    setLanguages(updatedLanguages);
+    await saveLanguages(updatedLanguages);
   };
-  
-  const existingLanguageCodes = exhibition?.languageOptions?.map(lang => lang.code) || [];
-  
+
+  const saveLanguages = async (updatedLanguages: Language[]) => {
+    await updateSettings({
+      id: exhibition._id,
+      data: { languageOptions: updatedLanguages }
+    });
+  };
+
   return (
-    <>
-      <SettingsSection icon={<Globe className='w-6 h-6' />} title={t('languages')}>
-        <div className='space-y-4'>
-          {exhibition?.languageOptions?.length > 0 ? (
-            exhibition.languageOptions.map(language => (
-              <LanguageItem 
-                key={language.code}
-                language={language}
-                onSetDefault={handleSetDefault}
-                onDelete={handleDeleteLanguage}
-                disabled={isUpdating}
-              />
-            ))
-          ) : (
-            <Alert>
-              <AlertDescription>
-                {t('no_languages_configured')}
-              </AlertDescription>
-            </Alert>
-          )}
-          
-          <Button
-            className='w-full mt-4'
-            variant='outline'
-            size='lg'
-            onClick={() => setIsAddModalOpen(true)}
-            disabled={isUpdating}
-          >
-            <Languages className='w-4 h-4 mr-2' />
-            {t('add_new_language')}
-          </Button>
-        </div>
-      </SettingsSection>
-      
-      <AddLanguageModal 
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
+    <div className='space-y-4'>
+      {/* Languages List */}
+      <div className='space-y-4'>
+        {languages.map((lang) => (
+          <div key={lang.code} className='flex items-center justify-between p-4 bg-muted/50 rounded-lg hover:bg-muted/70 transition-colors'>
+            <div className='flex items-center gap-4'>
+              <span className='text-lg font-medium min-w-[2.5rem]'>
+                {lang.code.toUpperCase()}
+              </span>
+              <span>{lang.name}</span>
+              {lang.isDefault && (
+                <span className='text-xs bg-primary/10 text-primary px-2 py-1 rounded-full font-medium'>
+                  Default
+                </span>
+              )}
+            </div>
+            <LanguageAction 
+              isDefault={!!lang.isDefault}
+              onSetDefault={() => handleSetDefault(lang.code)}
+              onDelete={() => handleRemoveLanguage(lang.code)}
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Add Language Button */}
+      <Button
+        className='w-full mt-4'
+        variant='outline'
+        size='lg'
+        onClick={() => setIsAddLanguageModalOpen(true)}
+      >
+        <Languages className='w-4 h-4 mr-2' />
+        Add New Language
+      </Button>
+
+      {/* Add Language Modal */}
+      <AddLanguageModal
+        isOpen={isAddLanguageModalOpen}
+        onOpenChange={setIsAddLanguageModalOpen}
         onAddLanguage={handleAddLanguage}
-        existingLanguageCodes={existingLanguageCodes}
+        existingLanguageCodes={languages.map(l => l.code)}
       />
-    </>
+    </div>
   );
 }
