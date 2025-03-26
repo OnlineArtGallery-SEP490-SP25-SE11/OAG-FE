@@ -19,19 +19,19 @@ export interface Exhibition {
   description: string;
   thumbnail: string;
   backgroundImage: string;
-  status:  ExhibitionStatus;
+  status: ExhibitionStatus;
   createdAt: string;
   updatedAt: string;
   gallery: Gallery;
-  artworks : [
+  artworks: [
     {
-        index: number;
-        artwork: {
-            _id: string;
-            title: string;
-            url: string;
-            description: string;
-        }
+      positionIndex: number;
+      artwork: {
+        _id: string;
+        title: string;
+        url: string;
+        description: string;
+      }
     }
   ];
   artworkPositions: [
@@ -40,15 +40,15 @@ export interface Exhibition {
       positionIndex: number;
     }
   ]
-  
+
 }
 
 export enum ExhibitionStatus {
-	DRAFT = 'DRAFT',
-	PENDING = 'PENDING',
-	PUBLISHED = 'PUBLISHED',
-	PRIVATE = 'PRIVATE',
-	REJECTED = 'REJECTED'
+  DRAFT = 'DRAFT',
+  PENDING = 'PENDING',
+  PUBLISHED = 'PUBLISHED',
+  PRIVATE = 'PRIVATE',
+  REJECTED = 'REJECTED'
 }
 
 // Schema definitions for nested objects
@@ -102,13 +102,13 @@ export const updateExhibitionSchema = z.object({
 
 
 export type GetExhibitionsResponse = {
-	exhibitions: Exhibition[];
-	pagination: Pagination;
+  exhibitions: Exhibition[];
+  pagination: Pagination;
 };
 
 
 export type ExhibitionRequestResponse = {
-	exhibition: Exhibition;
+  exhibition: Exhibition;
 }
 
 export type CreateEmptyExhibitionDto = z.infer<typeof createEmptyExhibitionSchema>;

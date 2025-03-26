@@ -17,6 +17,24 @@ export const formatTime = (seconds: number) =>  {
 	return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
 
+const padZero = (num: number): string => String(num).padStart(2, '0');
+
+export const formatDate = (date: Date): string => {
+  if (!(date instanceof Date) || isNaN(date.getTime())) {
+    console.error("Invalid date passed to formatDate:", date);
+    return "Invalid Date";
+  }
+
+  const year = date.getFullYear();
+  const month = padZero(date.getMonth() + 1); // getMonth() is 0-indexed (0-11)
+  const day = padZero(date.getDate());
+  const hour = padZero(date.getHours());
+  const minute = padZero(date.getMinutes());
+  const second = padZero(date.getSeconds());
+
+  return `${day}-${month}-${year} ${hour}:${minute}:${second}`;
+}
+
 export const isTokenExpired = (token: string): boolean => {
 	if (!token) return true;
 	try {

@@ -47,6 +47,8 @@ export const updateExhibitionAction = authenticatedAction
     )
     .handler(async ({ input, ctx }) => {
         const { id, data } = input;
+        console.log('Updating exhibition with data:', data);
+        console.log('Exhibition ID:', id);
         const result = await updateExhibition(ctx.user.accessToken, id, data);
         
         revalidatePath(`/creator/${id}`);

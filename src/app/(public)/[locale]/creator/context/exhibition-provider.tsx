@@ -1,17 +1,17 @@
 'use client';
 
 import { createContext, useContext, useState } from 'react';
-import { Exhibition } from '@/types/exhibition';
+import { Exhibition, UpdateExhibitionDto } from '@/types/exhibition';
 import { useRouter } from 'next/navigation';
 import { useServerAction } from 'zsa-react';
-import { updateExhibitionAction } from '../../actions';
+import { updateExhibitionAction } from '../actions';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslations } from 'next-intl';
 
 interface ExhibitionContextType {
   exhibition: Exhibition;
   isUpdating: boolean;
-  updateExhibition: (data: Partial<Exhibition>) => Promise<void>;
+  updateExhibition: (data: UpdateExhibitionDto) => Promise<void>;
   refreshExhibition: () => void;
 }
 
@@ -49,9 +49,9 @@ export default function ExhibitionContextProvider({
     }
   });
   
-  const updateExhibition = async (data: Partial<Exhibition>) => {
+  const updateExhibition = async (data: UpdateExhibitionDto) => {
     console.log('Updating exhibition with data:', data);
-    // await execute({ id: exhibition._id, data });
+    await execute({ id: exhibition._id, data });
   };
   
   const refreshExhibition = () => {
