@@ -14,7 +14,6 @@ import { ExhibitionInfoHeader } from './_components/exhibition-info-header';
 import { ExhibitionFloorPlan } from './_components/exhibition-floor-plan';
 import { ArtworkPositionsGrid } from './_components/artwork-positions-grid';
 import { ArtworkSelectionModal } from './_components/artwork-selection-modal';
-
 // Type for artwork
 interface Artwork {
   _id: string;

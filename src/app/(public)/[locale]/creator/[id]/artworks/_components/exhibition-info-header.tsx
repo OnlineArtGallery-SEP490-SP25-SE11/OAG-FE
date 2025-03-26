@@ -16,7 +16,7 @@ export function ExhibitionInfoHeader({
   faqLinkText,
 }: ExhibitionInfoHeaderProps) {
   return (
-    <div className='bg-white rounded-lg border p-6'>
+    <div className='bg-white rounded-lg border p-6 mb-8'>
       <h2 className='text-2xl font-bold text-gray-800 mb-4'>{title}</h2>
       <p className='text-gray-600 leading-relaxed'>{description}</p>
       <div className="mt-4 flex items-center gap-2 text-sm text-blue-600">

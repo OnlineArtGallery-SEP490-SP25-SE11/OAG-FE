@@ -9,6 +9,7 @@ import { ImagePlus, Music, Upload, X } from 'lucide-react';
 import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useLocale } from 'next-intl';
+import { ExhibitionInfoHeader } from '../artworks/_components/exhibition-info-header';
 
 // Mock data - replace with actual API call to get configured languages
 const getConfiguredLanguages = () => [
@@ -73,16 +74,13 @@ export default function ContentPage() {
 	};
 
 	return (
-		<div className='max-w-4xl mx-auto p-6 space-y-8'>
-			<div className='prose max-w-none mb-8'>
-				<h2 className='text-2xl font-bold mb-4'>Exhibition Content</h2>
-				<p className='text-gray-600'>
-					Add a name, description and preview image for your
-					exhibition. This content will show, for example, on social
-					media shares and is necessary for publishing on the Virtual
-					Art Gallery Discover page.
-				</p>
-			</div>
+		<div className='max-w-7xl mx-auto px-4 py-8 space-y-8'>
+			{/* Header Section */}
+			<ExhibitionInfoHeader 
+				title='Exhibition Content'
+				description='Manage the content and media for your exhibition.'
+				faqLinkText='Read FAQ'
+			/>
 
 			{/* Exhibition Details with Language Tabs */}
 			<Card className='p-6'>
