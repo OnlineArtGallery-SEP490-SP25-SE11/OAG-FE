@@ -262,43 +262,43 @@ export default function ArtworksPage() {
             </div>
           ) : (
             <ScrollArea className="h-[60vh]">
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-1">
-                {artworks.map((artwork) => (
-                  <div
-                    key={artwork._id}
-                    onClick={() => handleArtworkSelect(artwork)}
-                    className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all duration-200 cursor-pointer ${
-                      selectedArtwork?._id === artwork._id
-                        ? 'border-primary ring-2 ring-primary/20 scale-[0.98]'
-                        : 'border-gray-200 hover:border-primary/50'
-                    }`}
-                  >
-                    <Image
-                      src={artwork.url}
-                      alt={artwork.title}
-                      fill
-                      className="object-cover"
-                    />
-                    
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 hover:opacity-100 transition-opacity">
-                      <div className="absolute bottom-2 left-2 right-2">
-                        <h3 className="text-white text-sm font-medium truncate">
-                          {artwork.title}
-                        </h3>
-                        <p className="text-white/80 text-xs truncate">
-                          {artwork.dimensions?.width}x{artwork.dimensions?.height}
-                        </p>
-                      </div>
-                    </div>
-                    
-                    {selectedArtwork?._id === artwork._id && (
-                      <div className="absolute top-2 right-2 bg-primary rounded-full p-1">
-                        <Check className="w-4 h-4 text-white" />
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
+              {/*<div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-1">*/}
+              {/*  {artworks.map((artwork) => (*/}
+              {/*    <div*/}
+              {/*      key={artwork._id}*/}
+              {/*      onClick={() => handleArtworkSelect(artwork)}*/}
+              {/*      className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all duration-200 cursor-pointer ${*/}
+              {/*        selectedArtwork?._id === artwork._id*/}
+              {/*          ? 'border-primary ring-2 ring-primary/20 scale-[0.98]'*/}
+              {/*          : 'border-gray-200 hover:border-primary/50'*/}
+              {/*      }`}*/}
+              {/*    >*/}
+              {/*      <Image*/}
+              {/*        src={artwork.url}*/}
+              {/*        alt={artwork.title}*/}
+              {/*        fill*/}
+              {/*        className="object-cover"*/}
+              {/*      />*/}
+              {/*      */}
+              {/*      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 hover:opacity-100 transition-opacity">*/}
+              {/*        <div className="absolute bottom-2 left-2 right-2">*/}
+              {/*          <h3 className="text-white text-sm font-medium truncate">*/}
+              {/*            {artwork.title}*/}
+              {/*          </h3>*/}
+              {/*          <p className="text-white/80 text-xs truncate">*/}
+              {/*            {artwork.dimensions?.width}x{artwork.dimensions?.height}*/}
+              {/*          </p>*/}
+              {/*        </div>*/}
+              {/*      </div>*/}
+              {/*      */}
+              {/*      {selectedArtwork?._id === artwork._id && (*/}
+              {/*        <div className="absolute top-2 right-2 bg-primary rounded-full p-1">*/}
+              {/*          <Check className="w-4 h-4 text-white" />*/}
+              {/*        </div>*/}
+              {/*      )}*/}
+              {/*    </div>*/}
+              {/*  ))}*/}
+              {/*</div>*/}
             </ScrollArea>
           )}
           

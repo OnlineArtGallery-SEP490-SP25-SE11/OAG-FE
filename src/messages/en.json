@@ -114,8 +114,7 @@
     "publish_success": "Blog has been published",
     "private_success": "Blog has been privated",
     "pending": "Pending",
-    "draft_create_error": "An error occurred while creating blog",
-    "update_status_error": "An error occurred while updating blog status"
+    "draft_create_error": "An error occurred while creating blog"
   },
   "premium": {
     "feature_comparison": {
@@ -252,9 +251,7 @@
       "collections": "Collections",
       "professional_artist": "Professional Artist",
       "view_profile": "View Profile",
-      "collection_title": "Collection {number}",
-      "followers": "Followers",
-      "following" : "Following"
+      "collection_title": "Collection {number}"
     },
     "edit": {
       "title": "Edit Profile",
@@ -284,6 +281,18 @@
         "update_error": "Failed to update profile"
       }
     }
+  },
+  "filter": {
+    "filters": "Filters",
+    "categories": "Categories",
+    "priceRange": "Price Range",
+    "searchPlaceholder": "Search artworks...",
+    "quickSearch": "Quick search...",
+    "price": "Price",
+    "artists": "Artists",
+    "materials": "Materials",
+    "waysToBuy": "Ways to Buy",
+    "size": "Size"
   },
   "artworkPage":{
     "filter": {
