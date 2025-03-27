@@ -52,17 +52,38 @@ interface TransactionListProps {
     showCard?: boolean;
     title?: string;
     limit?: number;
+    transactions: Transaction[]; // Add this line
 }
+export interface TransactionData {
+    _id: string;
+    walletId: string;
+    amount: number;
+    type: string; // Less restrictive than ApiTransaction
+    status: string;
+    orderCode: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+}
+const mapApiToTransaction = (transaction: TransactionData): Transaction => {
+    // Validate the type to ensure it matches our expected values
+    const validType = ['DEPOSIT', 'WITHDRAWAL', 'PAYMENT'].includes(transaction.type)
+        ? transaction.type as 'DEPOSIT' | 'WITHDRAWAL' | 'PAYMENT'
+        : 'PAYMENT'; // Default fallback
 
-const mapApiToTransaction = (apiTransaction: ApiTransaction): Transaction => {
+    // Validate status similarly
+    const validStatus = ['PENDING', 'PAID', 'FAILED'].includes(transaction.status)
+        ? transaction.status as 'PENDING' | 'PAID' | 'FAILED'
+        : 'PENDING';
+
     return {
-        id: apiTransaction._id,
-        type: apiTransaction.type,
-        amount: apiTransaction.amount,
-        date: apiTransaction.createdAt,
-        description: `${apiTransaction.type === 'DEPOSIT' ? 'Deposit' : 'Withdrawal'} - ${apiTransaction.orderCode}`,
-        status: apiTransaction.status,
-        orderCode: apiTransaction.orderCode
+        id: transaction._id,
+        type: validType,
+        amount: transaction.amount,
+        date: transaction.createdAt,
+        description: `${validType === 'DEPOSIT' ? 'Deposit' : 'Withdrawal'} - ${transaction.orderCode}`,
+        status: validStatus,
+        orderCode: transaction.orderCode
     };
 };
 

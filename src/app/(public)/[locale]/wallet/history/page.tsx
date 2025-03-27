@@ -52,7 +52,25 @@ export default function HistoryPage() {
 			);
 		});
 	}, [search, type]);
+	const mappedFilteredTransactions = useMemo(() => {
+		return filteredTransactions.map(transaction => {
+			// Map status values
+			let mappedStatus: "PENDING" | "PAID" | "FAILED";
+			if (transaction.status === "pending") {
+				mappedStatus = "PENDING";
+			} else if (transaction.status === "success") {
+				mappedStatus = "PAID"; // Not just uppercase, different term
+			} else {
+				mappedStatus = "FAILED";
+			}
 
+			return {
+				...transaction,
+				type: transaction.type.toUpperCase() as "DEPOSIT" | "WITHDRAWAL" | "PAYMENT",
+				status: mappedStatus
+			};
+		});
+	}, [filteredTransactions]);
 	return (
 		<div className='min-h-screen bg-gradient-to-b from-background to-muted/20'>
 			<SectionHeader
@@ -89,9 +107,8 @@ export default function HistoryPage() {
 						/>
 					)}
 				</AnimatePresence>
-
 				<TransactionList
-					transactions={filteredTransactions}
+					transactions={mappedFilteredTransactions}
 					showCard={true}
 					title="All Transactions"
 				/>
