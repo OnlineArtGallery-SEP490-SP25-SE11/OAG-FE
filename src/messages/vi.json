@@ -277,6 +277,12 @@
         "auth_error": "Vui lòng đăng nhập để cập nhật hồ sơ",
         "update_success": "Cập nhật hồ sơ thành công",
         "update_error": "Không thể cập nhật hồ sơ"
+      },
+      "validation": {
+        "name_min_length": "Tên phải có ít nhất 2 ký tự",
+        "name_max_length": "Tên không được vượt quá 50 ký tự",
+        "bio_max_length": "Tiểu sử không được vượt quá 1000 ký tự",
+        "max_genres": "Không thể chọn quá 10 phong cách nghệ thuật"
       }
     }
   }
