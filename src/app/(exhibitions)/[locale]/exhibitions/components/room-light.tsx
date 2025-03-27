@@ -15,7 +15,7 @@ interface RoomLightsProps {
 	debug?: boolean;
 }
 
-export function RoomLights({ config, debug = true }: RoomLightsProps) {
+export function RoomLights({ config, debug = false }: RoomLightsProps) {
 	const directionalLightRef = useRef<DirectionalLight>(null);
 	const { gl } = useThree();
 

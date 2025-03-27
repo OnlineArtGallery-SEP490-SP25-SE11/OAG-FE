@@ -119,10 +119,10 @@ export default function Header() {
 										key={href}
 										href={href}
 										className={cn(
-											'group relative py-2 text-base sm:text-lg uppercase tracking-wider font-semibold transition-all duration-300',
+											'group relative py-2 text-base sm:text-lg uppercase tracking-wider  transition-all duration-300',
 											isScrolled
 												? 'text-gray-900 dark:text-white hover:text-primary dark:hover:text-primary'
-												: 'text-white hover:text-primary text-shadow-md',
+												: ' hover:text-primary ',
 											isActive &&
 												'text-primary dark:text-primary font-bold'
 										)}

@@ -2,7 +2,7 @@
 import { Card } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Flag, Heart, MessageSquare, Share2 } from 'lucide-react';
+import { Heart, MessageSquare, Share2 } from 'lucide-react';
 import Image from 'next/image';
 import {
 	Drawer,
@@ -44,24 +44,24 @@ const mockArtPosts = [
 		title: 'Abstract Harmony',
 		artist: {
 			name: 'Sarah Chen',
-			avatar: '/oag-logo.png'
+			avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop'
 		},
-		image: 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg',
+		image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5',
 		likes: 234,
 		comments: 45,
 		description: 'A contemporary piece exploring color and emotion'
 	},
 	{
 		id: '2',
-		title: 'Abstract Harmony',
+		title: 'Urban Reflections',
 		artist: {
-			name: 'Sarah Chen',
-			avatar: '/oag-logo.png'
+			name: 'Michael Rivera',
+			avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop'
 		},
-		image: 'https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg',
-		likes: 234,
-		comments: 45,
-		description: 'A contemporary piece exploring color and emotion'
+		image: 'https://images.unsplash.com/photo-1518998053901-5348d3961a04',
+		likes: 189,
+		comments: 32,
+		description: 'Capturing the essence of city life through abstract forms'
 	}
 ];
 

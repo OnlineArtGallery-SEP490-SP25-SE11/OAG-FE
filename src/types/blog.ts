@@ -1,5 +1,6 @@
 import { BlogStatus } from '@/utils/enums';
 import { z } from 'zod';
+import { Pagination } from './response';
 
 export const blogSchema = z.object({
 	_id: z.string(),
@@ -36,4 +37,14 @@ export type GetPublishedBlogsResponse = {
 		hasNextPage: boolean;
 		endCursor: string;
 	};
+};
+
+export type UserBlogsResponse = {
+    blogs: Blog[];
+    pagination: Pagination;
+}
+
+//CRUD
+export type BlogRequestResponse = {
+	blog: Blog;
 };

@@ -112,7 +112,8 @@
     "cancel": "Hủy yêu cầu",
     "cancel_request": "Yêu cầu xuất bản đã thu hồi",
     "pending": "Đã gửi",
-    "draft_create_error": "Đã xảy ra lỗi khi tạo blog"
+    "draft_create_error": "Đã xảy ra lỗi khi tạo blog",
+    "draft_update_error": "Đã xảy ra lỗi khi cập nhật blog"
   },
   "premium": {
     "feature_comparison": {
@@ -249,7 +250,9 @@
       "collections": "Bộ sưu tập",
       "professional_artist": "Nghệ sĩ chuyên nghiệp",
       "view_profile": "Xem hồ sơ",
-      "collection_title": "Bộ sưu tập {number}"
+      "collection_title": "Bộ sưu tập {number}",
+      "followers": "Người theo dõi",
+      "following": "Đang theo dõi"
     },
     "edit": {
       "title": "Chỉnh sửa hồ sơ",
@@ -284,6 +287,19 @@
         "bio_max_length": "Tiểu sử không được vượt quá 1000 ký tự",
         "max_genres": "Không thể chọn quá 10 phong cách nghệ thuật"
       }
+    }
+  },
+  "artworkPage":{
+    "filter": {
+      "priceRange": "Khoảng giá",
+      "categories": "Danh mục",
+      "filters": "Bộ lọc",
+      "artists": "Nghệ sĩ",
+      "wayToBuy": "Cách để mua",
+      "size": "Kích thước",
+      "material": "Chất liệu",
+      "price": "Giá",
+      "filterSearchPlaceholder": "Tìm kiếm bộ lọc"
     }
   }
 }

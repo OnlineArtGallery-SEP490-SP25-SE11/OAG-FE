@@ -15,6 +15,6 @@ export const deleteBlogAction = authenticatedAction
 	.handler(async ({ input, ctx }) => {
 		// const blogId = input.blogId;
 		// await deleteBlogUseCase(blogId);
-		console.log('input delete blog', input);
+		console.log('input delete blog', input, ctx);
 		redirect('/blogs/dashboard/posts');
 	});

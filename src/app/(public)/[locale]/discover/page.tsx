@@ -28,8 +28,8 @@ export default function DiscoverPage() {
     // Mock data - replace with API call
     const galleries: Gallery[] = [
         {
-            id: "1",
-            title: "Modern Art Exhibition 2024",
+            id: "6071b3e5c1b4d82edc4eda30",
+            title: "Modern Art Exhibition 2025",
             author: "Johny Dang",
             thumbnail: "https://images.unsplash.com/photo-1561214115-f2f134cc4912",
             category: "Modern Art",
@@ -40,7 +40,7 @@ export default function DiscoverPage() {
             tags: ["Modern", "Abstract", "2024"]
         },
         {
-            id: "2", 
+            id: "6071b3e5c1b4d82edc4eda31", 
             title: "Digital Dreams",
             author: "Sarah Chen",
             thumbnail: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5",
