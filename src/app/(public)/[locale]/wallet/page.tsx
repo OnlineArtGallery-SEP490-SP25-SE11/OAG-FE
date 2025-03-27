@@ -11,7 +11,7 @@ export default function WalletDashboard() {
 	const { data, error, isLoading, isFetching, refetch } = useQuery({
 		queryKey: ['wallet'],
 		queryFn: () => walletService.getWallet(),
-		placeholderData: (previousData) => previousData,
+		placeholderData: (previousData: unknown) => previousData,
 		refetchOnWindowFocus: true
 	});
 	const balance = data?.data.balance || 123456;
@@ -24,7 +24,7 @@ export default function WalletDashboard() {
 					<section>
 						<QuickActions />
 					</section>
-					<TransactionList />
+					<TransactionList/>
 				</div>
 			</main>
 		</div>

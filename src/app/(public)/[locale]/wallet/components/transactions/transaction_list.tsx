@@ -52,7 +52,7 @@ interface TransactionListProps {
     showCard?: boolean;
     title?: string;
     limit?: number;
-    transactions: Transaction[]; // Add this line
+    // transactions: Transaction[]; // Add this line
 }
 export interface TransactionData {
     _id: string;

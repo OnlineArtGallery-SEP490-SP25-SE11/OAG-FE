@@ -108,7 +108,7 @@ export default function HistoryPage() {
 					)}
 				</AnimatePresence>
 				<TransactionList
-					transactions={mappedFilteredTransactions}
+					// transactions={mappedFilteredTransactions}
 					showCard={true}
 					title="All Transactions"
 				/>
