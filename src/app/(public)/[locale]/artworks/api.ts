@@ -127,7 +127,6 @@ export async function fetchArtPiecesByRange(
 ): Promise<Artwork[]> {
 	const skip = startIndex;
 	const take = stopIndex - startIndex + 1;
-	// const url = `http://localhost:5000/api/`;
 	try {
 		const axios = await createAxiosInstance({ useToken: false });
 		if (!axios) throw new Error('Failed to create Axios instance');
