@@ -3,7 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { Loader } from './gallery-loader';
 import dynamic from 'next/dynamic';
 import { Stats } from '@react-three/drei';
-import { ExhibitionType } from '@/types/gallery';
+import { Exhibition as ExhibitionType } from '@/types/exhibition';
 
 
 export default function Exhibition({ exhibition }: { exhibition: ExhibitionType }) {

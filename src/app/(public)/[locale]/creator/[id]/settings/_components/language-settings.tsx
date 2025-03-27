@@ -61,9 +61,26 @@ export function LanguageSettings({
   };
 
   const handleRemoveLanguage = (code: string) => {
+    const removedLanguage = languages.find(lang => lang.code === code);
     const updatedLanguages = languages.filter(lang => lang.code !== code);
-    setLanguages(updatedLanguages);
-    saveLanguages(updatedLanguages);
+    
+    // If we're removing the default language and other languages exist
+    if (removedLanguage?.isDefault && updatedLanguages.length > 0) {
+      // Set the first remaining language as default
+      updatedLanguages[0].isDefault = true;
+    }
+    
+    // Only allow removal if there's at least one language remaining
+    if (updatedLanguages.length > 0) {
+      setLanguages(updatedLanguages);
+      saveLanguages(updatedLanguages);
+    } else {
+      toast({
+        title: tCommon('error'),
+        description: t('cannot_remove_last_language'),
+        variant: 'destructive',
+      });
+    }
   };
 
   const handleAddLanguage = async (code: string, name: string) => {

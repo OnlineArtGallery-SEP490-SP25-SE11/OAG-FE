@@ -8,7 +8,7 @@ export default function ExhibitionHeader({ exhibition }: { exhibition: Exhibitio
 
   const t = useTranslations('exhibitions');
     return (
-        <div className="border-b px-6 py-4 bg-white sticky top-0 z-10">
+        <div className="px-6 py-4 bg-white sticky top-0 z-10">
           <div className="flex items-center justify-end">
             
             <div className="flex items-center gap-4">

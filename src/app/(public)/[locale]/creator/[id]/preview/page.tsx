@@ -36,7 +36,7 @@ export default function PreviewPage() {
 					</div>
 
 					{/* Settings Section */}
-					<div className='border-t pt-6'>
+					{/* <div className='border-t pt-6'>
 						<h3 className='text-lg font-semibold mb-3'>
 							Display Settings
 						</h3>
@@ -64,7 +64,7 @@ export default function PreviewPage() {
 								</select>
 							</div>
 						</div>
-					</div>
+					</div> */}
 				</div>
 			</div>
 		</div>

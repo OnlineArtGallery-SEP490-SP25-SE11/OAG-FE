@@ -103,6 +103,7 @@ export function ArtworksContent({
         executePlacement({
             id: exhibition._id,
             data: {
+                welcomeImage: exhibition.welcomeImage,
                 artworkPositions: updatedPositions,
             }
         });

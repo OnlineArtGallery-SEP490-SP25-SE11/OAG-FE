@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { Gallery } from "./gallery";
 import { Pagination } from "./response";
+import { Gallery } from "./new-gallery";
 
 
 
-interface Artwork {
+export interface ExhibitionArtwork {
   _id: string;
   title: string;
   description: string;
@@ -21,7 +21,7 @@ interface Artwork {
 }
 
 export interface ArtworkPosition {
-  artwork: Artwork;
+  artwork: ExhibitionArtwork;
   positionIndex: number;
 }
 
@@ -48,9 +48,16 @@ export interface PublicSettings {
 
 export interface Exhibition {
   _id: string;
-  name: string;
   startDate: string;
   endDate: string;
+  welcomeImage: string;
+  backgroundMedia: string;
+  backgroundAudio: string;
+  contents: {
+    languageCode: string;
+    name: string;
+    description: string;
+  }[];
   gallery: Gallery;
   author: {
     _id: string;
@@ -110,10 +117,16 @@ export const createEmptyExhibitionSchema = z.object({
 
 // Update schema - all fields optional
 export const updateExhibitionSchema = z.object({
-  name: z.string().min(2).max(50).optional(),
-  description: z.string().optional(),
   startDate: z.string().or(z.date()).optional(),
   endDate: z.string().or(z.date()).optional(),
+  welcomeImage: z.string().url().optional(),
+  backgroundMedia: z.string().url().optional(),
+  backgroundAudio: z.string().url().optional(),
+  contents: z.array(z.object({
+    languageCode: z.string().min(2).max(2),
+    name: z.string().max(100),
+    description: z.string(),
+  })).optional(),
   gallery: z.string().optional(),
   languageOptions: z.array(languageOptionSchema).optional(),
   isFeatured: z.boolean().optional(),
@@ -123,6 +136,19 @@ export const updateExhibitionSchema = z.object({
   artworkPositions: z.array(artworkPositionSchema).optional()
 });
 
+
+export const contentSchema = z.object({
+  contents: z.array(z.object({
+    languageCode: z.string().min(2).max(2),
+    name: z.string().max(100),
+    description: z.string(),
+  })).optional(),
+  welcomeImage: z.string().optional(),
+  backgroundMedia: z.string().optional(),
+  backgroundAudio: z.string().optional(),
+});
+
+export type ContentFormData = z.infer<typeof contentSchema>;
 
 
 export type GetExhibitionsResponse = {
