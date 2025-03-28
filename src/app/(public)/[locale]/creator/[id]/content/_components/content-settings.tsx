@@ -12,7 +12,7 @@ import FileUploader from '@/components/ui.custom/file-uploader'; // Ensure this 
 import { useToast } from '@/hooks/use-toast';
 import { useServerAction } from 'zsa-react';
 import { updateExhibitionContentAction } from '../actions'; // Ensure this path is correct
-import { ImageIcon, Music, SaveIcon, VideoIcon, XIcon } from 'lucide-react';
+import { ImageIcon, Music, SaveIcon, XIcon } from 'lucide-react';
 import { LoaderButton } from '@/components/ui.custom/loader-button'; // Ensure this path is correct
 import { contentSchema, type ContentFormData } from '@/types/exhibition'; // Ensure this path is correct
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -258,7 +258,7 @@ export function ContentSettings({ exhibition }: { exhibition: Exhibition }) {
                                 </div>
                             ) : (
                                 <FileUploader
-                                    icon={<VideoIcon className="h-8 w-8 sm:h-12 sm:w-12" />}
+                                    // icon={<VideoIcon className="h-8 w-8 sm:h-12 sm:w-12" />}
                                     multiple={false}
                                     accept={{
                                         'image/*': ['.png', '.jpg', '.jpeg'],
