@@ -1,7 +1,7 @@
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { AnimatePresence, motion } from 'framer-motion';
-import { DollarSignIcon, Flag, Info, RulerIcon, UserIcon, X } from 'lucide-react';
+import { DollarSignIcon, Flag, Info, RulerIcon, UserIcon, X, BookmarkIcon } from 'lucide-react';
 import Image from 'next/image';
 import {
     Fragment,
@@ -19,6 +19,7 @@ import { Artwork } from '@/types/marketplace';
 import CreateReport from '@/components/ui.custom/report-button';
 import { RefType } from '@/utils/enums';
 import { Button } from '@/components/ui/button';
+import AddArtworkCollection from '@/components/ui.custom/add-artwork-collection';
 
 const overlayVariants = {
     initial: { opacity: 0 },
@@ -328,6 +329,24 @@ function Modal({
                                                                 }
                                                                 px
                                                             </span>
+                                                        </div>
+                                                        
+                                                        {/* Add the collection button here */}
+                                                        <div className='mt-4'>
+                                                            <AddArtworkCollection 
+                                                                artworkId={artwork._id}
+                                                                triggerButton={
+                                                                    <Button 
+                                                                        className="w-full flex items-center justify-center gap-2 bg-white/20 hover:bg-white/30 text-white"
+                                                                    >
+                                                                        <BookmarkIcon className="w-5 h-5" />
+                                                                        Add to Collection
+                                                                    </Button>
+                                                                }
+                                                                onSuccess={() => {
+                                                                    // Optional: You can add additional success handling here
+                                                                }}
+                                                            />
                                                         </div>
                                                     </div>
                                                     <Separator className='my-4 bg-white/20' />

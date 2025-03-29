@@ -15,7 +15,7 @@ const collectionService = {
                 throw new Error('Failed to create axios instance');
             }
             const res = await axios.get('/collection/:id');
-            return res.data.data;
+            return res.data;
         }
         catch(error){
             console.error('Error getting collections:', error);
@@ -30,7 +30,8 @@ const collectionService = {
                 throw new Error('Failed to create axios instance');
             }
             const res = await axios.get(`/collection`);
-            return res.data.data;
+            console.log('res', res.data);
+            return res.data;
         }
         catch(error){
             console.error('Error getting collections by userId:', error);
@@ -47,7 +48,7 @@ const collectionService = {
                 throw new Error('Failed to create axios instance');
             }
             const res = await axios.get(`/collection/other?userId=${userId}`);
-            return res.data.data;
+            return res.data;
         }
         catch(error){
             console.error('Error getting collections by userId:', error);
@@ -67,7 +68,7 @@ const collectionService = {
                 description: data.description,
                 artworks: imageArray,
             });
-            return res.data.data;
+            return res.data;
         }
         catch(error){
             console.error('Error creating collection:', error);
@@ -75,18 +76,17 @@ const collectionService = {
         }
     },
 // add artwork to collection
-async update(id: string, artworkId: string | string[]) {
+async update(id: string, artworkId: string | string[]): Promise<any> {
     try{
         const axios = await createAxiosInstance({ useToken: true });
         if(!axios){
             throw new Error('Failed to create axios instance');
         }
         const imageArray = Array.isArray(artworkId) ? artworkId : [artworkId].filter(Boolean);
-        const res = await axios.put(`/collection`, {
-            id: id,
+        const res = await axios.put(`/collection/${id}`, {
             artId: imageArray
         });
-        return res.data.data;
+        return res.data;
     }
     catch(error){
         console.error('Error updating collection:', error);
@@ -101,7 +101,7 @@ async update(id: string, artworkId: string | string[]) {
                 throw new Error('Failed to create axios instance');
             }
             const res = await axios.delete(`/collection/${id}`);
-            return res.data.data;
+            return res.data;
         }
         catch(error){
             console.error('Error deleting collection:', error);
@@ -116,7 +116,7 @@ async update(id: string, artworkId: string | string[]) {
                 throw new Error('Failed to create axios instance');
             }
             const res = await axios.delete(`/collection/art/${id}`);
-            return res.data.data;
+            return res.data;
         }
         catch(error){
             console.error('Error deleting artwork from collection:', error);
