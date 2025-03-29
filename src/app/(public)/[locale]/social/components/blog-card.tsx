@@ -1,6 +1,7 @@
 "use client";
 import {
   BookmarkPlusIcon,
+  Flag,
   Heart,
   MessagesSquare,
   MoreHorizontal,
@@ -14,7 +15,8 @@ import { createExcerpt, sanitizeBlogContent } from "@/app/utils";
 import { ToggleBookmarkButton } from "@/components/ui.custom/toggle-bookmark-button";
 import { ToggleHeartButton } from "@/components/ui.custom/toggle-heart-button";
 import { useParams } from "next/navigation";
-// import { ReportButton } from "@/components/ui.custom/report-button";
+import ReportButton from "@/components/ui.custom/report-button";
+import { RefType } from "@/utils/enums";
 import {
   Drawer,
   DrawerClose,
@@ -43,7 +45,7 @@ interface BlogCardProps {
   coverImage: string;
   content: string;
   author: {
-    _id: string
+    _id: string;
     name: string;
     image: string;
   };
@@ -195,22 +197,36 @@ export function BlogCard({
   return (
     <div className="w-full max-w-[700px] rounded-xl overflow-hidden border bg-white dark:bg-gray-800 transition-all duration-300 hover:shadow-xl flex flex-col">
       <div className="px-4 py-2">
-        <div className="flex items-center">
-          <Avatar className="h-8 w-8 mr-3">
-            <AvatarImage src={author.image} alt={author.name} />
-            <AvatarFallback>{author.name.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-              {author.name}
-            </p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              {formatDistanceToNow(publishedAt, {
-                addSuffix: true,
-              })}{" "}
-              · {readTime} min read
-            </p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <Avatar className="h-8 w-8 mr-3">
+              <AvatarImage src={author.image} alt={author.name} />
+              <AvatarFallback>{author.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                {author.name}
+              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                {formatDistanceToNow(publishedAt, {
+                  addSuffix: true,
+                })}{" "}
+                · {readTime} min read
+              </p>
+            </div>
           </div>
+          {isSignedIn && (
+            <ReportButton
+              refId={id}
+              refType={RefType.BLOG}
+              url={window.location.href}
+              triggerElement={
+                <Button variant="ghost">
+                  <Flag className="w-4 h-4" />
+                </Button>
+              }
+            />
+          )}
         </div>
       </div>
       <Link href={`/${locale}/blogs/${slug}`}>
@@ -281,43 +297,62 @@ export function BlogCard({
                               </span>
                             </div>
 
-                            {comment.author?._id === currentUser?._id ||
-                            author._id === currentUser?._id ? (
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button variant="ghost" size="icon">
-                                    <MoreHorizontal className="w-4 h-4" />
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                  {comment.author?.name ===
-                                    currentUser?.name && (
+                            <div className="flex items-center space-x-1">
+                              {isSignedIn &&
+                                comment.author?._id !== currentUser?._id && (
+                                  <ReportButton
+                                    refId={comment._id}
+                                    refType={RefType.COMMENT}
+                                    url={window.location.href}
+                                    triggerElement={
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-8 w-8"
+                                      >
+                                        <Flag className="w-3.5 h-3.5" />
+                                      </Button>
+                                    }
+                                  />
+                                )}
+                              {comment.author?._id === currentUser?._id ||
+                              author._id === currentUser?._id ? (
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="icon">
+                                      <MoreHorizontal className="w-4 h-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    {comment.author?.name ===
+                                      currentUser?.name && (
+                                      <DropdownMenuItem
+                                        onClick={() => {
+                                          setEditingCommentId(comment._id);
+                                          setEditContent(comment.content);
+                                        }}
+                                      >
+                                        Edit
+                                      </DropdownMenuItem>
+                                    )}
                                     <DropdownMenuItem
-                                      onClick={() => {
-                                        setEditingCommentId(comment._id);
-                                        setEditContent(comment.content);
+                                      onClick={async () => {
+                                        const user = await getCurrentUser();
+                                        if (user?.accessToken) {
+                                          handleDeleteComment(comment._id);
+                                        } else {
+                                          console.error(
+                                            "User not authenticated."
+                                          );
+                                        }
                                       }}
                                     >
-                                      Edit
+                                      Delete
                                     </DropdownMenuItem>
-                                  )}
-                                  <DropdownMenuItem
-                                    onClick={async () => {
-                                      const user = await getCurrentUser();
-                                      if (user?.accessToken) {
-                                        handleDeleteComment(comment._id);
-                                      } else {
-                                        console.error(
-                                          "User not authenticated."
-                                        );
-                                      }
-                                    }}
-                                  >
-                                    Delete
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            ) : null}
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              ) : null}
+                            </div>
                           </div>
 
                           {editingCommentId === comment._id ? (

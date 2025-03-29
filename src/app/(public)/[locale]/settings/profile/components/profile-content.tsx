@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import Collection from './collection'; // Import the Collection component
 
 interface ProfileContentProps {
 	initialData: {
@@ -186,7 +187,7 @@ const ProfileContent = ({ initialData }: ProfileContentProps) => {
 			</div>
 
 			{/* Tabs Section */}
-			<Tabs defaultValue='artworks' className='w-full'>
+			<Tabs defaultValue='collections' className='w-full'> {/* Changed default to collections */}
 				<TabsList className='flex justify-center space-x-2 border-b border-gray-200 pb-2'>
 					<TabsTrigger
 						value='favorites'
@@ -234,32 +235,9 @@ const ProfileContent = ({ initialData }: ProfileContentProps) => {
 				</TabsContent>
 
 				<TabsContent value='collections' className='mt-6'>
-					<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-						{[1, 2, 3].map((collection) => (
-							<motion.div
-								key={collection}
-								whileHover={{ scale: 1.02 }}
-								className='bg-white rounded-xl shadow-md overflow-hidden'
-							>
-								<div className='p-4'>
-									<h3 className='font-semibold mb-2'>
-										{t('view.collection_title', { number: collection })}
-									</h3>
-									<div className='grid grid-cols-2 gap-2'>
-										<img
-											src='https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg'
-											alt='Collection Preview'
-											className='w-full h-24 object-cover rounded-lg'
-										/>
-										<img
-											src='https://res.cloudinary.com/djvlldzih/image/upload/v1739204028/gallery/arts/occjr92oqgbd5gyzljvb.jpg'
-											alt='Collection Preview'
-											className='w-full h-24 object-cover rounded-lg'
-										/>
-									</div>
-								</div>
-							</motion.div>
-						))}
+					{/* Replace static collection content with the Collection component */}
+					<div className="bg-white rounded-xl p-6 shadow-sm">
+						<Collection />
 					</div>
 				</TabsContent>
 			</Tabs>

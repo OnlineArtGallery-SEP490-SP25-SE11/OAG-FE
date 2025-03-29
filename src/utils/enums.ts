@@ -31,7 +31,8 @@ export enum ReasonReport {
 export enum RefType{
   BLOG = 'BLOG',
   ARTWORK = 'ARTWORK',
-  USER = 'USER'
+  USER = 'USER',
+  COMMENT = 'COMMENT',
 }
 
 export enum Role{
