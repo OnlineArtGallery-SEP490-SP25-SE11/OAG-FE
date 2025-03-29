@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { createContext, useContext, useState } from 'react';
@@ -11,7 +12,10 @@ import { useTranslations } from 'next-intl';
 interface ExhibitionContextType {
   exhibition: Exhibition;
   isUpdating: boolean;
-  updateExhibition: (data: UpdateExhibitionDto) => Promise<void>;
+  updateExhibition: (
+    data: UpdateExhibitionDto,
+    options?: { onSuccess?: (result: any) => void; onError?: (error: any) => void }
+  ) => Promise<any>;
   refreshExhibition: () => void;
 }
 
@@ -30,28 +34,71 @@ export default function ExhibitionContextProvider({
   const t = useTranslations('exhibitions');
   const tCommon = useTranslations('common');
   
+  // State to track callback options for the current operation
+  const [callbackOptions, setCallbackOptions] = useState<{
+    onSuccess?: (result: any) => void;
+    onError?: (error: any) => void;
+  } | null>(null);
+  
   const { execute, isPending } = useServerAction(updateExhibitionAction, {
     onSuccess: (result) => {
+      // Always update the exhibition state
       setExhibition(result.data.exhibition);
-      toast({
-        title: tCommon('success'),
-        description: t('exhibition_updated_success'),
-        variant: 'success'
-      });
+      
+      // If custom success callback provided, call it
+      if (callbackOptions?.onSuccess) {
+        callbackOptions.onSuccess(result);
+        setCallbackOptions(null);
+      } else {
+        // Default success toast
+        toast({
+          title: tCommon('success'),
+          description: t('exhibition_updated_success'),
+          variant: 'success'
+        });
+      }
     },
     onError: (error) => {
-      toast({
-        title: tCommon('error'),
-        description: t('exhibition_update_failed'),
-        variant: 'destructive'
-      });
-      console.error('Error updating exhibition:', error);
+      // If custom error callback provided, call it
+      if (callbackOptions?.onError) {
+        callbackOptions.onError(error);
+        setCallbackOptions(null);
+      } else {
+        // Default error toast
+        toast({
+          title: tCommon('error'),
+          description: t('exhibition_update_failed'),
+          variant: 'destructive'
+        });
+        console.error('Error updating exhibition:', error);
+      }
     }
   });
   
-  const updateExhibition = async (data: UpdateExhibitionDto) => {
+  const updateExhibition = async (
+    data: UpdateExhibitionDto, 
+    options?: { 
+      onSuccess?: (result: any) => void, 
+      onError?: (error: any) => void 
+    }
+  ) => {
     console.log('Updating exhibition with data:', data);
-    await execute({ id: exhibition._id, data });
+    
+    // Store callback options for this operation
+    if (options) {
+      setCallbackOptions(options);
+    } else {
+      setCallbackOptions(null);
+    }
+    
+    try {
+      // Execute the server action
+      return await execute({ id: exhibition._id, data });
+    } catch (error) {
+      // Server action's onError will handle displaying errors
+      // But we need to re-throw for proper promise rejection
+      throw error;
+    }
   };
   
   const refreshExhibition = () => {
@@ -72,7 +119,7 @@ export default function ExhibitionContextProvider({
   );
 }
 
-// Custom hook để sử dụng context
+// Custom hook to use the exhibition context
 export function useExhibition() {
   const context = useContext(ExhibitionContext);
   if (!context) {

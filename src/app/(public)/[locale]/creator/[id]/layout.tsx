@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import ExhibitionHeader from "../components/exhibition-header";
 import ExhibitionSkeleton from "../components/exhibition-skeleton";
 import ExhibitionNavigation from "../components/exhibition-navigation";
+import ExhibitionContextProvider from "../context/exhibition-provider";
 export default async function CreatorLayout({
     children,
     params
@@ -13,14 +14,13 @@ export default async function CreatorLayout({
     params: { id: string, locale: string };
 }) {
     const exhibitionResponse = await getExhibitionById(params.id);
-    console.log('Exhibition response:', exhibitionResponse);
     if (!exhibitionResponse.data?.exhibition) {
         notFound();
     }
 
     const exhibition = exhibitionResponse.data.exhibition;
     return (
-        // <ExhibitionContextProvider initialData={exhibition}>
+        <ExhibitionContextProvider initialData={exhibition}>
             <div className="flex min-h-screen">
                 {/* Sidebar Navigation */}
                 <ExhibitionNavigation exhibition={exhibition} />
@@ -34,6 +34,6 @@ export default async function CreatorLayout({
                     <div className="p-6">{children}</div>
                 </div>
             </div>
-        // </ExhibitionContextProvider>
+        </ExhibitionContextProvider>
     )
 }

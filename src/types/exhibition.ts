@@ -2,8 +2,6 @@ import { z } from "zod";
 import { Pagination } from "./response";
 import { Gallery } from "./new-gallery";
 
-
-
 export interface ExhibitionArtwork {
   _id: string;
   title: string;
@@ -39,11 +37,7 @@ export interface ExhibitionResult {
   totalTime: number;
 }
 
-// Public settings interface
-export interface PublicSettings {
-  linkName: string;
-  discovery: boolean;
-}
+
 
 
 export interface Exhibition {
@@ -69,7 +63,8 @@ export interface Exhibition {
   isFeatured: boolean;
   status: ExhibitionStatus;
   result: ExhibitionResult;
-  public: PublicSettings;
+  linkName: string;
+  discovery: boolean;  
   artworkPositions: ArtworkPosition[];
 }
 
@@ -100,11 +95,6 @@ const resultSchema = z.object({
   totalTime: z.number().optional().default(0)
 });
 
-const publicSchema = z.object({
-  linkName: z.string().optional().default(''),
-  discovery: z.boolean().optional().default(false)
-});
-
 const artworkPositionSchema = z.object({
   artwork: z.string(),
   positionIndex: z.number()
@@ -132,7 +122,8 @@ export const updateExhibitionSchema = z.object({
   isFeatured: z.boolean().optional(),
   status: z.nativeEnum(ExhibitionStatus).optional(),
   result: resultSchema.optional(),
-  public: publicSchema.optional(),
+  linkName: z.string().optional(),
+  discovery: z.boolean().optional(),
   artworkPositions: z.array(artworkPositionSchema).optional()
 });
 

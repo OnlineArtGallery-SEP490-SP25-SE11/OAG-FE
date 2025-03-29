@@ -6,8 +6,6 @@ import { updateExhibition } from '@/service/exhibition';
 import { revalidatePath } from 'next/cache';
 import { contentSchema } from '@/types/exhibition';
 
-
-
 export const updateExhibitionContentAction = authenticatedAction
     .createServerAction()
     .input(z.object({
