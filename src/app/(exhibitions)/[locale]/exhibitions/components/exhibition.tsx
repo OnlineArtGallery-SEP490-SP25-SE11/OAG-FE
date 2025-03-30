@@ -1,36 +1,18 @@
 'use client';
 import { Canvas } from '@react-three/fiber';
-// import { Loader } from './gallery-loader';
+import { Loader } from './gallery-loader';
 import dynamic from 'next/dynamic';
-// import { Stats } from '@react-three/drei';
+import { Stats } from '@react-three/drei';
 import { Exhibition as ExhibitionType } from '@/types/exhibition';
-import { PointerLockControls } from '@react-three/drei';
-import { useCallback } from 'react';
-import { GalleryPreviewLoader } from '@/app/(public)/[locale]/about/components/gallery-preview-loader';
 
-interface ExhibitionProps {
-  exhibition: ExhibitionType;
-  isPointerLocked?: boolean;  // New prop
-  onPointerUnlock?: () => void;  // New prop
-  onPointerLock?: () => void;  // Added prop for locking
-}
 
-const Exhibition = ({ exhibition, isPointerLocked = false, onPointerUnlock, onPointerLock }: ExhibitionProps) => {
+export default function Exhibition({ exhibition }: { exhibition: ExhibitionType }) {
     const Scene = dynamic(() => import('./scene').then((mod) => mod.default), {
         ssr: false,
-        loading: () => <GalleryPreviewLoader />
+        loading: () => <Loader />
     });
-
-    // Add handleCanvasClick function
-    const handleCanvasClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-        e.stopPropagation();
-        if (!isPointerLocked && onPointerLock) {
-            onPointerLock();
-        }
-    }, [isPointerLocked, onPointerLock]);
-
     return (
-        <div className='w-full h-screen' onClick={handleCanvasClick}>
+        <div className='w-full h-screen'>
             <Canvas
                  shadows
                 //  dpr={[0.5, 1]} // Limit max DPR to 2
@@ -47,20 +29,9 @@ const Exhibition = ({ exhibition, isPointerLocked = false, onPointerUnlock, onPo
                 //     depth: true
                 // }}
             >
-                {/* <Stats /> */}
+                <Stats />
                 <Scene exhibition={exhibition} />
-                {isPointerLocked && (
-                    <PointerLockControls 
-                      /* your controls props */
-                      onUnlock={() => {
-                        // Call the parent's callback when unlocked
-                        if (onPointerUnlock) onPointerUnlock();
-                      }}
-                    />
-                )}
             </Canvas>
         </div>
     );
-};
-
-export default Exhibition;
+}

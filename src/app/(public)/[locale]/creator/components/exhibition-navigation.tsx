@@ -60,11 +60,11 @@ export default function ExhibitionNavigation({ exhibition }: { exhibition: Exhib
   ];
 
   return (
-    <div className="w-64 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800">
+    <div className="w-64">
       <div className="p-6">
-        <h1 className="text-2xl font-bold mb-6">
-          {t('exhibition_creator')}
-        </h1>
+        {/* <h1 className="text-2xl font-bold mb-6">
+          {exhibition.contents[0]?.name}
+        </h1> */}
         <nav className="space-y-1">
           {tabs.map((tab) => (
             <button

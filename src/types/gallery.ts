@@ -1,5 +1,7 @@
 import { Texture } from 'three';
 import { Gallery } from './new-gallery';
+import { Object3D } from 'three';
+import { Vector3 } from 'three';
 
 export type Vec3 = [number, number, number];
 
@@ -127,3 +129,15 @@ export type GetGalleriesResponse = {
 export type GalleryRequestResponse = {
 	gallery: Gallery;
 }
+
+export type ControlsType = Object3D & {
+	isLocked: boolean;
+	connect: () => void;
+	disconnect: () => void;
+	dispose: () => void;
+	getDirection: (direction: Vector3) => Vector3;
+	moveForward: (distance: number) => void;
+	moveRight: (distance: number) => void;
+	lock: () => void;
+	unlock: () => void;
+  };

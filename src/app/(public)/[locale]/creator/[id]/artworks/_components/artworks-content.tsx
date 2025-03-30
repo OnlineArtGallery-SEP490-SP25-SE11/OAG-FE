@@ -139,7 +139,7 @@ export function ArtworksContent({
                     imageUrl={exhibition.gallery?.planImage || 'https://res.cloudinary.com/djvlldzih/image/upload/v1739374668/gallery/modern_c1_plan.png'}
                     altText={t("floor_plan_alt")}
                     title={t("floor_plan")}
-                    description={t("floor_plan_description")}
+                    // description={t("floor_plan_description")}
                 />
 
                 {/* Artwork Positions Grid Component */}

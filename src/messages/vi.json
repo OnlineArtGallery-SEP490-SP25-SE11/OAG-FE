@@ -281,7 +281,7 @@
       }
     }
   },
-  "artworkPage":{
+  "artworkPage": {
     "filter": {
       "priceRange": "Khoảng giá",
       "categories": "Danh mục",
@@ -293,5 +293,70 @@
       "price": "Giá",
       "filterSearchPlaceholder": "Tìm kiếm bộ lọc"
     }
+  },
+  "exhibitions": {
+    "my_exhibitions": "Phòng trưng bày của tôi",
+    "create_exhibition": "Tạo phòng trưng bày",
+    "no_exhibitions_found": "Không tìm thấy phòng trưng bày nào",
+    "untitled_exhibition": "Phòng trưng bày chưa đặt tên",
+    "no_image": "Không có hình ảnh",
+    "please_login": "Vui lòng đăng nhập để xem phòng trưng bày của bạn",
+    "error_loading_exhibitions": "Lỗi khi tải phòng trưng bày",
+    
+    "artworks": "Tác phẩm",
+    "content": "Nội dung",
+    "settings": "Cài đặt",
+    "preview": "Xem trước",
+    "publish": "Xuất bản",
+    "result": "Kết quả",
+    
+    "artworks_description" : "Tải lên tác phẩm của bạn vào vị trí của chúng. Bạn có thể xem sơ đồ phòng trưng bày bên dưới và các vị trí cho tác phẩm được đánh số tương ứng.",
+    "exhibitions.floor_plan": "Sơ đồ phòng trưng bày",
+
+    "exhibition_publish_description": "Quản lý cài đặt xuất bản cho phòng trưng bày của bạn",
+    "exhibition_publish_title": "Xuất bản phòng trưng bày",
+    "link_name": "Tên liên kết",
+    "link_name_description": "Chọn URL duy nhất cho phòng trưng bày của bạn",
+    "enter_link_name": "Nhập tên liên kết",
+    "exhibition_dates": "Thời gian trưng bày",
+    "exhibition_dates_description": "Đặt ngày bắt đầu và kết thúc cho phòng trưng bày của bạn",
+    "start_date": "Ngày bắt đầu",
+    "end_date": "Ngày kết thúc",
+    "select_date": "Chọn ngày",
+    "end_date_after_start": "Ngày kết thúc phải sau ngày bắt đầu",
+    "dates_updated": "Cập nhật thời gian trưng bày thành công",
+    "dates_update_failed": "Không thể cập nhật thời gian trưng bày",
+    "discoverable": "Có thể khám phá",
+    "discoverable_description": "Cho phép người khác khám phá phòng trưng bày của bạn",
+    "discovery_publish_first": "Xuất bản phòng trưng bày để cho phép khám phá",
+    "discovery_updated": "Cập nhật cài đặt khám phá thành công",
+    "discovery_update_failed": "Không thể cập nhật cài đặt khám phá",
+    "link_name_updated": "Cập nhật tên liên kết thành công",
+    "link_name_update_failed": "Không thể cập nhật tên liên kết",
+    "exhibition_published": "Xuất bản phòng trưng bày thành công",
+    "publish_failed": "Không thể xuất bản phòng trưng bày",
+    "exhibition_unpublished": "Hủy xuất bản phòng trưng bày thành công",
+    "unpublish_failed": "Không thể hủy xuất bản phòng trưng bày",
+    "unpublish_no_artworks": "Bạn cần thêm tác phẩm trước khi hủy xuất bản",
+    "invalid_link_name": "Vui lòng nhập tên liên kết hợp lệ",
+    
+    "content_description": "Quản lý nội dung và phương tiện phòng trưng bày",
+    "welcome_image": "Hình ảnh chào mừng",
+    "background_media": "Phương tiện nền",
+    "background_audio": "Âm thanh nền",
+    "exhibition_name": "Tên phòng trưng bày",
+    "description": "Mô tả",
+    "enter_name_in_lang": "Nhập tên bằng {lang}",
+    "enter_description_in_lang": "Nhập mô tả bằng {lang}",
+    "content_updated": "Cập nhật nội dung thành công",
+    "content_update_failed": "Không thể cập nhật nội dung",
+    "read_faq": "Đọc FAQ",
+
+    "reset": "Đặt lại",
+    "save_changes": "Lưu thay đổi",
+    "saving": "Đang lưu...",
+    "publish_exhibition": "Xuất bản phòng trưng bày",
+    "unpublish": "Hủy xuất bản",
+    "unpublishing": "Đang hủy xuất bản..."
   }
 }

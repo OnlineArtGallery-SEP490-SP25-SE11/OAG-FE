@@ -66,7 +66,7 @@ export default async function ExhibitionGrid( { locale }: { locale: string }) {
         return (
           <Link
             key={exhibition._id}
-            href={`/${locale}/creator/${exhibition._id}/artworks`}
+            href={`/creator/${exhibition._id}/artworks`}
             className="block"
           >
             <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
