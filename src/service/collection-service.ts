@@ -100,7 +100,7 @@ async update(id: string, artworkId: string | string[]): Promise<any> {
             if(!axios){
                 throw new Error('Failed to create axios instance');
             }
-            const res = await axios.delete(`/collection/${id}`);
+            const res = await axios.delete(`/collection/delete-collection/${id}`);
             return res.data;
         }
         catch(error){
@@ -109,13 +109,15 @@ async update(id: string, artworkId: string | string[]): Promise<any> {
         }
     },
     //delete artwork from collection
-    async deleteArt(id: string) {
+    async deleteArt(id: string, artworkId: string) {
         try{
             const axios = await createAxiosInstance({ useToken: true });
             if(!axios){
                 throw new Error('Failed to create axios instance');
             }
-            const res = await axios.delete(`/collection/art/${id}`);
+            const res = await axios.delete(`/collection/delete-art/${id}`,{
+                data: { artId: artworkId }
+            });
             return res.data;
         }
         catch(error){

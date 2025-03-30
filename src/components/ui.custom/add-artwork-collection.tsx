@@ -23,17 +23,17 @@ export default function AddArtworkCollection({artworkId, triggerButton, onSucces
     const [isOpen, setIsOpen] = useState(false);
     const [selectedCollectionId, setSellectedCollectionId] = useState<string>("");
     // Fetch user collections
-    const { data: collections, isLoading } = useQuery({
+    const { data: { data: collections } = { data: [] }, isLoading } = useQuery({
         queryKey: ['collections'],
         queryFn: () => collectionService.getByUserId(),
     });
-    console.log('collections', collections);
     const mutation = useMutation({
         mutationFn: (collectionId: string) => collectionService.update(collectionId, artworkId),
         onSuccess: () => {
             toast({
                 title: "Success",
                 description: "Artwork added to collection successfully",
+                className: 'bg-green-500 text-white border-green-600'
             });
             
             setIsOpen(false);
@@ -46,7 +46,7 @@ export default function AddArtworkCollection({artworkId, triggerButton, onSucces
             toast({
                 title: "Error",
                 description: error instanceof Error ? error.message : "Failed to add artwork to collection",
-                variant: "destructive",
+                className: 'bg-red-500 text-white border-red-600'
             });
         }
     });
@@ -80,7 +80,7 @@ export default function AddArtworkCollection({artworkId, triggerButton, onSucces
                         </div>
                     ) : collections && collections.length > 0 ? (
                         <div className="flex flex-col gap-2 max-h-[60vh] overflow-y-auto">
-                            {collections?.map((collection: any) => (
+                            {collections.map((collection: any) => (
                                 <div 
                                     key={collection._id}
                                     className={`p-3 border rounded-md cursor-pointer hover:bg-secondary transition-colors ${

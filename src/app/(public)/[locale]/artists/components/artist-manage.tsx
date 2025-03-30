@@ -31,6 +31,8 @@ import EditArtworkForm from '../components/artist-update';
 import ConfirmationDialog from '../components/confirmation-dialog';
 import { ITEMS_PER_PAGE, STATUS_OPTIONS } from '../constant';
 import { Artwork } from '../interface';
+import AddArtworkCollection from '@/components/ui.custom/add-artwork-collection';
+import { Bookmark } from 'lucide-react'; // Use Lucide's Bookmark icon
 
 export default function ManageArtworks() {
 	const router = useRouter();
@@ -252,8 +254,24 @@ export default function ManageArtworks() {
 										</p>
 									)}
 								</div>
+
+								{/* Add Collection Button */}
+								<div className="mt-1 mb-1">
+									<AddArtworkCollection 
+										artworkId={artwork._id}
+										triggerButton={
+											<Button 
+												size="sm"
+												className="w-full bg-teal-500/80 hover:bg-teal-600/90 text-white backdrop-blur-sm text-xs md:text-sm flex items-center justify-center gap-1"
+											>
+												<Bookmark className="h-3 w-3" /> Lưu bộ sưu tập
+											</Button>
+										}
+									/>
+								</div>
+
+								{/* Existing Edit and Delete buttons */}
 								<div className="mt-2 flex gap-1">
-									{/* Sửa đổi 3: Cập nhật màu và thêm icon cho nút Sửa */}
 									<Button
 										size="sm"
 										className="flex-1 bg-teal-600 hover:bg-teal-700 text-white backdrop-blur-sm text-xs md:text-sm flex items-center justify-center gap-1"
@@ -264,7 +282,6 @@ export default function ManageArtworks() {
 									>
 										<Edit2 className="h-3 w-3" /> Sửa
 									</Button>
-									{/* Sửa đổi 3: Cập nhật màu và thêm icon cho nút Xóa */}
 									<Button
 										size="sm"
 										variant="destructive"
