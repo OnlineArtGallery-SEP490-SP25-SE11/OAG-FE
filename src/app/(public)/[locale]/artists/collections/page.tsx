@@ -313,13 +313,7 @@ export default function Collections() {
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-600 dark:text-emerald-400"><path d="M12 19c.5 0 1-.1 1.4-.4.4-.3.6-.7.6-1.1 0-.3-.1-.5-.2-.8-.2-.3-.5-.4-.8-.6-.3-.1-.5-.2-.9-.4l-.1-.1c-.2-.1-.4-.2-.6-.3-.2-.1-.3-.3-.3-.5s.1-.4.2-.5.3-.2.5-.2c.5 0 .9.2 1.2.6l.5-.8c-.2-.2-.4-.4-.7-.5-.3-.1-.6-.2-.9-.2-.4 0-.8.1-1.2.4-.3.2-.5.6-.5 1s.1.7.3.9c.2.2.4.4.7.5.3.1.6.3.9.4.3.2.6.3.8.5.2.1.2.3.2.5s-.1.4-.3.5c-.2.2-.4.2-.7.2-.4 0-.8-.1-1-.2-.3-.1-.5-.3-.7-.6l-.7.7c.3.3.6.6 1 .8.4.1.8.2 1.2.2Z"/><path d="M7 19h1a2 2 0 0 0 2-2v-1"/><path d="M17 19h-1a2 2 0 0 1-2-2v-1"/><path d="M7 5h1a2 2 0 0 1 2 2v1"/><path d="M17 5h-1a2 2 0 0 0-2 2v1"/></svg>
                                         Gallery
                                     </h3>
-                                    <Link 
-                                        href={`/artists/collections/${selectedCollection._id}`}
-                                        className="text-sm text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 font-medium flex items-center"
-                                    >
-                                        View full collection
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
-                                    </Link>
+                                  
                                 </div>
 
                                 {selectedCollection.artworks && selectedCollection.artworks.length > 0 ? (

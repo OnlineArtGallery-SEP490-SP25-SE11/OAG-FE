@@ -22,11 +22,13 @@ export default function AddArtworkCollection({artworkId, triggerButton, onSucces
     const { toast } = useToast();   
     const [isOpen, setIsOpen] = useState(false);
     const [selectedCollectionId, setSellectedCollectionId] = useState<string>("");
+    
     // Fetch user collections
     const { data: { data: collections } = { data: [] }, isLoading } = useQuery({
         queryKey: ['collections'],
         queryFn: () => collectionService.getByUserId(),
     });
+    
     const mutation = useMutation({
         mutationFn: (collectionId: string) => collectionService.update(collectionId, artworkId),
         onSuccess: () => {
@@ -52,9 +54,30 @@ export default function AddArtworkCollection({artworkId, triggerButton, onSucces
     });
 
     const handleAddToCollection = (collectionId: string) => {
+        // Check if artwork already exists in the selected collection
+        const selectedCollection = collections?.find(
+            (collection: any) => collection._id === collectionId
+        );
+        
+        if (selectedCollection && selectedCollection.artworks) {
+            const artworkExists = selectedCollection.artworks.some(
+                (artwork: any) => artwork._id === artworkId
+            );
+            
+            if (artworkExists) {
+                toast({
+                    title: "Already in collection",
+                    description: `This artwork is already in the "${selectedCollection.title}" collection`,
+                    className: 'bg-blue-500 text-white border-blue-600'
+                });
+                return;
+            }
+        }
+        
+        setSellectedCollectionId(collectionId);
         mutation.mutate(collectionId);
     };
-
+    
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
@@ -87,7 +110,6 @@ export default function AddArtworkCollection({artworkId, triggerButton, onSucces
                                         mutation.isPending && selectedCollectionId === collection._id ? 'opacity-70' : ''
                                     }`}
                                     onClick={() => {
-                                        setSellectedCollectionId(collection._id);
                                         handleAddToCollection(collection._id);
                                     }}
                                 >

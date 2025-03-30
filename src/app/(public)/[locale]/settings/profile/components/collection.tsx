@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/card';
 import CreateCollection from './create-collection';
 import Image from 'next/image';
+import { useParams } from 'next/navigation';
 
 // Define interface for Artwork type
 interface Artwork {
@@ -46,6 +47,7 @@ export default function Collection() {
 	const [selectedCollection, setSelectedCollection] =
 		useState<Collection | null>(null);
 	const { toast } = useToast();
+	const { locale } = useParams();
 
 	// Fetch user's collections with proper typing
 	const {
@@ -367,7 +369,7 @@ export default function Collection() {
 														className='mr-2'
 														onClick={() =>
 															window.open(
-																artwork.url,
+																	`/${locale}/artworks?id=${artwork._id}`,
 																'_blank'
 															)
 														}
