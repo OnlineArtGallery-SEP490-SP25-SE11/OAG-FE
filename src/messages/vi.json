@@ -115,8 +115,7 @@
     "cancel": "Hủy yêu cầu",
     "cancel_request": "Yêu cầu xuất bản đã thu hồi",
     "pending": "Đã gửi",
-    "draft_create_error": "Đã xảy ra lỗi khi tạo blog",
-    "draft_update_error": "Đã xảy ra lỗi khi cập nhật blog"
+    "draft_create_error": "Đã xảy ra lỗi khi tạo blog"
   },
   "premium": {
     "feature_comparison": {
@@ -284,7 +283,19 @@
       }
     }
   },
-  "artworkPage": {
+  "filter": {
+    "filters": "Bộ lọc",
+    "categories": "Danh mục",
+    "priceRange": "Khoảng giá",
+    "searchPlaceholder": "Tìm kiếm tranh...",
+    "quickSearch": "Tìm kiếm nhanh...",
+    "price": "Giá",
+    "artists": "Nghệ sĩ",
+    "materials": "Chất liệu",
+    "waysToBuy": "Cách mua",
+    "size": "Kích thước"
+  },
+  "artworkPage":{
     "filter": {
       "priceRange": "Khoảng giá",
       "categories": "Danh mục",
