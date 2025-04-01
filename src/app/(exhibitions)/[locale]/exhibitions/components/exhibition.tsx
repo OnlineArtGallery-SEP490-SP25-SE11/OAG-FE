@@ -2,7 +2,7 @@
 import { Canvas } from '@react-three/fiber';
 // import { Loader } from './gallery-loader';
 import dynamic from 'next/dynamic';
-import { Stats } from '@react-three/drei';
+// import { Stats } from '@react-three/drei';
 import { Exhibition as ExhibitionType } from '@/types/exhibition';
 import { GalleryPreviewLoader } from '@/app/(public)/[locale]/about/components/gallery-preview-loader';
 
@@ -30,7 +30,7 @@ export default function Exhibition({ exhibition }: { exhibition: ExhibitionType 
                 //     depth: true
                 // }}
             >
-                <Stats />
+                {/* <Stats /> */}
                 <Scene exhibition={exhibition} />
             </Canvas>
         </div>
