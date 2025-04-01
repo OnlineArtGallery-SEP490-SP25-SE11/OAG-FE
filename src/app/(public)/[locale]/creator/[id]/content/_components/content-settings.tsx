@@ -114,10 +114,10 @@ return (
                                 value={lang.code}
                                 className="flex items-center gap-2"
                             >
-                                {lang.name}
+                                {t(lang.code)}
                                 {lang.isDefault && (
                                     <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
-                                        Default
+                                        {t('default_language')}
                                     </span>
                                 )}
                             </TabsTrigger>
@@ -132,7 +132,7 @@ return (
                         <TabsContent key={field.id} value={lang.code} className="space-y-4">
                             <div>
                                 <Label htmlFor={`name-${lang.code}`}>
-                                    {t('exhibition_name')} ({lang.name})
+                                    {t('exhibition_name')} ({t(lang.code)})
                                 </Label>
                                 <Input
                                     id={`name-${lang.code}`}
@@ -150,7 +150,7 @@ return (
 
                             <div>
                                 <Label htmlFor={`description-${lang.code}`}>
-                                    {t('description')} ({lang.name})
+                                    {t('description')} ({t(lang.code)})
                                 </Label>
                                 <Textarea
                                     id={`description-${lang.code}`}

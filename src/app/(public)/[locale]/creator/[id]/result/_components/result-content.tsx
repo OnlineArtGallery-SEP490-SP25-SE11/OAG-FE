@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Users, Heart, Clock, Crown } from 'lucide-react';
 import { Exhibition } from '@/types/exhibition';
 import { formatTime } from '@/lib/utils';
+import { ExhibitionInfoHeader } from '../../components/exhibition-info-header';
+import { useTranslations } from 'next-intl';
 
 // This component receives exhibition data from the server
 export default function ResultContent({
@@ -13,17 +15,14 @@ export default function ResultContent({
     exhibition: Exhibition,
     isPremium: boolean
 }) {
+    const t = useTranslations('exhibitions');
     // We use a client component to display the exhibition data
     return (
         <div className='max-w-7xl mx-auto p-6 space-y-8'>
-            <div className='flex justify-between items-center'>
-                <div>
-                    <h1 className='text-3xl font-bold'>Analytics Dashboard</h1>
-                    <p className='text-gray-500 mt-2'>
-                        Track your exhibition performance and visitor engagement
-                    </p>
-                </div>
-            </div>
+              <ExhibitionInfoHeader
+                    description={t('exhibition_result_description')}
+                    title={t('exhibition_result_title')}
+                  />
 
             {isPremium ? (
                 <AnalyticsContent exhibition={exhibition} />
@@ -41,6 +40,7 @@ function AnalyticsContent({ exhibition }: { exhibition: Exhibition }) {
         totalLikes: exhibition.result?.likes?.reduce((total, like) => total + like.count, 0) || 0,
         averageTime: formatTime(exhibition.result?.totalTime || 0),
     };
+    const t = useTranslations('exhibitions');
 
     return (
         <>
@@ -49,7 +49,7 @@ function AnalyticsContent({ exhibition }: { exhibition: Exhibition }) {
                 <Card className='p-4 flex flex-col'>
                     <div className='flex items-center gap-2 text-gray-500 mb-2'>
                         <Users className='w-4 h-4' />
-                        <span>Total Visits</span>
+                        <span>{t('total_visits')}</span>
                     </div>
                     <span className='text-2xl font-bold'>
                         {analyticsData.totalVisits}
@@ -59,7 +59,7 @@ function AnalyticsContent({ exhibition }: { exhibition: Exhibition }) {
                 <Card className='p-4 flex flex-col'>
                     <div className='flex items-center gap-2 text-gray-500 mb-2'>
                         <Heart className='w-4 h-4' />
-                        <span>Total Likes</span>
+                        <span>{t('total_likes')}</span>
                     </div>
                     <span className='text-2xl font-bold'>
                         {analyticsData.totalLikes}
@@ -69,7 +69,7 @@ function AnalyticsContent({ exhibition }: { exhibition: Exhibition }) {
                 <Card className='p-4 flex flex-col'>
                     <div className='flex items-center gap-2 text-gray-500 mb-2'>
                         <Clock className='w-4 h-4' />
-                        <span>Avg. Time</span>
+                        <span>{t('average_time')}</span>
                     </div>
                     <span className='text-2xl font-bold'>
                         {analyticsData.averageTime}
@@ -81,7 +81,7 @@ function AnalyticsContent({ exhibition }: { exhibition: Exhibition }) {
             {/* Exhibition-specific Analytics - Artwork Likes */}
             <div className='mt-8'>
                 <h2 className='text-2xl font-bold mb-4'>
-                    Artwork Engagement
+                    {t('artwork_engagement')}
                 </h2>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                     {exhibition.result?.likes?.length ? (
@@ -100,7 +100,7 @@ function AnalyticsContent({ exhibition }: { exhibition: Exhibition }) {
                             );
                         })
                     ) : (
-                        <p className='text-gray-500'>No likes recorded for artworks.</p>
+                        <p className='text-gray-500'>{t('no_engagement')}</p>
                     )}
                 </div>
             </div>

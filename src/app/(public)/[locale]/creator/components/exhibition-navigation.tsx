@@ -60,7 +60,7 @@ export default function ExhibitionNavigation({ exhibition }: { exhibition: Exhib
   ];
 
   return (
-    <div className="w-64">
+    <div className="w-56">
       <div className="p-6">
         {/* <h1 className="text-2xl font-bold mb-6">
           {exhibition.contents[0]?.name}
@@ -71,7 +71,7 @@ export default function ExhibitionNavigation({ exhibition }: { exhibition: Exhib
               key={tab.value}
               onClick={() => router.push(`/creator/${exhibition._id}/${tab.value}`)}
               className={cn(
-                'w-full flex items-center space-x-3 px-4 py-3 text-left rounded-lg transition-colors hover:bg-muted',
+                'w-full flex items-center space-x-3 px-4 py-3 text-center font-bold rounded-lg transition-colors hover:bg-muted',
                 currentTab === tab.value
                   ? 'border-l-2 border-primary text-primary'
                   : 'text-muted-foreground',

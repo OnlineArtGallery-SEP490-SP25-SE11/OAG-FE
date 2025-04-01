@@ -27,7 +27,10 @@
     "back": "Back",
     "notification": "Notification",
     "success": "Success",
-    "error": "Error"
+    "error": "Error",
+    "save_changes": "Save Changes",
+    "cancel": "Cancel",
+    "delete": "Delete"
   },
   "header": {
     "home": "Home",
@@ -304,6 +307,12 @@
     "no_image": "No image",
     "please_login": "Please log in to view your exhibitions",
     "error_loading_exhibitions": "Error loading exhibitions",
+    "artwork_count": "{count} artworks",
+    "preview_gallery": "Preview Gallery",
+    "cancel": "Cancel",
+    "create": "Create",
+    "draft": "Draft",
+    "published": "Published",
     
     
     "artworks": "Artworks",
@@ -312,13 +321,35 @@
     "preview": "Preview",
     "publish": "Publish",
     "result": "Result",
+    "artwork_positions": "Artwork Positions",
     
     "artworks_description" : "Upload your artwork to their places. You can see your gallery's floor plan below and the places for art are numbered accordingly.",
     "floor_plan": "Floor Plan",
 
+
+    "default_language": "Default",
+    "en": "English",
+    "vi": "Vietnamese",
+    "settings_description" : "Create language versions for your international audience",
+    "add_new_language": "Add New Language",
+    "select_language": "Select Language",
+    "choose_a_language": "Choose a language",
+    "no_more_languages_available": "No more languages available",
+    "add_language": "Add Language",
+    "set_as_default": "Set as Default",
+
+    "preview_description" : "See a draft of your exhibition in real-time without the welcome page or instruction animation.",
+    "navigation_controls": "Navigation Controls",
+    "navigation_description": "Use your mouse to navigate the 3D space:",
+    "left_click_drag": "Left click + drag:",
+    "rotate_view": "Rotate view",
+    "movement": "Movement",
+
     "exhibition_publish_description": "Manage publication settings for your exhibition",
     "exhibition_publish_title": "Publish Exhibition",
     "link_name": "Link Name",
+    "exhibition_status_title": "Exhibition Status",
+
     "link_name_description": "Choose a unique URL for your exhibition",
     "enter_link_name": "Enter link name",
     "exhibition_dates": "Exhibition Dates",
@@ -343,6 +374,7 @@
     "unpublish_no_artworks": "You need to add artworks before unpublishing",
     "invalid_link_name": "Please enter a valid link name",
     
+    "exhibition_not_published": "Exhibition not published",
     "content_description": "Manage your exhibition content and media",
     "welcome_image": "Welcome Image",
     "background_media": "Background Media",
@@ -354,6 +386,15 @@
     "content_updated": "Content updated successfully",
     "content_update_failed": "Failed to update content",
     "read_faq": "Read FAQ",
+    "exhibition_result_description": "See the number of visits, likes and more for your account in total and per exhibition (for paid plans only).",
+    "exhibition_result_title": "Exhibition Result",
+    "total_visits": "Total Visits",
+    "total_likes": "Total Likes",
+    "average_time": "Average Time",
+    "artwork_engagement": "Artwork Engagement",
+    "no_engagement": "No likes recorded for artworks",
+    "likes": "Likes",
+    "engagement_metric": "Engagement metric for this artwork",
 
     "reset": "Reset",
     "save_changes": "Save Changes",

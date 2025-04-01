@@ -18,7 +18,7 @@ export default function ExhibitionPublishStatus({
   
   return (
     <Card className="p-6 ">
-      <h3 className="text-lg font-semibold mb-4">{t('exhibition_status')}</h3>
+      <h3 className="text-lg font-semibold mb-4">{t('exhibition_status_title')}</h3>
       <Alert className="bg-yellow-100">
         <Eye className="h-4 w-4" />
         <AlertTitle>

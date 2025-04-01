@@ -107,10 +107,10 @@ export function LanguageSettings({
               <span className='text-lg font-medium min-w-[2.5rem]'>
                 {lang.code.toUpperCase()}
               </span>
-              <span>{lang.name}</span>
+              <span>{t(lang.code)}</span>
               {lang.isDefault && (
                 <span className='text-xs bg-primary/10 text-primary px-2 py-1 rounded-full font-medium'>
-                  Default
+                  {t('default_language')}
                 </span>
               )}
             </div>
@@ -131,7 +131,7 @@ export function LanguageSettings({
         onClick={() => setIsAddLanguageModalOpen(true)}
       >
         <Languages className='w-4 h-4 mr-2' />
-        Add New Language
+        {t('add_new_language')}
       </Button>
 
       {/* Add Language Modal */}

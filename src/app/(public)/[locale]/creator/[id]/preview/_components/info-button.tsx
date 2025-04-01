@@ -1,10 +1,11 @@
 'use client';
 import { useState } from 'react';
 import { Info } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export const InfoButton = () => {
   const [isInfoVisible, setIsInfoVisible] = useState(false);
-  
+  const t = useTranslations('exhibitions');
   return (
     <div className="absolute top-3 right-3 z-20">
       <button
@@ -25,15 +26,19 @@ export const InfoButton = () => {
           onMouseLeave={() => setIsInfoVisible(false)}
         >
           <h3 className='text-base font-semibold text-gray-800 mb-2'>
-            Navigation
+            {t('navigation_controls')}
           </h3>
           <p className='text-sm text-gray-600 mb-3'>
-            Use your mouse to navigate the 3D space:
+            {/* Use your mouse to navigate the 3D space: */}
+            {t('navigation_description')}
           </p>
           <ul className='space-y-1.5 text-sm text-gray-500 list-disc list-inside'>
-            <li><span className="font-medium text-gray-700">Left click + drag:</span> Rotate view</li>
-            <li><span className="font-medium text-gray-700">Right click + drag:</span> Pan view</li>
-            <li><span className="font-medium text-gray-700">Scroll wheel:</span> Zoom in/out</li>
+            <li><span className="font-medium text-gray-700">
+              {t('left_click_drag')}
+            </span>
+              ({t('rotate_view')})
+            </li>
+            <li><span className="font-medium text-gray-700">WASD:</span> Movement</li>
           </ul>
         </div>
       )}

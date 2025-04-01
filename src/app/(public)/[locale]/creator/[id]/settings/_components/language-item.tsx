@@ -29,7 +29,7 @@ export function LanguageItem({
         <div className="w-10 h-6 flex items-center justify-center rounded border">
           {language.code}
         </div>
-        <span>{language.name}</span>
+        <span>{t(language.code)}</span>
         {language.isDefault && (
           <span className="inline-flex items-center rounded-full bg-primary/10 text-primary text-xs px-2 py-0.5">
             <Check className="w-3 h-3 mr-1" />
