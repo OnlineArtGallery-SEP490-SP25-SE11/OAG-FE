@@ -1,41 +1,23 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { BaseRoom } from './base-room';
 import { ArtworkMesh } from './art-work-mesh';
-import GalleryModelBase, { GalleryModelConfig } from './gallery-model-base';
+import GalleryModelBase from './gallery-model-base';
+import { Gallery as GalleryType } from '@/types/new-gallery';
+import { ExhibitionArtwork } from '@/types/exhibition';
 
-export interface WallArtwork {
-  id: string;
-  url: string;
-  position: [number, number, number];
-  rotation: [number, number, number];
-  frame?: { 
-    color: string; 
-    thickness: number;
-  };
+export interface GalleryArtwork {
+ artwork: ExhibitionArtwork;
+ placement: {
+   position: number[];
+   rotation: number[];
+ };
 }
 
 export interface GalleryConfig {
   id: string;
   name: string;
-  galleryModel: GalleryModelConfig;
-  walls: {
-    back?: {
-      artworkCount?: number;
-      artworks: WallArtwork[];
-    };
-    front?: {
-      artworkCount?: number;
-      artworks: WallArtwork[];
-    };
-    left?: {
-      artworkCount?: number;
-      artworks: WallArtwork[];
-    };
-    right?: {
-      artworkCount?: number;
-      artworks: WallArtwork[];
-    };
-  };
+  galleryModel: GalleryType;
+  artworks: GalleryArtwork[];
 }
 
 interface ExhibitionProps {
@@ -45,25 +27,7 @@ interface ExhibitionProps {
 }
 
 export default function Gallery({ config, visible = false, children }: ExhibitionProps) {
-  const { xAxis, yAxis, zAxis } = config.galleryModel.dimension;
-  
-  // Chuẩn bị tất cả các tác phẩm nghệ thuật để hiển thị
-  const allArtworks = useMemo(() => {
-    const artworks: WallArtwork[] = [];
-    
-    // Thu thập tất cả các tác phẩm từ các bức tường
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    Object.entries(config.walls).forEach(([_wallId, wall]) => {
-      if (wall?.artworks && wall.artworks.length > 0) {
-        // Sử dụng vị trí và hướng xoay đã được cung cấp (đã xử lý từ scene.tsx)
-        wall.artworks.forEach(artwork => {
-          artworks.push(artwork);
-        });
-      }
-    });
-    
-    return artworks;
-  }, [config.walls]);
+  const { xAxis, yAxis, zAxis } = config.galleryModel.dimensions;
   
   return (
     <>
@@ -77,18 +41,18 @@ export default function Gallery({ config, visible = false, children }: Exhibitio
             depth: zAxis
           }}
         >
-          {/* Hiển thị tất cả các tác phẩm nghệ thuật */}
-          {allArtworks.map(artwork => (
+          {/* Display all artworks by passing GalleryArtwork objects directly */}
+          {config.artworks.map(artworkItem => (
             <ArtworkMesh
-              key={`artwork-${artwork.id}`}
-              artwork={artwork}
+              key={`artwork-${artworkItem.artwork._id}`}
+              galleryArtwork={artworkItem}
             />
           ))}
           
-          {/* Mô hình phòng trưng bày */}
+          {/* Gallery model */}
           <GalleryModelBase model={config.galleryModel} visible={visible} />
           
-          {/* Các phần tử bổ sung */}
+          {/* Additional elements */}
           {children}
         </BaseRoom>
       </group>
