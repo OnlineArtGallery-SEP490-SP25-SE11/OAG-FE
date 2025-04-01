@@ -43,19 +43,23 @@ export default function ExhibitionNavigation({ exhibition }: { exhibition: Exhib
       value: 'preview', 
       label: t('preview'), 
       icon: <Earth />,
-      disabled: !exhibition?.artworkPositions?.length
+      // disabled: !exhibition?.artworkPositions?.length
+      disabled: false
+
     },
     { 
       value: 'publish', 
       label: t('publish'), 
       icon: <TrendingUp />,
-      disabled: !exhibition?.artworkPositions?.length
+      // disabled: !exhibition?.artworkPositions?.length
+      disabled: false
     },
     { 
       value: 'result', 
       label: t('result'), 
       icon: <Eye />,
-      disabled: !exhibition?.artworkPositions?.length
+      // disabled: !exhibition?.artworkPositions?.length
+      disabled: false
     }
   ];
 

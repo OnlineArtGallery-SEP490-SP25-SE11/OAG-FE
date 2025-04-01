@@ -37,6 +37,12 @@ export interface ExhibitionResult {
   totalTime: number;
 }
 
+export interface Ticket {
+  requiresPayment: boolean;
+  price: number;
+  registeredUsers: string[];
+  // currency: string;
+}
 
 
 
@@ -66,6 +72,7 @@ export interface Exhibition {
   linkName: string;
   discovery: boolean;  
   artworkPositions: ArtworkPosition[];
+  ticket: Ticket;
 }
 
 
@@ -83,6 +90,15 @@ const languageOptionSchema = z.object({
   code: z.string().min(2).max(2),
   isDefault: z.boolean()
 });
+
+
+const ticketSchema = z.object({
+  requiresPayment: z.boolean().default(false),
+  price: z.number().default(0),
+  registeredUsers: z.array(z.string()).default([]),
+  // currency: z.string().optional(),
+});
+
 
 const resultSchema = z.object({
   visits: z.number().optional().default(0),
@@ -105,6 +121,7 @@ export const createEmptyExhibitionSchema = z.object({
   name: z.string().min(2).max(50).optional()
 });
 
+
 // Update schema - all fields optional
 export const updateExhibitionSchema = z.object({
   startDate: z.string().or(z.date()).optional(),
@@ -124,7 +141,8 @@ export const updateExhibitionSchema = z.object({
   result: resultSchema.optional(),
   linkName: z.string().optional(),
   discovery: z.boolean().optional(),
-  artworkPositions: z.array(artworkPositionSchema).optional()
+  artworkPositions: z.array(artworkPositionSchema).optional(),
+  ticket: ticketSchema.optional(),
 });
 
 

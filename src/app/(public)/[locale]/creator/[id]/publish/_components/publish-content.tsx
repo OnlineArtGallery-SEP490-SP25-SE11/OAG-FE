@@ -16,9 +16,10 @@ import { useExhibition } from "../../../context/exhibition-provider";
 import ExhibitionDateManager, { DateFormValues } from "./exhibition-date-manager";
 import LinkNameManager from "./exhibition-linkname-manager";
 import DiscoveryManager from "./exhibition-discovery-manager";
+import TicketManager, { TicketData } from "./ticket-manager";
 
 // Define operation types for tracking specific loading states
-type UpdateOperation = 'linkName' | 'publish' | 'unpublish' | 'discovery' | 'dates';
+type UpdateOperation = 'linkName' | 'publish' | 'unpublish' | 'discovery' | 'dates' | 'ticket';
 
 // Link name form schema
 const linkNameSchema = z.object({
@@ -172,6 +173,8 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
       return;
     }
 
+    //
+
     setCurrentOperation('unpublish');
     await updateExhibition(
       { status: ExhibitionStatus.DRAFT },
@@ -242,6 +245,38 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
     );
   };
 
+  const [ticket, setTicket] = useState<TicketData>({
+    requiresPayment: exhibition.ticket?.requiresPayment || false,
+    price: exhibition.ticket?.price || 0,
+    registeredUsers: exhibition.ticket?.registeredUsers || []
+  });
+
+  const handleTicketUpdate = async (updatedTicket: TicketData) => {
+    setCurrentOperation('ticket');
+    await updateExhibition(
+      { ticket: updatedTicket },
+      {
+        onSuccess: () => {
+          setTicket(updatedTicket);
+          toast({
+            title: tCommon('success'),
+            description: t('ticket_settings_updated'),
+            variant: 'success',
+          });
+          setCurrentOperation(null);
+        },
+        onError: () => {
+          toast({
+            title: tCommon('error'),
+            description: t('ticket_settings_update_failed'),
+            variant: 'destructive',
+          });
+          setCurrentOperation(null);
+        }
+      }
+    );
+  };
+
   return (
     <div className='max-w-7xl mx-auto px-4 py-8 space-y-8'>
       <ExhibitionInfoHeader
@@ -268,6 +303,13 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
           isLoading={isOperationLoading('dates')}
         />
 
+        {/* Ticket Section */}
+        <TicketManager
+          ticket={ticket}
+          onSave={handleTicketUpdate}
+          isLoading={isOperationLoading('ticket')}
+        />
+
         {/* Discoverability Section */}
         <DiscoveryManager
           isDiscoverable={isDiscoverable}
@@ -281,6 +323,7 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
           isPublished={isPublished}
           linkName={linkNameForm.watch('linkName')}
           baseUrl={baseUrl}
+          ticket={ticket}
         />
 
         {/* Action Buttons */}

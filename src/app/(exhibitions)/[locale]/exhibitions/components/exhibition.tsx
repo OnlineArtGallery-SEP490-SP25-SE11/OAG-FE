@@ -1,15 +1,16 @@
 'use client';
 import { Canvas } from '@react-three/fiber';
-import { Loader } from './gallery-loader';
+// import { Loader } from './gallery-loader';
 import dynamic from 'next/dynamic';
 import { Stats } from '@react-three/drei';
 import { Exhibition as ExhibitionType } from '@/types/exhibition';
+import { GalleryPreviewLoader } from '@/app/(public)/[locale]/about/components/gallery-preview-loader';
 
 
 export default function Exhibition({ exhibition }: { exhibition: ExhibitionType }) {
     const Scene = dynamic(() => import('./scene').then((mod) => mod.default), {
         ssr: false,
-        loading: () => <Loader />
+        loading: () => <GalleryPreviewLoader />
     });
     return (
         <div className='w-full h-screen'>
