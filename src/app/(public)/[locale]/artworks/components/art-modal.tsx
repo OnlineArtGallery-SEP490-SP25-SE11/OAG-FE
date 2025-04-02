@@ -1,7 +1,7 @@
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { AnimatePresence, motion } from 'framer-motion';
-import { DollarSignIcon, Eye, Info, RulerIcon, TagIcon, UserIcon, X, CalendarIcon } from 'lucide-react';
+import { DollarSignIcon, Eye, Info, RulerIcon, TagIcon, UserIcon, X, CalendarIcon, BookmarkIcon, Flag } from 'lucide-react';
 import Image from 'next/image';
 import { Fragment, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { BiComment } from 'react-icons/bi';
@@ -9,6 +9,10 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { fetchArtworkById } from '@/app/(public)/[locale]/artworks/api';
 import { Artwork } from '@/types/marketplace';
+import CreateReport from '@/components/ui.custom/report-button';
+import { RefType } from '@/utils/enums';
+import { Button } from '@/components/ui/button';
+import AddArtworkCollection from '@/components/ui.custom/add-artwork-collection';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useSwipeable } from 'react-swipeable';
@@ -210,7 +214,34 @@ function Modal({
                             <div className={`
                 relative w-full h-full flex items-center justify-center
                 overflow-hidden transition-transform duration-300 ease-out
-              `}>
+              `}><div className="absolute top-2 right-2 flex items-center gap-2 z-50">
+                            <CreateReport
+                                refId={artwork._id}
+                                refType={RefType.ARTWORK}
+                                url={window.location.href}
+                                triggerElement={
+                                    <motion.button
+                                        initial={{ opacity: 0, scale: 0.8 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.8 }}
+                                        className='p-2 rounded-full hover:bg-black/20 transition-colors'
+                                        aria-label='Report artwork'
+                                    >
+                                        <Flag className='w-5 h-5 text-white dark:text-gray-100' />
+                                    </motion.button>
+                                }
+                            />
+                            <motion.button
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.8 }}
+                                className='p-2 rounded-full hover:bg-black/20 transition-colors'
+                                onClick={handleClose}
+                                aria-label='Close modal'
+                            >
+                                <X className='w-6 h-6 text-white dark:text-gray-100' />
+                            </motion.button>
+                        </div>
                                 <Image
                                     width={artwork.dimensions.width}
                                     height={artwork.dimensions.height}
@@ -375,6 +406,24 @@ function Modal({
                                                             </Badge>
                                                         </div>
                                                     )}
+
+                                                    {/* Add the collection button here */}
+                                                    <div className='mt-4'>
+                                                        <AddArtworkCollection 
+                                                            artworkId={artwork._id}
+                                                            triggerButton={
+                                                                <Button 
+                                                                    className="w-full flex items-center justify-center gap-2 bg-white/20 hover:bg-white/30 text-white"
+                                                                >
+                                                                    <BookmarkIcon className="w-5 h-5" />
+                                                                    Add to Collection
+                                                                </Button>
+                                                            }
+                                                            onSuccess={() => {
+                                                                // Optional: You can add additional success handling here
+                                                            }}
+                                                        />
+                                                    </div>
 
                                                     {/* Description - more prominent */}
                                                     <div className='bg-white/10 rounded-lg p-3 sm:p-4 border border-white/5'>
