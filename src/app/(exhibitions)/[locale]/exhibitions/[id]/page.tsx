@@ -1,6 +1,6 @@
-import { getExhibitions } from "@/service/gallery";
 import ExhibitionContent from "./exhibition-content";
 import { notFound } from "next/navigation";
+import { getExhibitionById } from "@/service/exhibition";
 
 
 
@@ -19,10 +19,11 @@ type PageProps = {
 	console.log('ExhibitionPage params:', params);  
 	console.log('ExhibitionPage id:', id); // This will now log the ID correctly
 	
-	const exhibitionData = await getExhibitions(id);
+	const res = await getExhibitionById(id);
+	const exhibitionData = res.data?.exhibition;
 	if (!exhibitionData) {
 	  return notFound();
 	}
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	return <ExhibitionContent exhibitionData={exhibitionData as any} />;
+	return <ExhibitionContent exhibitionData={exhibitionData} />;
   }

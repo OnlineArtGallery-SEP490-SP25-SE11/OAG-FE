@@ -18,6 +18,7 @@ interface FileUploaderProps {
 	accept?: Record<string, string[]>;
 	maxFiles?: number;
 	maxSize?: number;
+	icon?: React.ReactNode;
 	previewLayout?: 'horizontal' | 'vertical';
 	onFilesChange?: (files: File[]) => void;
 	options?: {
@@ -48,7 +49,8 @@ const DropZone = memo(
 		isDragActive,
 		multiple,
 		maxFiles,
-		maxSize
+		maxSize,
+		icon
 	}: {
 		getInputProps: () => React.InputHTMLAttributes<HTMLInputElement>;
 		isDragAccept: boolean;
@@ -57,6 +59,7 @@ const DropZone = memo(
 		multiple: boolean;
 		maxFiles: number;
 		maxSize: number;
+		icon?: React.ReactNode;
 	}) => {
 		const motionProps = {
 			initial: { opacity: 0.6 },
@@ -92,9 +95,15 @@ const DropZone = memo(
 						animate={{ scale: isDragActive ? 1.1 : 1 }}
 						transition={{ duration: 0.2 }}
 					>
-						<Upload
-							className={`mx-auto h-8 w-8 sm:h-12 sm:w-12 transition-colors duration-200 ${getDropzoneIconColor()}`}
-						/>
+						{icon ? (
+							<div className={`flex justify-center items-center mx-auto transition-colors duration-200 ${getDropzoneIconColor()}`}>
+								{icon}
+							</div>
+						) : (
+							<Upload
+								className={`mx-auto h-8 w-8 sm:h-12 sm:w-12 transition-colors duration-200 ${getDropzoneIconColor()}`}
+							/>
+						)}
 					</motion.div>
 					<p
 						className={`mt-2 text-xs sm:text-sm transition-colors duration-200 ${getDropzoneTextColor()}`}
@@ -346,6 +355,7 @@ Preview.displayName = 'Preview';
 const FileUploader: React.FC<FileUploaderProps> = ({
 	multiple = false,
 	accept,
+	icon,
 	maxFiles = 5,
 	maxSize = 5 * 1024 * 1024, // 5MB
 	previewLayout = 'horizontal',
@@ -498,6 +508,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
 						multiple={multiple}
 						maxFiles={maxFiles}
 						maxSize={maxSize}
+						icon={icon}
 					/>
 				</div>
 				<Preview

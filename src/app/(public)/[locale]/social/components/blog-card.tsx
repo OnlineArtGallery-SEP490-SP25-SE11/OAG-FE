@@ -1,4 +1,5 @@
 "use client";
+
 import {
   BookmarkPlusIcon,
   Flag,
@@ -38,6 +39,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@radix-ui/react-dropdown-menu";
+import FollowButton from "@/components/follow-button";
 
 interface BlogCardProps {
   id: string;
@@ -45,7 +47,7 @@ interface BlogCardProps {
   coverImage: string;
   content: string;
   author: {
-    _id: string;
+    id: string;
     name: string;
     image: string;
   };
@@ -67,6 +69,7 @@ interface Comment {
     name: string;
     avatar: string;
   };
+  replies?: string[];
 }
 
 export function BlogCard({
@@ -96,11 +99,20 @@ export function BlogCard({
   const [loading, setLoading] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const [replyTo, setReplyTo] = useState("");
+  const [replyContent, setReplyContent] = useState("");
+  const [token, setToken] = useState("");
+  const [userId, setUserId] = useState("");
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
       const user = await getCurrentUser();
-      setCurrentUser(user);
+
+      if (user) {
+        setToken(user.accessToken);
+        setUserId(user.id);
+        setCurrentUser(user);
+      }
     };
     fetchCurrentUser();
   }, []);
@@ -112,7 +124,6 @@ export function BlogCard({
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/comments/blog/${id}`
       );
-      console.log("CMT", response);
       setComments(response.data);
     } catch (error) {
       console.error("Error fetching comments:", error);
@@ -145,16 +156,23 @@ export function BlogCard({
       const user = await getCurrentUser();
       if (!user?.accessToken || !editContent.trim()) return;
 
+      const commentToUpdate = comments.find(
+        (comment) => comment._id === commentId
+      );
+      if (!commentToUpdate) return;
+
       const updatedComment = await updateComment({
         accessToken: user.accessToken,
         commentId,
         content: editContent,
+        replies: commentToUpdate.replies || [], // Giữ lại các replies cũ
       });
+
       if (updatedComment) {
         setComments((prev) =>
           prev.map((comment) =>
             comment._id === commentId
-              ? { ...comment, content: editContent }
+              ? { ...comment, content: editContent } // Chỉ cập nhật content, giữ nguyên replies
               : comment
           )
         );
@@ -174,13 +192,10 @@ export function BlogCard({
         console.error("User not authenticated.");
         return;
       }
-
       const isDeleted = await deleteComment({
         accessToken: user.accessToken,
         commentId,
       });
-      //TODO
-      console.log("aa", isDeleted);
       if (!isDeleted) {
         setComments((prev) =>
           prev.filter((comment) => comment._id !== commentId)
@@ -191,6 +206,41 @@ export function BlogCard({
       }
     } catch (error) {
       console.error("Error deleting comment:", error);
+    }
+  };
+
+  const handleSubmitReply = async (parentId: string, replyContent: string) => {
+    try {
+      console.log("Submitting reply...");
+      setLoading(true);
+
+      const user = await getCurrentUser();
+      console.log("Current user:", user);
+
+      if (!user) throw new Error("User not authenticated.");
+
+      console.log("Sending request to create comment with parentId...");
+      const newReply = await createComment({
+        accessToken: user.accessToken,
+        blogId: id,
+        content: replyContent,
+        parentId: parentId, // Gửi parentId để lưu vào comment con
+      });
+
+      console.log("New reply created:", newReply);
+
+      if (newReply) {
+        console.log("Updating state with newReply...");
+        setComments((prevComments) => [...prevComments, newReply]);
+
+        setReplyContent(""); // Clear input
+        console.log("Reply content cleared.");
+      }
+    } catch (error) {
+      console.error("Failed to add reply:", error);
+    } finally {
+      setLoading(false);
+      console.log("Loading state set to false.");
     }
   };
 
@@ -208,25 +258,31 @@ export function BlogCard({
                 {author.name}
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                {formatDistanceToNow(publishedAt, {
-                  addSuffix: true,
-                })}{" "}
-                · {readTime} min read
+                {formatDistanceToNow(publishedAt, { addSuffix: true })} ·{" "}
+                {readTime} min read
               </p>
             </div>
           </div>
-          {isSignedIn && (
-            <ReportButton
-              refId={id}
-              refType={RefType.BLOG}
-              url={window.location.href}
-              triggerElement={
-                <Button variant="ghost">
-                  <Flag className="w-4 h-4" />
-                </Button>
-              }
-            />
-          )}
+
+          {/* Combined UI with both report button and follow button */}
+          <div className="flex items-center">
+            {currentUser && currentUser.id !== author.id && (
+              <FollowButton targetUserId={author.id} initialIsFollowing={false} />
+            )}
+            
+            {isSignedIn && (
+              <ReportButton
+                refId={id}
+                refType={RefType.BLOG}
+                url={window.location.href}
+                triggerElement={
+                  <Button variant="ghost">
+                    <Flag className="w-4 h-4" />
+                  </Button>
+                }
+              />
+            )}
+          </div>
         </div>
       </div>
       <Link href={`/${locale}/blogs/${slug}`}>
@@ -261,7 +317,7 @@ export function BlogCard({
               </Button>
             </DrawerTrigger>
             <DrawerContent className="w-[400px] h-screen">
-              <div className="mx-auto w-full max-w-2xl h-full flex flex-col">
+              <div className="w-full h-full flex flex-col">
                 <DrawerHeader>
                   <DrawerTitle>Comments</DrawerTitle>
                   <DrawerDescription>
@@ -316,7 +372,7 @@ export function BlogCard({
                                   />
                                 )}
                               {comment.author?._id === currentUser?._id ||
-                              author._id === currentUser?._id ? (
+                              author.id === currentUser?._id ? (
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
                                     <Button variant="ghost" size="icon">
@@ -324,8 +380,7 @@ export function BlogCard({
                                     </Button>
                                   </DropdownMenuTrigger>
                                   <DropdownMenuContent align="end">
-                                    {comment.author?.name ===
-                                      currentUser?.name && (
+                                    {comment.author?._id === currentUser?._id && (
                                       <DropdownMenuItem
                                         onClick={() => {
                                           setEditingCommentId(comment._id);
@@ -354,7 +409,6 @@ export function BlogCard({
                               ) : null}
                             </div>
                           </div>
-
                           {editingCommentId === comment._id ? (
                             <div className="flex items-center space-x-2 mt-2">
                               <Input
@@ -368,11 +422,75 @@ export function BlogCard({
                                 Save
                               </Button>
                             </div>
+                          ) : replyTo === comment._id ? (
+                            <div className="flex items-center space-x-2 mt-2">
+                              <Input
+                                placeholder="Write a reply..."
+                                value={replyContent}
+                                onChange={(e) =>
+                                  setReplyContent(e.target.value)
+                                }
+                              />
+                              <Button
+                                variant="ghost"
+                                onClick={() =>
+                                  handleSubmitReply(comment._id, replyContent)
+                                }
+                              >
+                                Reply
+                              </Button>
+                            </div>
                           ) : (
                             <p className="text-sm text-muted-foreground mt-1">
                               {comment.content}
                             </p>
                           )}
+                          <Button
+                            variant="link"
+                            size="sm"
+                            className="text-blue-600 hover:underline mt-2"
+                            onClick={() => setReplyTo(comment._id)}
+                          >
+                            Reply
+                          </Button>
+                          {comment.replies?.map((replyId) => {
+                            const reply = comments.find(
+                              (c) => c._id === replyId
+                            ); // Tìm comment theo _id
+
+                            if (!reply) return null;
+
+                            return (
+                              <div
+                                key={reply._id}
+                                className="ml-8 mt-2 flex space-x-3 items-start"
+                              >
+                                <Avatar className="h-6 w-6">
+                                  <AvatarImage
+                                    src={reply.author?.avatar || ""}
+                                  />
+                                  <AvatarFallback>
+                                    {reply.author?.name?.[0]}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div className="flex-1">
+                                  <div className="d-flex">
+                                    <p className="text-sm font-medium">
+                                      {reply.author?.name}
+                                    </p>
+                                    <p className="text-xs text-muted-foreground">
+                                      {new Date(
+                                        reply.createdAt
+                                      ).toLocaleDateString()}
+                                    </p>
+                                  </div>
+                                  <p className="text-sm text-muted-foreground mt-1">
+                                    {reply.content}
+                                  </p>
+                                </div>
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
                     ))
@@ -400,9 +518,11 @@ export function BlogCard({
 
           {isSignedIn ? (
             <ToggleHeartButton
-              blogId={slug}
+              blogId={id}
+              userId={userId}
               initialHearted={isHearted}
               initialHeartCount={heartCount}
+              token={token}
             />
           ) : (
             <Link href="/sign-in">

@@ -301,3 +301,85 @@ export async function toggleBookmarkBlogService(
 		return false;
 	}
 }
+
+
+export async function addHeartToBlog(accessToken: string, blogId: string, userId: string) {
+    try {
+        const res = await axios.put(
+            `http://localhost:5000/api/blog/${blogId}/addHeart`,
+            { blogId, userId }, // Gửi body theo yêu cầu API
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+        return res.data;
+    } catch (error) {
+        console.error(`Error when adding heart: ${error}`);
+        return null;
+    }
+}
+
+
+export async function removeHeartFromBlog(accessToken: string, blogId: string, userId: string) {
+    try {
+        const res = await axios.put(
+            `http://localhost:5000/api/blog/${blogId}/removeHeart`,
+            { blogId, userId }, // Gửi body theo yêu cầu API
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+        return res.data;
+    } catch (error) {
+        console.error(`Error when removing heart: ${error}`);
+        return null;
+    }
+}
+
+export async function getHeartCount(blogId: string): Promise<number | undefined> {
+    try {
+        const res = await axios.get(`/api/blog/${blogId}/heart-count`);
+        return res.data.count; 
+    } catch (error) {
+        console.error(`Error when getting heart count: ${error}`);
+        return undefined; 
+    }
+}
+
+
+export async function checkIsUserHeartedBlog(
+	blogId: string,
+	userId: string,
+	token: string
+  ) {
+	try {
+	  const res = await axios.get(
+		`http://localhost:5000/api/blog/${blogId}/isHeart/${userId}`,
+		{
+		  headers: {
+			Authorization: `Bearer ${token}`,
+		  },
+		}
+	  );
+	  return res.data?.hasLiked ?? false;
+	} catch (error) {
+	  console.error(`Error when checking heart status: ${error}`);
+	  return false;
+	}
+  }
+  
+
+export async function getUsersWhoHeartedBlog(blogId: string) {
+    try {
+        const res = await axios.get(`/blog/${blogId}/heart-users`);
+        return res.data;
+    } catch (error) {
+        console.error(`Error when getting heart users: ${error}`);
+    }
+}
