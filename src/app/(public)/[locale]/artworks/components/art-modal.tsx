@@ -1,7 +1,7 @@
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { AnimatePresence, motion } from 'framer-motion';
-import { DollarSignIcon, Eye, Info, RulerIcon, TagIcon, UserIcon, X, CalendarIcon, BookmarkIcon } from 'lucide-react';
+import { DollarSignIcon, Eye, Info, RulerIcon, TagIcon, UserIcon, X, CalendarIcon, BookmarkIcon, Flag } from 'lucide-react';
 import Image from 'next/image';
 import { Fragment, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { BiComment } from 'react-icons/bi';
@@ -214,7 +214,34 @@ function Modal({
                             <div className={`
                 relative w-full h-full flex items-center justify-center
                 overflow-hidden transition-transform duration-300 ease-out
-              `}>
+              `}><div className="absolute top-2 right-2 flex items-center gap-2 z-50">
+                            <CreateReport
+                                refId={artwork._id}
+                                refType={RefType.ARTWORK}
+                                url={window.location.href}
+                                triggerElement={
+                                    <motion.button
+                                        initial={{ opacity: 0, scale: 0.8 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.8 }}
+                                        className='p-2 rounded-full hover:bg-black/20 transition-colors'
+                                        aria-label='Report artwork'
+                                    >
+                                        <Flag className='w-5 h-5 text-white dark:text-gray-100' />
+                                    </motion.button>
+                                }
+                            />
+                            <motion.button
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.8 }}
+                                className='p-2 rounded-full hover:bg-black/20 transition-colors'
+                                onClick={handleClose}
+                                aria-label='Close modal'
+                            >
+                                <X className='w-6 h-6 text-white dark:text-gray-100' />
+                            </motion.button>
+                        </div>
                                 <Image
                                     width={artwork.dimensions.width}
                                     height={artwork.dimensions.height}

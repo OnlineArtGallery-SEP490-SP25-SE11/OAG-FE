@@ -19,12 +19,13 @@ import {Badge} from '@/components/ui/badge';
 import {vietnamCurrency} from '@/utils/converters';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {AnimatePresence, motion} from 'framer-motion';
-import {CheckCircle2, Clock, Edit2, Eye, FilterX, Loader2, Search, ShieldAlert, Trash2, X} from 'lucide-react';
+import {CheckCircle2, Clock, Edit2, Eye, FilterX, Loader2, Search, ShieldAlert, Trash2, X, BookmarkIcon} from 'lucide-react';
 import Image from 'next/image';
 import {usePathname, useRouter, useSearchParams} from 'next/navigation';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import EditArtworkForm from '../components/artist-update';
 import ConfirmationDialog from '../components/confirmation-dialog';
+import AddArtworkCollection from '@/components/ui.custom/add-artwork-collection';
 import { ITEMS_PER_PAGE, STATUS_OPTIONS } from '../constant';
 import { Artwork } from '../interface';
 // Define moderation status options with icons and colors
@@ -320,6 +321,22 @@ export default function ManageArtworks() {
 										</p>
 									)}
 								</div>
+								
+								{/* Add Collection Button */}
+								<div className="mt-2 mb-1">
+									<AddArtworkCollection 
+										artworkId={artwork._id}
+										triggerButton={
+											<Button 
+												size="sm"
+												className="w-full bg-teal-500/80 hover:bg-teal-600/90 text-white backdrop-blur-sm text-xs md:text-sm flex items-center justify-center gap-1"
+											>
+												<BookmarkIcon className="h-3 w-3" /> Lưu bộ sưu tập
+											</Button>
+										}
+									/>
+								</div>
+								
 								<div className="mt-2 flex gap-1">
 									{/* Sửa đổi 3: Cập nhật màu và thêm icon cho nút Sửa */}
 									<Button
