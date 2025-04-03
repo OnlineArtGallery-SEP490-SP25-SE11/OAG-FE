@@ -19,15 +19,15 @@ import {Badge} from '@/components/ui/badge';
 import {vietnamCurrency} from '@/utils/converters';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {AnimatePresence, motion} from 'framer-motion';
-import {CheckCircle2, Clock, Edit2, Eye, FilterX, Loader2, Search, ShieldAlert, Trash2, X} from 'lucide-react';
+import {CheckCircle2, Clock, Edit2, Eye, FilterX, Loader2, Search, ShieldAlert, Trash2, X, BookmarkIcon} from 'lucide-react';
 import Image from 'next/image';
 import {usePathname, useRouter, useSearchParams} from 'next/navigation';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import EditArtworkForm from '../components/artist-update';
 import ConfirmationDialog from '../components/confirmation-dialog';
-import {ITEMS_PER_PAGE, STATUS_OPTIONS} from '../constant';
-import {Artwork} from '../interface';
-
+import AddArtworkCollection from '@/components/ui.custom/add-artwork-collection';
+import { ITEMS_PER_PAGE, STATUS_OPTIONS } from '../constant';
+import { Artwork } from '../interface';
 // Define moderation status options with icons and colors
 const MODERATION_STATUS_OPTIONS = [
     {
@@ -63,7 +63,6 @@ const MODERATION_STATUS_OPTIONS = [
         bgColor: 'bg-emerald-100'
     },
 ];
-
 export default function ManageArtworks() {
     const router = useRouter();
     const pathname = usePathname();
@@ -283,169 +282,102 @@ export default function ManageArtworks() {
             const moderationInfo = getModerationStatusInfo(moderationStatus);
             const ModIcon = moderationInfo.icon;
 
-            return (
-                <motion.div
-                    initial={{opacity: 0, y: 15}}
-                    animate={{opacity: 1, y: 0}}
-                    transition={{duration: 0.4, delay: index * 0.05, ease: 'easeOut'}}
-                    className="group relative hover:shadow-lg transition-all duration-300"
-                >
-                    <Card
-                        className={`overflow-hidden rounded-lg border ${moderationStatus === 'pending' ? 'border-amber-300' : moderationStatus === 'rejected' ? 'border-red-300' : 'border-emerald-300'} dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm`}>
-                        <div className={`relative ${isMobile ? 'aspect-[4/5]' : 'aspect-[2/3]'}`}>
-                            {/* Main image */}
-                            <Image
-                                src={imageUrl}
-                                alt={artwork.title}
-                                fill
-                                className="object-cover transition-transform duration-300 group-hover:scale-105"
-                                placeholder="blur"
-                                blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjFmMWYxIi8+PC9zdmc+"
-                            />
-                            
-                            {/* Always visible badges and info */}
-                            {/* Status badge - top right */}
-                            <motion.div
-                                className={`absolute top-2 right-2 px-2 py-0.5 rounded-full text-xs font-medium ${statusColor} text-white shadow-sm`}
-                                initial={{opacity: 0, scale: 0.9}}
-                                animate={{opacity: 1, scale: 1}}
-                                transition={{duration: 0.3, delay: 0.1 + index * 0.05, ease: 'easeOut'}}
-                            >
-                                {artwork.status}
-                            </motion.div>
-
-                            {/* Moderation status badge - top left */}
-                            <motion.div
-                                className={`absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-medium ${moderationInfo.bgColor} ${moderationInfo.textColor} shadow-sm flex items-center gap-1`}
-                                initial={{opacity: 0, scale: 0.9}}
-                                animate={{opacity: 1, scale: 1}}
-                                transition={{duration: 0.3, delay: 0.15 + index * 0.05, ease: 'easeOut'}}
-                            >
-                                <ModIcon className="h-3 w-3"/>
-                                <span>{moderationInfo.label}</span>
-                            </motion.div>
-                            
-                            {/* Bottom info bar with title, dimensions and categories */}
-                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent pt-6 pb-2 px-2">
-                                <h3 className="text-sm font-medium text-white line-clamp-1 mb-1">
-                                    {artwork.title}
-                                </h3>
-                                
-                                <div className="flex justify-between items-center">
-                                    {/* Categories on the left */}
-                                    {artwork.category && artwork.category.length > 0 && (
-                                        <div className="flex flex-wrap gap-1 max-w-[65%]">
-                                            {artwork.category.slice(0, 1).map((cat, i) => (
-                                                <span 
-                                                    key={i} 
-                                                    className="px-1.5 py-0.5 bg-black/40 text-[10px] text-white rounded-md backdrop-blur-sm"
-                                                >
-                                                    {cat}
-                                                </span>
-                                            ))}
-                                            {artwork.category.length > 1 && (
-                                                <span className="px-1.5 py-0.5 bg-black/40 text-[10px] text-white rounded-md backdrop-blur-sm">
-                                                    +{artwork.category.length - 1}
-                                                </span>
-                                            )}
-                                        </div>
-                                    )}
-                                    
-                                    {/* Dimensions on the right */}
-                                    {artwork.dimensions && (
-                                        <div className="px-1.5 py-0.5 rounded-md text-[10px] font-medium bg-black/40 text-white shadow-sm backdrop-blur-sm ml-auto">
-                                            {artwork.dimensions.width} × {artwork.dimensions.height}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                            
-                            {/* Hover overlay with detailed info and actions */}
-                            <motion.div
-                                className="absolute inset-0 bg-gradient-to-t from-teal-900/90 via-teal-900/80 to-teal-900/60 p-3 flex flex-col opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                                initial={{opacity: 0}}
-                                whileHover={{opacity: 1}}
-                                transition={{duration: 0.2, ease: 'easeInOut'}}
-                            >
-                                <div className="space-y-2 flex-1">
-                                    <h3 className="text-sm md:text-base font-semibold text-white">
-                                        {artwork.title}
-                                    </h3>
-                                    <p className="text-xs text-teal-100 line-clamp-3">
-                                        {artwork.description}
-                                    </p>
-                                    
-                                    <div className="flex items-center justify-between">
-                                        <p className="text-xs font-medium text-teal-50">
-                                            {vietnamCurrency(artwork.price)}
-                                        </p>
-                                        
-                                        {artwork.views > 0 && (
-                                            <p className="text-xs text-teal-200">
-                                                {artwork.views.toLocaleString()} lượt xem
-                                            </p>
-                                        )}
-                                    </div>
-                                    
-                                    {/* Dimensions info */}
-                                    {artwork.dimensions && (
-                                        <div className="flex items-center text-xs text-teal-200">
-                                            <span className="flex items-center">
-                                                Kích thước: {artwork.dimensions.width} × {artwork.dimensions.height} px
-                                            </span>
-                                        </div>
-                                    )}
-                                    
-                                    {/* All categories */}
-                                    {artwork.category && artwork.category.length > 0 && (
-                                        <div className="space-y-1">
-                                            <div className="text-xs text-teal-200">Danh mục:</div>
-                                            <div className="flex flex-wrap gap-1">
-                                                {artwork.category.map((cat, i) => (
-                                                    <span 
-                                                        key={i} 
-                                                        className="px-1.5 py-0.5 bg-teal-800/50 text-[10px] text-teal-100 rounded-full"
-                                                    >
-                                                        {cat}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                                
-                                {/* Action buttons */}
-                                <div className="mt-2 flex gap-2">
-                                    <Button
-                                        size="sm"
-                                        className="flex-1 bg-teal-600 hover:bg-teal-700 text-white backdrop-blur-sm text-xs md:text-sm flex items-center justify-center gap-1"
-                                        onClick={() => {
-                                            setSelectedArtwork(artwork);
-                                            setEditModalOpen(true);
-                                        }}
-                                    >
-                                        <Edit2 className="h-3 w-3"/> Sửa
-                                    </Button>
-                                    <Button
-                                        size="sm"
-                                        variant="destructive"
-                                        className="flex-1 bg-red-600 hover:bg-red-700 text-white backdrop-blur-sm text-xs md:text-sm flex items-center justify-center gap-1"
-                                        onClick={() => {
-                                            setDeleteArtworkId(artwork._id);
-                                            setDeleteConfirmOpen(true);
-                                        }}
-                                    >
-                                        <Trash2 className="h-3 w-3"/> Xóa
-                                    </Button>
-                                </div>
-                            </motion.div>
-                        </div>
-                    </Card>
-                </motion.div>
-            );
-        },
-        [isMobile]
-    );
+			return (
+				<motion.div
+					initial={{ opacity: 0, y: 15 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.4, delay: index * 0.05, ease: 'easeOut' }}
+					className="group relative hover:shadow-lg transition-all duration-300"
+				>
+					<Card className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
+						<div className={`relative ${isMobile ? 'aspect-[4/5]' : 'aspect-[2/3]'}`}>
+							<Image
+								src={imageUrl}
+								alt={artwork.title}
+								fill
+								className="object-cover transition-transform duration-300 group-hover:scale-105"
+								placeholder="blur"
+								blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjFmMWYxIi8+PC9zdmc+"
+							/>
+							<motion.div
+								className="absolute inset-0 bg-gradient-to-t from-teal-900/80 via-teal-900/50 to-transparent p-2 md:p-3 flex flex-col opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+								initial={{ opacity: 0, y: 10 }}
+								whileHover={{ opacity: 1, y: 0 }}
+								transition={{ duration: 0.2, ease: 'easeInOut' }}
+							>
+								<div className="space-y-1 md:space-y-2 flex-1">
+									<h3 className="text-sm md:text-base font-semibold text-white line-clamp-1">
+										{artwork.title}
+									</h3>
+									<p className="text-xs md:text-sm text-teal-100 line-clamp-2">
+										{artwork.description}
+									</p>
+									<p className="text-xs md:text-sm font-medium text-teal-50">
+										{vietnamCurrency(artwork.price)}
+									</p>
+									{artwork.views > 0 && (
+										<p className="text-xs text-teal-200">
+											{artwork.views.toLocaleString()} lượt xem
+										</p>
+									)}
+								</div>
+								
+								{/* Add Collection Button */}
+								<div className="mt-2 mb-1">
+									<AddArtworkCollection 
+										artworkId={artwork._id}
+										triggerButton={
+											<Button 
+												size="sm"
+												className="w-full bg-teal-500/80 hover:bg-teal-600/90 text-white backdrop-blur-sm text-xs md:text-sm flex items-center justify-center gap-1"
+											>
+												<BookmarkIcon className="h-3 w-3" /> Lưu bộ sưu tập
+											</Button>
+										}
+									/>
+								</div>
+								
+								<div className="mt-2 flex gap-1">
+									{/* Sửa đổi 3: Cập nhật màu và thêm icon cho nút Sửa */}
+									<Button
+										size="sm"
+										className="flex-1 bg-teal-600 hover:bg-teal-700 text-white backdrop-blur-sm text-xs md:text-sm flex items-center justify-center gap-1"
+										onClick={() => {
+											setSelectedArtwork(artwork);
+											setEditModalOpen(true);
+										}}
+									>
+										<Edit2 className="h-3 w-3" /> Sửa
+									</Button>
+									{/* Sửa đổi 3: Cập nhật màu và thêm icon cho nút Xóa */}
+									<Button
+										size="sm"
+										variant="destructive"
+										className="flex-1 bg-red-600 hover:bg-red-700 text-white backdrop-blur-sm text-xs md:text-sm flex items-center justify-center gap-1"
+										onClick={() => {
+											setDeleteArtworkId(artwork._id);
+											setDeleteConfirmOpen(true);
+										}}
+									>
+										<Trash2 className="h-3 w-3" /> Xóa
+									</Button>
+								</div>
+							</motion.div>
+							<motion.div
+								className={`absolute top-2 right-2 px-2 py-0.5 rounded-full text-xs font-medium ${statusColor} text-white shadow-sm`}
+								initial={{ opacity: 0, scale: 0.9 }}
+								animate={{ opacity: 1, scale: 1 }}
+								transition={{ duration: 0.3, delay: 0.1 + index * 0.05, ease: 'easeOut' }}
+							>
+								{artwork.status}
+							</motion.div>
+						</div>
+					</Card>
+				</motion.div>
+			);
+		},
+		[isMobile]
+	);
 
     const renderSkeletons = useCallback(() =>
         Array.from({length: ITEMS_PER_PAGE}).map((_, index) => (

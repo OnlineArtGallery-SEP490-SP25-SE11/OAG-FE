@@ -43,7 +43,7 @@ export const TEXTURE_URL = {
 		'https://res.cloudinary.com/djvlldzih/image/upload/v1738916166/gallery/textures/brick-wall.jpg',
 	WHITE_WALL:
 		'https://res.cloudinary.com/djvlldzih/image/upload/v1738916278/gallery/textures/white-wall.jpg',
-	WHITE_DECORATIVE_CELLING: 
+	WHITE_DECORATIVE_CELLING:
 		'https://res.cloudinary.com/djvlldzih/image/upload/v1740022250/gallery/textures/white-decorative-faux-tin-ceiling.jpg',
 	CELLING_GYPSUM:
 		'https://res.cloudinary.com/djvlldzih/image/upload/v1740888096/gallery/textures/celling-gypsum.jpg',
@@ -62,4 +62,18 @@ export const ARTWORK_URL = {
 		'https://res.cloudinary.com/djvlldzih/image/upload/v1738856841/gallery/arts/tz8nc5z131qr0cvrsyeb.jpg',
 	ARTWORK_4:
 		'https://res.cloudinary.com/djvlldzih/image/upload/v1738856840/gallery/arts/kh68mg65vfhoqbuy0clg.jpg'
+};
+
+
+export const KEYBOARD_CONTROLS = [
+	{ name: 'forward', keys: ['ArrowUp', 'w', 'W'] },
+	{ name: 'backward', keys: ['ArrowDown', 's', 'S'] },
+	{ name: 'left', keys: ['ArrowLeft', 'a', 'A'] },
+	{ name: 'right', keys: ['ArrowRight', 'd', 'D'] }
+];
+
+export const POINTER_LOCK_CONFIG = {
+	maxPolarAngle: Math.PI * 0.7, // Limit looking up
+	minPolarAngle: Math.PI * 0.3, // Limit looking down
+	pointerSpeed: 0.2,
 };

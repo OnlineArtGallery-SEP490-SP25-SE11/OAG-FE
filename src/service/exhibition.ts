@@ -65,6 +65,8 @@ export const createExhibition = async (accessToken: string, templateId: string):
     }
 }
 
+
+
 export const updateExhibition = async (accessToken: string, id: string, data: UpdateExhibitionDto): Promise<ApiResponse<ExhibitionRequestResponse>> => {
     try {
         const res = await createApi(accessToken).patch(`/exhibition/${id}`, data);

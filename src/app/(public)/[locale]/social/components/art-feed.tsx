@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
-import { ReportButton } from '@/components/ui.custom/report-button';
+// import { ReportButton } from '@/components/ui.custom/report-button';
 const mockComments = [
 	{
 		id: '1',
@@ -187,7 +187,6 @@ export function ArtFeed() {
 															</button>
 														</div>
 													</div>
-													<ReportButton></ReportButton>
 												</div>
 											))}
 										</div>
@@ -228,7 +227,6 @@ export function ArtFeed() {
 							>
 								<Share2 className='w-4 h-4' />
 							</Button>
-							<ReportButton />
 						</div>
 					</div>
 				</Card>
