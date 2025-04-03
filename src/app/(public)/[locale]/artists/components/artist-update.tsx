@@ -51,7 +51,7 @@ const artworkFormSchema = z.object({
   price: z.coerce.number().min(0, {
     message: "Giá phải là số không âm",
   }),
-  status: z.enum(["Available", "Sold", "Hidden", "Selling"]),
+  status: z.enum(["Available", "Hidden", "Selling"]),
   category: z.array(z.string()).min(1, {
     message: "Vui lòng chọn ít nhất một danh mục",
   }),

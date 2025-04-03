@@ -22,7 +22,9 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
-import { vi } from 'date-fns/locale';
+import { vi, enUS } from 'date-fns/locale';
+import { useTranslations } from 'next-intl';
+import { useLocale } from 'next-intl';
 
 const ITEMS_PER_PAGE = 9;
 
@@ -31,34 +33,38 @@ export default function WarehouseClient() {
     const router = useRouter();
     const [page, setPage] = useState(1);
     const [activeTab, setActiveTab] = useState('all');
-    
+
+    // Sử dụng hook useTranslations để lấy chuỗi dịch
+    const t = useTranslations('warehouse');
+    const locale = useLocale();
+
     // Lấy danh sách tranh trong kho
     const { data, isLoading, error, refetch } = useQuery({
         queryKey: ['artworkWarehouse', page, activeTab],
         queryFn: () => getArtworkWarehouse(
-            session?.user.accessToken as string, 
-            { 
-                page, 
+            session?.user.accessToken as string,
+            {
+                page,
                 limit: ITEMS_PER_PAGE,
                 filter: activeTab !== 'all' ? activeTab : undefined
             }
         ),
         enabled: !!session?.user.accessToken
     });
-    
+
     const warehouseItems = data?.data?.items || [];
     const totalItems = data?.data?.total || 0;
     const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-    
+
     const handleDownload = async (warehouseItemId: string, title: string) => {
         try {
-            const toastId = toast.loading(`Đang tải ${title}...`);
-            
+            const toastId = toast.loading(t('artwork.downloading', { title }));
+
             const blob = await downloadWarehouseArtwork(
                 session?.user.accessToken as string,
                 warehouseItemId
             );
-            
+
             // Tạo URL từ blob và tải file
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
@@ -66,28 +72,32 @@ export default function WarehouseClient() {
             link.download = `${title || 'artwork'}.jpg`;
             document.body.appendChild(link);
             link.click();
-            
+
             // Dọn dẹp
             setTimeout(() => {
                 window.URL.revokeObjectURL(url);
                 document.body.removeChild(link);
                 toast.dismiss(toastId);
-                toast.success(`Đã tải ${title} thành công`);
+                toast.success(t('artwork.download_success', { title }));
                 refetch(); // Cập nhật lại dữ liệu để cập nhật downloadCount
             }, 100);
         } catch (error) {
-            toast.error('Không thể tải ảnh. Vui lòng thử lại sau.');
+            toast.error(t('artwork.download_error'));
         }
     };
-    
+
     const handlePageChange = (newPage: number) => {
         setPage(newPage);
     };
-    
+
     const formatDate = (dateString: string) => {
-        return format(new Date(dateString), 'dd/MM/yyyy HH:mm', { locale: vi });
+        return format(
+            new Date(dateString),
+            'dd/MM/yyyy HH:mm',
+            { locale: locale === 'vi' ? vi : enUS }
+        );
     };
-    
+
     // Render danh sách tranh
     const renderWarehouseItems = () => {
         if (isLoading) {
@@ -108,29 +118,29 @@ export default function WarehouseClient() {
                 </div>
             );
         }
-        
+
         if (error || !warehouseItems.length) {
             return (
                 <div className="flex flex-col items-center justify-center py-12 px-4 text-center space-y-4">
                     <div className="bg-white/5 p-4 rounded-full">
                         <ImageIcon className="h-12 w-12 text-white/50" />
                     </div>
-                    <h3 className="text-xl font-semibold text-white">Chưa có tranh nào trong kho</h3>
+                    <h3 className="text-xl font-semibold text-white">{t('empty.title')}</h3>
                     <p className="text-white/70 max-w-md">
-                        Bạn chưa mua tranh nào. Hãy khám phá và mua các tác phẩm nghệ thuật để thêm vào kho tranh của mình.
+                        {t('empty.description')}
                     </p>
                     <div className="mt-4">
                         <Button
                             variant="outline"
                             onClick={() => router.push('/artworks')}
                         >
-                            Khám phá tranh
+                            {t('empty.explore')}
                         </Button>
                     </div>
                 </div>
             );
         }
-        
+
         return (
             <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -151,28 +161,22 @@ export default function WarehouseClient() {
                                     />
                                     <div className="absolute top-2 right-2">
                                         <Badge className="bg-blue-500/80 text-white">
-                                            {item.downloadCount > 0 ? `Đã tải ${item.downloadCount} lần` : 'Chưa tải'}
+                                            {item.downloadCount > 0
+                                                ? t('artwork.download_count', { count: item.downloadCount })
+                                                : t('artwork.not_downloaded')}
                                         </Badge>
                                     </div>
                                 </div>
                                 <CardHeader>
                                     <CardTitle className="text-white truncate">{item.artworkId.title}</CardTitle>
                                     <CardDescription>
-                                        Nghệ sĩ: {item.artworkId.artistId?.name || 'Không xác định'}
+                                        {t('artwork.artist')}: {item.artworkId.artistId?.name || t('artwork.unknown_artist')}
                                     </CardDescription>
                                 </CardHeader>
-                                <CardContent className="flex-grow pt-0">
-                                    <div className="space-y-2 text-xs text-white/60">
-                                        <div className="flex items-center gap-2">
-                                            <Calendar className="h-3 w-3" />
-                                            <span>Mua ngày: {formatDate(item.purchasedAt)}</span>
-                                        </div>
-                                        {item.downloadedAt && (
-                                            <div className="flex items-center gap-2">
-                                                <Clock className="h-3 w-3" />
-                                                <span>Tải lần cuối: {formatDate(item.downloadedAt)}</span>
-                                            </div>
-                                        )}
+                                <CardContent className="flex-grow">
+                                    <div className="flex items-center text-sm text-white/70 mb-2">
+                                        <Calendar className="h-4 w-4 mr-1.5" />
+                                        <span>{t('artwork.purchased_on')}: {formatDate(item.createdAt)}</span>
                                     </div>
                                 </CardContent>
                                 <CardFooter className="pt-2 gap-2">
@@ -182,7 +186,7 @@ export default function WarehouseClient() {
                                         onClick={() => handleDownload(item._id, item.artworkId.title)}
                                     >
                                         <Download className="h-4 w-4 mr-2" />
-                                        Tải ảnh
+                                        {t('artwork.download')}
                                     </Button>
                                     <Button
                                         variant="secondary"
@@ -196,7 +200,7 @@ export default function WarehouseClient() {
                         </motion.div>
                     ))}
                 </div>
-                
+
                 {totalPages > 1 && (
                     <div className="flex justify-center mt-8">
                         <Pagination
@@ -209,37 +213,37 @@ export default function WarehouseClient() {
             </>
         );
     };
-    
+
     return (
         <div className="container py-8">
             <div className="space-y-6">
                 <div>
-                    <h1 className="text-3xl font-bold text-white mb-2">Kho tranh của tôi</h1>
+                    <h1 className="text-3xl font-bold text-white mb-2">{t('title')}</h1>
                     <p className="text-white/70">
-                        Truy cập và tải xuống các tác phẩm nghệ thuật bạn đã mua.
+                        {t('description')}
                     </p>
                 </div>
-                
+
                 <Tabs defaultValue="all" onValueChange={setActiveTab} className="w-full">
                     <TabsList className="mb-6">
-                        <TabsTrigger value="all">Tất cả</TabsTrigger>
-                        <TabsTrigger value="recent">Mới mua</TabsTrigger>
-                        <TabsTrigger value="downloaded">Đã tải</TabsTrigger>
-                        <TabsTrigger value="not_downloaded">Chưa tải</TabsTrigger>
+                        <TabsTrigger value="all">{t('tabs.all')}</TabsTrigger>
+                        <TabsTrigger value="recent">{t('tabs.recent')}</TabsTrigger>
+                        <TabsTrigger value="downloaded">{t('tabs.downloaded')}</TabsTrigger>
+                        <TabsTrigger value="not_downloaded">{t('tabs.not_downloaded')}</TabsTrigger>
                     </TabsList>
-                    
+
                     <TabsContent value="all" className="space-y-6">
                         {renderWarehouseItems()}
                     </TabsContent>
-                    
+
                     <TabsContent value="recent" className="space-y-6">
                         {renderWarehouseItems()}
                     </TabsContent>
-                    
+
                     <TabsContent value="downloaded" className="space-y-6">
                         {renderWarehouseItems()}
                     </TabsContent>
-                    
+
                     <TabsContent value="not_downloaded" className="space-y-6">
                         {renderWarehouseItems()}
                     </TabsContent>
@@ -260,7 +264,7 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
     const getPageNumbers = () => {
         const pageNumbers = [];
         const maxPagesToShow = 5;
-        
+
         if (totalPages <= maxPagesToShow) {
             // Hiển thị tất cả trang nếu tổng số trang ít hơn maxPagesToShow
             for (let i = 1; i <= totalPages; i++) {
@@ -293,10 +297,10 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
                 pageNumbers.push(totalPages);
             }
         }
-        
+
         return pageNumbers;
     };
-    
+
     return (
         <div className="flex items-center gap-1">
             <Button
@@ -308,7 +312,7 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
             >
                 <ChevronLeft className="h-4 w-4" />
             </Button>
-            
+
             {getPageNumbers().map((pageNumber, index) => (
                 pageNumber === '...' ? (
                     <div key={`ellipsis-${index}`} className="px-3 py-1 text-sm text-white/50">...</div>
@@ -324,7 +328,7 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
                     </Button>
                 )
             ))}
-            
+
             <Button
                 variant="outline"
                 size="icon"

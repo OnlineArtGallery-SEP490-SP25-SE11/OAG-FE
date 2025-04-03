@@ -73,19 +73,20 @@ export const downloadArtwork = async (
     }
 };
 
-// // Kiểm tra xem người dùng đã mua tranh này chưa
-// export const checkArtworkPurchased = async (
-//     accessToken: string,
-//     artworkId: string
-// ): Promise<ApiResponse<{ purchased: boolean }>> => {
-//     try {
-//         const res = await createApi(accessToken).get(`/artwork/purchased/${artworkId}`);
-//         return res.data;
-//     } catch (error) {
-//         console.error('Lỗi khi kiểm tra trạng thái mua tranh:', error);
-//         return handleApiError<{ purchased: boolean }>(
-//             error,
-//             'Không thể kiểm tra trạng thái mua tranh'
-//         );
-//     }
-// };
+// Kiểm tra xem người dùng đã mua tranh chưa
+export const checkUserPurchased = async (
+    accessToken: string,
+    artworkId: string
+): Promise<ApiResponse<{ hasPurchased: boolean }>> => {
+    try {
+        const res = await createApi(accessToken).get(`/artwork/${artworkId}/check-purchased`);
+        console.log('rescac', res.data);
+        return res.data;
+    } catch (error) {
+        console.error('Lỗi khi kiểm tra trạng thái mua tranh:', error);
+        return handleApiError<{ hasPurchased: boolean }>(
+            error,
+            'Không thể kiểm tra trạng thái mua tranh'
+        );
+    }
+};

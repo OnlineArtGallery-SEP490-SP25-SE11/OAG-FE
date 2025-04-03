@@ -1,5 +1,5 @@
 import { createAxiosInstance } from '@/lib/axios';
-import { ca } from 'date-fns/locale';
+ 
 
 export interface CollectionForm {
     title: string;
