@@ -493,267 +493,286 @@ export default function ManageArtworks() {
                 </p>
             </motion.div>
 
-            {/* Moderation Status Tabs */}
             <motion.div
                 initial={{opacity: 0, y: -10}}
                 animate={{opacity: 1, y: 0}}
                 transition={{duration: 0.5, delay: 0.15, ease: 'easeOut'}}
+                className="mb-4"
             >
-                <Tabs
-                    defaultValue={moderationStatusFilter}
-                    onValueChange={handleModerationStatusChange}
-                    className="w-full"
-                >
-                    <TabsList className="w-full grid grid-cols-4 bg-teal-50 dark:bg-gray-800 p-1 rounded-lg mb-3">
+                <div className="w-full overflow-x-auto no-scrollbar">
+                    <div className="flex gap-1 p-1 bg-teal-50/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg mb-3">
                         {MODERATION_STATUS_OPTIONS.map(option => (
-                            <TabsTrigger
+                            <button
                                 key={option.value}
-                                value={option.value}
-                                className="flex items-center justify-center gap-1.5 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700"
+                                onClick={() => handleModerationStatusChange(option.value)}
+                                className={`flex items-center justify-center gap-1.5 py-2 px-3 text-sm rounded-md transition-all duration-200 flex-1 min-w-[90px] ${
+                                    moderationStatusFilter === option.value
+                                        ? `bg-white dark:bg-gray-700 shadow-sm ${option.textColor}`
+                                        : 'hover:bg-white/50 dark:hover:bg-gray-700/50 text-gray-600 dark:text-gray-300'
+                                }`}
                             >
-                                <option.icon className="h-3.5 w-3.5"/>
-                                <span className="hidden md:inline">{option.label}</span>
-                                <Badge className={`${option.bgColor} ${option.textColor} border-0 px-1.5 py-0`}>
-                                    {option.value === 'all'
-                                        ? totalCount
-                                        : moderationCounts[option.value as keyof typeof moderationCounts] || 0}
-                                </Badge>
-                            </TabsTrigger>
+                                <option.icon className={`h-3.5 w-3.5 ${moderationStatusFilter === option.value ? option.textColor : ''}`} />
+                                <span className="hidden sm:inline whitespace-nowrap">{option.label}</span>
+                                {/* Only show badge counts on "all" tab or the current tab */}
+                                {(option.value === 'all' || moderationStatusFilter === option.value) && (
+                                    <Badge
+                                        className={`${option.bgColor} ${option.textColor} border-0 px-1.5 py-0 ml-1`}
+                                    >
+                                        {option.value === 'all'
+                                            ? totalCount
+                                            : moderationCounts[option.value as keyof typeof moderationCounts] || 0}
+                                    </Badge>
+                                )}
+                            </button>
                         ))}
-                    </TabsList>
+                    </div>
+                </div>
 
-                    {/* Filters */}
+                {/* Replace TabsContent with a simple conditional rendering approach */}
+                <AnimatePresence mode="wait">
                     <motion.div
-                        initial={{opacity: 0, y: -10}}
-                        animate={{opacity: 1, y: 0}}
-                        transition={{duration: 0.5, delay: 0.2, ease: 'easeOut'}}
-                        className="flex flex-col gap-2 md:flex-row md:items-center md:gap-3 mb-3"
+                        key={moderationStatusFilter}
+                        initial={{ opacity: 0, x: 10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -10 }}
+                        transition={{ duration: 0.3 }}
                     >
-                        <div className="relative flex-1 max-w-md">
-                            <Search
-                                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-teal-500 dark:text-teal-400 h-4 w-4"/>
-                            <Input
-                                type="text"
-                                placeholder="Tìm theo tiêu đề..."
-                                value={searchTerm}
-                                onChange={handleSearchChange}
-                                className="pl-8 rounded-lg border-gray-200 dark:border-gray-700 shadow-sm text-sm focus:ring-2 focus:ring-teal-500 h-9 bg-gray-50 dark:bg-gray-700/30 text-gray-700 dark:text-gray-200"
-                            />
-                            {searchTerm && (
-                                <motion.button
+                        {/* Filters */}
+                        <motion.div
+                            initial={{opacity: 0, y: -10}}
+                            animate={{opacity: 1, y: 0}}
+                            transition={{duration: 0.5, delay: 0.2, ease: 'easeOut'}}
+                            className="flex flex-col gap-2 md:flex-row md:items-center md:gap-3 mb-3"
+                        >
+                            {/* Filter content remains the same */}
+                            <div className="relative flex-1 max-w-md">
+                                <Search
+                                    className="absolute left-2.5 top-1/2 -translate-y-1/2 text-teal-500 dark:text-teal-400 h-4 w-4"/>
+                                <Input
+                                    type="text"
+                                    placeholder="Tìm theo tiêu đề..."
+                                    value={searchTerm}
+                                    onChange={handleSearchChange}
+                                    className="pl-8 rounded-lg border-gray-200 dark:border-gray-700 shadow-sm text-sm focus:ring-2 focus:ring-teal-500 h-9 bg-gray-50 dark:bg-gray-700/30 text-gray-700 dark:text-gray-200"
+                                />
+                                {searchTerm && (
+                                    <motion.button
+                                        initial={{opacity: 0, scale: 0.8}}
+                                        animate={{opacity: 1, scale: 1}}
+                                        onClick={() => {
+                                            setSearchTerm('');
+                                            setDebouncedSearch('');
+                                            if (currentPage !== 1) setCurrentPage(1);
+                                        }}
+                                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-teal-500 hover:text-teal-600 dark:hover:text-teal-300"
+                                        transition={{duration: 0.2}}
+                                    >
+                                        <X className="h-4 w-4"/>
+                                    </motion.button>
+                                )}
+                            </div>
+                            <Select value={statusFilter} onValueChange={handleStatusChange}>
+                                <SelectTrigger
+                                    className="w-full max-w-[140px] rounded-lg border-gray-200 dark:border-gray-700 shadow-sm text-sm h-9 bg-gray-50 dark:bg-gray-700/30 text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-teal-500">
+                                    <SelectValue placeholder="Trạng thái"/>
+                                </SelectTrigger>
+                                <SelectContent className="rounded-lg">
+                                    {STATUS_OPTIONS.map((option) => (
+                                        <SelectItem key={option.value} value={option.value}
+                                                    className="text-sm text-gray-700 dark:text-gray-200">
+                                <span
+                                    className={`inline-block w-2 h-2 rounded-full ${option.color} mr-2`}></span>
+                                            {option.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            {(debouncedSearch || statusFilter !== 'all') && (
+                                <motion.div
                                     initial={{opacity: 0, scale: 0.8}}
                                     animate={{opacity: 1, scale: 1}}
-                                    onClick={() => {
-                                        setSearchTerm('');
-                                        setDebouncedSearch('');
-                                        if (currentPage !== 1) setCurrentPage(1);
-                                    }}
-                                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-teal-500 hover:text-teal-600 dark:hover:text-teal-300"
+                                    exit={{opacity: 0, scale: 0.8}}
                                     transition={{duration: 0.2}}
                                 >
-                                    <FilterX className="h-4 w-4"/>
-                                </motion.button>
-                            )}
-                        </div>
-                        <Select value={statusFilter} onValueChange={handleStatusChange}>
-                            <SelectTrigger
-                                className="w-full max-w-[140px] rounded-lg border-gray-200 dark:border-gray-700 shadow-sm text-sm h-9 bg-gray-50 dark:bg-gray-700/30 text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-teal-500">
-                                <SelectValue placeholder="Trạng thái"/>
-                            </SelectTrigger>
-                            <SelectContent className="rounded-lg">
-                                {STATUS_OPTIONS.map((option) => (
-                                    <SelectItem key={option.value} value={option.value}
-                                                className="text-sm text-gray-700 dark:text-gray-200">
-                                        <span
-                                            className={`inline-block w-2 h-2 rounded-full ${option.color} mr-2`}></span>
-                                        {option.label}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        {(debouncedSearch || statusFilter !== 'all') && (
-                            <motion.div
-                                initial={{opacity: 0, scale: 0.8}}
-                                animate={{opacity: 1, scale: 1}}
-                                exit={{opacity: 0, scale: 0.8}}
-                                transition={{duration: 0.2}}
-                            >
-                                <Button
-                                    variant="outline"
-                                    size="icon"
-                                    onClick={resetFilters}
-                                    className="h-9 w-9 rounded-lg border-teal-200 dark:border-teal-600 text-teal-500 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-700/50"
-                                >
-                                    <FilterX className="h-4 w-4"/>
-                                </Button>
-                            </motion.div>
-                        )}
-                    </motion.div>
-
-                    {/* Content for each tab */}
-                    {MODERATION_STATUS_OPTIONS.map(option => (
-                        <TabsContent key={option.value} value={option.value} className="mt-0">
-                            {/* Pagination (Mobile: Top only) */}
-                            {totalPages > 0 && isMobile && (
-                                <motion.div
-                                    initial={{opacity: 0, y: -10}}
-                                    animate={{opacity: 1, y: 0}}
-                                    transition={{duration: 0.5, delay: 0.3, ease: 'easeOut'}}
-                                    className="mb-3"
-                                >
-                                    <Pagination>
-                                        <PaginationContent>
-                                            <PaginationItem>
-                                                <PaginationPrevious
-                                                    href="#"
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        if (currentPage > 1) setCurrentPage(currentPage - 1);
-                                                    }}
-                                                    className={currentPage === 1 ? 'pointer-events-none opacity-50 text-teal-500 dark:text-teal-400' : 'text-teal-500 dark:text-teal-400'}
-                                                />
-                                            </PaginationItem>
-                                            {renderPaginationItems()}
-                                            <PaginationItem>
-                                                <PaginationNext
-                                                    href="#"
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-                                                    }}
-                                                    className={currentPage === totalPages ? 'pointer-events-none opacity-50 text-teal-500 dark:text-teal-400' : 'text-teal-500 dark:text-teal-400'}
-                                                />
-                                            </PaginationItem>
-                                        </PaginationContent>
-                                    </Pagination>
+                                    <Button
+                                        variant="outline"
+                                        size="icon"
+                                        onClick={resetFilters}
+                                        className="h-9 w-9 rounded-lg border-teal-200 dark:border-teal-600 text-teal-500 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-700/50"
+                                    >
+                                        <FilterX className="h-4 w-4"/>
+                                    </Button>
                                 </motion.div>
                             )}
+                        </motion.div>
 
-                            {/* Main Content */}
-                            <AnimatePresence mode="wait">
-                                {isLoading ? (
-                                    <motion.div
-                                        key="loading"
-                                        initial={{opacity: 0}}
-                                        animate={{opacity: 1}}
-                                        exit={{opacity: 0}}
-                                        transition={{duration: 0.5}}
-                                        className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3"
-                                    >
-                                        {renderSkeletons()}
-                                    </motion.div>
-                                ) : error ? (
-                                    <motion.div
-                                        key="error"
-                                        initial={{opacity: 0}}
-                                        animate={{opacity: 1}}
-                                        exit={{opacity: 0}}
-                                        transition={{duration: 0.5}}
-                                        className="text-center py-6 space-y-2 border rounded-lg bg-emerald-50 dark:bg-teal-900/30"
-                                    >
-                                        <p className="text-sm text-red-500 dark:text-red-400 font-medium">
-                                            Lỗi khi tải tác phẩm
-                                        </p>
-                                        <Button variant="outline" onClick={() => refetch()}
+                        {/* Mobile Pagination */}
+                        {totalPages > 0 && isMobile && (
+                            <motion.div
+                                initial={{opacity: 0, y: -10}}
+                                animate={{opacity: 1, y: 0}}
+                                transition={{duration: 0.5, delay: 0.3, ease: 'easeOut'}}
+                                className="mb-3"
+                            >
+                                <Pagination>
+                                    <PaginationContent>
+                                        <PaginationItem>
+                                            <PaginationPrevious
+                                                href="#"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    if (currentPage > 1) setCurrentPage(currentPage - 1);
+                                                }}
+                                                className={currentPage === 1 ? 'pointer-events-none opacity-50 text-teal-500 dark:text-teal-400' : 'text-teal-500 dark:text-teal-400'}
+                                            />
+                                        </PaginationItem>
+                                        {renderPaginationItems()}
+                                        <PaginationItem>
+                                            <PaginationNext
+                                                href="#"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+                                                }}
+                                                className={currentPage === totalPages ? 'pointer-events-none opacity-50 text-teal-500 dark:text-teal-400' : 'text-teal-500 dark:text-teal-400'}
+                                            />
+                                        </PaginationItem>
+                                    </PaginationContent>
+                                </Pagination>
+                            </motion.div>
+                        )}
+
+                        {/* Main Content */}
+                        <AnimatePresence mode="wait">
+                            {isLoading ? (
+                                <motion.div
+                                    key="loading"
+                                    initial={{opacity: 0}}
+                                    animate={{opacity: 1}}
+                                    exit={{opacity: 0}}
+                                    transition={{duration: 0.5}}
+                                    className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3"
+                                >
+                                    {renderSkeletons()}
+                                </motion.div>
+                            ) : error ? (
+                                <motion.div
+                                    key="error"
+                                    initial={{opacity: 0}}
+                                    animate={{opacity: 1}}
+                                    exit={{opacity: 0}}
+                                    transition={{duration: 0.5}}
+                                    className="text-center py-6 space-y-2 border rounded-lg bg-emerald-50 dark:bg-teal-900/30"
+                                >
+                                    <p className="text-sm text-red-500 dark:text-red-400 font-medium">
+                                        Lỗi khi tải tác phẩm
+                                    </p>
+                                    <Button variant="outline" onClick={() => refetch()}
+                                            className="text-sm text-teal-700 dark:text-teal-200 border-teal-200 dark:border-teal-600 hover:bg-teal-100 dark:hover:bg-teal-700/50">
+                                        Thử lại
+                                    </Button>
+                                </motion.div>
+                            ) : artworks.length === 0 ? (
+                                <motion.div
+                                    key="empty"
+                                    initial={{opacity: 0}}
+                                    animate={{opacity: 1}}
+                                    exit={{opacity: 0}}
+                                    transition={{duration: 0.5}}
+                                    className="text-center py-6 border rounded-lg bg-emerald-50 dark:bg-teal-900/30 space-y-2"
+                                >
+                                    {(() => {
+                                        const currentOption = MODERATION_STATUS_OPTIONS.find(opt => opt.value === moderationStatusFilter) || MODERATION_STATUS_OPTIONS[0];
+                                        const Icon = currentOption.icon;
+                                        return (
+                                            <>
+                                                <div className="flex justify-center">
+                                                    <Icon className={`h-8 w-8 ${currentOption.textColor}`}/>
+                                                </div>
+                                                <p className="text-sm font-medium text-emerald-700 dark:text-emerald-200">
+                                                    Không tìm thấy tác phẩm {moderationStatusFilter !== 'all' ? `trạng thái "${currentOption.label}"` : ''}
+                                                </p>
+                                            </>
+                                        );
+                                    })()}
+                                    <p className="text-xs text-teal-600 dark:text-teal-400">
+                                        {debouncedSearch || statusFilter !== 'all' ? 'Thay đổi bộ lọc để thử lại' : 'Thêm tác phẩm đầu tiên của bạn'}
+                                    </p>
+                                    {(debouncedSearch || statusFilter !== 'all') && (
+                                        <Button variant="outline" onClick={resetFilters}
                                                 className="text-sm text-teal-700 dark:text-teal-200 border-teal-200 dark:border-teal-600 hover:bg-teal-100 dark:hover:bg-teal-700/50">
-                                            Thử lại
+                                            Xóa bộ lọc
                                         </Button>
-                                    </motion.div>
-                                ) : artworks.length === 0 ? (
-                                    <motion.div
-                                        key="empty"
-                                        initial={{opacity: 0}}
-                                        animate={{opacity: 1}}
-                                        exit={{opacity: 0}}
-                                        transition={{duration: 0.5}}
-                                        className="text-center py-6 border rounded-lg bg-emerald-50 dark:bg-teal-900/30 space-y-2"
-                                    >
-                                        <div className="flex justify-center">
-                                            <option.icon className={`h-8 w-8 ${option.textColor}`}/>
-                                        </div>
-                                        <p className="text-sm font-medium text-emerald-700 dark:text-emerald-200">
-                                            Không tìm thấy tác
-                                            phẩm {option.value !== 'all' ? `trạng thái "${option.label}"` : ''}
-                                        </p>
-                                        <p className="text-xs text-teal-600 dark:text-teal-400">
-                                            {debouncedSearch || statusFilter !== 'all' ? 'Thay đổi bộ lọc để thử lại' : 'Thêm tác phẩm đầu tiên của bạn'}
-                                        </p>
-                                        {(debouncedSearch || statusFilter !== 'all') && (
-                                            <Button variant="outline" onClick={resetFilters}
-                                                    className="text-sm text-teal-700 dark:text-teal-200 border-teal-200 dark:border-teal-600 hover:bg-teal-100 dark:hover:bg-teal-700/50">
-                                                Xóa bộ lọc
-                                            </Button>
-                                        )}
-                                    </motion.div>
-                                ) : (
-                                    <motion.div
-                                        key="content"
-                                        initial={{opacity: 0}}
-                                        animate={{opacity: 1}}
-                                        exit={{opacity: 0}}
-                                        transition={{duration: 0.5}}
-                                    >
-                                        <div className="relative">
-                                            <AnimatePresence>
-                                                {isFetching && !isLoading && (
-                                                    <motion.div
-                                                        initial={{opacity: 0}}
-                                                        animate={{opacity: 1}}
-                                                        exit={{opacity: 0}}
-                                                        className="absolute inset-0 bg-white/70 dark:bg-gray-900/70 flex items-center justify-center z-10 rounded-lg backdrop-blur-sm"
-                                                        transition={{duration: 0.3}}
-                                                    >
-                                                        <Loader2 className="h-6 w-6 text-teal-500 animate-spin"/>
-                                                    </motion.div>
-                                                )}
-                                            </AnimatePresence>
+                                    )}
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    key="content"
+                                    initial={{opacity: 0}}
+                                    animate={{opacity: 1}}
+                                    exit={{opacity: 0}}
+                                    transition={{duration: 0.5}}
+                                >
+                                    <div className="relative">
+                                        <AnimatePresence>
+                                            {isFetching && !isLoading && (
+                                                <motion.div
+                                                    initial={{opacity: 0}}
+                                                    animate={{opacity: 1}}
+                                                    exit={{opacity: 0}}
+                                                    className="absolute inset-0 bg-white/70 dark:bg-gray-900/70 flex items-center justify-center z-10 rounded-lg backdrop-blur-sm"
+                                                    transition={{duration: 0.3}}
+                                                >
+                                                    <Loader2 className="h-6 w-6 text-teal-500 animate-spin"/>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
 
-                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
-                                                {artworks.map((artwork, index) => renderArtworkCard(artwork, index))}
-                                            </div>
+                                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3">
+                                            {artworks.map((artwork, index) => renderArtworkCard(artwork, index))}
                                         </div>
+                                    </div>
 
-                                        {/* Pagination (Desktop: Bottom only) */}
-                                        {totalPages > 0 && !isMobile && (
-                                            <motion.div
-                                                initial={{opacity: 0, y: 15}}
-                                                animate={{opacity: 1, y: 0}}
-                                                transition={{duration: 0.5, delay: 0.3, ease: 'easeOut'}}
-                                                className="mt-4"
-                                            >
-                                                <Pagination>
-                                                    <PaginationContent>
-                                                        <PaginationItem>
-                                                            <PaginationPrevious
-                                                                href="#"
-                                                                onClick={(e) => {
-                                                                    e.preventDefault();
-                                                                    if (currentPage > 1) setCurrentPage(currentPage - 1);
-                                                                }}
-                                                                className={currentPage === 1 ? 'pointer-events-none opacity-50 text-teal-500 dark:text-teal-400' : 'text-teal-500 dark:text-teal-400'}
-                                                            />
-                                                        </PaginationItem>
-                                                        {renderPaginationItems()}
-                                                        <PaginationItem>
-                                                            <PaginationNext
-                                                                href="#"
-                                                                onClick={(e) => {
-                                                                    e.preventDefault();
-                                                                    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-                                                                }}
-                                                                className={currentPage === totalPages ? 'pointer-events-none opacity-50 text-teal-500 dark:text-teal-400' : 'text-teal-500 dark:text-teal-400'}
-                                                            />
-                                                        </PaginationItem>
-                                                    </PaginationContent>
-                                                </Pagination>
-                                            </motion.div>
-                                        )}
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </TabsContent>
-                    ))}
-                </Tabs>
+                                    {/* Desktop Pagination */}
+                                    {totalPages > 0 && !isMobile && (
+                                        <motion.div
+                                            initial={{opacity: 0, y: 15}}
+                                            animate={{opacity: 1, y: 0}}
+                                            transition={{duration: 0.5, delay: 0.3, ease: 'easeOut'}}
+                                            className="mt-4"
+                                        >
+                                            <Pagination>
+                                                <PaginationContent>
+                                                    <PaginationItem>
+                                                        <PaginationPrevious
+                                                            href="#"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                if (currentPage > 1) setCurrentPage(currentPage - 1);
+                                                            }}
+                                                            className={currentPage === 1 ? 'pointer-events-none opacity-50 text-teal-500 dark:text-teal-400' : 'text-teal-500 dark:text-teal-400'}
+                                                        />
+                                                    </PaginationItem>
+                                                    {renderPaginationItems()}
+                                                    <PaginationItem>
+                                                        <PaginationNext
+                                                            href="#"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+                                                            }}
+                                                            className={currentPage === totalPages ? 'pointer-events-none opacity-50 text-teal-500 dark:text-teal-400' : 'text-teal-500 dark:text-teal-400'}
+                                                        />
+                                                    </PaginationItem>
+                                                </PaginationContent>
+                                            </Pagination>
+                                        </motion.div>
+                                    )}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </motion.div>
+                </AnimatePresence>
             </motion.div>
 
             {/* Edit Modal */}

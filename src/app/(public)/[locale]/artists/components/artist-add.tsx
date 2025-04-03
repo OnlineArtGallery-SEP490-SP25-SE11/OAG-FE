@@ -65,7 +65,7 @@ export default function UploadArtwork() {
             width: '',
             height: '',
             price: 0,
-            status: 'Available',
+            status: 'available',
             imageUrl: ''
         }
     });
@@ -369,7 +369,7 @@ export default function UploadArtwork() {
                                                         </FormControl>
                                                         <SelectContent className='rounded-lg'>
                                                             <SelectItem
-                                                                value='Available'
+                                                                value='available'
                                                                 className='text-sm'
                                                             >
                                                                 {t(
@@ -377,7 +377,7 @@ export default function UploadArtwork() {
                                                                 )}
                                                             </SelectItem>
                                                             <SelectItem
-                                                                value='Selling'
+                                                                value='selling'
                                                                 className='text-sm'
                                                             >
                                                                 {t(
@@ -385,7 +385,7 @@ export default function UploadArtwork() {
                                                                 )}
                                                             </SelectItem>
                                                             <SelectItem
-                                                                value='Hidden'
+                                                                value='hidden'
                                                                 className='text-sm'
                                                             >
                                                                 {t(
