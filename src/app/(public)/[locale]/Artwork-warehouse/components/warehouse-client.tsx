@@ -8,6 +8,8 @@ import { getArtworkWarehouse, downloadWarehouseArtwork } from '@/service/artwork
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useToast } from '@/hooks/use-toast';
+
 import {
     Card,
     CardContent,
@@ -16,9 +18,8 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { Download, Image as ImageIcon, ExternalLink, Calendar, Clock, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Download, Image as ImageIcon, ExternalLink, Calendar, ChevronRight, ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
-import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
@@ -33,6 +34,7 @@ export default function WarehouseClient() {
     const router = useRouter();
     const [page, setPage] = useState(1);
     const [activeTab, setActiveTab] = useState('all');
+    const { toast } = useToast();
 
     // Sử dụng hook useTranslations để lấy chuỗi dịch
     const t = useTranslations('warehouse');
@@ -58,7 +60,10 @@ export default function WarehouseClient() {
 
     const handleDownload = async (warehouseItemId: string, title: string) => {
         try {
-            const toastId = toast.loading(t('artwork.downloading', { title }));
+            toast({
+                title: t('artwork.downloading', { title }),
+                description: t('artwork.downloading', { title }),
+            });
 
             const blob = await downloadWarehouseArtwork(
                 session?.user.accessToken as string,
@@ -77,12 +82,18 @@ export default function WarehouseClient() {
             setTimeout(() => {
                 window.URL.revokeObjectURL(url);
                 document.body.removeChild(link);
-                toast.dismiss(toastId);
-                toast.success(t('artwork.download_success', { title }));
+                toast({
+                    title: t('artwork.download_success', { title }),
+                    description: t('artwork.download_success', { title }),
+                });
                 refetch(); // Cập nhật lại dữ liệu để cập nhật downloadCount
             }, 100);
         } catch (error) {
-            toast.error(t('artwork.download_error'));
+            console.error(error);
+            toast({
+                title: t('artwork.download_error'),
+                description: t('artwork.download_error'),
+            });
         }
     };
 
@@ -176,7 +187,7 @@ export default function WarehouseClient() {
                                 <CardContent className="flex-grow">
                                     <div className="flex items-center text-sm text-white/70 mb-2">
                                         <Calendar className="h-4 w-4 mr-1.5" />
-                                        <span>{t('artwork.purchased_on')}: {formatDate(item.createdAt)}</span>
+                                        <span>{t('artwork.purchased_on')}: {formatDate(item.purchasedAt)}</span>
                                     </div>
                                 </CardContent>
                                 <CardFooter className="pt-2 gap-2">
