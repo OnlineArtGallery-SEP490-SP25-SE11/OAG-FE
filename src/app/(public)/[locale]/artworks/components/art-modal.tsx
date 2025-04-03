@@ -16,7 +16,7 @@ import AddArtworkCollection from '@/components/ui.custom/add-artwork-collection'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useSwipeable } from 'react-swipeable';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { getUserBalance, purchaseArtwork, downloadArtwork } from '@/service/artwork';
 import { getArtworkWarehouse, downloadWarehouseArtwork } from '@/service/artwork-warehouse';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
@@ -62,6 +62,7 @@ function Modal({
     const t = useTranslations();
     const tCommon = useTranslations('common');
     const tArtwork = useTranslations('artwork');
+    const { toast } = useToast();
 
     const router = useRouter();
     const pathname = usePathname();
@@ -105,37 +106,46 @@ function Modal({
                 setDownloadToken(response.data?.downloadUrl || null);
                 setShowBuyConfirm(false);
                 setShowSuccess(true);
-                toast.success(t('artwork.purchase_success'));
+                toast({
+                    title: t('artwork.purchase_success'),
+                    description: t('artwork.purchase_success'),
+                });
 
                 queryClient.invalidateQueries({ queryKey: ['userBalance'] });
                 queryClient.invalidateQueries({ queryKey: ['userPurchased', id] });
                 queryClient.invalidateQueries({ queryKey: ['artworks', id] });
             } else {
                 if (response.message?.includes('không đủ')) {
-                    toast.error(t('wallet.insufficient_balance'));
+                    toast({
+                        title: t('wallet.insufficient_balance'),
+                        description: t('wallet.insufficient_balance'),
+                    });
                     router.push('/wallet/deposit');
                 } else if (response.message?.includes('đã mua')) {
-                    toast.info(t('artwork.already_purchased'));
+                    toast({
+                        title: t('artwork.already_purchased'),
+                        description: t('artwork.already_purchased'),
+                    });
                 } else {
-                    toast.error(response.message || t('common.error'));
+                    toast({ title: response.message || t('common.error'), description: response.message || t('common.error') });
                 }
             }
         },
         onError: () => {
             setIsProcessing(false);
-            toast.error(t('common.error'));
+            toast({ title: t('common.error'), description: t('common.error') });
         }
     });
 
     const handleBuy = () => {
         if (!session) {
-            toast.error(t('error.authenticationError'));
+            toast({ title: t('error.authenticationError'), description: t('error.authenticationError') });
             router.push('/auth/login');
             return;
         }
 
         if (userHasPurchased) {
-            toast.info(t('artwork.already_purchased'));
+            toast({ title: t('artwork.already_purchased'), description: t('artwork.already_purchased') });
             return;
         }
 
@@ -144,7 +154,10 @@ function Modal({
 
     const confirmBuy = () => {
         if (artwork.price > userBalance) {
-            toast.error(t('wallet.insufficient_balance'));
+            toast({
+                title: t('wallet.insufficient_balance'),
+                description: t('wallet.insufficient_balance'),
+            });
             setShowBuyConfirm(false);
             router.push('/wallet/deposit');
             return;
@@ -157,7 +170,10 @@ function Modal({
         if (!id) return;
 
         try {
-            const toastId = toast.loading(t('artwork.downloading'));
+            toast({
+                title: t('artwork.downloading'),
+                description: t('artwork.downloading'),
+            });
 
             let blobData: Blob;
 
@@ -173,8 +189,10 @@ function Modal({
                 );
 
                 if (!warehouseResponse.data?.items?.length) {
-                    toast.dismiss(toastId);
-                    toast.error(t('artwork.download_error'));
+                    toast({
+                        title: t('artwork.download_error'),
+                        description: t('artwork.download_error'),
+                    });
                     return;
                 }
 
@@ -195,14 +213,19 @@ function Modal({
             setTimeout(() => {
                 window.URL.revokeObjectURL(url);
                 document.body.removeChild(link);
-                toast.dismiss(toastId);
-                toast.success(t('artwork.download_success'));
+                toast({
+                    title: t('artwork.download_success'),
+                    description: t('artwork.download_success'),
+                });
 
                 queryClient.invalidateQueries({ queryKey: ['artworkWarehouse'] });
             }, 100);
         } catch (error) {
             console.error('Lỗi khi tải ảnh:', error);
-            toast.error(t('artwork.download_error'));
+            toast({
+                title: t('artwork.download_error'),
+                description: t('artwork.download_error'),
+            });
         }
     };
 
