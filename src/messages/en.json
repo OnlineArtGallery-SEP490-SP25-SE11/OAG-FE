@@ -324,6 +324,7 @@
     "create": "Create",
     "draft": "Draft",
     "published": "Published",
+    "choose_template": "Choose Template",
     
     
     "artworks": "Artworks",
@@ -333,9 +334,10 @@
     "publish": "Publish",
     "result": "Result",
     "artwork_positions": "Artwork Positions",
-    
+    "select_artwork_for_position": "Select artwork for position",
     "artworks_description" : "Upload your artwork to their places. You can see your gallery's floor plan below and the places for art are numbered accordingly.",
     "floor_plan": "Floor Plan",
+    "place_artwork": "Place Artwork",
 
 
     "default_language": "Default",
