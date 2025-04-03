@@ -26,7 +26,7 @@ export function GalleryPreviewLoader() {
                                 />
                             </svg>
                         </div>
-                        <div className="text-xl font-semibold mb-2">Loading Gallery</div>
+                        <div className="text-xl font-semibold mb-2">Loading</div>
                     </div>
                 </div>
             </div>

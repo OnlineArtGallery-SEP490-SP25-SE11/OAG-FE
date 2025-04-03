@@ -1,4 +1,6 @@
-import axios, { axiosWithAuth, createApi } from '@/lib/axios';
+import axios, { createApi } from '@/lib/axios';
+import { ApiResponse } from '@/types/response';
+import { handleApiError } from '@/utils/error-handler';
 import { AxiosInstance } from 'axios';
 interface User {
 	provider: string; // google, facebook, phone, etc.
@@ -34,14 +36,14 @@ export async function registerUser(
 	/*
   - Example res.data:
   {
-    "message": "userRegisteredSuccessfully",
-    "user": {
-      "provider": "phone",
-      "providerId": "1234567890",
-      "name": "John Doe",
-      "email": "john.doe@example.com",
-      "phone": "0909090909"
-    }
+	"message": "userRegisteredSuccessfully",
+	"user": {
+	  "provider": "phone",
+	  "providerId": "1234567890",
+	  "name": "John Doe",
+	  "email": "john.doe@example.com",
+	  "phone": "0909090909"
+	}
   }
 
   */
@@ -55,8 +57,31 @@ export async function registerUser(
 	return res.data;
 }
 
+type CheckIsArtistPreniunResponse = {
+	result: boolean;
+}
 
-// 🔹 Follow user
+export async function checkIsArtistPremium(token: string): Promise<ApiResponse<CheckIsArtistPreniunResponse>> {
+	try {
+		console.log('Checking if artist is premium with token:', token);
+		// const res = await createApi(token).get('/artist/premium-check');
+		return {
+			data: {
+				result: true
+			},
+			details: null,
+			message: 'Success',
+			errorCode: '',
+			status: 200
+		};
+	} catch (error) {
+		console.error('Error checking if artist is premium:', error);
+		return handleApiError<CheckIsArtistPreniunResponse>(
+			error,
+			'Failed to check if artist is premium'
+		);
+	}
+} // 🔹 Follow user
 export async function followUser(token: string, targetUserId: string): Promise<{ message: string }> {
 	try {
 		const res = await createApi(token).post(`/user/follow/${targetUserId}`);

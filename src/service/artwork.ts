@@ -45,7 +45,6 @@ export const purchaseArtwork = async (
 ): Promise<ApiResponse<PurchaseArtworkResponse>> => {
     try {
         const res = await createApi(accessToken).post(`/artwork/${artworkId}/purchase`);
-        console.log('haha1',res.data);
         return res.data;
     } catch (error) {
         console.error('Lỗi khi mua tranh:', error);
@@ -64,13 +63,10 @@ export const downloadArtwork = async (
 ): Promise<Blob> => {
     try {
         const res = await createApi(accessToken).get(`/artwork/download/${artworkId}`, {
-
             params: { token: downloadToken },
             responseType: 'blob'
         });
-        console.log('haha',res.data);
         return res.data;
-        
     } catch (error) {
         console.error('Lỗi khi tải ảnh:', error);
         throw new Error('Không thể tải ảnh');

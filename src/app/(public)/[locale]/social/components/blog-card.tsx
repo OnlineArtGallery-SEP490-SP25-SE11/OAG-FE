@@ -1,7 +1,8 @@
 "use client";
-//new pull
+
 import {
   BookmarkPlusIcon,
+  Flag,
   Heart,
   MessagesSquare,
   MoreHorizontal,
@@ -15,7 +16,8 @@ import { createExcerpt, sanitizeBlogContent } from "@/app/utils";
 import { ToggleBookmarkButton } from "@/components/ui.custom/toggle-bookmark-button";
 import { ToggleHeartButton } from "@/components/ui.custom/toggle-heart-button";
 import { useParams } from "next/navigation";
-import { ReportButton } from "@/components/ui.custom/report-button";
+import ReportButton from "@/components/ui.custom/report-button";
+import { RefType } from "@/utils/enums";
 import {
   Drawer,
   DrawerClose,
@@ -262,10 +264,25 @@ export function BlogCard({
             </div>
           </div>
 
-          {/* Nút Follow */}
-          {currentUser && currentUser.id !== author.id && (
-            <FollowButton targetUserId={author.id} initialIsFollowing={false} />
-          )}
+          {/* Combined UI with both report button and follow button */}
+          <div className="flex items-center">
+            {currentUser && currentUser.id !== author.id && (
+              <FollowButton targetUserId={author.id} initialIsFollowing={false} />
+            )}
+            
+            {isSignedIn && (
+              <ReportButton
+                refId={id}
+                refType={RefType.BLOG}
+                url={window.location.href}
+                triggerElement={
+                  <Button variant="ghost">
+                    <Flag className="w-4 h-4" />
+                  </Button>
+                }
+              />
+            )}
+          </div>
         </div>
       </div>
       <Link href={`/${locale}/blogs/${slug}`}>
@@ -335,36 +352,62 @@ export function BlogCard({
                                 ).toLocaleDateString()}
                               </span>
                             </div>
-                            {comment.author?.name === currentUser?.name ||
-                            author.name === currentUser?.name ? (
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button variant="ghost" size="icon">
-                                    <MoreHorizontal className="w-4 h-4" />
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                  {comment.author?.name ===
-                                    currentUser?.name && (
+
+                            <div className="flex items-center space-x-1">
+                              {isSignedIn &&
+                                comment.author?._id !== currentUser?._id && (
+                                  <ReportButton
+                                    refId={comment._id}
+                                    refType={RefType.COMMENT}
+                                    url={window.location.href}
+                                    triggerElement={
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-8 w-8"
+                                      >
+                                        <Flag className="w-3.5 h-3.5" />
+                                      </Button>
+                                    }
+                                  />
+                                )}
+                              {comment.author?._id === currentUser?._id ||
+                              author.id === currentUser?._id ? (
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="icon">
+                                      <MoreHorizontal className="w-4 h-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    {comment.author?._id === currentUser?._id && (
+                                      <DropdownMenuItem
+                                        onClick={() => {
+                                          setEditingCommentId(comment._id);
+                                          setEditContent(comment.content);
+                                        }}
+                                      >
+                                        Edit
+                                      </DropdownMenuItem>
+                                    )}
                                     <DropdownMenuItem
-                                      onClick={() => {
-                                        setEditingCommentId(comment._id);
-                                        setEditContent(comment.content);
+                                      onClick={async () => {
+                                        const user = await getCurrentUser();
+                                        if (user?.accessToken) {
+                                          handleDeleteComment(comment._id);
+                                        } else {
+                                          console.error(
+                                            "User not authenticated."
+                                          );
+                                        }
                                       }}
                                     >
-                                      Edit
+                                      Delete
                                     </DropdownMenuItem>
-                                  )}
-                                  <DropdownMenuItem
-                                    onClick={() =>
-                                      handleDeleteComment(comment._id)
-                                    }
-                                  >
-                                    Delete
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            ) : null}
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              ) : null}
+                            </div>
                           </div>
                           {editingCommentId === comment._id ? (
                             <div className="flex items-center space-x-2 mt-2">
@@ -507,8 +550,6 @@ export function BlogCard({
           </Link>
         )}
       </div>
-
-      <ReportButton />
     </div>
   );
 }
