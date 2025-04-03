@@ -73,6 +73,11 @@ export default function AuthButton() {
 						text={t('settings')}
 						href='/settings'
 					/>
+					<DropdownItemWithIcon
+								icon={<BookOpen className='w-6 h-6' />}
+								text={t('artwork_warehouse')}
+								href='/Artwork-warehouse'
+							/>
 					{user.role.includes('artist') && (
 						<>
 							<DropdownItemWithIcon
@@ -90,6 +95,7 @@ export default function AuthButton() {
 								text={t('my_blogs')}
 								href='/my-blogs'
 							/>
+							
 						</>
 					)}
 

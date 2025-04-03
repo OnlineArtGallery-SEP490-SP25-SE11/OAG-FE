@@ -1,17 +1,23 @@
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { AnimatePresence, motion } from 'framer-motion';
-import { DollarSignIcon, Eye, Info, RulerIcon, TagIcon, UserIcon, X, CalendarIcon } from 'lucide-react';
+import { DollarSignIcon, Eye, Info, RulerIcon, TagIcon, UserIcon, X, CalendarIcon, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import { Fragment, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { BiComment } from 'react-icons/bi';
 import { usePathname, useRouter } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { useSession } from 'next-auth/react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchArtworkById } from '@/app/(public)/[locale]/artworks/api';
 import { Artwork } from '@/types/marketplace';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useSwipeable } from 'react-swipeable';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import { getUserBalance, purchaseArtwork, downloadArtwork } from '@/service/artwork';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { AlertCircle, Check, Download } from 'lucide-react';
 
 const overlayVariants = {
     initial: { opacity: 0 },
@@ -55,6 +61,105 @@ function Modal({
     const [activeTab, setActiveTab] = useState('details');
     const [imageLoaded, setImageLoaded] = useState(false);
     const [isZoomed, setIsZoomed] = useState(false);
+    const { data: session } = useSession();
+    const queryClient = useQueryClient();
+    const [showBuyConfirm, setShowBuyConfirm] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [downloadToken, setDownloadToken] = useState<string | null>(null);
+    
+    // Lấy số dư người dùng
+    const { data: balanceData } = useQuery({
+        queryKey: ['userBalance'],
+        queryFn: () => getUserBalance(session?.user.accessToken as string),
+        enabled: !!session?.user.accessToken && !!id
+    });
+    
+    const userBalance = balanceData?.data?.balance || 0;
+    
+    // Mutation để mua tranh
+    const purchaseMutation = useMutation({
+        mutationFn: () => purchaseArtwork(session?.user.accessToken as string, id as string),
+        onMutate: () => {
+            setIsProcessing(true);
+        },
+        onSuccess: (response) => {
+            setIsProcessing(false);
+            
+            if (response.data?.success) {
+                setDownloadToken(response.data?.downloadUrl || null);
+                setShowBuyConfirm(false);
+                setShowSuccess(true);
+                toast.success('Mua tranh thành công!');
+                
+                // Cập nhật lại dữ liệu
+                queryClient.invalidateQueries({ queryKey: ['userBalance'] });
+                queryClient.invalidateQueries({ queryKey: ['artwork', id] });
+            } else {
+                if (response.message?.includes('không đủ')) {
+                    toast.error('Số dư không đủ để mua tranh này');
+                    router.push('/wallet/deposit'); // Chuyển hướng đến trang nạp tiền
+                // } else if (response.message?.includes('đã mua')) {
+                //     toast.info('Bạn đã mua tranh này trước đó');
+                } else {
+                    toast.error(response.message || 'Có lỗi xảy ra khi mua tranh');
+                }
+            }
+        },
+        onError: () => {
+            setIsProcessing(false);
+            toast.error('Có lỗi xảy ra khi mua tranh');
+        }
+    });
+    
+    const handleBuy = () => {
+        if (!session) {
+            toast.error('Vui lòng đăng nhập để mua tranh');
+            router.push('/auth/login');
+            return;
+        }
+        
+        setShowBuyConfirm(true);
+    };
+    
+    const confirmBuy = () => {
+        if (artwork.price > userBalance) {
+            toast.error('Số dư không đủ để mua tranh này');
+            setShowBuyConfirm(false);
+            router.push('/wallet/deposit');
+            return;
+        }
+        
+        purchaseMutation.mutate();
+    };
+    
+    const handleDownload = async () => {
+        if (!downloadToken || !id) return;
+        
+        try {
+            const blob = await downloadArtwork(
+                session?.user.accessToken as string,
+                id,
+                downloadToken
+            );
+            
+            // Tạo URL từ blob và tải file
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${artwork.title || 'artwork'}.jpg`;
+            document.body.appendChild(link);
+            link.click();
+            
+            // Dọn dẹp
+            setTimeout(() => {
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(link);
+            }, 100);
+        } catch (error) {
+            toast.error('Không thể tải ảnh. Vui lòng thử lại sau.');
+        }
+    };
 
     const handleClose = useCallback(() => {
         setId(null);
@@ -338,14 +443,29 @@ function Modal({
                                                     {/* Price (only if > 0) */}
                                                     {artwork.price > 0 && (
                                                         <div className='bg-white/10 hover:bg-white/15 transition-colors rounded-lg p-2 sm:p-3'>
-                                                            <div className='flex items-center gap-2 sm:gap-3'>
-                                                                <DollarSignIcon className='w-5 h-5 sm:w-6 sm:h-6 text-white/70' />
-                                                                <div>
-                                                                    <p className='text-xs sm:text-sm text-white/70'>Price</p>
-                                                                    <p className='font-semibold text-white text-lg sm:text-xl'>
-                                                                        ${artwork.price.toLocaleString()}
-                                                                    </p>
+                                                            <div className='flex items-center justify-between gap-2 sm:gap-3'>
+                                                                <div className='flex items-center gap-2 sm:gap-3'>
+                                                                    <DollarSignIcon className='w-5 h-5 sm:w-6 sm:h-6 text-white/70' />
+                                                                    <div>
+                                                                        <p className='text-xs sm:text-sm text-white/70'>Giá</p>
+                                                                        <p className='font-semibold text-white text-lg sm:text-xl'>
+                                                                            ${artwork.price.toLocaleString()}
+                                                                        </p>
+                                                                    </div>
                                                                 </div>
+                                                                
+                                                                {/* Hiển thị nút mua chỉ khi tranh có status là "selling" hoặc "available" */}
+                                                                {(artwork.status?.toLowerCase() === 'selling'  
+                                                                ) && (
+                                                                    <Button 
+                                                                        onClick={handleBuy}
+                                                                        className="bg-green-500 hover:bg-green-600 text-white"
+                                                                        size="sm"
+                                                                    >
+                                                                        <ShoppingCart className="mr-1 h-4 w-4" />
+                                                                        Mua ngay
+                                                                    </Button>
+                                                                )}
                                                             </div>
                                                         </div>
                                                     )}
@@ -493,6 +613,91 @@ function Modal({
                     </motion.div>
                 </motion.div>
             </AnimatePresence>
+            
+            {/* Modal xác nhận mua tranh */}
+            <AlertDialog open={showBuyConfirm} onOpenChange={setShowBuyConfirm}>
+                <AlertDialogContent className="bg-black border border-white/20 text-white">
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Xác nhận mua tranh</AlertDialogTitle>
+                        <AlertDialogDescription className="text-white/80">
+                            <div className="space-y-4 my-4">
+                                <div className="border border-white/10 rounded-lg p-4 bg-white/5">
+                                    <h3 className="font-medium mb-1">{artwork.title}</h3>
+                                    <p className="text-sm text-white/70">Nghệ sĩ: {artwork.artistId?.name || 'Không xác định'}</p>
+                                    <p className="text-xl font-bold mt-2">${artwork.price?.toLocaleString()}</p>
+                                </div>
+                                
+                                <div className="bg-white/5 p-3 rounded-lg">
+                                    <div className="flex justify-between items-center">
+                                        <span>Số dư hiện tại:</span>
+                                        <span className="font-medium">${userBalance?.toLocaleString()}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center mt-1">
+                                        <span>Sau khi mua:</span>
+                                        <span className={`font-medium ${userBalance < artwork.price ? 'text-red-400' : ''}`}>
+                                            ${(userBalance - artwork.price)?.toLocaleString()}
+                                        </span>
+                                    </div>
+                                    
+                                    {userBalance < artwork.price && (
+                                        <div className="mt-2 flex items-start gap-2 text-red-400 bg-red-400/10 p-2 rounded">
+                                            <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                                            <p className="text-sm">Số dư không đủ để mua tranh này. Hãy nạp thêm tiền.</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter className="flex gap-2">
+                        <AlertDialogCancel className="bg-white/10 hover:bg-white/20 text-white border-0">Hủy</AlertDialogCancel>
+                        <AlertDialogAction 
+                            onClick={confirmBuy} 
+                            className="bg-green-500 hover:bg-green-600 text-white"
+                            disabled={userBalance < artwork.price || isProcessing}
+                        >
+                            {isProcessing ? (
+                                <>
+                                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                                    Đang xử lý...
+                                </>
+                            ) : (
+                                'Xác nhận mua'
+                            )}
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
+            {/* Modal thông báo mua tranh thành công */}
+            <AlertDialog open={showSuccess} onOpenChange={setShowSuccess}>
+                <AlertDialogContent className="bg-black border border-white/20 text-white">
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Mua tranh thành công!</AlertDialogTitle>
+                        <AlertDialogDescription className="text-white/80">
+                            <div className="text-center my-4 space-y-4">
+                                <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto">
+                                    <Check className="h-8 w-8 text-green-500" />
+                                </div>
+                                <p>Cảm ơn bạn đã mua "{artwork.title}"</p>
+                                <p className="text-sm">Bạn có thể tải ảnh chất lượng cao về máy ngay bây giờ.</p>
+                            </div>
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter className="flex gap-2">
+                        <AlertDialogCancel className="bg-white/10 hover:bg-white/20 text-white border-0">
+                            Đóng
+                        </AlertDialogCancel>
+                        <AlertDialogAction 
+                            onClick={handleDownload} 
+                            className="bg-blue-500 hover:bg-blue-600 text-white"
+                        >
+                            <Download className="mr-2 h-4 w-4" />
+                            Tải ảnh về máy
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </Fragment>
     );
 }
