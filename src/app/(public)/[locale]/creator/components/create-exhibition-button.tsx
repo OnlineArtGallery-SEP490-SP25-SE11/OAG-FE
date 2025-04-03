@@ -25,7 +25,7 @@ export default function CreateExhibitionButton() {
                 variant: "success"
             });
             setIsModalOpen(false);
-            router.push(`/creator/exhibitions/${result.data.exhibition._id}/artworks`);
+            router.push(`/creator/${result.data.exhibition._id}/artworks`);
             router.refresh();
         },
         onError: (error) => {

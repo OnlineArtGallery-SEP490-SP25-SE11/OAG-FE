@@ -322,6 +322,7 @@
     "create": "Tạo mới",
     "draft": "Bản nháp",
     "published": "Đã xuất bản",
+    "choose_template": "Chọn mẫu phòng trưng bày",
     
     "artworks": "Tác phẩm",
     "content": "Nội dung",
@@ -330,9 +331,10 @@
     "publish": "Xuất bản",
     "result": "Kết quả",
     "artwork_positions": "Vị trí tác phẩm",
-    
+    "select_artwork_for_position": "Chọn tác phẩm cho vị trí",
     "artworks_description" : "Tải lên tác phẩm của bạn vào vị trí của chúng. Bạn có thể xem sơ đồ phòng trưng bày bên dưới và các vị trí cho tác phẩm được đánh số tương ứng.",
-    "exhibitions.floor_plan": "Sơ đồ phòng trưng bày",
+    "floor_plan": "Sơ đồ phòng trưng bày",
+    "place_artwork": "Đặt tác phẩm",
 
     "default_language": "Mặc định",
     "en" :"Tiếng Anh",
