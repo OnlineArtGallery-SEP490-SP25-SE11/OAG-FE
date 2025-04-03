@@ -15,6 +15,10 @@ import { BioEditor } from './bio-editor';
 import { Badge } from '@/components/ui/badge';
 import { X, Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEditProfileSchema } from '../schema';
+import { z } from 'zod';
 
 interface EditProfileProps {
  initialData: {
@@ -58,11 +62,21 @@ const AVAILABLE_GENRES = [
 const EditProfile = ({ initialData }: EditProfileProps) => {
  console.log('cac', initialData);
  const { data: session, status } = useSession();
- const [formData, setFormData] = useState({
-  name: initialData.name,
-  address: initialData.address || '',
-  bio: initialData.artistProfile?.bio || '',
-  genres: initialData.artistProfile?.genre || [],
+ const { editProfileSchema } = useEditProfileSchema();
+ const {
+  register,
+  handleSubmit,
+  formState: { errors },
+  setValue,
+  watch
+ } = useForm({
+  resolver: zodResolver(editProfileSchema),
+  defaultValues: {
+   name: initialData.name,
+   address: initialData.address || '',
+   bio: initialData.artistProfile?.bio || '',
+   genres: initialData.artistProfile?.genre || [],
+  }
  });
  const [newGenre, setNewGenre] = useState('');
  const [isLoading, setIsLoading] = useState(false);
@@ -82,20 +96,17 @@ const EditProfile = ({ initialData }: EditProfileProps) => {
    return;
   }
 
-  if (newGenre && !formData.genres.includes(newGenre)) {
-   const updatedGenres = [...formData.genres, newGenre];
+  if (newGenre && !watch('genres').includes(newGenre)) {
+   const updatedGenres = [...watch('genres'), newGenre];
    try {
     await updateProfile({
      artistProfile: {
       genre: updatedGenres,
-      bio: formData.bio
+      bio: watch('bio')
      }
     }, session.user.accessToken);
 
-    setFormData(prev => ({
-     ...prev,
-     genres: updatedGenres
-    }));
+    setValue('genres', updatedGenres);
     setNewGenre('');
 
     await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
@@ -127,18 +138,15 @@ const EditProfile = ({ initialData }: EditProfileProps) => {
   }
 
   try {
-   const updatedGenres = formData.genres.filter(g => g !== genreToRemove);
+   const updatedGenres = watch('genres').filter(g => g !== genreToRemove);
    await updateProfile({
     artistProfile: {
      genre: updatedGenres,
-     bio: formData.bio
+     bio: watch('bio')
     }
    }, session.user.accessToken);
 
-   setFormData(prev => ({
-    ...prev,
-    genres: updatedGenres
-   }));
+   setValue('genres', updatedGenres);
 
    await queryClient.invalidateQueries({ queryKey: ['currentUser'] });
    await revalidateProfilePages();
@@ -157,9 +165,7 @@ const EditProfile = ({ initialData }: EditProfileProps) => {
   }
  };
 
- const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-
+ const onSubmit = async (data: z.infer<typeof editProfileSchema>) => {
   if (status !== 'authenticated') {
    toast({
     title: 'Authentication Error',
@@ -173,11 +179,11 @@ const EditProfile = ({ initialData }: EditProfileProps) => {
   try {
    setIsLoading(true);
    const updateData = {
-    name: formData.name,
-    address: formData.address,
+    name: data.name,
+    address: data.address,
     artistProfile: isArtist ? {
-     bio: formData.bio,
-     genre: formData.genres
+     bio: data.bio,
+     genre: data.genres
     } : undefined
    };
 
@@ -234,7 +240,7 @@ const EditProfile = ({ initialData }: EditProfileProps) => {
       </div>
 
       {/* Form Section */}
-      <form onSubmit={handleSubmit} className='space-y-8 max-w-2xl mx-auto'>
+      <form onSubmit={handleSubmit(onSubmit)} className='space-y-8 max-w-2xl mx-auto'>
        {/* Basic Info Card */}
        <div className='bg-white rounded-xl border border-gray-100 shadow-sm p-6 space-y-6 hover:border-purple-200 transition duration-200'>
         <div className='flex items-center space-x-2 text-lg font-semibold text-gray-900'>
@@ -253,12 +259,13 @@ const EditProfile = ({ initialData }: EditProfileProps) => {
           </Label>
           <Input
            id='name'
-           value={formData.name}
-           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-           required
+           {...register('name')}
            className='w-full focus:ring-purple-500 focus:border-purple-500'
            placeholder={t('name_placeholder')}
           />
+          {errors.name && (
+           <p className="text-sm text-red-500">{errors.name.message}</p>
+          )}
          </div>
         </div>
        </div>
@@ -282,11 +289,14 @@ const EditProfile = ({ initialData }: EditProfileProps) => {
           </Label>
           <div className='bg-white rounded-lg border border-gray-200 shadow-sm hover:border-purple-200 transition duration-200'>
            <BioEditor
-            initialBio={formData.bio}
+            initialBio={watch('bio')}
             isEditable={true}
-            onChange={(newBio) => setFormData({ ...formData, bio: newBio })}
+            onChange={(newBio) => setValue('bio', newBio)}
            />
           </div>
+          {errors.bio && (
+           <p className="text-sm text-red-500">{errors.bio.message}</p>
+          )}
          </div>
 
          {/* Art Styles */}
@@ -300,7 +310,7 @@ const EditProfile = ({ initialData }: EditProfileProps) => {
            >
             <option value="">{t('select_art_style')}</option>
             {AVAILABLE_GENRES
-             .filter(genre => !formData.genres.includes(genre))
+             .filter(genre => !watch('genres').includes(genre))
              .map(genre => (
               <option key={genre} value={genre}>{genre}</option>
              ))
@@ -319,11 +329,11 @@ const EditProfile = ({ initialData }: EditProfileProps) => {
           </div>
 
           <div className='p-4 bg-gray-50 rounded-xl min-h-[60px] border border-gray-100'>
-           {formData.genres.length === 0 ? (
+           {watch('genres').length === 0 ? (
             <p className='text-gray-500 text-sm text-center'>{t('no_art_styles')}</p>
            ) : (
             <div className='flex flex-wrap gap-2'>
-             {formData.genres.map((genre) => (
+             {watch('genres').map((genre) => (
               <Badge
                key={genre}
                variant="secondary"

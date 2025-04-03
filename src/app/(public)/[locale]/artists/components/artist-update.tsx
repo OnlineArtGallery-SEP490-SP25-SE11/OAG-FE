@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { 
   Form, 
   FormControl, 
-  FormDescription, 
   FormField, 
   FormItem, 
   FormLabel, 
@@ -21,22 +20,19 @@ import {
 } from "@/components/ui/select";
 import { 
   Card, 
-  CardContent, 
-  CardDescription, 
   CardFooter, 
   CardHeader, 
-  CardTitle 
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { CheckIcon, Loader2, Plus, Save, Tag, Trash2, X } from "lucide-react";
+import { Loader2, Plus, Save, Tag, X } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Artwork } from "../interface";
 import { artworkService } from "../queries";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { vietnamCurrency } from "@/utils/converters";
@@ -51,7 +47,7 @@ const artworkFormSchema = z.object({
   price: z.coerce.number().min(0, {
     message: "Giá phải là số không âm",
   }),
-  status: z.enum(["Available", "Sold", "Hidden", "Selling"]),
+  status: z.enum(["Available", "Hidden", "Selling"]),
   category: z.array(z.string()).min(1, {
     message: "Vui lòng chọn ít nhất một danh mục",
   }),
@@ -77,7 +73,7 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
       title: artwork.title || "",
       description: artwork.description || "",
       price: artwork.price || 0,
-      status: artwork.status || "available",
+      status: artwork.status as any,
       category: artwork.category || [],
     },
   });

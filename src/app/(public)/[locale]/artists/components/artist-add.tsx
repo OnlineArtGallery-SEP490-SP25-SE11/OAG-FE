@@ -70,7 +70,7 @@ export default function UploadArtwork() {
         }
     });
 
-    const { data, error, isLoading } = useQuery({
+    const { data} = useQuery({
         queryKey: ['categories'],
         queryFn: () => artworkService.getCategories(),
         placeholderData: (previousData) => previousData,
