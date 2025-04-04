@@ -197,14 +197,18 @@
       "width": "Nhập chiều rộng",
       "height": "Nhập chiều cao",
       "price": "Nhập giá",
-      "status": "Chọn trạng thái"
+      "status": "Chọn trạng thái",
+      "categories": "Nhập tên danh mục",
+      "add_category": "Thêm danh mục"
     },
     "helper": {
       "description": "Mô tả nên bao gồm phong cách, chủ đề và ý nghĩa của tác phẩm",
       "categories": "Chọn tất cả danh mục áp dụng cho tác phẩm này",
-      "image": "Hình ảnh nên có độ phân giải cao và hiển thị rõ ràng tác phẩm"
+      "image": "Hình ảnh nên có độ phân giải cao và hiển thị rõ ràng tác phẩm",
+      "suggestedCategories": "Danh mục gợi ý"
     },
     "status": {
+      "all": "Tất cả",
       "available": "Có sẵn",
       "sold": "Đã bán",
       "selling": "Đang bán",
@@ -215,11 +219,16 @@
       "fileSize": "Kích thước: {size} MB",
       "dropHere": "Thả tệp ở đây...",
       "dragAndDrop": "Kéo và thả ảnh vào đây, hoặc click để chọn tệp",
-      "acceptedFormats": "(Chấp nhận các định dạng JPG, PNG, GIF)"
+      "acceptedFormats": "(Chấp nhận các định dạng JPG, PNG, GIF)",
+      "showPreview": "Hiển thị xem trước",
+      "hidePreview": "Ẩn xem trước",
+      "preview": "Xem trước"
     },
     "button": {
       "upload": "Tải lên Tác phẩm",
-      "uploading": "Đang tải lên..."
+      "uploading": "Đang tải lên...",
+      "add": "Thêm",
+      "remove": "Xóa"
     },
     "toast": {
       "successTitle": "Tải lên Thành công!",
@@ -235,6 +244,54 @@
       "heightRequired": "Vui lòng nhập chiều cao",
       "priceRequired": "Vui lòng nhập giá",
       "statusRequired": "Vui lòng chọn trạng thái"
+    },
+    "edit_artwork": "Chỉnh sửa Tác phẩm",
+    "tabs": {
+      "info": "Thông tin",
+      "preview": "Xem trước"
+    },
+    "artwork_description": "Mô tả Tác phẩm",
+    "preview_note": "Ghi chú Xem trước"
+  },
+  "artwork_management": {
+    "title": "Quản lý tác phẩm",
+    "total_artworks": "Tổng cộng {count} tác phẩm",
+    "search_placeholder": "Tìm theo tiêu đề...",
+    "status_placeholder": "Trạng thái",
+    "no_artworks_found": "Không tìm thấy tác phẩm",
+    "no_artworks_status": "Không tìm thấy tác phẩm trạng thái \"{status}\"",
+    "try_change_filters": "Thay đổi bộ lọc để thử lại",
+    "add_first_artwork": "Thêm tác phẩm đầu tiên của bạn",
+    "clear_filters": "Xóa bộ lọc",
+    "loading": "Đang tải...",
+    "load_error": "Lỗi khi tải tác phẩm",
+    "error_loading": "Lỗi khi tải tác phẩm",
+    "retry": "Thử lại",
+    "save_collection": "Lưu vào bộ sưu tập",
+    "edit": "Sửa",
+    "delete": "Xóa",
+    "delete_confirmation": "Bạn có chắc chắn muốn xóa tác phẩm này không?",
+    "empty_state": "Không tìm thấy tác phẩm {moderationStatus}",
+    "change_filters": "Hãy thử thay đổi bộ lọc",
+    "views": "lượt xem",
+    "dimensions": "Kích thước",
+    "categories": "Danh mục",
+    "moderation_status": {
+      "all": "Tất cả",
+      "pending": "Đang chờ",
+      "rejected": "Từ chối", 
+      "approved": "Đã duyệt"
+    },
+    "info": {
+      "dimensions": "Kích thước",
+      "categories": "Danh mục",
+      "views": "lượt xem"
+    },
+    "status": {
+      "available": "Có sẵn",
+      "sold": "Đã bán",
+      "selling": "Đang bán",
+      "hidden": "Ẩn"
     }
   },
   "profile": {
@@ -295,7 +352,7 @@
     "waysToBuy": "Cách mua",
     "size": "Kích thước"
   },
-  "artworkPage":{
+  "artworkPage": {
     "filter": {
       "priceRange": "Khoảng giá",
       "categories": "Danh mục",
@@ -323,7 +380,6 @@
     "draft": "Bản nháp",
     "published": "Đã xuất bản",
     "choose_template": "Chọn mẫu phòng trưng bày",
-    
     "artworks": "Tác phẩm",
     "content": "Nội dung",
     "settings": "Cài đặt",
@@ -332,28 +388,25 @@
     "result": "Kết quả",
     "artwork_positions": "Vị trí tác phẩm",
     "select_artwork_for_position": "Chọn tác phẩm cho vị trí",
-    "artworks_description" : "Tải lên tác phẩm của bạn vào vị trí của chúng. Bạn có thể xem sơ đồ phòng trưng bày bên dưới và các vị trí cho tác phẩm được đánh số tương ứng.",
+    "artworks_description": "Tải lên tác phẩm của bạn vào vị trí của chúng. Bạn có thể xem sơ đồ phòng trưng bày bên dưới và các vị trí cho tác phẩm được đánh số tương ứng.",
     "floor_plan": "Sơ đồ phòng trưng bày",
     "place_artwork": "Đặt tác phẩm",
-
     "default_language": "Mặc định",
-    "en" :"Tiếng Anh",
-    "vi" :"Tiếng Việt",
-    "settings_description" : "Tạo phiên bản ngôn ngữ cho khán giả quốc tế của bạn",
+    "en": "Tiếng Anh",
+    "vi": "Tiếng Việt",
+    "settings_description": "Tạo phiên bản ngôn ngữ cho khán giả quốc tế của bạn",
     "add_new_language": "Thêm ngôn ngữ mới",
     "select_language": "Chọn ngôn ngữ",
     "choose_a_language": "Chọn một ngôn ngữ",
     "no_more_languages_available": "Không còn ngôn ngữ nào khả dụng",
     "add_language": "Thêm ngôn ngữ",
     "set_as_default": "Đặt làm mặc định",
-
-    "preview_description" : "Xem bản nháp của phòng trưng bày của bạn theo thời gian thực mà không có trang chào mừng hoặc hoạt hình hướng dẫn.",
+    "preview_description": "Xem bản nháp của phòng trưng bày của bạn theo thời gian thực mà không có trang chào mừng hoặc hoạt hình hướng dẫn.",
     "navigation_controls": "Điều khiển điều hướng",
     "navigation_description": "Sử dụng chuột để điều hướng không gian 3D:",
     "left_click_drag": "Nhấp chuột trái và kéo",
     "rotate_view": "Xoay góc nhìn",
     "movement": "Di chuyển",
-
     "exhibition_publish_description": "Quản lý cài đặt xuất bản cho phòng trưng bày của bạn",
     "exhibition_publish_title": "Xuất bản phòng trưng bày",
     "link_name": "Tên liên kết",
@@ -398,7 +451,6 @@
     "exhibition_status_published": "Triển lãm đã xuất bản",
     "exhibition_status_draft": "Triển lãm bản nháp",
     "exhibition_live": "Triển lãm của bạn đang hoạt động và có thể truy cập được công khai.",
-    
     "exhibition_not_published": "Phòng trưng bày chưa được xuất bản",
     "content_description": "Quản lý nội dung và phương tiện phòng trưng bày",
     "welcome_image": "Hình ảnh chào mừng",
@@ -420,12 +472,24 @@
     "no_engagement": "Không có tương tác nào",
     "likes": "Lượt thích",
     "engagement_metrics": "Các chỉ số tương tác",
-
     "reset": "Đặt lại",
     "save_changes": "Lưu thay đổi",
     "saving": "Đang lưu...",
     "publish_exhibition": "Xuất bản phòng trưng bày",
     "unpublish": "Hủy xuất bản",
     "unpublishing": "Đang hủy xuất bản..."
+  },
+  "artist_layout": {
+    "dashboard": "Tổng quan",
+    "upload_artwork": "Tải lên tác phẩm",
+    "manage_artworks": "Quản lý tác phẩm",
+    "collections": "Bộ sưu tập",
+    "premium": "Premium",
+    "settings": "Cài đặt",
+    "art_manager": "Quản lý Nghệ thuật",
+    "artist_portal": "Cổng Nghệ sĩ",
+    "main_section": "Chính",
+    "content_section": "Nội dung",
+    "account_section": "Tài khoản"
   }
 }

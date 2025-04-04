@@ -199,29 +199,38 @@
       "width": "Enter width",
       "height": "Enter height",
       "price": "Enter price",
-      "status": "Select status"
+      "status": "Select status",
+      "categories": "Enter category name",
+      "add_category": "Add category"
     },
     "helper": {
       "description": "Description should include style, theme and meaning of the artwork",
       "categories": "Select all categories that apply to this artwork",
-      "image": "Image should be high resolution and clearly display the artwork"
+      "image": "Image should be high resolution and clearly display the artwork",
+      "suggestedCategories": "Suggested categories"
     },
     "status": {
+      "all": "All",
       "available": "Available",
       "sold": "Sold",
-      "selling": "Selling",
-      "hidden": "Hidden"
+      "hidden": "Hidden",
+      "selling": "Selling"
     },
     "upload": {
       "fileSelected": "Selected: {name}",
       "fileSize": "Size: {size} MB",
       "dropHere": "Drop file here...",
       "dragAndDrop": "Drag and drop image here, or click to select",
-      "acceptedFormats": "(Accepts JPG, PNG, GIF formats)"
+      "acceptedFormats": "(Accepts JPG, PNG, GIF formats)",
+      "showPreview": "Show Preview",
+      "hidePreview": "Hide Preview",
+      "preview": "Preview"
     },
     "button": {
       "upload": "Upload Artwork",
-      "uploading": "Uploading..."
+      "uploading": "Uploading...",
+      "add": "Add",
+      "remove": "Remove"
     },
     "toast": {
       "successTitle": "Upload Successful!",
@@ -237,6 +246,54 @@
       "heightRequired": "Height is required",
       "priceRequired": "Price is required",
       "statusRequired": "Status is required"
+    },
+    "edit_artwork": "Edit Artwork",
+    "tabs": {
+      "info": "Information",
+      "preview": "Preview"
+    },
+    "artwork_description": "Artwork Description",
+    "preview_note": "Preview Note"
+  },
+  "artwork_management": {
+    "title": "Artwork Management",
+    "total_artworks": "Total {count} artworks",
+    "search_placeholder": "Search by title...",
+    "status_placeholder": "Status",
+    "no_artworks_found": "No artworks found",
+    "no_artworks_status": "No artworks with status \"{status}\"",
+    "try_change_filters": "Try changing filters",
+    "add_first_artwork": "Add your first artwork",
+    "clear_filters": "Clear filters",
+    "loading": "Loading...",
+    "load_error": "Error loading artworks",
+    "error_loading": "Error loading artworks",
+    "retry": "Try again",
+    "save_collection": "Save to Collection",
+    "edit": "Edit",
+    "delete": "Delete",
+    "delete_confirmation": "Are you sure you want to delete this artwork?",
+    "empty_state": "No {moderationStatus} artworks found",
+    "change_filters": "Try changing your filters",
+    "views": "views",
+    "dimensions": "Dimensions",
+    "categories": "Categories",
+    "moderation_status": {
+      "all": "All",
+      "pending": "Pending",
+      "rejected": "Rejected",
+      "approved": "Approved"
+    },
+    "info": {
+      "dimensions": "Dimensions",
+      "categories": "Categories",
+      "views": "views"
+    },
+    "status": {
+      "available": "Available",
+      "sold": "Sold",
+      "hidden": "Hidden",
+      "selling": "Selling"
     }
   },
   "profile": {
@@ -297,7 +354,7 @@
     "waysToBuy": "Ways to Buy",
     "size": "Size"
   },
-  "artworkPage":{
+  "artworkPage": {
     "filter": {
       "priceRange": "Price Range",
       "categories": "Categories",
@@ -325,8 +382,6 @@
     "draft": "Draft",
     "published": "Published",
     "choose_template": "Choose Template",
-    
-    
     "artworks": "Artworks",
     "content": "Content",
     "settings": "Settings",
@@ -335,29 +390,25 @@
     "result": "Result",
     "artwork_positions": "Artwork Positions",
     "select_artwork_for_position": "Select artwork for position",
-    "artworks_description" : "Upload your artwork to their places. You can see your gallery's floor plan below and the places for art are numbered accordingly.",
+    "artworks_description": "Upload your artwork to their places. You can see your gallery's floor plan below and the places for art are numbered accordingly.",
     "floor_plan": "Floor Plan",
     "place_artwork": "Place Artwork",
-
-
     "default_language": "Default",
     "en": "English",
     "vi": "Vietnamese",
-    "settings_description" : "Create language versions for your international audience",
+    "settings_description": "Create language versions for your international audience",
     "add_new_language": "Add New Language",
     "select_language": "Select Language",
     "choose_a_language": "Choose a language",
     "no_more_languages_available": "No more languages available",
     "add_language": "Add Language",
     "set_as_default": "Set as Default",
-
-    "preview_description" : "See a draft of your exhibition in real-time without the welcome page or instruction animation.",
+    "preview_description": "See a draft of your exhibition in real-time without the welcome page or instruction animation.",
     "navigation_controls": "Navigation Controls",
     "navigation_description": "Use your mouse to navigate the 3D space:",
     "left_click_drag": "Left click + drag:",
     "rotate_view": "Rotate view",
     "movement": "Movement",
-
     "exhibition_publish_description": "Manage publication settings for your exhibition",
     "exhibition_publish_title": "Publish Exhibition",
     "link_name": "Link Name",
@@ -402,7 +453,6 @@
     "exhibition_status_published": "Published Exhibition",
     "exhibition_status_draft": "Draft Exhibition",
     "exhibition_live": "Your exhibition is live and accessible to the public.",
-    
     "exhibition_not_published": "Exhibition not published",
     "content_description": "Manage your exhibition content and media",
     "welcome_image": "Welcome Image",
@@ -424,12 +474,24 @@
     "no_engagement": "No likes recorded for artworks",
     "likes": "Likes",
     "engagement_metric": "Engagement metric for this artwork",
-
     "reset": "Reset",
     "save_changes": "Save Changes",
     "saving": "Saving...",
     "publish_exhibition": "Publish Exhibition",
     "unpublish": "Unpublish",
     "unpublishing": "Unpublishing..."
+  },
+  "artist_layout": {
+    "dashboard": "Dashboard",
+    "upload_artwork": "Upload Artwork",
+    "manage_artworks": "Manage Artworks",
+    "collections": "Collections",
+    "premium": "Premium",
+    "settings": "Settings",
+    "art_manager": "Art Manager",
+    "artist_portal": "Artist Portal",
+    "main_section": "Main",
+    "content_section": "Content",
+    "account_section": "Account"
   }
 }
