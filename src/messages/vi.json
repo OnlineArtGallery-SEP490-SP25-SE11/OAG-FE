@@ -30,7 +30,9 @@
     "error": "Lỗi",
     "save_changes": "Lưu thay đổi",
     "cancel": "Hủy",
-    "delete": "Xóa"
+    "delete": "Xóa",
+    "processing": "Đang xử lý...",
+    "close": "Đóng"
   },
   "header": {
     "settings": "Cài đặt",
@@ -48,7 +50,8 @@
     "wallet": "Ví",
     "messages": "Tin nhắn",
     "my_blogs": "Bài viết",
-    "premium": "Premium"
+    "premium": "Premium",
+     "artwork_warehouse": "Kho tranh"
   },
   "auth": {
     "loginTitle": "Đăng nhập vào tài khoản",
@@ -245,6 +248,15 @@
       "priceRequired": "Vui lòng nhập giá",
       "statusRequired": "Vui lòng chọn trạng thái"
     },
+    "purchase_confirmation": "Xác nhận mua tranh",
+    "artist": "Nghệ sĩ",
+    "unknown_artist": "Không xác định",
+    "confirm_purchase": "Xác nhận mua",
+    "purchase_success": "Mua tranh thành công!",
+    "thank_you_purchase": "Cảm ơn bạn đã mua \"{title}\"",
+    "download_now": "Bạn có thể tải ảnh chất lượng cao về máy ngay bây giờ.",
+    "download_image": "Tải ảnh về máy",
+    "already_purchased": "Bạn đã mua tranh này trước đó",
     "edit_artwork": "Chỉnh sửa Tác phẩm",
     "tabs": {
       "info": "Thông tin",
@@ -279,7 +291,7 @@
     "moderation_status": {
       "all": "Tất cả",
       "pending": "Đang chờ",
-      "rejected": "Từ chối", 
+      "rejected": "Từ chối",
       "approved": "Đã duyệt"
     },
     "info": {
@@ -337,6 +349,12 @@
         "auth_error": "Vui lòng đăng nhập để cập nhật hồ sơ",
         "update_success": "Cập nhật hồ sơ thành công",
         "update_error": "Không thể cập nhật hồ sơ"
+      },
+      "validation": {
+        "name_min_length": "Tên phải có ít nhất 2 ký tự",
+        "name_max_length": "Tên không được vượt quá 50 ký tự",
+        "bio_max_length": "Tiểu sử không được vượt quá 1000 ký tự",
+        "max_genres": "Không thể chọn quá 10 phong cách nghệ thuật"
       }
     }
   },
@@ -478,6 +496,38 @@
     "publish_exhibition": "Xuất bản phòng trưng bày",
     "unpublish": "Hủy xuất bản",
     "unpublishing": "Đang hủy xuất bản..."
+  },
+  "wallet": {
+    "current_balance": "Số dư hiện tại",
+    "after_purchase": "Sau khi mua",
+    "insufficient_balance": "Số dư không đủ để mua tranh này. Hãy nạp thêm tiền."
+  },
+  "warehouse": {
+    "title": "Kho tranh của tôi",
+    "description": "Truy cập và tải xuống các tác phẩm nghệ thuật bạn đã mua.",
+    "tabs": {
+      "all": "Tất cả",
+      "recent": "Mới mua",
+      "downloaded": "Đã tải",
+      "not_downloaded": "Chưa tải"
+
+    },
+    "empty": {
+      "title": "Chưa có tranh nào trong kho",
+      "description": "Bạn chưa mua tranh nào. Hãy khám phá và mua các tác phẩm nghệ thuật để thêm vào kho tranh của mình.",
+      "explore": "Khám phá tranh"
+    },
+    "artwork": {
+      "artist": "Nghệ sĩ",
+      "unknown_artist": "Không xác định",
+      "purchased_on": "Ngày mua",
+      "download_count": "Đã tải {count} lần",
+      "not_downloaded": "Chưa tải",
+      "download": "Tải ảnh",
+      "downloading": "Đang tải {title}...",
+      "download_success": "Đã tải {title} thành công",
+      "download_error": "Không thể tải ảnh. Vui lòng thử lại sau."
+    }
   },
   "artist_layout": {
     "dashboard": "Tổng quan",

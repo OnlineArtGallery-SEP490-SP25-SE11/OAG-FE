@@ -30,7 +30,9 @@
     "error": "Error",
     "save_changes": "Save Changes",
     "cancel": "Cancel",
-    "delete": "Delete"
+    "delete": "Delete",
+    "processing": "Processing...",
+    "close": "Close"
   },
   "header": {
     "home": "Home",
@@ -48,7 +50,8 @@
     "wallet": "Wallet",
     "messages": "Messages",
     "my_blogs": "My Blogs",
-    "premium": "Premium"
+    "premium": "Premium",
+    "artwork_warehouse": "Artwork Warehouse"
   },
   "auth": {
     "loginTitle": "Login to your account",
@@ -247,6 +250,15 @@
       "priceRequired": "Price is required",
       "statusRequired": "Status is required"
     },
+    "purchase_confirmation": "Confirm Purchase",
+    "artist": "Artist",
+    "unknown_artist": "Unknown",
+    "confirm_purchase": "Confirm Purchase",
+    "purchase_success": "Purchase Successful!",
+    "thank_you_purchase": "Thank you for purchasing \"{title}\"",
+    "download_now": "You can download the high-quality image now.",
+    "download_image": "Download Image",
+    "already_purchased": "You have already purchased this artwork",
     "edit_artwork": "Edit Artwork",
     "tabs": {
       "info": "Information",
@@ -354,7 +366,7 @@
     "waysToBuy": "Ways to Buy",
     "size": "Size"
   },
-  "artworkPage": {
+  "artworkPage":{
     "filter": {
       "priceRange": "Price Range",
       "categories": "Categories",
@@ -480,6 +492,38 @@
     "publish_exhibition": "Publish Exhibition",
     "unpublish": "Unpublish",
     "unpublishing": "Unpublishing..."
+  },
+  "wallet": {
+    "current_balance": "Current Balance",
+    "after_purchase": "After Purchase",
+    "insufficient_balance": "Insufficient balance to purchase this artwork. Please add funds."
+  },
+  "warehouse": {
+    "title": "My Artwork Warehouse",
+    "description": "Access and download the artworks you have purchased.",
+    "tabs": {
+      "all": "All",
+      "recent": "Recently Purchased",
+      "downloaded": "Downloaded",
+      "not_downloaded": "Not Downloaded"
+
+    },
+    "empty": {
+      "title": "No artworks in warehouse",
+      "description": "You haven't purchased any artworks yet. Explore and purchase artworks to add them to your warehouse.",
+      "explore": "Explore Artworks"
+    },
+    "artwork": {
+      "artist": "Artist",
+      "unknown_artist": "Unknown",
+      "purchased_on": "Purchased on",
+      "download_count": "Downloaded {count} times",
+      "not_downloaded": "Not downloaded",
+      "download": "Download",
+      "downloading": "Downloading {title}...",
+      "download_success": "Downloaded {title} successfully",
+      "download_error": "Could not download image. Please try again later."
+    }
   },
   "artist_layout": {
     "dashboard": "Dashboard",
