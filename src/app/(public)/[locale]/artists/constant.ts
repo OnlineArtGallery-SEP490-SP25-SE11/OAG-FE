@@ -116,10 +116,25 @@ const demo = [
 ];
 
 export const ITEMS_PER_PAGE = 12;
-export const STATUS_OPTIONS = [
-    { value: 'all', label: 'Tất cả', color: 'bg-gray-500' },
-    { value: 'available', label: 'Có sẵn', color: 'bg-emerald-500' },
-    // Bỏ trạng thái 'sold'
-    { value: 'hidden', label: 'Ẩn', color: 'bg-gray-700' },
-    { value: 'selling', label: 'Đang bán', color: 'bg-teal-500' },
-];
+
+export type StatusOption = {
+  value: string;
+  label: string;
+  color: string;
+  isTranslationKey?: boolean;
+};
+
+/**
+ * Returns status options with translated labels
+ * @param t - Translation function that takes a key and returns the translated string
+ * @returns Array of status options with translated labels
+ */
+export const ARTWORK_STATUS = (t: (key: string) => string): StatusOption[] => {
+  return [
+    // { value: 'all', label: t('status.all'), color: 'bg-gray-500' },
+    { value: 'available', label: t('status.available'), color: 'bg-emerald-500' },
+    { value: 'sold', label: t('status.sold'), color: 'bg-red-500' },
+    { value: 'hidden', label: t('status.hidden'), color: 'bg-gray-700' },
+    { value: 'selling', label: t('status.selling'), color: 'bg-teal-500' },
+  ];
+};
