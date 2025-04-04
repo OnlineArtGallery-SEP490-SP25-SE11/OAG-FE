@@ -46,7 +46,7 @@ export default function Collections() {
         queryKey: ['collections'],
         queryFn: async () => {
             try {
-                const res = await collectionService.getByUserId();
+                const res = await collectionService.getByArtistId();
                 return res;
             } catch (error) {
                 console.error('Error fetching collections:', error);

@@ -119,6 +119,16 @@ export default function Collection() {
 				artworkId
 			);
 
+			// Update the selectedCollection state immediately for UI update
+			if (selectedCollection && selectedCollection.artworks) {
+				setSelectedCollection({
+					...selectedCollection,
+					artworks: selectedCollection.artworks.filter(
+						artwork => artwork._id !== artworkId
+					)
+				});
+			}
+
 			toast({
 				title: 'Artwork removed',
 				description:
@@ -427,12 +437,12 @@ export default function Collection() {
 						>
 							Close
 						</Button>
-						{selectedCollection?.artworks &&
+						{/* {selectedCollection?.artworks &&
 							selectedCollection.artworks.length > 0 && (
 								<Button className='w-full sm:w-auto flex items-center gap-1'>
 									<PlusCircle size={16} /> Add More Artworks
 								</Button>
-							)}
+							)} */}
 					</div>
 				</DialogContent>
 			</Dialog>

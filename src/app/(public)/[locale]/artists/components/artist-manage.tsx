@@ -25,7 +25,7 @@ import {usePathname, useRouter, useSearchParams} from 'next/navigation';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import EditArtworkForm from '../components/artist-update';
 import ConfirmationDialog from '../components/confirmation-dialog';
-import AddArtworkCollection from '@/components/ui.custom/add-artwork-collection';
+import AddArtworkCollection from '@/components/ui.custom/add-artwork-collection-in-artist';
 import { ITEMS_PER_PAGE, STATUS_OPTIONS } from '../constant';
 import { Artwork } from '../interface';
 // Define moderation status options with icons and colors

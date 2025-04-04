@@ -48,7 +48,7 @@ export default function CreateCollection({ onSuccess, triggerButton }: CreateCol
     const mutation = useMutation({
         mutationFn: (data: CreateCollectionForm) => {
             console.log('Sending data to server:', data);
-            return collectionService.create(data);
+            return collectionService.createInUser(data);
         },
         onSuccess: () => {
             console.log('Mutation successful');
