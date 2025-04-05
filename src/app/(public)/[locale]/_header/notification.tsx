@@ -49,7 +49,6 @@ const dropdownVariants = {
 
 export default function Notification() {
   const t = useTranslations('common');
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isPinned, setIsPinned] = useState<boolean>(false);
   const [isHovering, setIsHovering] = useState<boolean>(false);
   
@@ -74,17 +73,10 @@ export default function Notification() {
     handleMarkAsRead,
     handleDeleteNotification,
     setNotificationPanelOpen,
-    refreshUnreadCount
   } = useNotification();
-  console.log(unreadCount);
+
   const displayUnreadCount = typeof unreadCount === 'number' ? unreadCount : 0;
   const hasUnreadNotifications = displayUnreadCount > 0;
-  
-  // Real-time update effect (assuming WebSocket integration in useNotification)
-  useEffect(() => {
-    // WebSocket handling would be in useNotification, updating unreadCount directly
-    refreshUnreadCount();
-  }, [refreshUnreadCount]);
   
   const showDropdown = isPinned || isHovering;
   
@@ -138,12 +130,9 @@ export default function Notification() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setNotificationPanelOpen(showDropdown);
-      if (showDropdown) {
-        refreshUnreadCount();
-      }
     }, 200);
     return () => clearTimeout(timer);
-  }, [showDropdown, setNotificationPanelOpen, refreshUnreadCount]);
+  }, [showDropdown, setNotificationPanelOpen]);
   
   const memoizedNotifications = useMemo(() => {
     return notifications.map(item => ({
@@ -189,8 +178,7 @@ export default function Notification() {
   
   const handleClick = useCallback(() => {
     setIsPinned(prev => !prev);
-    refreshUnreadCount();
-  }, [refreshUnreadCount]);
+  }, []);
 
   return (
     <div 
