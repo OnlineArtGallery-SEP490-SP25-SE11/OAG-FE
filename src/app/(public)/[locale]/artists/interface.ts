@@ -5,11 +5,13 @@ export type Artwork = {
     category: string[];
     dimensions: { width: number; height: number; _id: string };
     url: string;
-    status: 'Available' | 'Sold' | 'Hidden' | 'Selling';
+    status: 'available' | 'sold' | 'hidden' | 'selling';
 
     views: number;
     price: number;
     createdAt: string;
     updatedAt: string;
     __v: number;
+
+    moderationStatus: string;
 };

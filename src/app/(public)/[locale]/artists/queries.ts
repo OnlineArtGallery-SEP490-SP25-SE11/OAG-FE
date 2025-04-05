@@ -29,6 +29,35 @@ export const artworkService = {
 			throw new Error('Network response was not ok');
 		}
 	},
+	getArtist: async (options: any, currentPage: number): Promise<any> => {
+		const skip = (currentPage - 1) * ITEMS_PER_PAGE;
+		const take = ITEMS_PER_PAGE;
+
+		const params = new URLSearchParams();
+		Object.entries(options).forEach(([key, value]) => {
+			if (value) {
+				params.append(key, String(value));
+			}
+		});
+		params.append('skip', String(skip));
+		params.append('take', String(take));
+		// console.log(params.toString());
+		const axios = await createAxiosInstance({ useToken: true });
+		if (!axios) throw new Error('Failed to create Axios instance');
+
+		const response = await axios.get(`/artwork/artist?${params.toString()}`
+			// ,{
+			// headers: {
+			// 	'Cache-Control': 'no-cache'
+			// } }
+		);
+		console.log(response);
+		if (response.status !== 200 && response.status !== 304) {
+			throw new Error('Error fetching artworks');
+		}
+
+		return response.data;
+	},
 	get: async (options: any, currentPage: number): Promise<any> => {
 		const skip = (currentPage - 1) * ITEMS_PER_PAGE;
 		const take = ITEMS_PER_PAGE;

@@ -127,12 +127,12 @@ export async function fetchArtPiecesByRange(
 ): Promise<Artwork[]> {
 	const skip = startIndex;
 	const take = stopIndex - startIndex + 1;
-	// const url = `http://localhost:5000/api/`;
 	try {
 		const axios = await createAxiosInstance({ useToken: false });
 		if (!axios) throw new Error('Failed to create Axios instance');
-		const response = await axios.get(`/artwork?skip=${skip}&take=${take}&status=selling&status=available&status=sold`);
-		// console.log(response.data.data.artworks);
+		
+		// Lấy cả tranh có trạng thái selling và available
+		const response = await axios.get(`/artwork?skip=${skip}&take=${take}&status=selling&status=available`);
 		return response.data.data.artworks;
 	} catch {
 		throw new Error('Error fetching artworks');

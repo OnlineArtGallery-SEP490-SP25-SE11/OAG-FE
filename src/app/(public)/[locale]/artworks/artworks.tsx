@@ -220,7 +220,6 @@ export default function Artworks({ artworks }: { artworks: Artwork[] }) {
 	const scrollPositionRef = useRef<number>(0);
 	const [windowWidth] = useWindowSize();
 	const isMobile = windowWidth < 768;
-
 	const loadMore = useCallback(
 		useInfiniteLoader(
 			async (startIndex, stopIndex, currentItems) => {

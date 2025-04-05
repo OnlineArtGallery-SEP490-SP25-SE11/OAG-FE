@@ -15,7 +15,7 @@ export const artworkFormSchema = (t: (key: string) => string) => {
 			z.string().min(1),
 			z.number().min(0)
 		]).optional().transform(val => typeof val === 'string' && val ? Number(val) : val),
-		status: z.enum(['Available', 'Sold', 'Hidden', 'Selling'], {
+		status: z.enum(['available', 'sold', 'hidden', 'selling'], {
 			required_error: t('validation.statusRequired')
 		}),
 		imageUrl: z.string().optional()

@@ -27,7 +27,12 @@
     "back": "Back",
     "notification": "Notification",
     "success": "Success",
-    "error": "Error"
+    "error": "Error",
+    "save_changes": "Save Changes",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "processing": "Processing...",
+    "close": "Close"
   },
   "header": {
     "home": "Home",
@@ -45,7 +50,8 @@
     "wallet": "Wallet",
     "messages": "Messages",
     "my_blogs": "My Blogs",
-    "premium": "Premium"
+    "premium": "Premium",
+    "artwork_warehouse": "Artwork Warehouse"
   },
   "auth": {
     "loginTitle": "Login to your account",
@@ -114,8 +120,7 @@
     "publish_success": "Blog has been published",
     "private_success": "Blog has been privated",
     "pending": "Pending",
-    "draft_create_error": "An error occurred while creating blog",
-    "update_status_error": "An error occurred while updating blog status"
+    "draft_create_error": "An error occurred while creating blog"
   },
   "premium": {
     "feature_comparison": {
@@ -197,29 +202,38 @@
       "width": "Enter width",
       "height": "Enter height",
       "price": "Enter price",
-      "status": "Select status"
+      "status": "Select status",
+      "categories": "Enter category name",
+      "add_category": "Add category"
     },
     "helper": {
       "description": "Description should include style, theme and meaning of the artwork",
       "categories": "Select all categories that apply to this artwork",
-      "image": "Image should be high resolution and clearly display the artwork"
+      "image": "Image should be high resolution and clearly display the artwork",
+      "suggestedCategories": "Suggested categories"
     },
     "status": {
+      "all": "All",
       "available": "Available",
       "sold": "Sold",
-      "selling": "Selling",
-      "hidden": "Hidden"
+      "hidden": "Hidden",
+      "selling": "Selling"
     },
     "upload": {
       "fileSelected": "Selected: {name}",
       "fileSize": "Size: {size} MB",
       "dropHere": "Drop file here...",
       "dragAndDrop": "Drag and drop image here, or click to select",
-      "acceptedFormats": "(Accepts JPG, PNG, GIF formats)"
+      "acceptedFormats": "(Accepts JPG, PNG, GIF formats)",
+      "showPreview": "Show Preview",
+      "hidePreview": "Hide Preview",
+      "preview": "Preview"
     },
     "button": {
       "upload": "Upload Artwork",
-      "uploading": "Uploading..."
+      "uploading": "Uploading...",
+      "add": "Add",
+      "remove": "Remove"
     },
     "toast": {
       "successTitle": "Upload Successful!",
@@ -235,6 +249,63 @@
       "heightRequired": "Height is required",
       "priceRequired": "Price is required",
       "statusRequired": "Status is required"
+    },
+    "purchase_confirmation": "Confirm Purchase",
+    "artist": "Artist",
+    "unknown_artist": "Unknown",
+    "confirm_purchase": "Confirm Purchase",
+    "purchase_success": "Purchase Successful!",
+    "thank_you_purchase": "Thank you for purchasing \"{title}\"",
+    "download_now": "You can download the high-quality image now.",
+    "download_image": "Download Image",
+    "already_purchased": "You have already purchased this artwork",
+    "edit_artwork": "Edit Artwork",
+    "tabs": {
+      "info": "Information",
+      "preview": "Preview"
+    },
+    "artwork_description": "Artwork Description",
+    "preview_note": "Preview Note"
+  },
+  "artwork_management": {
+    "title": "Artwork Management",
+    "total_artworks": "Total {count} artworks",
+    "search_placeholder": "Search by title...",
+    "status_placeholder": "Status",
+    "no_artworks_found": "No artworks found",
+    "no_artworks_status": "No artworks with status \"{status}\"",
+    "try_change_filters": "Try changing filters",
+    "add_first_artwork": "Add your first artwork",
+    "clear_filters": "Clear filters",
+    "loading": "Loading...",
+    "load_error": "Error loading artworks",
+    "error_loading": "Error loading artworks",
+    "retry": "Try again",
+    "save_collection": "Save to Collection",
+    "edit": "Edit",
+    "delete": "Delete",
+    "delete_confirmation": "Are you sure you want to delete this artwork?",
+    "empty_state": "No {moderationStatus} artworks found",
+    "change_filters": "Try changing your filters",
+    "views": "views",
+    "dimensions": "Dimensions",
+    "categories": "Categories",
+    "moderation_status": {
+      "all": "All",
+      "pending": "Pending",
+      "rejected": "Rejected",
+      "approved": "Approved"
+    },
+    "info": {
+      "dimensions": "Dimensions",
+      "categories": "Categories",
+      "views": "views"
+    },
+    "status": {
+      "available": "Available",
+      "sold": "Sold",
+      "hidden": "Hidden",
+      "selling": "Selling"
     }
   },
   "profile": {
@@ -253,9 +324,7 @@
       "collections": "Collections",
       "professional_artist": "Professional Artist",
       "view_profile": "View Profile",
-      "collection_title": "Collection {number}",
-      "followers": "Followers",
-      "following" : "Following"
+      "collection_title": "Collection {number}"
     },
     "edit": {
       "title": "Edit Profile",
@@ -286,6 +355,18 @@
       }
     }
   },
+  "filter": {
+    "filters": "Filters",
+    "categories": "Categories",
+    "priceRange": "Price Range",
+    "searchPlaceholder": "Search artworks...",
+    "quickSearch": "Quick search...",
+    "price": "Price",
+    "artists": "Artists",
+    "materials": "Materials",
+    "waysToBuy": "Ways to Buy",
+    "size": "Size"
+  },
   "artworkPage":{
     "filter": {
       "priceRange": "Price Range",
@@ -298,5 +379,164 @@
       "price": "Price",
       "filterSearchPlaceholder": "Search for filters"
     }
+  },
+  "exhibitions": {
+    "my_exhibitions": "My Exhibitions",
+    "create_exhibition": "Create Exhibition",
+    "no_exhibitions_found": "No exhibitions found",
+    "untitled_exhibition": "Untitled Exhibition",
+    "no_image": "No image",
+    "please_login": "Please log in to view your exhibitions",
+    "error_loading_exhibitions": "Error loading exhibitions",
+    "artwork_count": "{count} artworks",
+    "preview_gallery": "Preview Gallery",
+    "cancel": "Cancel",
+    "create": "Create",
+    "draft": "Draft",
+    "published": "Published",
+    "choose_template": "Choose Template",
+    "artworks": "Artworks",
+    "content": "Content",
+    "settings": "Settings",
+    "preview": "Preview",
+    "publish": "Publish",
+    "result": "Result",
+    "artwork_positions": "Artwork Positions",
+    "select_artwork_for_position": "Select artwork for position",
+    "artworks_description": "Upload your artwork to their places. You can see your gallery's floor plan below and the places for art are numbered accordingly.",
+    "floor_plan": "Floor Plan",
+    "place_artwork": "Place Artwork",
+    "default_language": "Default",
+    "en": "English",
+    "vi": "Vietnamese",
+    "settings_description": "Create language versions for your international audience",
+    "add_new_language": "Add New Language",
+    "select_language": "Select Language",
+    "choose_a_language": "Choose a language",
+    "no_more_languages_available": "No more languages available",
+    "add_language": "Add Language",
+    "set_as_default": "Set as Default",
+    "preview_description": "See a draft of your exhibition in real-time without the welcome page or instruction animation.",
+    "navigation_controls": "Navigation Controls",
+    "navigation_description": "Use your mouse to navigate the 3D space:",
+    "left_click_drag": "Left click + drag:",
+    "rotate_view": "Rotate view",
+    "movement": "Movement",
+    "exhibition_publish_description": "Manage publication settings for your exhibition",
+    "exhibition_publish_title": "Publish Exhibition",
+    "link_name": "Link Name",
+    "exhibition_status_title": "Exhibition Status",
+    "link_name_description": "Choose a unique URL for your exhibition",
+    "enter_link_name": "Enter link name",
+    "exhibition_dates": "Exhibition Dates",
+    "exhibition_dates_description": "Set the start and end dates for your exhibition",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "select_date": "Select a date",
+    "end_date_after_start": "End date must be after start date",
+    "dates_updated": "Exhibition dates updated successfully",
+    "dates_update_failed": "Failed to update exhibition dates",
+    "discoverable": "Discoverable",
+    "discoverable_description": "Allow your exhibition to be discovered by others",
+    "discovery_publish_first": "Publish your exhibition to make it discoverable",
+    "discovery_updated": "Discovery settings updated successfully",
+    "discovery_update_failed": "Failed to update discovery settings",
+    "link_name_updated": "Link name updated successfully",
+    "link_name_update_failed": "Failed to update link name",
+    "exhibition_published": "Exhibition published successfully",
+    "publish_failed": "Failed to publish exhibition",
+    "exhibition_unpublished": "Exhibition unpublished successfully",
+    "unpublish_failed": "Failed to unpublish exhibition",
+    "unpublish_no_artworks": "You need to add artworks before unpublishing",
+    "invalid_link_name": "Please enter a valid link name",
+    "ticket_settings": "Ticket Settings",
+    "ticket_settings_description": "Manage ticketing and payment options for your exhibition",
+    "requires_payment": "Paid Entry",
+    "requires_payment_description": "Require visitors to purchase a ticket to view your exhibition",
+    "ticket_price": "Ticket Price",
+    "price_greater_than_zero": "Price must be greater than 0 for paid exhibitions",
+    "ticket_settings_updated": "Ticket settings updated successfully",
+    "ticket_settings_update_failed": "Failed to update ticket settings",
+    "registered_users": "Registered Users",
+    "registered_users_count": "{count} visitors registered",
+    "registered_count": "{count} registered",
+    "ticket_free": "Free Entry",
+    "ticket_paid": "Paid Entry",
+    "link_copied": "Link copied to clipboard",
+    "exhibition_status_published": "Published Exhibition",
+    "exhibition_status_draft": "Draft Exhibition",
+    "exhibition_live": "Your exhibition is live and accessible to the public.",
+    "exhibition_not_published": "Exhibition not published",
+    "content_description": "Manage your exhibition content and media",
+    "welcome_image": "Welcome Image",
+    "background_media": "Background Media",
+    "background_audio": "Background Audio",
+    "exhibition_name": "Exhibition Name",
+    "description": "Description",
+    "enter_name_in_lang": "Enter name in {lang}",
+    "enter_description_in_lang": "Enter description in {lang}",
+    "content_updated": "Content updated successfully",
+    "content_update_failed": "Failed to update content",
+    "read_faq": "Read FAQ",
+    "exhibition_result_description": "See the number of visits, likes and more for your account in total and per exhibition (for paid plans only).",
+    "exhibition_result_title": "Exhibition Result",
+    "total_visits": "Total Visits",
+    "total_likes": "Total Likes",
+    "average_time": "Average Time",
+    "artwork_engagement": "Artwork Engagement",
+    "no_engagement": "No likes recorded for artworks",
+    "likes": "Likes",
+    "engagement_metric": "Engagement metric for this artwork",
+    "reset": "Reset",
+    "save_changes": "Save Changes",
+    "saving": "Saving...",
+    "publish_exhibition": "Publish Exhibition",
+    "unpublish": "Unpublish",
+    "unpublishing": "Unpublishing..."
+  },
+  "wallet": {
+    "current_balance": "Current Balance",
+    "after_purchase": "After Purchase",
+    "insufficient_balance": "Insufficient balance to purchase this artwork. Please add funds."
+  },
+  "warehouse": {
+    "title": "My Artwork Warehouse",
+    "description": "Access and download the artworks you have purchased.",
+    "tabs": {
+      "all": "All",
+      "recent": "Recently Purchased",
+      "downloaded": "Downloaded",
+      "not_downloaded": "Not Downloaded"
+
+    },
+    "empty": {
+      "title": "No artworks in warehouse",
+      "description": "You haven't purchased any artworks yet. Explore and purchase artworks to add them to your warehouse.",
+      "explore": "Explore Artworks"
+    },
+    "artwork": {
+      "artist": "Artist",
+      "unknown_artist": "Unknown",
+      "purchased_on": "Purchased on",
+      "download_count": "Downloaded {count} times",
+      "not_downloaded": "Not downloaded",
+      "download": "Download",
+      "downloading": "Downloading {title}...",
+      "download_success": "Downloaded {title} successfully",
+      "download_error": "Could not download image. Please try again later."
+    }
+  },
+  "artist_layout": {
+    "dashboard": "Dashboard",
+    "upload_artwork": "Upload Artwork",
+    "manage_artworks": "Manage Artworks",
+    "collections": "Collections",
+    "premium": "Premium",
+    "settings": "Settings",
+    "art_manager": "Art Manager",
+    "artist_portal": "Artist Portal",
+    "main_section": "Main",
+    "content_section": "Content",
+    "account_section": "Account"
   }
 }

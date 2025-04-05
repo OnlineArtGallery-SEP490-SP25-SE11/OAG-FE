@@ -1,70 +1,56 @@
 import React from 'react';
 import GalleryModel from './gallery-model';
-import { Vec3 } from '@/types/gallery';
+import { Gallery } from '@/types/new-gallery';
+import { BoxColliderConfig } from '@/types/gallery';
 
-export interface GalleryModelConfig {
-  id: string;
-  name: string;
-  description?: string;
-  dimension: {
-    xAxis: number;
-    yAxis: number;
-    zAxis: number;
-  };
-  wallThickness: number;
-  modelPath: string;
-  modelPosition: Vec3;
-  modelRotation: Vec3;
-  modelScale: number;
-  customCollider?: {
-    shape: 'box' | 'curved';
-    args?: Vec3;
-    radius?: number;
-    height?: number;
-    segments?: number;
-    arc?: number;
-    position: Vec3;
-    rotation?: Vec3;
-  };
-}
+
 
 interface GalleryModelBaseProps {
-  model: GalleryModelConfig;
+  model: Gallery;
   visible?: boolean;
 }
 
 export default function GalleryModelBase({ model, visible = false }: GalleryModelBaseProps) {
-  const config = {
-    dimension: model.dimension,
+  const galleryModelComponentConfig = {
+    dimension: model.dimensions,
     wallThickness: model.wallThickness,
+    wallHeight: model.wallHeight, // Pass height if needed
     modelPath: model.modelPath,
     modelPosition: model.modelPosition,
     modelRotation: model.modelRotation,
     modelScale: model.modelScale,
-    ...(model.customCollider && { 
-      customCollider: model.customCollider.shape === 'box' 
+    // --- Handle Colliders ---
+    // Option 1: Pass the whole array if GalleryModel supports it
+    // customColliders: model.customColliders,
+
+    // Option 2: Take the first collider if GalleryModel expects one (or none)
+    customCollider: model.customColliders && model.customColliders.length > 0
         ? {
-            shape: 'box' as const,
-            args: model.customCollider.args || [0, 0, 0],
-            position: model.customCollider.position,
-            rotation: model.customCollider.rotation
-          }
-        : {
-            shape: 'curved' as const,
-            radius: model.customCollider.radius || 0,
-            height: model.customCollider.height || 0,
-            segments: model.customCollider.segments,
-            arc: model.customCollider.arc,
-            position: model.customCollider.position,
-            rotation: model.customCollider.rotation
-          }
-    })
-  };
+            // Map the fields from NewCustomCollider to what GalleryModel expects
+            shape: model.customColliders[0].shape,
+            ...(model.customColliders[0].shape === 'box' && {
+                args: (model.customColliders[0] as BoxColliderConfig).args,
+            }),
+            position: model.customColliders[0].position,
+            rotation: model.customColliders[0].rotation,
+            // Add radius, height etc. if needed based on shape
+            ...(model.customColliders[0].shape === 'curved' && {
+                // Add properties for non-box shapes based on your NewCustomCollider definition
+                radius: model.customColliders[0].radius,
+                height: model.customColliders[0].height,
+                segments: model.customColliders[0].segments,
+                arc: model.customColliders[0].arc,
+            })
+        }
+        : undefined, // Pass undefined if no colliders exist
+
+     // Add any other transformations needed for GalleryModel
+};
   
   return (
     <GalleryModel
-      key={`gallery-model-${model.id}`}
-      config={config}
+      key={`gallery-model-${model._id}`}
+      config={galleryModelComponentConfig}
       visible={visible}
     />
   );
