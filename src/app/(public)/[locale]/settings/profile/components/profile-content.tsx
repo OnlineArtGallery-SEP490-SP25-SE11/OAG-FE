@@ -6,6 +6,7 @@ import {
   Heart,
   Image,
   Pencil,
+  Star,
   UserCheck,
   Users,
 } from "lucide-react";
@@ -126,7 +127,19 @@ const ProfileContent = ({ initialData }: ProfileContentProps) => {
         {/* Profile Info */}
         <div className="relative px-8 pb-8">
           {/* Edit Profile Button */}
-          <div className="absolute top-4 right-8">
+          <div className="flex absolute top-4 right-8">
+            {!initialData.role?.includes("artist") && (
+              <Button
+                onClick={() => router.push("/settings")}
+                className="flex items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors duration-200 mx-2"
+                variant="outline"
+                size="sm"
+              >
+                <Star className="w-4 h-4" />
+                <span>{t("common.become_artist")}</span>
+              </Button>
+            )}
+
             <Button
               onClick={() => router.push("/settings/profile/edit")}
               className="flex items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors duration-200"

@@ -244,7 +244,8 @@
       "followers": "Followers",
       "following": "Following",
       "artist_badge": "Artist",
-      "premium_badge": "Premium"
+      "premium_badge": "Premium",
+      "become_artist": "Become Artist"
     },
     "view": {
       "edit_profile": "Edit Profile",

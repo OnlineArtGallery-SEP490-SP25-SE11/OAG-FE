@@ -242,7 +242,8 @@
       "followers": "Người theo dõi",
       "following": "Đang theo dõi",
       "artist_badge": "Nghệ sĩ",
-      "premium_badge": "Premium"
+      "premium_badge": "Premium",
+      "become_artist":"Trở thành nghệ sĩ"
     },
     "view": {
       "edit_profile": "Chỉnh sửa hồ sơ",
