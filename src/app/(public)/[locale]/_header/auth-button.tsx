@@ -19,7 +19,8 @@ import {
 	Palette,
 	SettingsIcon,
 	UserRoundPen,
-	WalletMinimal
+	WalletMinimal,
+	Warehouse
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
@@ -73,6 +74,11 @@ export default function AuthButton() {
 						text={t('settings')}
 						href='/settings'
 					/>
+					<DropdownItemWithIcon
+								icon={<Warehouse  className='w-6 h-6' />}
+								text={t('artwork_warehouse')}
+								href='/Artwork-warehouse'
+							/>
 					{user.role.includes('artist') && (
 						<>
 							<DropdownItemWithIcon
@@ -90,6 +96,7 @@ export default function AuthButton() {
 								text={t('my_blogs')}
 								href='/my-blogs'
 							/>
+							
 						</>
 					)}
 
