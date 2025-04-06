@@ -11,6 +11,12 @@ const config: Config = {
 		'./src/components/**/*.{js,ts,jsx,tsx,mdx}',
 		'./src/app/**/*.{js,ts,jsx,tsx,mdx}'
 	],
+	safelist: [
+		// Dynamic color classes used in NotArtistDisplay
+		'hover:shadow-teal-500/10', 'dark:hover:shadow-teal-400/10', 'bg-teal-100', 'dark:bg-teal-900/40', 'text-teal-600', 'dark:text-teal-400', 'ring-teal-500/10', 'dark:ring-teal-400/10', 'from-teal-500/10',
+		'hover:shadow-indigo-500/10', 'dark:hover:shadow-indigo-400/10', 'bg-indigo-100', 'dark:bg-indigo-900/40', 'text-indigo-600', 'dark:text-indigo-400', 'ring-indigo-500/10', 'dark:ring-indigo-400/10', 'from-indigo-500/10',
+		'hover:shadow-amber-500/10', 'dark:hover:shadow-amber-400/10', 'bg-amber-100', 'dark:bg-amber-900/40', 'text-amber-600', 'dark:text-amber-400', 'ring-amber-500/10', 'dark:ring-amber-400/10', 'from-amber-500/10',
+	],
 	theme: {
 		extend: {
 			colors: {

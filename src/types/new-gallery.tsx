@@ -1,5 +1,4 @@
-import { Vec3 } from "./gallery";
-
+export type Vec3 = [number, number, number];
 
 export interface Dimension {
     xAxis: number;
@@ -13,21 +12,22 @@ export interface ArtworkPlacement {
 }
 
 export interface BaseColliderConfig {
-    position: Vec3;
-    rotation: Vec3;
+	position: Vec3;
+	rotation: Vec3;
+	visible?: boolean;
 }
 
 export interface BoxColliderConfig extends BaseColliderConfig {
-    shape: 'box';
-    args: Vec3;
+	shape: 'box';
+	args: Vec3;
 }
 
 export interface CurvedColliderConfig extends BaseColliderConfig {
-    shape: 'curved';
-    radius: number;
-    height: number;
-    segments?: number;
-    arc?: number;
+	shape: 'curved';
+	radius: number;
+	height: number;
+	segments?: number;
+	arc?: number;
 }
 
 

@@ -51,7 +51,7 @@
     "messages": "Tin nhắn",
     "my_blogs": "Bài viết",
     "premium": "Premium",
-     "artwork_warehouse": "Kho tranh"
+    "artwork_warehouse": "Kho tranh"
   },
   "auth": {
     "loginTitle": "Đăng nhập vào tài khoản",
@@ -495,7 +495,14 @@
     "saving": "Đang lưu...",
     "publish_exhibition": "Xuất bản phòng trưng bày",
     "unpublish": "Hủy xuất bản",
-    "unpublishing": "Đang hủy xuất bản..."
+    "unpublishing": "Đang hủy xuất bản...",
+    "status": {
+      "PUBLISHED": "Đã công khai",
+      "DRAFT": "Bản nháp",
+      "UNPUBLISHED": "Chưa công khai",
+      "PENDING": "Đang chờ",
+      "REJECTED": "Bị từ chối"
+    }
   },
   "wallet": {
     "current_balance": "Số dư hiện tại",
@@ -541,5 +548,24 @@
     "main_section": "Chính",
     "content_section": "Nội dung",
     "account_section": "Tài khoản"
+  },
+  "not_artist_display": {
+    "title": "Khởi Đầu Hành Trình Nghệ Thuật",
+    "description": "Chuyển đổi hồ sơ của bạn thành không gian triển lãm nghệ thuật và tham gia cộng đồng sáng tạo sôi động của chúng tôi.",
+    "features": {
+      "curate": {
+        "title": "Tổ Chức Triển Lãm",
+        "description": "Thiết kế phòng trưng bày kỹ thuật số để giới thiệu tác phẩm nghệ thuật của bạn một cách đột phá."
+      },
+      "visibility": {
+        "title": "Tăng Độ Nhận Diện",
+        "description": "Giới thiệu tác phẩm của bạn đến những người yêu nghệ thuật, nhà sưu tập và người quản lý triển lãm trên toàn thế giới."
+      },
+      "community": {
+        "title": "Xây Dựng Cộng Đồng",
+        "description": "Kết nối với các nghệ sĩ, hợp tác dự án và chia sẻ cảm hứng."
+      }
+    },
+    "become_artist": "Trở Thành Nghệ Sĩ"
   }
 }
