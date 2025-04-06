@@ -61,7 +61,6 @@ function Modal({
 }) {
     const t = useTranslations();
     const tCommon = useTranslations('common');
-    const tArtwork = useTranslations('artwork');
     const { toast } = useToast();
 
     const router = useRouter();

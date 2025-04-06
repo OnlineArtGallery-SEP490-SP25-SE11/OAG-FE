@@ -313,7 +313,9 @@
       "followers": "Người theo dõi",
       "following": "Đang theo dõi",
       "artist_badge": "Nghệ sĩ",
-      "premium_badge": "Premium"
+      "premium_badge": "Premium",
+      "become_artist":"Trở thành nghệ sĩ",
+      "email": "Email"
     },
     "view": {
       "edit_profile": "Chỉnh sửa hồ sơ",
@@ -321,7 +323,15 @@
       "collections": "Bộ sưu tập",
       "professional_artist": "Nghệ sĩ chuyên nghiệp",
       "view_profile": "Xem hồ sơ",
-      "collection_title": "Bộ sưu tập {number}"
+      "collection_title": "Bộ sưu tập {number}",
+      "about": "Thông tin cá nhân",
+      "biography": "Tiểu sử",
+      "contact_info": "Thông tin liên hệ",
+      "joined_date": "Ngày tham gia",
+      "no_address": "Chưa cập nhật địa chỉ",
+      "default_bio": "là một nghệ sĩ tài năng với niềm đam mê về nghệ thuật. Hãy thêm tiểu sử của bạn trong phần chỉnh sửa hồ sơ.",
+      "no_followers": "Chưa có người theo dõi",
+      "no_following": "Bạn chưa theo dõi ai"
     },
     "edit": {
       "title": "Chỉnh sửa hồ sơ",
