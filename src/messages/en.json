@@ -316,7 +316,8 @@
       "following": "Following",
       "artist_badge": "Artist",
       "premium_badge": "Premium",
-      "become_artist": "Become Artist"
+      "become_artist": "Become Artist",
+      "email": "Email"
     },
     "view": {
       "edit_profile": "Edit Profile",
@@ -324,7 +325,15 @@
       "collections": "Collections",
       "professional_artist": "Professional Artist",
       "view_profile": "View Profile",
-      "collection_title": "Collection {number}"
+      "collection_title": "Collection {number}",
+      "about": "About",
+      "biography": "Biography",
+      "contact_info": "Contact Information",
+      "joined_date": "Joined Date",
+      "no_address": "No address provided",
+      "default_bio": "is a talented artist with a passion for art. Add your biography in the edit profile section.",
+      "no_followers": "No followers yet",
+      "no_following": "You are not following anyone yet"
     },
     "edit": {
       "title": "Edit Profile",
