@@ -14,7 +14,7 @@ import {
 import { useQuery, useMutation } from '@tanstack/react-query';
 import collectionService from '@/service/collection-service';
 import { useToast } from '@/hooks/use-toast';
-import CreateCollection from '@/app/(public)/[locale]/settings/profile/components/create-collection';
+import CreateCollection from './create-collection';
 
 type Artwork = {
     _id: string;
@@ -202,15 +202,19 @@ export default function Collections() {
                             <Card className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg h-full flex flex-col">
                                 <CardHeader className="border-b border-gray-200 dark:border-gray-700 py-2 md:py-3 bg-gradient-to-r from-emerald-50 to-teal-100 dark:from-emerald-900 dark:to-teal-800">
                                     <div className="flex justify-between items-center">
-                                        <div>
-                                            <h2 className="text-base md:text-lg font-semibold text-emerald-700 dark:text-emerald-200 line-clamp-1">
+                                        <div className="relative group min-w-0">
+                                            <h2 className="text-base md:text-lg font-semibold text-emerald-700 dark:text-emerald-200 truncate max-w-full">
                                                 {collection.title}
                                             </h2>
+                                            {/* Tooltip for full title on hover */}
+                                            <div className="absolute left-0 top-full mt-1 z-10 bg-white dark:bg-gray-800 text-emerald-700 dark:text-emerald-200 p-2 rounded-md shadow-lg text-sm invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-opacity duration-300 pointer-events-none border border-emerald-100 dark:border-emerald-800 max-w-xs">
+                                                {collection.title}
+                                            </div>
                                             <p className="text-xs md:text-sm text-emerald-600 dark:text-emerald-300">
                                                 {collection.artworks?.length || 0} artworks
                                             </p>
                                         </div>
-                                        <div className="flex gap-1">
+                                        <div className="flex gap-1 shrink-0">
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
@@ -237,9 +241,20 @@ export default function Collections() {
                                     </div>
                                 </CardHeader>
                                 <CardContent className="p-3 md:p-4 flex-1 flex flex-col">
-                                    <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 mb-2 md:mb-4 line-clamp-2">
-                                        {collection.description || 'No description'}
-                                    </p>
+                                    <div className="relative group mb-2 md:mb-4">
+                                        <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 line-clamp-2 overflow-hidden">
+                                            {collection.description || 'No description'}
+                                            {collection.description && collection.description.length > 60 && (
+                                                <span className="text-teal-500 dark:text-teal-400 ml-1">...</span>
+                                            )}
+                                        </p>
+                                        {/* Tooltip for full description on hover */}
+                                        {collection.description && collection.description.length > 60 && (
+                                            <div className="absolute left-0 top-full mt-1 z-10 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 rounded-md shadow-lg text-sm invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-opacity duration-300 pointer-events-none border border-gray-200 dark:border-gray-700 max-w-xs">
+                                                {collection.description}
+                                            </div>
+                                        )}
+                                    </div>
                                     <div className="grid grid-cols-3 gap-2 md:gap-3 flex-1 p-2 md:p-3 rounded-lg bg-gray-50 dark:bg-gray-700/30">
                                         {collection.artworks && collection.artworks.length > 0 ? (
                                             <>

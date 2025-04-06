@@ -126,18 +126,18 @@ export default function AddArtworkCollection({artworkId, triggerButton, onSucces
                         </Button>
                     )}
                 </div>
-                <DialogContent className="sm:max-w-md">
-                    <DialogHeader>
-                        <DialogTitle>Add to Collection</DialogTitle>
+                <DialogContent className="sm:max-w-md max-h-[90vh] overflow-hidden flex flex-col">
+                    <DialogHeader className="pb-4">
+                        <DialogTitle className="text-xl">Add to Collection</DialogTitle>
                     </DialogHeader>
                     
-                    <div className="py-4">
+                    <div className="flex-1 min-h-0 py-2">
                         {isLoading ? (
                             <div className="flex justify-center py-4">
                                 <Loader2 className="h-6 w-6 animate-spin text-primary" />
                             </div>
                         ) : collections && collections.length > 0 ? (
-                            <div className="flex flex-col gap-2 max-h-[60vh] overflow-y-auto">
+                            <div className="flex flex-col gap-2 overflow-y-auto max-h-[60vh] pr-1">
                                 {collections.map((collection: any) => (
                                     <div 
                                         key={collection._id}
@@ -148,9 +148,14 @@ export default function AddArtworkCollection({artworkId, triggerButton, onSucces
                                             handleAddToCollection(collection._id);
                                         }}
                                     >
-                                        <div className="font-medium">{collection.title}</div>
+                                        <div className="font-medium truncate" title={collection.title}>
+                                            {collection.title}
+                                        </div>
                                         {collection.description && (
-                                            <div className="text-sm text-muted-foreground line-clamp-1">
+                                            <div 
+                                                className="text-sm text-muted-foreground line-clamp-2 break-words"
+                                                title={collection.description}
+                                            >
                                                 {collection.description}
                                             </div>
                                         )}
@@ -172,7 +177,7 @@ export default function AddArtworkCollection({artworkId, triggerButton, onSucces
                     </div>
                     
                     {mutation.isPending && (
-                        <div className="flex items-center justify-center gap-2 text-sm">
+                        <div className="flex items-center justify-center gap-2 text-sm mt-4 py-2 border-t">
                             <Loader2 className="h-4 w-4 animate-spin" />
                             <span>Adding artwork to collection...</span>
                         </div>
