@@ -22,7 +22,7 @@ export default async function ResultPage({
 		return notFound();
 	}
 	const resPremium = await checkIsArtistPremium(user!.accessToken);
-	const isPremium = resPremium.data?.result;
+	const isPremium = resPremium.data?.isPremium;
 	return (
 		<ResultContent exhibition={exhibition!} isPremium={isPremium!} />
 	)
