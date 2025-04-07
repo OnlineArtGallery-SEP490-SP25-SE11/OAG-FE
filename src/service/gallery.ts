@@ -278,7 +278,7 @@ export async function getGalleryTemplates(params?: {
       return res.data;
   } catch (error) {
       console.error('Error getting gallery templates:', error);
-      return handleApiError<GetGalleriesResponse>(
+      throw handleApiError<GetGalleriesResponse>(
           error,
           'Failed to fetch gallery templates'
       );
@@ -292,7 +292,7 @@ export async function getGalleryTemplate(id: string): Promise<ApiResponse<Galler
       return res.data;
   } catch (error) {
       console.error(`Error getting gallery template ${id}:`, error);
-      return handleApiError<GalleryRequestResponse>(
+      throw handleApiError<GalleryRequestResponse>(
           error,
           'Failed to fetch gallery template'
       );

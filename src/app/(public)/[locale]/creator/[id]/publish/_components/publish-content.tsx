@@ -87,10 +87,11 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
           linkNameForm.reset({ linkName });
           setCurrentOperation(null);
         },
-        onError: () => {
+        onError: (error) => {
+          console.log('Error updating link name:', error);
           toast({
             title: tCommon('error'),
-            description: t('link_name_update_failed'),
+            description: t(error.err?.message || 'link_name_update_failed'),
             variant: 'destructive',
           });
           setCurrentOperation(null);

@@ -76,7 +76,7 @@ export async function checkIsArtistPremium(token: string): Promise<ApiResponse<C
 		};
 	} catch (error) {
 		console.error('Error checking if artist is premium:', error);
-		return handleApiError<CheckIsArtistPremiumResponse>(
+		throw handleApiError<CheckIsArtistPremiumResponse>(
 			error,
 			'Failed to check if artist is premium'
 		);

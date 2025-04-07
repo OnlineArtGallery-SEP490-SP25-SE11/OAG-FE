@@ -49,7 +49,7 @@ export default function PreviewModal({ isOpen, onOpenChange, template }: Preview
             onOpenChange(true);
         }
     }} modal={true}>
-        <DialogContent className="max-w-7xl w-[95vw] h-[90vh] p-0 pl-12 pt-4 bg-black border-none focus:border-none">
+        <DialogContent className="max-w-7xl w-[95vw] h-[90vh] p-0 pl-12 pt-4 bg-black focus:outline-none focus-visible:outline-none">
           {/* Explicit Close button */}
           <Button
             variant="ghost"
