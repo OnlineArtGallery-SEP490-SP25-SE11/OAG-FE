@@ -12,7 +12,7 @@ import { Artwork } from '@/types/marketplace';
 import CreateReport from '@/components/ui.custom/report-button';
 import { RefType } from '@/utils/enums';
 import { Button } from '@/components/ui/button';
-import AddArtworkCollection from '@/components/ui.custom/add-artwork-collection';
+import AddArtworkCollection from '@/components/ui.custom/add-artwork-collection-in-user';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useSwipeable } from 'react-swipeable';
@@ -61,7 +61,6 @@ function Modal({
 }) {
     const t = useTranslations();
     const tCommon = useTranslations('common');
-    const tArtwork = useTranslations('artwork');
     const { toast } = useToast();
 
     const router = useRouter();

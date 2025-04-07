@@ -9,8 +9,8 @@ export const collectionSchema = z.object({
 });
 
 export const createCollection = z.object({   
-    title : z.string(),
-    description : z.string(),
+    title : z.string().min(10, { message: "Title is required, minimum 10 characters" }).max(50, { message: "Title is too long, maximum 50 characters" }),
+    description : z.string().min(20, { message: "Description is required, minimum 20 characters" }),
     artworks : z.array(z.string()).optional(),
 });
 export type CollectionForm = z.infer<typeof collectionSchema>;
