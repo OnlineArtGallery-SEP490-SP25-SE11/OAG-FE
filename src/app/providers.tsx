@@ -3,6 +3,8 @@ import { ThemeProvider } from '@/components/theme-wrapper';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import QueryWrapper from '@/components/query-wrapper';
+import { NotificationToaster } from '@/components/ui/NotificationToaster';
+
 export function Providers({ children }: { children: React.ReactNode }) {
 	return (
 		<QueryWrapper>
@@ -15,6 +17,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 				{/* TODO add posthog */}
 				<TooltipProvider>{children}</TooltipProvider>
 				<Toaster />
+				<NotificationToaster />
 			</ThemeProvider>
 		</QueryWrapper>
 	);
