@@ -17,6 +17,12 @@ import {
 import CreateCollection from './create-collection';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // Define interface for Artwork type
 interface Artwork {
@@ -119,6 +125,16 @@ export default function Collection() {
 				artworkId
 			);
 
+			// Update the selectedCollection state immediately for UI update
+			if (selectedCollection && selectedCollection.artworks) {
+				setSelectedCollection({
+					...selectedCollection,
+					artworks: selectedCollection.artworks.filter(
+						artwork => artwork._id !== artworkId
+					)
+				});
+			}
+
 			toast({
 				title: 'Artwork removed',
 				description:
@@ -200,19 +216,36 @@ export default function Collection() {
 							<Card className='h-full flex flex-col overflow-hidden hover:shadow-md transition-shadow'>
 								<CardHeader className='pb-2'>
 									<div className='flex justify-between items-start'>
-										<div>
-											<CardTitle className='text-xl'>
-												{collection.title}
-											</CardTitle>
-											<CardDescription className='line-clamp-1 mt-1'>
-												{collection.description ||
-													'No description'}
-											</CardDescription>
+										<div className="w-full max-w-[calc(100%-40px)]">
+											<TooltipProvider>
+												<Tooltip>
+													<TooltipTrigger asChild>
+														<CardTitle className='text-xl truncate'>
+															{collection.title}
+														</CardTitle>
+													</TooltipTrigger>
+													<TooltipContent side="top" className="max-w-xs break-words bg-secondary text-secondary-foreground">
+														{collection.title}
+													</TooltipContent>
+												</Tooltip>
+											</TooltipProvider>
+											<TooltipProvider>
+												<Tooltip>
+													<TooltipTrigger asChild>
+														<CardDescription className='line-clamp-2 mt-1 break-words hover:cursor-help'>
+															{collection.description || 'No description'}
+														</CardDescription>
+													</TooltipTrigger>
+													<TooltipContent side="bottom" className="max-w-xs break-words bg-secondary text-secondary-foreground">
+														{collection.description || 'No description'}
+													</TooltipContent>
+												</Tooltip>
+											</TooltipProvider>
 										</div>
 										<Button
 											variant='ghost'
 											size='icon'
-											className='text-muted-foreground hover:text-primary'
+											className='text-muted-foreground hover:text-primary ml-2'
 											onClick={() => {
 												setSelectedCollection(
 													collection
@@ -308,10 +341,10 @@ export default function Collection() {
 			<Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
 				<DialogContent className='sm:max-w-4xl max-h-[90vh] overflow-y-auto'>
 					<div className='space-y-1'>
-						<h2 className='text-2xl font-bold'>
+						<h2 className='text-2xl font-bold break-words'>
 							{selectedCollection?.title}
 						</h2>
-						<p className='text-muted-foreground'>
+						<p className='text-muted-foreground break-words'>
 							{selectedCollection?.description ||
 								'No description provided'}
 						</p>
@@ -359,9 +392,18 @@ export default function Collection() {
 
 											{/* Hover overlay with actions */}
 											<div className='absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center'>
-												<p className='text-white font-medium mb-2 px-2 text-center'>
-													{artwork.title}
-												</p>
+												<TooltipProvider>
+													<Tooltip>
+														<TooltipTrigger asChild>
+															<p className='text-white font-medium mb-2 px-2 text-center line-clamp-2 w-full'>
+																{artwork.title}
+															</p>
+														</TooltipTrigger>
+														<TooltipContent side="top" className="bg-black text-white">
+															{artwork.title}
+														</TooltipContent>
+													</Tooltip>
+												</TooltipProvider>
 												<div className='flex'>
 													<Button
 														variant='secondary'
@@ -427,12 +469,6 @@ export default function Collection() {
 						>
 							Close
 						</Button>
-						{selectedCollection?.artworks &&
-							selectedCollection.artworks.length > 0 && (
-								<Button className='w-full sm:w-auto flex items-center gap-1'>
-									<PlusCircle size={16} /> Add More Artworks
-								</Button>
-							)}
 					</div>
 				</DialogContent>
 			</Dialog>

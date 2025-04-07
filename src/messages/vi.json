@@ -32,7 +32,18 @@
     "cancel": "Hủy",
     "delete": "Xóa",
     "processing": "Đang xử lý...",
-    "close": "Đóng"
+    "close": "Đóng",
+    "notifications": "Thông báo",
+    "markAllAsRead": "Đánh dấu tất cả là đã đọc",
+    "noNotifications": "Không có thông báo",
+    "notificationsWillAppearHere": "Thông báo sẽ xuất hiện ở đây",
+    "loadMore": "Tải thêm",
+    "noMoreNotifications": "Không còn thông báo",
+    "new": "Mới",
+    "markAsRead": "Đánh dấu đã đọc",
+    "deleteNotification": "Xóa thông báo",
+    "noTitle": "Không có tiêu đề",
+    "noContent": "Không có nội dung"
   },
   "header": {
     "settings": "Cài đặt",

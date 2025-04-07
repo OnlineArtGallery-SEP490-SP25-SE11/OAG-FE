@@ -7,6 +7,7 @@ export interface Notification {
     isRead: boolean;
     isSystem: boolean;
     refType: string;
+    refId?: string; // Add optional refId field for navigation
     userId: string;
     createdAt: Date;
     updatedAt: Date;
@@ -51,9 +52,10 @@ const notificationService = {
     async  markAsRead(id?: string) {
       const axiosInstance = await createAxiosInstance({ useToken: true });
       if (!axiosInstance) return null;
-      
+      console.log(`markAsRead: ${id}`)
       const url = id ? `/notification/read/${id}` : '/notification/read';
       const res = await axiosInstance.put(url);
+      console.log('read: ',res.data)
       return res.data;
     },
     
