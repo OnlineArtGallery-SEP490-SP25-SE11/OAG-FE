@@ -14,7 +14,7 @@ interface ExhibitionContextType {
   isUpdating: boolean;
   updateExhibition: (
     data: UpdateExhibitionDto,
-    options?: { onSuccess?: (result: any) => void; onError?: (error: any) => void }
+    options?: { onSuccess?: (result: { data: any }) => void; onError?: (error: { err: { code: string; message: string; }; }) => void }
   ) => Promise<any>;
   refreshExhibition: () => void;
 }
@@ -33,18 +33,25 @@ export default function ExhibitionContextProvider({
   const { toast } = useToast();
   const t = useTranslations('exhibitions');
   const tCommon = useTranslations('common');
-  
+
   // State to track callback options for the current operation
   const [callbackOptions, setCallbackOptions] = useState<{
-    onSuccess?: (result: any) => void;
-    onError?: (error: any) => void;
+    onSuccess?: (result: {
+      data: any;
+    }) => void;
+    onError?: (error: {
+      err: {
+        code: string;
+        message: string;
+      };
+    }) => void;
   } | null>(null);
-  
+
   const { execute, isPending } = useServerAction(updateExhibitionAction, {
     onSuccess: (result) => {
       // Always update the exhibition state
       setExhibition(result.data.exhibition);
-      
+
       // If custom success callback provided, call it
       if (callbackOptions?.onSuccess) {
         callbackOptions.onSuccess(result);
@@ -74,37 +81,38 @@ export default function ExhibitionContextProvider({
       }
     }
   });
-  
+
   const updateExhibition = async (
-    data: UpdateExhibitionDto, 
-    options?: { 
-      onSuccess?: (result: any) => void, 
-      onError?: (error: any) => void 
+    data: UpdateExhibitionDto,
+    options?: {
+      onSuccess?: (result: any) => void,
+      onError?: (error: any) => void
     }
   ) => {
     console.log('Updating exhibition with data:', data);
-    
+
     // Store callback options for this operation
     if (options) {
       setCallbackOptions(options);
     } else {
       setCallbackOptions(null);
     }
-    
+
     try {
       // Execute the server action
       return await execute({ id: exhibition._id, data });
     } catch (error) {
+      console.error('Error in updateExhibition:', error); // Add this line
       // Server action's onError will handle displaying errors
       // But we need to re-throw for proper promise rejection
       throw error;
     }
   };
-  
+
   const refreshExhibition = () => {
     router.refresh();
   };
-  
+
   return (
     <ExhibitionContext.Provider
       value={{

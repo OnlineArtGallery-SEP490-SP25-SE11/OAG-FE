@@ -42,7 +42,7 @@ export const getExhibitions = async (accessToken: string, params?: {
   
     } catch (error) {
         console.error('Error getting gallery templates:', error);
-        return handleApiError<GetExhibitionsResponse>(
+        throw handleApiError<GetExhibitionsResponse>(
             error,
             'Failed to fetch gallery templates'
         );
@@ -58,7 +58,7 @@ export const createExhibition = async (accessToken: string, templateId: string):
         return res.data;
     } catch (error) {
         console.error('Error creating exhibition:', error);
-        return handleApiError<ExhibitionRequestResponse>(
+        throw handleApiError<ExhibitionRequestResponse>(
             error,
             'Failed to create exhibition'
         );
@@ -73,7 +73,7 @@ export const updateExhibition = async (accessToken: string, id: string, data: Up
         return res.data;
     } catch (error) {
         console.error('Error updating exhibition:', error);
-        return handleApiError<ExhibitionRequestResponse>(
+        throw handleApiError<ExhibitionRequestResponse>(
             error,
             'Failed to update exhibition'
         );
@@ -86,7 +86,7 @@ export const getExhibitionById = async (id: string): Promise<ApiResponse<Exhibit
         return res.data;
     } catch (error) {
         console.error('Error getting exhibition by ID:', error);
-        return handleApiError<ExhibitionRequestResponse>(
+        throw handleApiError<ExhibitionRequestResponse>(
             error,
             'Failed to get exhibition by ID'
         );

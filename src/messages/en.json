@@ -45,6 +45,25 @@
     "noTitle": "No title",
     "noContent": "No content"
   },
+  "not_artist_display": {
+    "title": "Unlock Your Artist Journey",
+    "description": "Transform your profile into an artist showcase and join our vibrant creative community.",
+    "features": {
+      "curate": {
+        "title": "Curate Exhibitions",
+        "description": "Design immersive digital galleries to showcase your artwork in innovative ways."
+      },
+      "visibility": {
+        "title": "Gain Visibility",
+        "description": "Showcase your portfolio to art enthusiasts, collectors, and curators worldwide."
+      },
+      "community": {
+        "title": "Build Community",
+        "description": "Connect with fellow artists, collaborate on projects, and share inspiration."
+      }
+    },
+    "become_artist": "Become an Artist"
+  },
   "header": {
     "home": "Home",
     "about": "About",
@@ -512,7 +531,14 @@
     "saving": "Saving...",
     "publish_exhibition": "Publish Exhibition",
     "unpublish": "Unpublish",
-    "unpublishing": "Unpublishing..."
+    "unpublishing": "Unpublishing...",
+    "status": {
+      "PUBLISHED": "Published",
+      "DRAFT": "Draft",
+      "UNPUBLISHED": "Unpublished",
+      "PENDING": "Pending",
+      "REJECTED": "Rejected"
+    }
   },
   "wallet": {
     "current_balance": "Current Balance",
