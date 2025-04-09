@@ -43,8 +43,9 @@ export interface Ticket {
   registeredUsers: string[];
   // currency: string;
 }
-
-
+export interface TicketStatus {
+  hasTicket: boolean;
+}
 
 export interface Exhibition {
   _id: string;
@@ -168,6 +169,14 @@ export type GetExhibitionsResponse = {
 
 export type ExhibitionRequestResponse = {
   exhibition: Exhibition;
+}
+
+export type TicketPurchaseResponse = {
+  exhibitionId: string;
+  exhibitionName: string;
+  purchaseDate: Date;
+  price: number;
+  status: 'COMPLETED';
 }
 
 export type CreateEmptyExhibitionDto = z.infer<typeof createEmptyExhibitionSchema>;

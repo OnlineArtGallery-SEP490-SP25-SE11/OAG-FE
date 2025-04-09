@@ -1,6 +1,7 @@
 import ExhibitionContent from "./exhibition-content";
 import { notFound } from "next/navigation";
 import { getExhibitionById } from "@/service/exhibition";
+import { ExhibitionStatus } from "@/types/exhibition";
 
 
 
@@ -21,9 +22,9 @@ type PageProps = {
 	
 	const res = await getExhibitionById(id);
 	const exhibitionData = res.data?.exhibition;
-	if (!exhibitionData) {
+	if (!exhibitionData || exhibitionData.status !== ExhibitionStatus.PUBLISHED) {
 	  return notFound();
 	}
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	return <ExhibitionContent exhibitionData={exhibitionData} />;
+	return <ExhibitionContent exhibitionData={exhibitionData}/>;
   }

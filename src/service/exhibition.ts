@@ -1,7 +1,7 @@
 // import { createApi } from "@/lib/axios";
 
 import { createApi } from "@/lib/axios";
-import { ExhibitionRequestResponse, GetExhibitionsResponse, UpdateExhibitionDto } from "@/types/exhibition";
+import { ExhibitionRequestResponse, GetExhibitionsResponse, TicketPurchaseResponse, UpdateExhibitionDto } from "@/types/exhibition";
 import { ApiResponse } from "@/types/response";
 import { handleApiError } from "@/utils/error-handler";
 
@@ -10,7 +10,7 @@ export const getExhibitions = async (accessToken: string, params?: {
     limit?: number;
     sort?: Record<string, 1 | -1>;
     search?: string;
-}): Promise<ApiResponse<GetExhibitionsResponse>> =>{
+}): Promise<ApiResponse<GetExhibitionsResponse>> => {
     try {
         const queryParams = new URLSearchParams();
         if (params?.page) queryParams.set('page', params.page.toString());
@@ -18,7 +18,7 @@ export const getExhibitions = async (accessToken: string, params?: {
         if (params?.sort) queryParams.set('sort', JSON.stringify(params.sort));
         if (params?.search) queryParams.set('search', params.search);
 
-        const url = `/exhibition${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+        const url = `/exhibitions${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
         const res = await createApi(accessToken).get(url);
         return res.data;
 
@@ -39,7 +39,33 @@ export const getExhibitions = async (accessToken: string, params?: {
         //         }
         //     }
         // }
-  
+
+    } catch (error) {
+        console.error('Error getting gallery templates:', error);
+        throw handleApiError<GetExhibitionsResponse>(
+            error,
+            'Failed to fetch gallery templates'
+        );
+    }
+}
+export const getUserExhibitions = async (accessToken: string, params?: {
+    page?: number;
+    limit?: number;
+    sort?: Record<string, 1 | -1>;
+    search?: string;
+}): Promise<ApiResponse<GetExhibitionsResponse>> => {
+    try {
+        const queryParams = new URLSearchParams();
+        if (params?.page) queryParams.set('page', params.page.toString());
+        if (params?.limit) queryParams.set('limit', params.limit.toString());
+        if (params?.sort) queryParams.set('sort', JSON.stringify(params.sort));
+        if (params?.search) queryParams.set('search', params.search);
+
+        const url = `/exhibition/user-exhibitions${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+        const res = await createApi(accessToken).get(url);
+        console.log('User exhibitions response:', res.data);
+        return res.data;
+
     } catch (error) {
         console.error('Error getting gallery templates:', error);
         throw handleApiError<GetExhibitionsResponse>(
@@ -52,9 +78,9 @@ export const getExhibitions = async (accessToken: string, params?: {
 
 export const createExhibition = async (accessToken: string, templateId: string): Promise<ApiResponse<ExhibitionRequestResponse>> => {
     try {
-        const res = await createApi(accessToken).post('/exhibition', { 
+        const res = await createApi(accessToken).post('/exhibition', {
             gallery: templateId
-         });
+        });
         return res.data;
     } catch (error) {
         console.error('Error creating exhibition:', error);
@@ -93,4 +119,19 @@ export const getExhibitionById = async (id: string): Promise<ApiResponse<Exhibit
     }
 }
 
+export const purchaseExhibitionTicket = async (
+    accessToken: string,
+    exhibitionId: string
+): Promise<ApiResponse<TicketPurchaseResponse>> => {
+    try {
+        const res = await createApi(accessToken).post(`/exhibition/${exhibitionId}/ticket/purchase`);
+        return res.data;
+    } catch (error) {
+        console.error('Error purchasing ticket:', error);
+        throw handleApiError<{ message: string }>(
+            error,
+            'Failed to purchase ticket'
+        );
+    }
+};
 

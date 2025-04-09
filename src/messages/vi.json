@@ -325,7 +325,7 @@
       "following": "Đang theo dõi",
       "artist_badge": "Nghệ sĩ",
       "premium_badge": "Premium",
-      "become_artist":"Trở thành nghệ sĩ",
+      "become_artist": "Trở thành nghệ sĩ",
       "email": "Email"
     },
     "view": {
@@ -405,6 +405,7 @@
     }
   },
   "exhibitions": {
+    "enter_exhibition": "Xem triễn lãm",
     "my_exhibitions": "Phòng trưng bày của tôi",
     "create_exhibition": "Tạo phòng trưng bày",
     "no_exhibitions_found": "Không tìm thấy phòng trưng bày nào",
@@ -523,7 +524,13 @@
       "UNPUBLISHED": "Chưa công khai",
       "PENDING": "Đang chờ",
       "REJECTED": "Bị từ chối"
-    }
+    },
+    "purchase_ticket": "Mua vé",
+    "get_ticket": "Nhận vé miễn phí",
+    "checking_ticket": "Đang kiểm tra trạng thái vé...",
+    "already_purchased": "Đã mua vé",
+    "ticket_purchased_success": "Mua vé thành công",
+    "ticket_purchase_failed": "Mua vé thất bại"
   },
   "wallet": {
     "current_balance": "Số dư hiện tại",
@@ -538,7 +545,6 @@
       "recent": "Mới mua",
       "downloaded": "Đã tải",
       "not_downloaded": "Chưa tải"
-
     },
     "empty": {
       "title": "Chưa có tranh nào trong kho",

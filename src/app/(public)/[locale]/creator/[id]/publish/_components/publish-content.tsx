@@ -189,10 +189,10 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
           });
           setCurrentOperation(null);
         },
-        onError: () => {
+        onError: (error) => {
           toast({
             title: tCommon('error'),
-            description: t('unpublish_failed'),
+            description: t(error.err?.message || 'unpublish_failed'),
             variant: 'destructive',
           });
           setCurrentOperation(null);
@@ -234,10 +234,10 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
           });
           setCurrentOperation(null);
         },
-        onError: () => {
+        onError: (error) => {
           toast({
             title: tCommon('error'),
-            description: t('publish_failed'),
+            description: t(error.err?.message || 'publish_failed'),
             variant: 'destructive',
           });
           setCurrentOperation(null);

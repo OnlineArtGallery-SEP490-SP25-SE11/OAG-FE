@@ -412,7 +412,7 @@
       "categories": "Categories",
       "filters": "Filters",
       "artists": "Artists",
-      "wayToBuy": "Ways to Buy",
+      "wayToBuy": "Ways to Buy",  
       "size": "Size",
       "material": "Material",
       "price": "Price",
@@ -420,6 +420,7 @@
     }
   },
   "exhibitions": {
+    "enter_exhibition": "Enter Exhibition",
     "my_exhibitions": "My Exhibitions",
     "create_exhibition": "Create Exhibition",
     "no_exhibitions_found": "No exhibitions found",
@@ -538,7 +539,13 @@
       "UNPUBLISHED": "Unpublished",
       "PENDING": "Pending",
       "REJECTED": "Rejected"
-    }
+    },
+    "purchase_ticket": "Purchase Ticket",
+    "get_ticket": "Get Free Ticket",
+    "checking_ticket": "Checking ticket status...",
+    "already_purchased": "Already Purchased",
+    "ticket_purchased_success": "Ticket purchased successfully",
+    "ticket_purchase_failed": "Failed to purchase ticket"
   },
   "wallet": {
     "current_balance": "Current Balance",
