@@ -1,0 +1,54 @@
+import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
+import { Eye, Heart, Sparkles } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { PublicExhibition } from '@/types/exhibition';
+
+interface ExhibitionCardProps {
+  exhibition: PublicExhibition;
+}
+
+export function ExhibitionCard({ exhibition }: ExhibitionCardProps) {
+  const t = useTranslations('exhibitions');
+  
+  // Get localized content (default to first content if not found)
+  const content = exhibition.contents.find(c => c.languageCode === 'en') || exhibition.contents[0];
+  
+  return (
+    <Link href={`/exhibitions/${exhibition._id}`}>
+      <Card className="overflow-hidden h-full flex flex-col group cursor-pointer transition-shadow hover:shadow-md">
+        <div className="relative aspect-[4/3]">
+          <Image
+            src={exhibition.welcomeImage || '/images/placeholder-gallery.jpg'}
+            alt={content?.name || t('untitled_exhibition')}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+          {exhibition.isFeatured && (
+            <div className="absolute top-2 right-2">
+              <Badge variant="secondary" className="bg-white/80 backdrop-blur-sm">
+                <Sparkles className="w-3 h-3 mr-1 text-yellow-400" />
+                {t('featured')}
+              </Badge>
+            </div>
+          )}
+        </div>
+        <div className="p-4 flex-grow">
+          <h3 className="font-semibold text-lg mb-1 truncate">{content?.name || t('untitled_exhibition')}</h3>
+          <p className="text-sm text-muted-foreground mb-2">{exhibition.author.name}</p>
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <span className="flex items-center gap-1">
+              <Eye className="w-4 h-4" /> {exhibition.result?.visits || 0}
+            </span>
+            <span className="flex items-center gap-1">
+              <Heart className="w-4 h-4" /> {exhibition.result?.likes?.length || 0}
+            </span>
+          </div>
+        </div>
+      </Card>
+    </Link>
+  );
+}

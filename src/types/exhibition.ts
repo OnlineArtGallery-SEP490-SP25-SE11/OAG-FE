@@ -179,5 +179,77 @@ export type TicketPurchaseResponse = {
   status: 'COMPLETED';
 }
 
+export interface ExhibitionDisplay {
+  _id: string;
+  contents: {
+    languageCode: string;
+    name: string;
+    description: string;
+  }[];
+  author: {
+    _id: string;
+    name: string;
+    image: string;
+  };
+  welcomeImage: string;
+  artworkPositions: {
+    artwork: {
+      title: string;
+      category: string[];
+    };
+    positionIndex: number;
+  }[];
+  result: {
+    visits: number;
+    likes: { count: number; artworkId: string; }[];
+  };
+  status: string;
+  isFeatured: boolean;
+}
+
 export type CreateEmptyExhibitionDto = z.infer<typeof createEmptyExhibitionSchema>;
 export type UpdateExhibitionDto = z.infer<typeof updateExhibitionSchema>;
+
+
+export interface PublicExhibition {
+  _id: string;
+  contents: {
+    name: string;
+    description: string;
+    languageCode?: string;
+  }[];
+  startDate: string;
+  endDate: string;
+  author: {
+    _id: string;
+    name: string;
+    email: string;
+    image: string;
+  };
+  isFeatured: boolean;  
+  status: string;
+  linkName: string;
+  discovery: boolean;
+  ticket?: {
+    requiresPayment: boolean;
+    price: number;
+    registeredUsers: string[];
+  };
+  welcomeImage?: string; // This might be optional based on your response
+  result?: {
+    visits: number;
+    likes: { artworkId: string; count: number }[] | string[];
+  };
+}
+
+export interface GetPublicExhibitionsResponse {
+  exhibitions: PublicExhibition[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    pages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  };
+}

@@ -420,6 +420,18 @@
     }
   },
   "exhibitions": {
+    "discover_title": "Discover Amazing Virtual Galleries",
+    "discover_description": "Explore curated exhibitions from artists around the world. Experience art in immersive virtual spaces.",
+    "search_placeholder": "Search exhibitions, artists, or styles...",
+    "search": "Search",
+    "tabs": {
+      "featured": "Featured",
+      "trending": "Trending",
+      "recent": "Recent"
+    },
+    "featured": "Featured",
+    "error_loading": "There was an error loading exhibitions",
+    "try_again": "Try Again",
     "enter_exhibition": "Enter Exhibition",
     "my_exhibitions": "My Exhibitions",
     "create_exhibition": "Create Exhibition",

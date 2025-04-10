@@ -1,7 +1,7 @@
 // import { createApi } from "@/lib/axios";
 
 import { createApi } from "@/lib/axios";
-import { ExhibitionRequestResponse, GetExhibitionsResponse, TicketPurchaseResponse, UpdateExhibitionDto } from "@/types/exhibition";
+import { ExhibitionRequestResponse, GetExhibitionsResponse, GetPublicExhibitionsResponse, TicketPurchaseResponse, UpdateExhibitionDto } from "@/types/exhibition";
 import { ApiResponse } from "@/types/response";
 import { handleApiError } from "@/utils/error-handler";
 
@@ -133,5 +133,49 @@ export const purchaseExhibitionTicket = async (
             'Failed to purchase ticket'
         );
     }
+}
+
+
+export const getPublicExhibitions = async ({
+  page = 1,
+  limit = 12,
+  sort,
+  filter,
+  search,
+}: {
+  page?: number;
+  limit?: number;
+  sort?: Record<string, unknown>;
+  filter?: Record<string, unknown>;
+  search?: string;
+}): Promise<ApiResponse<GetPublicExhibitionsResponse>> => {
+  try {
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+    });
+    
+    if (sort) {
+      queryParams.set('sort', JSON.stringify(sort));
+    }
+    
+    if (filter) {
+      queryParams.set('filter', JSON.stringify(filter));
+    }
+    
+    if (search) {
+      queryParams.set('search', search);
+    }
+
+    console.log('Query Params:', queryParams.toString());
+    const response = await createApi().get(`/exhibition/public?${queryParams}`);
+    console.log('Response:', response.data);
+    return response.data;
+  } catch (error) {
+    throw handleApiError<GetExhibitionsResponse>(
+      error, 
+      'Failed to fetch exhibitions'
+    );
+  }
 };
 
