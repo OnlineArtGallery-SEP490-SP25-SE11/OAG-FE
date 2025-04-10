@@ -23,7 +23,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { AlertCircle, Check } from 'lucide-react';
 import { checkUserPurchased } from '@/service/artwork';
 import { useTranslations } from 'next-intl';
-
+import CreateCollection from '@/app/(public)/[locale]/settings/profile/components/create-collection';
 const overlayVariants = {
     initial: { opacity: 0 },
     animate: { opacity: 1, transition: { duration: 0.3, ease: 'easeOut' } },
