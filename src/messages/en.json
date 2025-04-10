@@ -483,6 +483,8 @@
     "discovery_update_failed": "Failed to update discovery settings",
     "link_name_updated": "Link name updated successfully",
     "link_name_update_failed": "Failed to update link name",
+    "exhibition_pending": "Exhibition is pending approval",
+    "exhibition_pending_failed": "Failed to request publication",
     "exhibition_published": "Exhibition published successfully",
     "publish_failed": "Failed to publish exhibition",
     "exhibition_unpublished": "Exhibition unpublished successfully",

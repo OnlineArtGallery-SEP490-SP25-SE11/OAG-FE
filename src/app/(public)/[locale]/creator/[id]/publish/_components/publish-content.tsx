@@ -220,7 +220,7 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
     await updateExhibition(
       {
         linkName,
-        status: ExhibitionStatus.PUBLISHED,
+        status: ExhibitionStatus.PENDING,
         startDate,
         endDate
       },
@@ -229,7 +229,7 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
           setIsPublished(true);
           toast({
             title: tCommon('success'),
-            description: t('exhibition_published'),
+            description: t('exhibition_pending'),
             variant: 'success',
           });
           setCurrentOperation(null);
@@ -237,7 +237,7 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
         onError: (error) => {
           toast({
             title: tCommon('error'),
-            description: t(error.err?.message || 'publish_failed'),
+            description: t(error.err?.message || 'exhibition_pending_failed'),
             variant: 'destructive',
           });
           setCurrentOperation(null);
