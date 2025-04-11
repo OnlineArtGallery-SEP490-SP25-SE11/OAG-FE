@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import {
 	Heart,
 	MoreHorizontal,
@@ -7,6 +7,8 @@ import {
 	Volume1
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useSpeechSynthesis } from '@/hooks/use-speech-synthesis';
+import { OverlayButton } from './overlay-button';
 
 interface IArtworkInfoOverlayProps {
 	title?: string;
@@ -23,82 +25,83 @@ export function ArtworkInfoOverlay({
 }: IArtworkInfoOverlayProps) {
 	const [isExpanded, setIsExpanded] = useState(false);
 	const [isLiked, setIsLiked] = useState(false);
-	const [isPlaying, setIsPlaying] = useState(false);
 
-	const handleAudioToggle = () => {
-		setIsPlaying(!isPlaying);
-		// TODO: Implement audio playback logic
-	};
+	// Use our custom speech synthesis hook
+	const { isPlaying, toggle } = useSpeechSynthesis();
+
+	// Create a handler for the audio toggle that uses the description text
+	const handleAudioToggle = useCallback(() => {
+		toggle(description || "No description available");
+	}, [toggle, description]);
+
+	// Create a wrapped close handler that properly stops speech
+	const handleClose = useCallback(() => {
+		// Call the original onClose
+		onClose();
+	}, [onClose]);
+
+	// Constants for fallback content
+	const fallbackTitle = 'Artwork Title';
+	// const fallbackSize = '800x800';
+	const fallbackDescription = 'No description available for this artwork.';
 
 	return (
 		<AnimatePresence>
 			<motion.div
 				className='fixed bottom-2 w-[80%] ml-[10%] bg-white opacity-90 rounded-md shadow-lg'
-				// style={{
-				//   width: "min(95%, 1200px)",
-				//   maxWidth: "1200px",
-				//   margin: "0 200px",
-				// }}
+				// className="fixed bottom-2 w-[80%] mx-auto left-0 right-0 bg-white/90 rounded-md shadow-lg"
 				initial={{ y: '100%' }}
 				animate={{ y: isExpanded ? '0%' : '80%' }}
 				transition={{ type: 'spring', damping: 20 }}
 			>
-				<div className='flex items-center justify-between p-4 border-b border-gray-200'>
-					<button
-						onClick={onClose}
-						className='p-2 rounded-full hover:bg-gray-100 transition-colors duration-200'
+				<header className="flex items-center justify-between p-4 border-b border-gray-200">
+					<OverlayButton
+						onClick={handleClose}
 						aria-label='Close'
 					>
-						<ArrowLeft className='w-6 h-6' />
-					</button>
+						<ArrowLeft className="w-6 h-6" />
+					</OverlayButton>
 
-					<div className='flex items-center gap-2'>
-						<button
+					<div className="flex items-center gap-2">
+						<OverlayButton
 							onClick={handleAudioToggle}
-							className='p-2 rounded-full hover:bg-gray-100 transition-colors duration-200'
 							aria-label={isPlaying ? 'Stop audio' : 'Play audio'}
 						>
 							{isPlaying ? (
-								<Volume2 className='w-6 h-6 text-blue-500' />
+								<Volume2 className="w-6 h-6 text-blue-500" />
 							) : (
-								<Volume1 className='w-6 h-6 text-gray-600' />
+								<Volume1 className="w-6 h-6 text-gray-600" />
 							)}
-						</button>
+						</OverlayButton>
 
-						<button
+						<OverlayButton
 							onClick={() => setIsLiked(!isLiked)}
-							className='p-2 rounded-full hover:bg-gray-100 transition-colors duration-200'
 							aria-label={isLiked ? 'Unlike' : 'Like'}
 						>
 							<Heart
-								className={`w-6 h-6 transition-colors duration-200 ${
-									isLiked
-										? 'fill-red-500 text-red-500'
-										: 'text-gray-600'
-								}`}
+								className={`w-6 h-6 transition-colors duration-200 ${isLiked ? 'fill-red-500 text-red-500' : 'text-gray-600'
+									}`}
 							/>
-						</button>
+						</OverlayButton>
 
-						<button
+						<OverlayButton
 							onClick={() => setIsExpanded(!isExpanded)}
-							className='p-2 rounded-full hover:bg-gray-100 transition-colors duration-200'
 							aria-label={isExpanded ? 'Collapse' : 'Expand'}
 						>
-							<MoreHorizontal className='w-6 h-6 text-gray-600' />
-						</button>
+							<MoreHorizontal className="w-6 h-6 text-gray-600" />
+						</OverlayButton>
 					</div>
-				</div>
+				</header>
 
-				<div className='p-6 space-y-4'>
-					<h2 className='text-xl font-bold text-gray-900'>
-						{title || 'Lorem ipsum dolor sit amet'}
+				<section className="p-6 space-y-4">
+					<h2 className="text-xl font-bold text-gray-900">
+						{title || fallbackTitle}
 					</h2>
-					<h2 className='text-gray-600'>{size || '800x800'}</h2>
-					<p className='text-gray-600 leading-relaxed'>
-						{description ||
-							'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tristique commodo mi vitae luctus. Etiam iaculis bibendum finibus. Praesent eu augue eget eros vehicula imperdiet. Mauris dictum eros ipsum. Sed dapibus tellus vitae aliquet mollis. Sed ultrices nibh id lacus pretium maximus. Nulla at ultrices nisl. Phasellus tempor eros vitae aliquet faucibus. Ut ante mi, molestie dictum molestie quis, finibus in massa. In eleifend ultricies vulputate. Suspendisse euismod sollicitudin ex ut faucibus. Donec congue ipsum in ex tincidunt pharetra.'}
+					{/* <h3 className="text-gray-600">{size || fallbackSize}</h3> */}
+					<p className="text-gray-600 leading-relaxed">
+						{description || fallbackDescription}
 					</p>
-				</div>
+				</section>
 			</motion.div>
 		</AnimatePresence>
 	);
