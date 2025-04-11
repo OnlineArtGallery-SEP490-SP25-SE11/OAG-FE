@@ -1,4 +1,4 @@
-import { getExhibitions } from '@/service/exhibition';
+import { getUserExhibitions } from '@/service/exhibition';
 import { getCurrentUser } from '@/lib/session';
 import { Exhibition } from '@/types/exhibition';
 import { getTranslations } from 'next-intl/server';
@@ -13,13 +13,9 @@ export default async function ExhibitionGrid({ locale }: { locale: string }) {
   }
 
   let exhibitions: Exhibition[] = [];
-  try {
-    const exhibitionsResponse = await getExhibitions(user.accessToken);
+    const exhibitionsResponse = await getUserExhibitions(user.accessToken);
     exhibitions = exhibitionsResponse.data?.exhibitions ?? [];
-  } catch (error) {
-    console.error("Failed to fetch exhibitions:", error);
-    return <div>{t('error_loading_exhibitions')}</div>;
-  }
+    console.log('caz', exhibitionsResponse)
 
   if (exhibitions.length === 0) {
     return <div>{t('no_exhibitions_found')}</div>;

@@ -467,7 +467,7 @@ export default function UploadArtwork() {
                                             <FileUploader
                                                 accept={{ 'image/*': [] }}
                                                 maxFiles={1}
-                                                maxSize={5 * 1024 * 1024}
+                                                maxSize={10 * 1024 * 1024}
                                                 icon={<ImageIcon className="h-10 w-10 opacity-70" />}
                                                 onFileUpload={(files) => {
                                                     const file = files[0];

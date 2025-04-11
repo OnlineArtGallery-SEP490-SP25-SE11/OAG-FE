@@ -420,6 +420,26 @@
     }
   },
   "exhibitions": {
+    "no_search_results": "No exhibitions found for your search",
+    "try_different_search": "Try different keywords or browse exhibitions by category",
+    "no_exhibitions_featured": "No featured exhibitions available",
+    "no_exhibitions_trending": "No trending exhibitions yet",
+    "no_exhibitions_recent": "No recent exhibitions to show",
+    "check_back_later": "Please check back later for new exhibitions",
+    "clear_search": "Clear search",
+    "discover_title": "Discover Amazing Virtual Galleries",
+    "discover_description": "Explore curated exhibitions from artists around the world. Experience art in immersive virtual spaces.",
+    "search_placeholder": "Search exhibitions, artists, or styles...",
+    "search": "Search",
+    "tabs": {
+      "featured": "Featured",
+      "trending": "Trending",
+      "recent": "Recent"
+    },
+    "featured": "Featured",
+    "error_loading": "There was an error loading exhibitions",
+    "try_again": "Try Again",
+    "enter_exhibition": "Enter Exhibition",
     "my_exhibitions": "My Exhibitions",
     "create_exhibition": "Create Exhibition",
     "no_exhibitions_found": "No exhibitions found",
@@ -482,6 +502,8 @@
     "discovery_update_failed": "Failed to update discovery settings",
     "link_name_updated": "Link name updated successfully",
     "link_name_update_failed": "Failed to update link name",
+    "exhibition_pending": "Exhibition is pending approval",
+    "exhibition_pending_failed": "Failed to request publication",
     "exhibition_published": "Exhibition published successfully",
     "publish_failed": "Failed to publish exhibition",
     "exhibition_unpublished": "Exhibition unpublished successfully",
@@ -538,7 +560,13 @@
       "UNPUBLISHED": "Unpublished",
       "PENDING": "Pending",
       "REJECTED": "Rejected"
-    }
+    },
+    "purchase_ticket": "Purchase Ticket",
+    "get_ticket": "Get Free Ticket",
+    "checking_ticket": "Checking ticket status...",
+    "already_purchased": "Already Purchased",
+    "ticket_purchased_success": "Ticket purchased successfully",
+    "ticket_purchase_failed": "Failed to purchase ticket"
   },
   "wallet": {
     "current_balance": "Current Balance",
@@ -553,7 +581,6 @@
       "recent": "Recently Purchased",
       "downloaded": "Downloaded",
       "not_downloaded": "Not Downloaded"
-
     },
     "empty": {
       "title": "No artworks in warehouse",

@@ -5,8 +5,8 @@ import PreviewContent from './_components/preview-content';
 
 export default async function PreviewPage({ params }: { params: { id: string } }) {
 	const { id } = params;
-	const res = await getExhibitionById(id);
-	const exhibition = res.data?.exhibition;
+		const res = await getExhibitionById(id);
+		const exhibition = res.data?.exhibition;
 	
 	
 	return (

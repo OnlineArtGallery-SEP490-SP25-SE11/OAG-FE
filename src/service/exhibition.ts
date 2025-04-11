@@ -1,7 +1,8 @@
 // import { createApi } from "@/lib/axios";
 
 import { createApi } from "@/lib/axios";
-import { ExhibitionRequestResponse, GetExhibitionsResponse, UpdateExhibitionDto } from "@/types/exhibition";
+import { getCurrentUser } from "@/lib/session";
+import { ExhibitionRequestResponse, GetExhibitionsResponse, GetPublicExhibitionsResponse, TicketPurchaseResponse, UpdateExhibitionDto } from "@/types/exhibition";
 import { ApiResponse } from "@/types/response";
 import { handleApiError } from "@/utils/error-handler";
 
@@ -10,7 +11,7 @@ export const getExhibitions = async (accessToken: string, params?: {
     limit?: number;
     sort?: Record<string, 1 | -1>;
     search?: string;
-}): Promise<ApiResponse<GetExhibitionsResponse>> =>{
+}): Promise<ApiResponse<GetExhibitionsResponse>> => {
     try {
         const queryParams = new URLSearchParams();
         if (params?.page) queryParams.set('page', params.page.toString());
@@ -18,7 +19,7 @@ export const getExhibitions = async (accessToken: string, params?: {
         if (params?.sort) queryParams.set('sort', JSON.stringify(params.sort));
         if (params?.search) queryParams.set('search', params.search);
 
-        const url = `/exhibition${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+        const url = `/exhibitions${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
         const res = await createApi(accessToken).get(url);
         return res.data;
 
@@ -39,7 +40,33 @@ export const getExhibitions = async (accessToken: string, params?: {
         //         }
         //     }
         // }
-  
+
+    } catch (error) {
+        console.error('Error getting gallery templates:', error);
+        throw handleApiError<GetExhibitionsResponse>(
+            error,
+            'Failed to fetch gallery templates'
+        );
+    }
+}
+export const getUserExhibitions = async (accessToken: string, params?: {
+    page?: number;
+    limit?: number;
+    sort?: Record<string, 1 | -1>;
+    search?: string;
+}): Promise<ApiResponse<GetExhibitionsResponse>> => {
+    try {
+        const queryParams = new URLSearchParams();
+        if (params?.page) queryParams.set('page', params.page.toString());
+        if (params?.limit) queryParams.set('limit', params.limit.toString());
+        if (params?.sort) queryParams.set('sort', JSON.stringify(params.sort));
+        if (params?.search) queryParams.set('search', params.search);
+
+        const url = `/exhibition/user-exhibitions${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+        const res = await createApi(accessToken).get(url);
+        console.log('User exhibitions response:', res.data);
+        return res.data;
+
     } catch (error) {
         console.error('Error getting gallery templates:', error);
         throw handleApiError<GetExhibitionsResponse>(
@@ -52,9 +79,9 @@ export const getExhibitions = async (accessToken: string, params?: {
 
 export const createExhibition = async (accessToken: string, templateId: string): Promise<ApiResponse<ExhibitionRequestResponse>> => {
     try {
-        const res = await createApi(accessToken).post('/exhibition', { 
+        const res = await createApi(accessToken).post('/exhibition', {
             gallery: templateId
-         });
+        });
         return res.data;
     } catch (error) {
         console.error('Error creating exhibition:', error);
@@ -82,7 +109,11 @@ export const updateExhibition = async (accessToken: string, id: string, data: Up
 
 export const getExhibitionById = async (id: string): Promise<ApiResponse<ExhibitionRequestResponse>> => {
     try {
-        const res = await createApi().get(`/exhibition/${id}`);
+        const user = await getCurrentUser();
+        if (!user) {
+            throw new Error('User not authenticated');
+        }
+        const res = await createApi(user.accessToken).get(`/exhibition/${id}`);
         return res.data;
     } catch (error) {
         console.error('Error getting exhibition by ID:', error);
@@ -93,4 +124,85 @@ export const getExhibitionById = async (id: string): Promise<ApiResponse<Exhibit
     }
 }
 
+export const getExhibitionByLinkName = async (linkName: string): Promise<ApiResponse<ExhibitionRequestResponse>> => {
+    try {
+        const res = await createApi().get(`/exhibition/public/link/${linkName}`);
+        return res.data;
+    } catch (error) {
+        console.error('Error getting exhibition by link name:', error);
+        throw handleApiError<ExhibitionRequestResponse>(
+            error,
+            'Failed to get exhibition by link name'
+        );
+    }
+}
+
+export const purchaseExhibitionTicket = async (accessToken: string, exhibitionId: string): Promise<ApiResponse<TicketPurchaseResponse>> => {
+    try {
+        const res = await createApi(accessToken).post(`/exhibition/${exhibitionId}/ticket/purchase`);
+        return res.data;
+    } catch (error) {
+        console.error('Error purchasing exhibition ticket:', error);
+        throw handleApiError<TicketPurchaseResponse>(
+            error,
+            'Failed to purchase exhibition ticket'
+        );
+    }
+}
+
+
+export const getPublicExhibitions = async ({
+  page = 1,
+  limit = 12,
+  sort,
+  filter,
+  search,
+  status,
+}: {
+  page?: number;
+  limit?: number;
+  sort?: Record<string, unknown>;
+  filter?: Record<string, unknown>;
+  search?: string;
+  status?: string | string[];
+}): Promise<ApiResponse<GetPublicExhibitionsResponse>> => {
+  try {
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+    });
+    
+    if (sort) {
+      queryParams.set('sort', JSON.stringify(sort));
+    }
+    
+    if (filter) {
+      queryParams.set('filter', JSON.stringify(filter));
+    }
+    
+    if (search) {
+      queryParams.set('search', search);
+    }
+    
+    if (status) {
+      // Handle status as a direct URL parameter instead of part of filter
+      if (Array.isArray(status)) {
+        queryParams.set('status', status.join(','));
+      } else {
+        queryParams.set('status', status);
+      }
+    }
+
+    console.log('Query Params:', queryParams.toString());
+    // Change the endpoint to match your example
+    const response = await createApi().get(`/exhibition/public?${queryParams}`);
+    console.log('Response:', response.data);
+    return response.data;
+  } catch (error) {
+    throw handleApiError<GetExhibitionsResponse>(
+      error, 
+      'Failed to fetch exhibitions'
+    );
+  }
+};
 

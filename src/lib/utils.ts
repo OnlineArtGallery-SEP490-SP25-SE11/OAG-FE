@@ -6,6 +6,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { jwtDecode } from 'jwt-decode';
 import { twMerge } from 'tailwind-merge';
 import slugify from 'slugify';
+import { Exhibition } from '@/types/exhibition';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -76,3 +77,22 @@ export function createSlug(title: string): string {
 		remove: /[*+~.()'"!:@]/g // Remove specific characters
 	});
 }
+
+
+
+export function getLocalizedContent(exhibition: Exhibition, locale: string) {
+	// Try to find content matching current locale
+	const localContent = exhibition.contents.find(
+	  content => content.languageCode === locale
+	);
+  
+	if (!localContent) {
+	  // If no match, try to find content in default language
+	  const defaultLang = exhibition.languageOptions.find(lang => lang.isDefault);
+	  return exhibition.contents.find(
+		content => content.languageCode === defaultLang?.code
+	  ) || exhibition.contents[0]; // Fallback to first content if no default found
+	}
+  
+	return localContent;
+  }
