@@ -56,15 +56,26 @@ export default function ExhibitionContent({ exhibitionData }: { exhibitionData: 
     return (
       <div className='relative h-screen w-full'>
         <div className='absolute inset-0'>
-          {exhibitionData.backgroundMedia && (
-            <Image
+            {exhibitionData.backgroundMedia && (
+            exhibitionData.backgroundMedia.endsWith('.mp4') ? (
+              <video
+              src={exhibitionData.backgroundMedia}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="object-cover w-full h-full"
+              />
+            ) : (
+              <Image
               src={exhibitionData.backgroundMedia}
               alt='Gallery Background'
               fill
               className='object-cover'
               priority
-            />
-          )}
+              />
+            )
+            )}
         </div>
 
         <div className='relative h-full flex items-center justify-center'>

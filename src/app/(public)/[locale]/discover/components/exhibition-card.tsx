@@ -17,7 +17,7 @@ export function ExhibitionCard({ exhibition }: ExhibitionCardProps) {
   const content = exhibition.contents.find(c => c.languageCode === 'en') || exhibition.contents[0];
   
   return (
-    <Link href={`/exhibitions/${exhibition._id}`}>
+    <Link href={`/exhibitions/${exhibition.linkName}`}>
       <Card className="overflow-hidden h-full flex flex-col group cursor-pointer transition-shadow hover:shadow-md">
         <div className="relative aspect-[4/3]">
           <Image

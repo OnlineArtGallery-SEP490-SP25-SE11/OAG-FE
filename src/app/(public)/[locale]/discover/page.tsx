@@ -17,7 +17,6 @@ export default async function DiscoverPage() {
   if (!initialData.data) {
     return <div>Error loading exhibitions</div>;
   }
-  
   return (
     <Suspense fallback={<ExhibitionSkeleton />}>
       <DiscoverClient initialData={initialData.data} />

@@ -1,7 +1,8 @@
 // import { createApi } from "@/lib/axios";
 
 import { createApi } from "@/lib/axios";
-import { ExhibitionRequestResponse, GetExhibitionsResponse, GetPublicExhibitionsResponse, TicketPurchaseResponse, UpdateExhibitionDto } from "@/types/exhibition";
+import { getCurrentUser } from "@/lib/session";
+import { ExhibitionRequestResponse, GetExhibitionsResponse, GetPublicExhibitionsResponse, UpdateExhibitionDto } from "@/types/exhibition";
 import { ApiResponse } from "@/types/response";
 import { handleApiError } from "@/utils/error-handler";
 
@@ -108,7 +109,11 @@ export const updateExhibition = async (accessToken: string, id: string, data: Up
 
 export const getExhibitionById = async (id: string): Promise<ApiResponse<ExhibitionRequestResponse>> => {
     try {
-        const res = await createApi().get(`/exhibition/${id}`);
+        const user = await getCurrentUser();
+        if (!user) {
+            throw new Error('User not authenticated');
+        }
+        const res = await createApi(user.accessToken).get(`/exhibition/${id}`);
         return res.data;
     } catch (error) {
         console.error('Error getting exhibition by ID:', error);
@@ -119,18 +124,15 @@ export const getExhibitionById = async (id: string): Promise<ApiResponse<Exhibit
     }
 }
 
-export const purchaseExhibitionTicket = async (
-    accessToken: string,
-    exhibitionId: string
-): Promise<ApiResponse<TicketPurchaseResponse>> => {
+export const getExhibitionByLinkName = async (linkName: string): Promise<ApiResponse<ExhibitionRequestResponse>> => {
     try {
-        const res = await createApi(accessToken).post(`/exhibition/${exhibitionId}/ticket/purchase`);
+        const res = await createApi().get(`/exhibition/public/link/${linkName}`);
         return res.data;
     } catch (error) {
-        console.error('Error purchasing ticket:', error);
-        throw handleApiError<{ message: string }>(
+        console.error('Error getting exhibition by link name:', error);
+        throw handleApiError<ExhibitionRequestResponse>(
             error,
-            'Failed to purchase ticket'
+            'Failed to get exhibition by link name'
         );
     }
 }
