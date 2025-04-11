@@ -412,7 +412,7 @@
       "categories": "Categories",
       "filters": "Filters",
       "artists": "Artists",
-      "wayToBuy": "Ways to Buy",  
+      "wayToBuy": "Ways to Buy",
       "size": "Size",
       "material": "Material",
       "price": "Price",
@@ -420,6 +420,13 @@
     }
   },
   "exhibitions": {
+    "no_search_results": "No exhibitions found for your search",
+    "try_different_search": "Try different keywords or browse exhibitions by category",
+    "no_exhibitions_featured": "No featured exhibitions available",
+    "no_exhibitions_trending": "No trending exhibitions yet",
+    "no_exhibitions_recent": "No recent exhibitions to show",
+    "check_back_later": "Please check back later for new exhibitions",
+    "clear_search": "Clear search",
     "discover_title": "Discover Amazing Virtual Galleries",
     "discover_description": "Explore curated exhibitions from artists around the world. Experience art in immersive virtual spaces.",
     "search_placeholder": "Search exhibitions, artists, or styles...",
@@ -574,7 +581,6 @@
       "recent": "Recently Purchased",
       "downloaded": "Downloaded",
       "not_downloaded": "Not Downloaded"
-
     },
     "empty": {
       "title": "No artworks in warehouse",

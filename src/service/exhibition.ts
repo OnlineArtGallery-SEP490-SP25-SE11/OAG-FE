@@ -2,7 +2,7 @@
 
 import { createApi } from "@/lib/axios";
 import { getCurrentUser } from "@/lib/session";
-import { ExhibitionRequestResponse, GetExhibitionsResponse, GetPublicExhibitionsResponse, UpdateExhibitionDto } from "@/types/exhibition";
+import { ExhibitionRequestResponse, GetExhibitionsResponse, GetPublicExhibitionsResponse, TicketPurchaseResponse, UpdateExhibitionDto } from "@/types/exhibition";
 import { ApiResponse } from "@/types/response";
 import { handleApiError } from "@/utils/error-handler";
 
@@ -137,6 +137,19 @@ export const getExhibitionByLinkName = async (linkName: string): Promise<ApiResp
     }
 }
 
+export const purchaseExhibitionTicket = async (accessToken: string, exhibitionId: string): Promise<ApiResponse<TicketPurchaseResponse>> => {
+    try {
+        const res = await createApi(accessToken).post(`/exhibition/${exhibitionId}/ticket/purchase`);
+        return res.data;
+    } catch (error) {
+        console.error('Error purchasing exhibition ticket:', error);
+        throw handleApiError<TicketPurchaseResponse>(
+            error,
+            'Failed to purchase exhibition ticket'
+        );
+    }
+}
+
 
 export const getPublicExhibitions = async ({
   page = 1,
@@ -144,12 +157,14 @@ export const getPublicExhibitions = async ({
   sort,
   filter,
   search,
+  status,
 }: {
   page?: number;
   limit?: number;
   sort?: Record<string, unknown>;
   filter?: Record<string, unknown>;
   search?: string;
+  status?: string | string[];
 }): Promise<ApiResponse<GetPublicExhibitionsResponse>> => {
   try {
     const queryParams = new URLSearchParams({
@@ -168,8 +183,18 @@ export const getPublicExhibitions = async ({
     if (search) {
       queryParams.set('search', search);
     }
+    
+    if (status) {
+      // Handle status as a direct URL parameter instead of part of filter
+      if (Array.isArray(status)) {
+        queryParams.set('status', status.join(','));
+      } else {
+        queryParams.set('status', status);
+      }
+    }
 
     console.log('Query Params:', queryParams.toString());
+    // Change the endpoint to match your example
     const response = await createApi().get(`/exhibition/public?${queryParams}`);
     console.log('Response:', response.data);
     return response.data;

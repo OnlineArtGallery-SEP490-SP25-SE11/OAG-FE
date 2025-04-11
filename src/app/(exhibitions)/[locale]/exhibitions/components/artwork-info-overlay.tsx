@@ -19,6 +19,7 @@ interface IArtworkInfoOverlayProps {
 
 export function ArtworkInfoOverlay({
 	title,
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	size,
 	description,
 	onClose

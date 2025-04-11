@@ -405,13 +405,20 @@
     }
   },
   "exhibitions": {
+    "no_search_results": "Không tìm thấy triển lãm nào cho từ khóa tìm kiếm của bạn",
+    "try_different_search": "Thử tìm kiếm với từ khóa khác hoặc duyệt triển lãm theo danh mục",
+    "no_exhibitions_featured": "Hiện không có triển lãm nổi bật nào", 
+    "no_exhibitions_trending": "Chưa có triển lãm thịnh hành nào",
+    "no_exhibitions_recent": "Chưa có triển lãm mới nào",
+    "check_back_later": "Vui lòng quay lại sau để xem triển lãm mới",
+    "clear_search": "Xóa tìm kiếm",
     "discover_title": "Khám Phá Phòng Trưng Bày Ảo Tuyệt Vời",
     "discover_description": "Khám phá các triển lãm được tuyển chọn từ các nghệ sĩ trên toàn thế giới. Trải nghiệm nghệ thuật trong không gian ảo sống động.",
-    "search_placeholder": "Tìm kiếm triển lãm, nghệ sĩ hoặc phong cách...", 
+    "search_placeholder": "Tìm kiếm triển lãm, nghệ sĩ hoặc phong cách...",
     "search": "Tìm kiếm",
     "tabs": {
       "featured": "Nổi bật",
-      "trending": "Xu hướng", 
+      "trending": "Xu hướng",
       "recent": "Mới nhất"
     },
     "featured": "Nổi bật",
