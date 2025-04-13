@@ -1,6 +1,6 @@
 'use client'
 import React, { useCallback, useMemo, useRef, useState } from "react";
-import { Mesh, Vector3, BoxGeometry, PlaneGeometry, MeshStandardMaterial, MeshBasicMaterial } from "three";
+import { Mesh, Vector3, BoxGeometry, PlaneGeometry, MeshStandardMaterial, MeshBasicMaterial} from "three";
 import { Vec3 } from "@/types/gallery";
 import { useRaycaster } from "@/hooks/useRaycaster";
 import { ArtworkPortal } from "./artwork-portal";
@@ -125,11 +125,15 @@ export const ArtworkMesh: React.FC<{ galleryArtwork: GalleryArtwork }> = React.m
         });
 
         const texture = useCloudinaryAsset(artwork.url);
+        // texture.magFilter = LinearFilter;
+        // texture.minFilter = LinearMipMapLinearFilter;
+        texture.colorSpace = 'srgb';
 
         const artworkMaterial = useMemo(
             () =>
                 new MeshBasicMaterial({
-                    map: texture
+                    map: texture,
+                    toneMapped: false,
                 }),
             [texture]
         );

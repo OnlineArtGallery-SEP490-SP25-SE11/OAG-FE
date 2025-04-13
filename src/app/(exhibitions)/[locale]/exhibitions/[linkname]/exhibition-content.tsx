@@ -18,7 +18,7 @@ export default function ExhibitionContent({ exhibitionData }: { exhibitionData: 
   const t = useTranslations('exhibitions');
   const { canAccess, isLoading } = useExhibitionAccess(exhibitionData);
   const localizedContent = getLocalizedContent(exhibitionData, locale);
-
+  console.log('access', canAccess);
   const renderActionButton = () => {
     if (isLoading) {
       return (

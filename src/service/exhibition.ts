@@ -151,6 +151,19 @@ export const purchaseExhibitionTicket = async (accessToken: string, exhibitionId
 }
 
 
+export const likeExhibitionArtwork = async (accessToken: string, exhibitionId: string, artworkId: string): Promise<ApiResponse<ExhibitionRequestResponse>> => {
+    try {
+        const res = await createApi(accessToken).post(`/exhibition/${exhibitionId}/artwork/${artworkId}/like`);
+        return res.data;
+    } catch (error) {
+        console.error('Error liking exhibition artwork:', error);
+        throw handleApiError<ExhibitionRequestResponse>(
+            error,
+            'Failed to like exhibition artwork'
+        );
+    }
+}
+
 export const getPublicExhibitions = async ({
   page = 1,
   limit = 12,
