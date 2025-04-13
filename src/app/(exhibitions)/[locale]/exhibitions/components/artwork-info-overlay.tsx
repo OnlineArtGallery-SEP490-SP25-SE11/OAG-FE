@@ -17,7 +17,7 @@ type User = Session['user'];
 interface IArtworkInfoOverlayProps {
 	artworkId: string;
 	exhibitionId: string;
-	likes: {
+	likes?: {
 		userIds: string[];
 		count: number;
 	};
@@ -90,7 +90,7 @@ export function ArtworkInfoOverlay({
 						<LikeArtworkButton
 							artworkId={artworkId}
 							exhibitionId={exhibitionId}
-							likes={likes}
+							likes={likes || { userIds: [], count: 0 }}
 							user={user}
 						/>
 

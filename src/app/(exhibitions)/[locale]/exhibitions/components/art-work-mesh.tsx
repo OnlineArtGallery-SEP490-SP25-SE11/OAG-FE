@@ -181,7 +181,8 @@ export const ArtworkMesh: React.FC<ArtworkMeshProps> = React.memo(
         // Memoize overlay content to prevent unnecessary re-renders
         const overlayContent = useMemo(() => (
             shouldShowModal ? (
-                <ArtworkPortal isOpen={true} onClose={handleClose}>
+                artwork._id && exhibitionId ? (
+                    <ArtworkPortal isOpen={true} onClose={handleClose}>
                     <ArtworkInfoOverlay
                         artworkId={artwork._id}
                         exhibitionId={exhibitionId}
@@ -191,7 +192,8 @@ export const ArtworkMesh: React.FC<ArtworkMeshProps> = React.memo(
                         user={user}
                         onClose={handleClose} // Pass the stable handleClose
                     />
-                </ArtworkPortal>
+                    </ArtworkPortal>
+                ) : null
             ) : null
         // Dependencies: only re-render if modal should show/hide or data changes
         ), [shouldShowModal, handleClose, artwork._id, exhibitionId, artwork.title, likes, artwork.description, user]);

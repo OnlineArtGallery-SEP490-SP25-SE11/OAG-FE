@@ -9,13 +9,13 @@ import { Session } from 'next-auth'; // <-- Import Session type
 
 // Interface for GalleryArtwork (remains the same)
 export interface GalleryArtwork {
-  exhibitionId: string;
+  exhibitionId?: string;
   artwork: ExhibitionArtwork;
   placement: {
     position: number[];
     rotation: number[];
   };
-  likes: {
+  likes?: {
     userIds: string[];
     count: number;
   };
