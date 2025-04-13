@@ -2,7 +2,7 @@
 
 import { createApi } from "@/lib/axios";
 import { getCurrentUser } from "@/lib/session";
-import { ExhibitionRequestResponse, GetExhibitionsResponse, GetPublicExhibitionsResponse, TicketPurchaseResponse, UpdateExhibitionDto } from "@/types/exhibition";
+import { ExhibitionRequestResponse, GetExhibitionsResponse, GetPublicExhibitionsResponse, LikeArtworkResponse, TicketPurchaseResponse, UpdateExhibitionDto } from "@/types/exhibition";
 import { ApiResponse } from "@/types/response";
 import { handleApiError } from "@/utils/error-handler";
 
@@ -151,18 +151,24 @@ export const purchaseExhibitionTicket = async (accessToken: string, exhibitionId
 }
 
 
-export const likeExhibitionArtwork = async (accessToken: string, exhibitionId: string, artworkId: string): Promise<ApiResponse<ExhibitionRequestResponse>> => {
+export const toggleArtworkLike = async (
+    accessToken: string,
+    exhibitionId: string,
+    artworkId: string
+  ): Promise<ApiResponse<LikeArtworkResponse>> => {
     try {
-        const res = await createApi(accessToken).post(`/exhibition/${exhibitionId}/artwork/${artworkId}/like`);
-        return res.data;
+      const res = await createApi(accessToken).post(`/exhibition/${exhibitionId}/artwork/like`, {
+        artworkId
+      });
+      return res.data;
     } catch (error) {
-        console.error('Error liking exhibition artwork:', error);
-        throw handleApiError<ExhibitionRequestResponse>(
-            error,
-            'Failed to like exhibition artwork'
-        );
+      console.error('Error toggling artwork like:', error);
+      throw handleApiError<{liked: boolean}>(
+        error,
+        'Failed to toggle artwork like status'
+      );
     }
-}
+  }
 
 export const getPublicExhibitions = async ({
   page = 1,

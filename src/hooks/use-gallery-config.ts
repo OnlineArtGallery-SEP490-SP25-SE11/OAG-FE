@@ -15,16 +15,25 @@ export function useProcessedArtworks(exhibition: Exhibition) {
       })
       .map(artworkPos => {
         const placement = exhibition.gallery.artworkPlacements[artworkPos.positionIndex];
+        const artworkLikes = exhibition.result?.likes?.filter(
+          like => like.artworkId === artworkPos.artwork._id
+        ) || [];
+
         return {
           artwork: artworkPos.artwork,
+          exhibitionId: exhibition._id,
           placement: {
             position: placement.position,
             rotation: placement.rotation,
+          },
+          likes: {
+            userIds: artworkLikes.map(like => like.userId),
+            count: artworkLikes.length
           }
         };
       });
-  }, [exhibition.artworkPositions, exhibition.gallery.artworkPlacements]);
-}
+  }, [exhibition._id, exhibition.artworkPositions, exhibition.gallery.artworkPlacements, exhibition.result?.likes]);
+} 
 
 export function useGalleryConfig(exhibition: Exhibition) {
   const processedArtworks = useProcessedArtworks(exhibition);

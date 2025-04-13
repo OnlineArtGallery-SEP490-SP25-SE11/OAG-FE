@@ -10,15 +10,21 @@ import { useLocale, useTranslations } from 'next-intl';
 import { formatDateByLocale } from '@/utils/converters';
 import { useExhibitionAccess } from '@/hooks/use-exhibition-access';
 import { getLocalizedContent } from '@/lib/utils';
+import { useSession } from 'next-auth/react';
 
 
 export default function ExhibitionContent({ exhibitionData }: { exhibitionData: ExhibitionType }) {
   const [isStarted, setIsStarted] = useState(false);
   const locale = useLocale();
   const t = useTranslations('exhibitions');
-  const { canAccess, isLoading } = useExhibitionAccess(exhibitionData);
+  const { canAccess, isLoading: accessLoading } = useExhibitionAccess(exhibitionData);
   const localizedContent = getLocalizedContent(exhibitionData, locale);
-  console.log('access', canAccess);
+
+  // --- Get session data ---
+  const { data: session, status: sessionStatus } = useSession();
+  const isLoading = accessLoading || sessionStatus === 'loading';
+
+
   const renderActionButton = () => {
     if (isLoading) {
       return (
@@ -56,26 +62,26 @@ export default function ExhibitionContent({ exhibitionData }: { exhibitionData: 
     return (
       <div className='relative h-screen w-full'>
         <div className='absolute inset-0'>
-            {exhibitionData.backgroundMedia && (
+          {exhibitionData.backgroundMedia && (
             exhibitionData.backgroundMedia.endsWith('.mp4') ? (
               <video
-              src={exhibitionData.backgroundMedia}
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="object-cover w-full h-full"
+                src={exhibitionData.backgroundMedia}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="object-cover w-full h-full"
               />
             ) : (
               <Image
-              src={exhibitionData.backgroundMedia}
-              alt='Gallery Background'
-              fill
-              className='object-cover'
-              priority
+                src={exhibitionData.backgroundMedia}
+                alt='Gallery Background'
+                fill
+                className='object-cover'
+                priority
               />
             )
-            )}
+          )}
         </div>
 
         <div className='relative h-full flex items-center justify-center'>
@@ -122,7 +128,7 @@ export default function ExhibitionContent({ exhibitionData }: { exhibitionData: 
 
   return (
     <div>
-      <Exhibition exhibition={exhibitionData} />
+      <Exhibition exhibition={exhibitionData} session={session} />
     </div>
   );
 }
