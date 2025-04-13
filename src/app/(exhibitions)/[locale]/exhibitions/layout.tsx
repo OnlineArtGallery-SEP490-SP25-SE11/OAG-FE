@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     description: 'art gallery online for everyone'
 };
 
-export default async function RootLayout({
+export default async function ExhibitionLayout({
     children,
     params: { locale }
 }: Readonly<{
@@ -31,7 +31,7 @@ export default async function RootLayout({
 
     return (
         <NextIntlClientProvider messages={messages} locale={locale}>
-                <div className=''>{children}</div>
+            <div className=''>{children}</div>
         </NextIntlClientProvider>
     );
 }

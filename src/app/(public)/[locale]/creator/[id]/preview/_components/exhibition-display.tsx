@@ -51,6 +51,7 @@ export function ExhibitionDisplay({ exhibition }: { exhibition: ExhibitionType }
             <Gallery
               config={galleryConfig} // Pass the new config
               visible={false} // Or control visibility as needed
+              session={null}
             />
           </Physics>
 

@@ -33,7 +33,7 @@ export interface LanguageOption {
 // Result interface for exhibition analytics
 export interface ExhibitionResult {
   visits: number;
-  likes: { count: number; artworkId: string }[];
+  likes: { count: number; artworkId: string, userId: string }[];
   totalTime: number;
 }
 
@@ -106,7 +106,8 @@ const resultSchema = z.object({
   likes: z.array(
     z.object({
       count: z.number(),
-      artworkId: z.string()
+      artworkId: z.string(),
+      userId: z.string()
     })
   ).optional().default([]),
   totalTime: z.number().optional().default(0)
@@ -252,4 +253,11 @@ export interface GetPublicExhibitionsResponse {
     hasNext: boolean;
     hasPrev: boolean;
   };
+}
+
+
+export interface LikeArtworkResponse {
+  liked: boolean;
+  likesCount: number;
+  artworkId: string;
 }
