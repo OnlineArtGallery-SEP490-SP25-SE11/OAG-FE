@@ -32,7 +32,8 @@
     "cancel": "Hủy",
     "delete": "Xóa",
     "processing": "Đang xử lý...",
-    "close": "Đóng"
+    "close": "Đóng",
+    "you": "Bạn"
   },
   "header": {
     "settings": "Cài đặt",
@@ -263,7 +264,24 @@
       "preview": "Xem trước"
     },
     "artwork_description": "Mô tả Tác phẩm",
-    "preview_note": "Ghi chú Xem trước"
+    "preview_note": "Ghi chú Xem trước",
+    "zoom_in": "Phóng to",
+    "zoom_out": "Thu nhỏ",
+    "swipe_to_change_tabs": "Vuốt để chuyển tab",
+    "comments": "Bình luận",
+    "info": "Thông tin",
+    "view_profile": "Xem hồ sơ",
+    "add_to_collection": "Thêm vào bộ sưu tập",
+    "buy_now": "Mua ngay",
+    "your_work": "Tác phẩm của bạn",
+    "no_comments": "Chưa có bình luận nào",
+    "add_comment": "Thêm bình luận",
+    "no_artwork_info": "Không có thông tin tác phẩm",
+    "loading": "Đang tải...",
+    "description": "Mô tả",
+    "price": "Giá",
+    "downloading": "Đang tải...",
+    "download_success": "Tải xuống thành công"
   },
   "artwork_management": {
     "title": "Quản lý tác phẩm",
@@ -536,7 +554,21 @@
       "download": "Tải ảnh",
       "downloading": "Đang tải {title}...",
       "download_success": "Đã tải {title} thành công",
-      "download_error": "Không thể tải ảnh. Vui lòng thử lại sau."
+      "download_error": "Không thể tải ảnh. Vui lòng thử lại sau.",
+      "zoom_in": "Phóng to",
+      "zoom_out": "Thu nhỏ",
+      "swipe_to_change_tabs": "Vuốt để chuyển tab",
+      "comments": "Bình luận",
+      "info": "Thông tin",
+      "view_profile": "Xem hồ sơ",
+      "add_to_collection": "Thêm vào bộ sưu tập",
+      "buy_now": "Mua ngay",
+      "your_work": "Tác phẩm của bạn",
+      "no_comments": "Chưa có bình luận nào",
+      "add_comment": "Thêm bình luận",
+      "no_artwork_info": "Không có thông tin tác phẩm",
+      "price": "Giá",
+      "loading": "Đang tải..."
     }
   },
   "artist_layout": {

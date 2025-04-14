@@ -32,7 +32,8 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "processing": "Processing...",
-    "close": "Close"
+    "close": "Close",
+    "you": "You"
   },
   "header": {
     "home": "Home",
@@ -265,7 +266,22 @@
       "preview": "Preview"
     },
     "artwork_description": "Artwork Description",
-    "preview_note": "Preview Note"
+    "preview_note": "Preview Note",
+    "zoom_in": "Zoom in",
+    "zoom_out": "Zoom out",
+    "swipe_to_change_tabs": "Swipe to change tabs",
+    "comments": "Comments",
+    "info": "Information",
+    "view_profile": "View profile",
+    "add_to_collection": "Add to collection",
+    "buy_now": "Buy now",
+    "your_work": "Your artwork",
+    "no_comments": "No comments yet",
+    "add_comment": "Add a comment",
+    "no_artwork_info": "No artwork information available",
+    "price": "Price",
+    "downloading": "Downloading...",
+    "loading": "Loading..."
   },
   "artwork_management": {
     "title": "Artwork Management",
@@ -532,7 +548,21 @@
       "download": "Download",
       "downloading": "Downloading {title}...",
       "download_success": "Downloaded {title} successfully",
-      "download_error": "Could not download image. Please try again later."
+      "download_error": "Could not download image. Please try again later.",
+      "zoom_in": "Zoom in",
+    "zoom_out": "Zoom out",
+    "swipe_to_change_tabs": "Swipe to change tabs",
+    "comments": "Comments",
+    "info": "Information",
+    "view_profile": "View profile",
+    "add_to_collection": "Add to collection",
+    "buy_now": "Buy now",
+    "your_work": "Your artwork",
+      "no_comments": "No comments yet",
+      "add_comment": "Add a comment",
+      "no_artwork_info": "No artwork information available",
+      "price": "Price",
+      "loading": "Loading..."
     }
   },
   "artist_layout": {
