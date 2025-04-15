@@ -1,8 +1,8 @@
 import { PhysicalCollider } from "./physical-collider";
 import { CurvedPhysicalCollider } from "./curved-physical-collider";
-import { ColliderConfig } from "@/types/gallery";
+import { CustomCollider } from "@/types/new-gallery";
 
-export function Collider(props: ColliderConfig) {
+export function Collider(props: CustomCollider) {
   if (props.shape === 'box') {
     return <PhysicalCollider {...props} />;
   } else if (props.shape === 'curved') {

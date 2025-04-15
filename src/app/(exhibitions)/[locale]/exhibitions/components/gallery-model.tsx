@@ -3,8 +3,8 @@ import { useGLTF } from "@react-three/drei";
 import { usePlane } from "@react-three/cannon";
 import * as THREE from "three";
 import { useMemo } from "react";
-import { ColliderConfig, Vec3 } from "@/types/gallery";
 import { Collider } from "./collider";
+import { CustomCollider, Vec3 } from "@/types/new-gallery";
 
 interface Dimensions {
   xAxis: number;
@@ -19,7 +19,7 @@ interface GalleryConfig {
   modelScale: number;
   modelPosition: Vec3;
   modelRotation: Vec3;
-  customColliders?: ColliderConfig[];
+  customColliders?: CustomCollider[];
 }
 
 interface GalleryModelProps {
@@ -48,7 +48,7 @@ export default function GalleryModel({
   }));
 
   const walls = useMemo(() => {
-    const baseWalls: ColliderConfig[] = [
+    const baseWalls: CustomCollider[] = [
       //back wall
       { shape: "box", position: [0, wallY, -halfZ], rotation: [0, 0, 0], args: [xAxis, yAxis, wallThickness] },
       //front wall

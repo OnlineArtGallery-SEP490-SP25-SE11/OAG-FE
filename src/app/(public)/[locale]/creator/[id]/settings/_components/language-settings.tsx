@@ -73,7 +73,14 @@ export function LanguageSettings({
     // Only allow removal if there's at least one language remaining
     if (updatedLanguages.length > 0) {
       setLanguages(updatedLanguages);
-      saveLanguages(updatedLanguages);
+      
+      // Filter out the content for the removed language
+      const updatedContents = exhibition.contents.filter(
+        content => content.languageCode !== code
+      );
+      
+      // Save both language options and updated contents
+      saveLanguagesAndContents(updatedLanguages, updatedContents);
     } else {
       toast({
         title: tCommon('error'),
@@ -94,6 +101,20 @@ export function LanguageSettings({
     await updateSettings({
       id: exhibition._id,
       data: { languageOptions: updatedLanguages }
+    });
+  };
+
+  // New function to save both languages and contents
+  const saveLanguagesAndContents = async (
+    updatedLanguages: Language[],
+    updatedContents: typeof exhibition.contents
+  ) => {
+    await updateSettings({
+      id: exhibition._id,
+      data: { 
+        languageOptions: updatedLanguages,
+        contents: updatedContents
+      }
     });
   };
 

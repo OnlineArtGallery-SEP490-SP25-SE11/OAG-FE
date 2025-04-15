@@ -9,7 +9,7 @@ export const getArtistArtworks = async (accessToken: string): Promise<ApiRespons
         return res.data;
     } catch (error) {
         console.error('Error getting artist artworks:', error);
-        return handleApiError<ArtworksResponse>(
+        throw handleApiError<ArtworksResponse>(
             error,
             'Failed to fetch artist artworks'
         );
@@ -31,7 +31,7 @@ export const getUserBalance = async (accessToken: string): Promise<ApiResponse<{
         return res.data;
     } catch (error) {
         console.error('Lỗi khi lấy số dư ví:', error);
-        return handleApiError<{ balance: number }>(
+        throw handleApiError<{ balance: number }>(
             error,
             'Không thể lấy thông tin số dư ví'
         );
@@ -48,7 +48,7 @@ export const purchaseArtwork = async (
         return res.data;
     } catch (error) {
         console.error('Lỗi khi mua tranh:', error);
-        return handleApiError<PurchaseArtworkResponse>(
+        throw handleApiError<PurchaseArtworkResponse>(
             error,
             'Không thể hoàn tất giao dịch mua tranh'
         );
@@ -84,7 +84,7 @@ export const checkUserPurchased = async (
         return res.data;
     } catch (error) {
         console.error('Lỗi khi kiểm tra trạng thái mua tranh:', error);
-        return handleApiError<{ hasPurchased: boolean }>(
+        throw handleApiError<{ hasPurchased: boolean }>(
             error,
             'Không thể kiểm tra trạng thái mua tranh'
         );
