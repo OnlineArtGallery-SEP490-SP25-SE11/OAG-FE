@@ -44,7 +44,8 @@
     "markAsRead": "Đánh dấu đã đọc",
     "deleteNotification": "Xóa thông báo",
     "noTitle": "Không có tiêu đề",
-    "noContent": "Không có nội dung"
+    "noContent": "Không có nội dung",
+    "loading": "Đang tải..."
   },
   "header": {
     "settings": "Cài đặt",
@@ -276,6 +277,45 @@
     },
     "artwork_description": "Mô tả Tác phẩm",
     "preview_note": "Ghi chú Xem trước",
+    "toggle_details": "Hiển thị/ẩn chi tiết",
+    "drag_to_pan": "Kéo để di chuyển",
+    "remove_from_favorites": "Xóa khỏi yêu thích",
+    "add_to_favorites": "Thêm vào yêu thích",
+    "comments_standard_view": "Chuyển sang chế độ tiêu chuẩn để xem bình luận",
+    "zoom_in": "Phóng to",
+    "zoom_out": "Thu nhỏ",
+    "reset_zoom": "Đặt lại",
+    "loading_image": "Đang tải ảnh...",
+    "download_not_available": "Tải xuống không khả dụng",
+    "please_use_standard_view": "Vui lòng sử dụng chế độ tiêu chuẩn cho thao tác này",
+    "purchase_not_available": "Mua tranh không khả dụng",
+    "collection_not_available": "Bộ sưu tập không khả dụng",
+    "swipe_to_change_tabs": "Vuốt để chuyển tab",
+    "no_description": "Không có mô tả",
+    "no_comments": "Chưa có bình luận nào",
+    "info": "Thông tin",
+    "comments": "Bình luận",
+    "report_artwork": "Báo cáo tranh",
+    "yours": "Của bạn",
+    "purchased": "Đã mua",
+    "buy": "Mua",
+    "save": "Lưu",
+    "download": "Tải xuống",
+    "description": "Mô tả",
+    "be_first_comment": "Hãy là người đầu tiên bình luận",
+    "add_comment": "Thêm bình luận",
+    "user": "Người dùng",
+    "days_ago": "{days} ngày trước",
+    "comment_example": "Tác phẩm tuyệt đẹp! Tôi thích bố cục và màu sắc.",
+    "downloading": "Đang tải xuống...",
+    "download_success": "Đã tải xuống thành công",
+    "download_error": "Lỗi tải xuống",
+    "no_artwork_info": "Không có thông tin về tác phẩm",
+    "standard_view": "Chế độ tiêu chuẩn",
+    "immersive_view": "Chế độ đắm chìm",
+    "close_details": "Đóng chi tiết",
+    "categories": "Danh mục",
+    "preview_note": "Ghi chú Xem trước",
     "zoom_in": "Phóng to",
     "zoom_out": "Thu nhỏ",
     "swipe_to_change_tabs": "Vuốt để chuyển tab",
@@ -410,7 +450,8 @@
     "artists": "Nghệ sĩ",
     "materials": "Chất liệu",
     "waysToBuy": "Cách mua",
-    "size": "Kích thước"
+    "size": "Kích thước",
+    "status": "Trạng thái"
   },
   "artworkPage": {
     "filter": {
@@ -428,7 +469,7 @@
   "exhibitions": {
     "no_search_results": "Không tìm thấy triển lãm nào cho từ khóa tìm kiếm của bạn",
     "try_different_search": "Thử tìm kiếm với từ khóa khác hoặc duyệt triển lãm theo danh mục",
-    "no_exhibitions_featured": "Hiện không có triển lãm nổi bật nào", 
+    "no_exhibitions_featured": "Hiện không có triển lãm nổi bật nào",
     "no_exhibitions_trending": "Chưa có triển lãm thịnh hành nào",
     "no_exhibitions_recent": "Chưa có triển lãm mới nào",
     "check_back_later": "Vui lòng quay lại sau để xem triển lãm mới",
@@ -585,6 +626,7 @@
       "recent": "Mới mua",
       "downloaded": "Đã tải",
       "not_downloaded": "Chưa tải"
+
     },
     "empty": {
       "title": "Chưa có tranh nào trong kho",
@@ -629,6 +671,68 @@
     "main_section": "Chính",
     "content_section": "Nội dung",
     "account_section": "Tài khoản"
+  },
+  "artcard": {
+    "sold": "Đã bán",
+    "display_only": "Chỉ trưng bày",
+    "not_for_sale": "Không bán",
+    "view_artwork_details": "Xem chi tiết tác phẩm {title}"
+  },
+  "artworks": {
+    "list_view_disabled": "Chế độ xem danh sách tạm thời bị vô hiệu hóa",
+    "end_of_list": "Đã tải tất cả {count} trong tổng số {total} tác phẩm",
+    "no_artworks_found": "Không tìm thấy tác phẩm nào",
+    "loading_more": "Đang tải thêm tác phẩm..."
+  },
+  "report": {
+    "button": "Báo cáo",
+    "buttonAriaLabel": "Nhấn để báo cáo",
+    "closeAriaLabel": "Đóng hộp thoại",
+    "cancelAriaLabel": "Hủy báo cáo",
+    "submitAriaLabel": "Gửi báo cáo",
+    "title": "Báo cáo nội dung",
+    "description": "Hãy cho chúng tôi biết lý do bạn muốn báo cáo nội dung này. Báo cáo của bạn sẽ được xử lý bởi đội ngũ kiểm duyệt của chúng tôi.",
+    "fields": {
+      "reason": "Lý do",
+      "url": "Đường dẫn",
+      "type": "Loại",
+      "description": "Mô tả",
+      "evidence": "Hình ảnh minh chứng",
+      "optional": "không bắt buộc"
+    },
+    "placeholders": {
+      "description": "Vui lòng cung cấp chi tiết về báo cáo này",
+      "url": "Đường dẫn đến nội dung liên quan",
+      "noFiles": "Chưa có tệp nào được chọn"
+    },
+    "help": {
+      "description": "Mô tả càng cụ thể càng giúp chúng tôi xử lý báo cáo nhanh hơn",
+      "evidence": "Tải lên hình ảnh để hỗ trợ báo cáo của bạn"
+    },
+    "button": {
+      "submit": "Gửi báo cáo",
+      "submitting": "Đang gửi..."
+    },
+    "toast": {
+      "success": "Gửi báo cáo thành công",
+      "error": "Không thể gửi báo cáo"
+    },
+    "reasons": {
+      "spam": "Spam",
+      "harassment": "Quấy rối",
+      "hate_speech": "Phát ngôn thù địch",
+      "violence": "Bạo lực",
+      "nudity": "Khỏa thân",
+      "copyright": "Vi phạm bản quyền",
+      "others": "Khác",
+      "inappropriate": "Nội dung không phù hợp",
+      "other": "Khác"
+    },
+    "types": {
+      "user": "Người dùng",
+      "artwork": "Tác phẩm",
+      "blog": "Bài viết"
+    }
   },
   "not_artist_display": {
     "title": "Khởi Đầu Hành Trình Nghệ Thuật",

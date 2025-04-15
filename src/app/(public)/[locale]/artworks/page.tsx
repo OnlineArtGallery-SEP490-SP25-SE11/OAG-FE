@@ -21,9 +21,15 @@ const Artworks = dynamic(
 );
 
 const ArtworksPage = async () => {
-    const initialData = (await fetchArtPiecesByRange(0, 20)) as Artwork[];
+    const response = await fetchArtPiecesByRange(0, 10);
+    const initialData = response.data.artworks;
+    const totalCount = response.data.total;
+    
     return (
-        <Artworks artworks={initialData}/>
+        <Artworks 
+            artworks={initialData} 
+            initialTotal={totalCount}
+        />
     );
 };
 export default ArtworksPage;
