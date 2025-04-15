@@ -14,7 +14,6 @@ export const AuthDialog = ({
     setIsOpen: (isOpen: boolean) => void
 }) => {
     const [isLoading, setIsLoading] = useState(false);
-    const { user, status } = useAuthClient();
 
     const onGoogleLogin = async () => {
         setIsLoading(true);
@@ -27,7 +26,7 @@ export const AuthDialog = ({
         }
     };
 
-    if (!user) return (
+    return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogContent className="sm:max-w-[425px] bg-white rounded-xl shadow-2xl">
                 <motion.div
@@ -76,5 +75,4 @@ export const AuthDialog = ({
         </Dialog>
     );
     
-    return null; // Trả về null nếu user đã đăng nhập
 };

@@ -1,12 +1,12 @@
-'use client';
 
+import { getExhibitionById } from '@/service/exhibition';
 import PublishContent from './_components/publish-content';
-import { useExhibition } from '../../context/exhibition-provider';
 
-export default function PublishPage() {
-  const { exhibition } = useExhibition();
-  
+export default async function PublishPage({ params }: { params: { id: string } }) {
+  const { id } = params;
+  const res = await getExhibitionById(id);
+  const exhibition = res.data?.exhibition;
   return (
-    <PublishContent exhibition={exhibition} />
+    <PublishContent exhibition={exhibition!} />
   );
 }

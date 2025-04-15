@@ -33,6 +33,7 @@
     "delete": "Xóa",
     "processing": "Đang xử lý...",
     "close": "Đóng",
+    "you": "Bạn",
     "notifications": "Thông báo",
     "markAllAsRead": "Đánh dấu tất cả là đã đọc",
     "noNotifications": "Không có thông báo",
@@ -274,7 +275,24 @@
       "preview": "Xem trước"
     },
     "artwork_description": "Mô tả Tác phẩm",
-    "preview_note": "Ghi chú Xem trước"
+    "preview_note": "Ghi chú Xem trước",
+    "zoom_in": "Phóng to",
+    "zoom_out": "Thu nhỏ",
+    "swipe_to_change_tabs": "Vuốt để chuyển tab",
+    "comments": "Bình luận",
+    "info": "Thông tin",
+    "view_profile": "Xem hồ sơ",
+    "add_to_collection": "Thêm vào bộ sưu tập",
+    "buy_now": "Mua ngay",
+    "your_work": "Tác phẩm của bạn",
+    "no_comments": "Chưa có bình luận nào",
+    "add_comment": "Thêm bình luận",
+    "no_artwork_info": "Không có thông tin tác phẩm",
+    "loading": "Đang tải...",
+    "description": "Mô tả",
+    "price": "Giá",
+    "downloading": "Đang tải...",
+    "download_success": "Tải xuống thành công"
   },
   "artwork_management": {
     "title": "Quản lý tác phẩm",
@@ -325,7 +343,7 @@
       "following": "Đang theo dõi",
       "artist_badge": "Nghệ sĩ",
       "premium_badge": "Premium",
-      "become_artist":"Trở thành nghệ sĩ",
+      "become_artist": "Trở thành nghệ sĩ",
       "email": "Email"
     },
     "view": {
@@ -374,8 +392,11 @@
       "validation": {
         "name_min_length": "Tên phải có ít nhất 2 ký tự",
         "name_max_length": "Tên không được vượt quá 50 ký tự",
+        "name_no_special_chars": "Tên không được chứa ký tự đặc biệt",
+        "address_max_length": "Địa chỉ không được vượt quá 200 ký tự",
         "bio_max_length": "Tiểu sử không được vượt quá 1000 ký tự",
-        "max_genres": "Không thể chọn quá 10 phong cách nghệ thuật"
+        "max_genres": "Không thể chọn quá 10 phong cách nghệ thuật",
+        "genre_max_length": "Mỗi phong cách nghệ thuật không được vượt quá 30 ký tự"
       }
     }
   },
@@ -405,6 +426,26 @@
     }
   },
   "exhibitions": {
+    "no_search_results": "Không tìm thấy triển lãm nào cho từ khóa tìm kiếm của bạn",
+    "try_different_search": "Thử tìm kiếm với từ khóa khác hoặc duyệt triển lãm theo danh mục",
+    "no_exhibitions_featured": "Hiện không có triển lãm nổi bật nào", 
+    "no_exhibitions_trending": "Chưa có triển lãm thịnh hành nào",
+    "no_exhibitions_recent": "Chưa có triển lãm mới nào",
+    "check_back_later": "Vui lòng quay lại sau để xem triển lãm mới",
+    "clear_search": "Xóa tìm kiếm",
+    "discover_title": "Khám Phá Phòng Trưng Bày Ảo Tuyệt Vời",
+    "discover_description": "Khám phá các triển lãm được tuyển chọn từ các nghệ sĩ trên toàn thế giới. Trải nghiệm nghệ thuật trong không gian ảo sống động.",
+    "search_placeholder": "Tìm kiếm triển lãm, nghệ sĩ hoặc phong cách...",
+    "search": "Tìm kiếm",
+    "tabs": {
+      "featured": "Nổi bật",
+      "trending": "Xu hướng",
+      "recent": "Mới nhất"
+    },
+    "featured": "Nổi bật",
+    "error_loading": "Đã xảy ra lỗi khi tải triển lãm",
+    "try_again": "Thử lại",
+    "enter_exhibition": "Xem triễn lãm",
     "my_exhibitions": "Phòng trưng bày của tôi",
     "create_exhibition": "Tạo phòng trưng bày",
     "no_exhibitions_found": "Không tìm thấy phòng trưng bày nào",
@@ -523,7 +564,13 @@
       "UNPUBLISHED": "Chưa công khai",
       "PENDING": "Đang chờ",
       "REJECTED": "Bị từ chối"
-    }
+    },
+    "purchase_ticket": "Mua vé",
+    "get_ticket": "Nhận vé miễn phí",
+    "checking_ticket": "Đang kiểm tra trạng thái vé...",
+    "already_purchased": "Đã mua vé",
+    "ticket_purchased_success": "Mua vé thành công",
+    "ticket_purchase_failed": "Mua vé thất bại"
   },
   "wallet": {
     "current_balance": "Số dư hiện tại",
@@ -538,7 +585,6 @@
       "recent": "Mới mua",
       "downloaded": "Đã tải",
       "not_downloaded": "Chưa tải"
-
     },
     "empty": {
       "title": "Chưa có tranh nào trong kho",
@@ -554,7 +600,21 @@
       "download": "Tải ảnh",
       "downloading": "Đang tải {title}...",
       "download_success": "Đã tải {title} thành công",
-      "download_error": "Không thể tải ảnh. Vui lòng thử lại sau."
+      "download_error": "Không thể tải ảnh. Vui lòng thử lại sau.",
+      "zoom_in": "Phóng to",
+      "zoom_out": "Thu nhỏ",
+      "swipe_to_change_tabs": "Vuốt để chuyển tab",
+      "comments": "Bình luận",
+      "info": "Thông tin",
+      "view_profile": "Xem hồ sơ",
+      "add_to_collection": "Thêm vào bộ sưu tập",
+      "buy_now": "Mua ngay",
+      "your_work": "Tác phẩm của bạn",
+      "no_comments": "Chưa có bình luận nào",
+      "add_comment": "Thêm bình luận",
+      "no_artwork_info": "Không có thông tin tác phẩm",
+      "price": "Giá",
+      "loading": "Đang tải..."
     }
   },
   "artist_layout": {

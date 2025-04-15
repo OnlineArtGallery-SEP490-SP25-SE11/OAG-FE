@@ -417,6 +417,7 @@ export default function CozyGallery() {
                         <ArtworkMesh
                             key={galleryArtwork.id}
                             galleryArtwork={galleryArtwork}
+                            session={null}
                         />
                     ))}
 
@@ -425,6 +426,7 @@ export default function CozyGallery() {
                         <ArtworkMesh
                             key={galleryArtwork.id}
                             galleryArtwork={galleryArtwork}
+                            session={null}
                         />
                     ))}
 
@@ -433,6 +435,7 @@ export default function CozyGallery() {
                         <ArtworkMesh
                             key={galleryArtwork.id}
                             galleryArtwork={galleryArtwork}
+                            session={null}
                         />
                     ))}
 
@@ -441,6 +444,7 @@ export default function CozyGallery() {
                         <ArtworkMesh
                             key={galleryArtwork.id}
                             galleryArtwork={galleryArtwork}
+                            session={null}
                         />
                     ))}
            

@@ -453,7 +453,7 @@ export default function Collection() {
 									No artworks yet
 								</p>
 								<p className='text-muted-foreground text-center max-w-md mb-4'>
-									This collection doesn't have any artworks
+									This collection do not have any artworks
 									yet. Add some to get started!
 								</p>
 								<Button>Add Artworks</Button>
