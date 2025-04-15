@@ -40,6 +40,7 @@ import {
   DropdownMenuItem,
 } from "@radix-ui/react-dropdown-menu";
 import FollowButton from "@/components/follow-button";
+import BlogCommentDrawer from "./comment-drawer";
 
 interface BlogCardProps {
   id: string;
@@ -97,7 +98,6 @@ export function BlogCard({
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState("");
   const [loading, setLoading] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [replyTo, setReplyTo] = useState("");
   const [replyContent, setReplyContent] = useState("");
@@ -117,132 +117,129 @@ export function BlogCard({
     fetchCurrentUser();
   }, []);
 
-  //get commet byBlogID
-  const fetchComments = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/comments/blog/${id}`
-      );
-      setComments(response.data);
-    } catch (error) {
-      console.error("Error fetching comments:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const fetchComments = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await axios.get(
+  //       `${process.env.NEXT_PUBLIC_API_URL}/comments/blog/${id}`
+  //     );
+  //     setComments(response.data);
+  //   } catch (error) {
+  //     console.error("Error fetching comments:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  //Add new comment
-  const handleSubmitComment = async () => {
-    const user = await getCurrentUser();
-    if (!newComment.trim() || !user) return;
-    try {
-      const newCommentData = await createComment({
-        accessToken: user.accessToken,
-        blogId: id,
-        content: newComment,
-      });
-      if (newCommentData) {
-        setComments((prev) => [newCommentData, ...prev]);
-        setNewComment("");
-      }
-    } catch (error) {
-      console.error("Error adding comment:", error);
-    }
-  };
+  // const handleSubmitComment = async () => {
+  //   const user = await getCurrentUser();
+  //   if (!newComment.trim() || !user) return;
+  //   try {
+  //     const newCommentData = await createComment({
+  //       accessToken: user.accessToken,
+  //       blogId: id,
+  //       content: newComment,
+  //     });
+  //     if (newCommentData) {
+  //       setComments((prev) => [newCommentData, ...prev]);
+  //       setNewComment("");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error adding comment:", error);
+  //   }
+  // };
 
-  const handleUpdateComment = async (commentId: string) => {
-    try {
-      const user = await getCurrentUser();
-      if (!user?.accessToken || !editContent.trim()) return;
+  // const handleUpdateComment = async (commentId: string) => {
+  //   try {
+  //     const user = await getCurrentUser();
+  //     if (!user?.accessToken || !editContent.trim()) return;
 
-      const commentToUpdate = comments.find(
-        (comment) => comment._id === commentId
-      );
-      if (!commentToUpdate) return;
+  //     const commentToUpdate = comments.find(
+  //       (comment) => comment._id === commentId
+  //     );
+  //     if (!commentToUpdate) return;
 
-      const updatedComment = await updateComment({
-        accessToken: user.accessToken,
-        commentId,
-        content: editContent,
-        replies: commentToUpdate.replies || [], // Giữ lại các replies cũ
-      });
+  //     const updatedComment = await updateComment({
+  //       accessToken: user.accessToken,
+  //       commentId,
+  //       content: editContent,
+  //       replies: commentToUpdate.replies || [], // Giữ lại các replies cũ
+  //     });
 
-      if (updatedComment) {
-        setComments((prev) =>
-          prev.map((comment) =>
-            comment._id === commentId
-              ? { ...comment, content: editContent } // Chỉ cập nhật content, giữ nguyên replies
-              : comment
-          )
-        );
-        setEditingCommentId(null);
-        setEditContent("");
-      }
-    } catch (error) {
-      console.error("Error updating comment:", error);
-    }
-  };
+  //     if (updatedComment) {
+  //       setComments((prev) =>
+  //         prev.map((comment) =>
+  //           comment._id === commentId
+  //             ? { ...comment, content: editContent } // Chỉ cập nhật content, giữ nguyên replies
+  //             : comment
+  //         )
+  //       );
+  //       setEditingCommentId(null);
+  //       setEditContent("");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error updating comment:", error);
+  //   }
+  // };
 
-  //DELETE comment
-  const handleDeleteComment = async (commentId: string) => {
-    try {
-      const user = await getCurrentUser();
-      if (!user?.accessToken) {
-        console.error("User not authenticated.");
-        return;
-      }
-      const isDeleted = await deleteComment({
-        accessToken: user.accessToken,
-        commentId,
-      });
-      if (!isDeleted) {
-        setComments((prev) =>
-          prev.filter((comment) => comment._id !== commentId)
-        );
-        console.log("Comment deleted successfully!");
-      } else {
-        console.error("Failed to delete comment.");
-      }
-    } catch (error) {
-      console.error("Error deleting comment:", error);
-    }
-  };
+  // const handleDeleteComment = async (commentId: string) => {
+  //   try {
+  //     const user = await getCurrentUser();
+  //     if (!user?.accessToken) {
+  //       console.error("User not authenticated.");
+  //       return;
+  //     }
+  //     const isDeleted = await deleteComment({
+  //       accessToken: user.accessToken,
+  //       commentId,
+  //     });
+  //     if (!isDeleted) {
+  //       setComments((prev) =>
+  //         prev.filter((comment) => comment._id !== commentId)
+  //       );
+  //       console.log("Comment deleted successfully!");
+  //     } else {
+  //       console.error("Failed to delete comment.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error deleting comment:", error);
+  //   }
+  // };
 
-  const handleSubmitReply = async (parentId: string, replyContent: string) => {
-    try {
-      console.log("Submitting reply...");
-      setLoading(true);
+  // const handleSubmitReply = async (parentId: string, replyContent: string) => {
+  //   try {
+  //     console.log("Submitting reply...");
+  //     setLoading(true);
 
-      const user = await getCurrentUser();
-      console.log("Current user:", user);
+  //     const user = await getCurrentUser();
+  //     console.log("Current user:", user);
 
-      if (!user) throw new Error("User not authenticated.");
+  //     if (!user) throw new Error("User not authenticated.");
 
-      console.log("Sending request to create comment with parentId...");
-      const newReply = await createComment({
-        accessToken: user.accessToken,
-        blogId: id,
-        content: replyContent,
-        parentId: parentId, // Gửi parentId để lưu vào comment con
-      });
+  //     console.log("Sending request to create comment with parentId...");
+  //     const newReply = await createComment({
+  //       accessToken: user.accessToken,
+  //       blogId: id,
+  //       content: replyContent,
+  //       parentId: parentId, // Gửi parentId để lưu vào comment con
+  //     });
 
-      console.log("New reply created:", newReply);
+  //     console.log("New reply created:", newReply);
 
-      if (newReply) {
-        console.log("Updating state with newReply...");
-        setComments((prevComments) => [...prevComments, newReply]);
+  //     if (newReply) {
+  //       console.log("Updating state with newReply...");
+  //       setComments((prevComments) => [...prevComments, newReply]);
 
-        setReplyContent(""); // Clear input
-        console.log("Reply content cleared.");
-      }
-    } catch (error) {
-      console.error("Failed to add reply:", error);
-    } finally {
-      setLoading(false);
-      console.log("Loading state set to false.");
-    }
-  };
+  //       setReplyContent(""); // Clear input
+  //       console.log("Reply content cleared.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to add reply:", error);
+  //   } finally {
+  //     setLoading(false);
+  //     console.log("Loading state set to false.");
+  //   }
+  // };
 
   return (
     <div className="w-full max-w-[700px] rounded-xl overflow-hidden border bg-white dark:bg-gray-800 transition-all duration-300 hover:shadow-xl flex flex-col">
@@ -267,9 +264,12 @@ export function BlogCard({
           {/* Combined UI with both report button and follow button */}
           <div className="flex items-center">
             {currentUser && currentUser.id !== author.id && (
-              <FollowButton targetUserId={author.id} initialIsFollowing={false} />
+              <FollowButton
+                targetUserId={author.id}
+                initialIsFollowing={false}
+              />
             )}
-            
+
             {isSignedIn && (
               <ReportButton
                 refId={id}
@@ -310,7 +310,12 @@ export function BlogCard({
 
       <div className="flex items-center justify-between px-4 py-2">
         <div className="flex items-center space-x-2">
-          <Drawer onOpenChange={(open) => open && fetchComments()}>
+          <BlogCommentDrawer
+            blogId={id}
+            authorId={author.id}
+            isSignedIn={isSignedIn}
+          />
+          {/* <Drawer onOpenChange={(open) => open && fetchComments()}>
             <DrawerTrigger asChild>
               <Button variant="ghost" size="sm">
                 <MessagesSquare className="w-4 h-4 mr-2" />
@@ -380,7 +385,8 @@ export function BlogCard({
                                     </Button>
                                   </DropdownMenuTrigger>
                                   <DropdownMenuContent align="end">
-                                    {comment.author?._id === currentUser?._id && (
+                                    {comment.author?._id ===
+                                      currentUser?._id && (
                                       <DropdownMenuItem
                                         onClick={() => {
                                           setEditingCommentId(comment._id);
@@ -514,7 +520,7 @@ export function BlogCard({
                 </DrawerFooter>
               </div>
             </DrawerContent>
-          </Drawer>
+          </Drawer> */}
 
           {isSignedIn ? (
             <ToggleHeartButton
