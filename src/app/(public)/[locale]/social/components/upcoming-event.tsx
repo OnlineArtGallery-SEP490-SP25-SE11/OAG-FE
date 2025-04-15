@@ -46,15 +46,15 @@ export function UpcomingEvents() {
     
     try {
       await eventService.participate(eventId);
-      alert("Đăng ký thành công!");
+      alert("Registration successful!");
     } catch (error) {
-      console.error("Không thể đăng ký sự kiện", error);
-      alert("Đăng ký không thành công!");
+      console.error("Unable to register for event:", error);
+      alert("Registration failed!");
     }
   };
 
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString('vi-VN', {
+    return date.toLocaleDateString('en-US', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
@@ -79,10 +79,10 @@ export function UpcomingEvents() {
         </CardHeader>
         <CardContent className='space-y-6'>
           {isLoading ? (
-            <p className='text-center text-muted-foreground py-6'>Đang tải sự kiện...</p>
+            <p className='text-center text-muted-foreground py-6'>Loading events...</p>
           ) : error || !events?.length ? (
             <p className='text-center text-muted-foreground py-6'>
-              {error ? "Đã xảy ra lỗi khi tải sự kiện" : "Không có sự kiện sắp tới"}
+              {error ? "Error loading events" : "No upcoming events"}
             </p>
           ) : (
             events.map((event: EventWithDetails) => {
@@ -132,14 +132,14 @@ export function UpcomingEvents() {
                         <Info className='h-4 w-4 mt-0.5 flex-shrink-0' />
                         <div>
                           <p className={isExpanded ? '' : 'line-clamp-2'}>
-                            {event.description || "Không có mô tả"}
+                            {event.description || "No description"}
                           </p>
                           {event.description && event.description.length > 100 && (
                             <button 
                               onClick={() => toggleDescription(eventId)}
                               className='text-xs text-blue-500 mt-1 hover:underline'
                             >
-                              {isExpanded ? 'Thu gọn' : 'Xem thêm'}
+                              {isExpanded ? 'Collapse' : 'See more'}
                             </button>
                           )}
                         </div>
@@ -178,7 +178,7 @@ export function UpcomingEvents() {
                     {event.attendees !== undefined && (
                       <div className='flex items-center text-sm text-muted-foreground'>
                         <Activity className='mr-2 h-4 w-4 flex-shrink-0' />
-                        <span>{event.attendees} người tham gia</span>
+                        <span>{event.attendees} participants</span>
                       </div>
                     )}
 
@@ -190,8 +190,8 @@ export function UpcomingEvents() {
                       onClick={() => eventId && handleParticipate(eventId)}
                       disabled={event.status === EventStatus.COMPLETED}
                     >
-                      {event.status === EventStatus.COMPLETED ? 'Đã kết thúc' : 
-                       event.status === EventStatus.ONGOING ? 'Tham gia ngay' : 'Đăng ký'}
+                      {event.status === EventStatus.COMPLETED ? 'Completed' : 
+                       event.status === EventStatus.ONGOING ? 'Join now' : 'Register'}
                     </Button>
                   </div>
                 </div>
