@@ -1,21 +1,27 @@
-
+// src/app/(exhibitions)/[locale]/exhibitions/[linkname]/components/scene.tsx
 import { Physics } from '@react-three/cannon';
-import { KeyboardControls, PerspectiveCamera, Preload } from '@react-three/drei';
+import { KeyboardControls, PerspectiveCamera, Preload, PointerLockControls, PointerLockControlsProps } from '@react-three/drei';
 import { GALLERY_CONFIG } from '@/utils/gallery-config';
 import Player from './player';
-import { PointerLockControls, PointerLockControlsProps } from '@react-three/drei';
 import { Crosshair } from './crosshair';
 import { useThree } from '@react-three/fiber';
 import Gallery from './gallery';
-import { Exhibition } from '@/types/exhibition';
+import { Exhibition as ExhibitionType } from '@/types/exhibition'; // Renamed import
 import { useGalleryConfig } from '@/hooks/use-gallery-config';
 import { KEYBOARD_CONTROLS, POINTER_LOCK_CONFIG } from '@/utils/constants';
+import { Session } from 'next-auth'; // <-- Import Session type
 
-export default function Scene({ exhibition }: { exhibition: Exhibition }) {
+// --- Update props interface ---
+interface SceneProps {
+    exhibition: ExhibitionType;
+    session: Session | null; // <-- Accept session
+}
+// --- End update props ---
+
+export default function Scene({ exhibition, session }: SceneProps) { // <-- Use updated props
   const { set } = useThree();
   const galleryConfig = useGalleryConfig(exhibition);
 
-  // Fix: Update the onUpdate function to use the correct type
   const pointerLockProps: PointerLockControlsProps = {
     ...POINTER_LOCK_CONFIG,
     onUpdate: (controls) => {
@@ -25,29 +31,19 @@ export default function Scene({ exhibition }: { exhibition: Exhibition }) {
 
   return (
     <KeyboardControls map={KEYBOARD_CONTROLS}>
-      <PerspectiveCamera
-        makeDefault
-        position={GALLERY_CONFIG.CAMERA.INITIAL_POSITION}
-      />
-      <ambientLight intensity={2} color={'ffffff'} />
-      <Physics
-        gravity={GALLERY_CONFIG.PHYSICS.GRAVITY}
-        defaultContactMaterial={GALLERY_CONFIG.PHYSICS.CONTACT_MATERIAL}
-      >
+      <PerspectiveCamera makeDefault position={GALLERY_CONFIG.CAMERA.INITIAL_POSITION} />
+      <ambientLight intensity={2} color={'#ffffff'} />
+      <Physics gravity={GALLERY_CONFIG.PHYSICS.GRAVITY} defaultContactMaterial={GALLERY_CONFIG.PHYSICS.CONTACT_MATERIAL}>
         <Player />
-        <Gallery
-          config={galleryConfig}
-          visible={false}
-        />
+        {/* Pass session down to Gallery */}
+        <Gallery config={galleryConfig} visible={false} session={session} />
       </Physics>
-
       <Preload all />
       <PointerLockControls {...pointerLockProps} />
       <Crosshair />
     </KeyboardControls>
   );
 }
-
 // import { Physics } from '@react-three/cannon';
 // import { KeyboardControls, PerspectiveCamera, Preload } from '@react-three/drei';
 // import { GALLERY_CONFIG } from '@/utils/gallery-config';

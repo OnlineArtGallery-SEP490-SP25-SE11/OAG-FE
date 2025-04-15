@@ -57,17 +57,17 @@ export async function registerUser(
 	return res.data;
 }
 
-type CheckIsArtistPreniunResponse = {
-	result: boolean;
+type CheckIsArtistPremiumResponse = {
+	isPremium: boolean;
 }
 
-export async function checkIsArtistPremium(token: string): Promise<ApiResponse<CheckIsArtistPreniunResponse>> {
+export async function checkIsArtistPremium(token: string): Promise<ApiResponse<CheckIsArtistPremiumResponse>> {
 	try {
 		console.log('Checking if artist is premium with token:', token);
 		// const res = await createApi(token).get('/artist/premium-check');
 		return {
 			data: {
-				result: true
+				isPremium: true
 			},
 			details: null,
 			message: 'Success',
@@ -76,7 +76,7 @@ export async function checkIsArtistPremium(token: string): Promise<ApiResponse<C
 		};
 	} catch (error) {
 		console.error('Error checking if artist is premium:', error);
-		return handleApiError<CheckIsArtistPreniunResponse>(
+		throw handleApiError<CheckIsArtistPremiumResponse>(
 			error,
 			'Failed to check if artist is premium'
 		);
@@ -128,7 +128,12 @@ export async function getFollowersCount(axiosInstance: AxiosInstance): Promise<n
 export async function getFollowingList(axiosInstance: AxiosInstance): Promise<User[]> {
     try {
         const res = await axiosInstance.get('/user/following');
-        return res.data?.following?.map((user: any) => ({
+        return res.data?.following?.map((user: {
+			_id: string;
+			name: string;
+			email: string;
+			image: string;
+		}) => ({
             _id: user._id || '',
             name: user.name || 'Unknown',
             email: user.email || 'No email',
@@ -143,7 +148,12 @@ export async function getFollowingList(axiosInstance: AxiosInstance): Promise<Us
 export async function getFollowersList(axiosInstance: AxiosInstance): Promise<User[]> {
     try {
         const res = await axiosInstance.get('/user/followers');
-        return res.data?.followers?.map((user: any) => ({
+        return res.data?.followers?.map((user: {
+			_id: string;
+			name: string;
+			email: string;
+			image: string;
+		}) => ({
             _id: user._id || '',
             name: user.name || 'Unknown',
             email: user.email || 'No email',
@@ -166,3 +176,4 @@ export async function isFollowing(token: string, targetUserId: string): Promise<
 		throw error;
 	}
 }
+

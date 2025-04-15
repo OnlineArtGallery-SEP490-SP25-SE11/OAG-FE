@@ -141,3 +141,4 @@ export type ControlsType = Object3D & {
 	lock: () => void;
 	unlock: () => void;
   };
+  
