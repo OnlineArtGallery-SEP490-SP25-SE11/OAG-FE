@@ -32,7 +32,39 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "processing": "Processing...",
-    "close": "Close"
+    "close": "Close",
+    "you": "You",
+    "notifications": "Notifications",
+    "markAllAsRead": "Mark all as read",
+    "noNotifications": "No notifications",
+    "notificationsWillAppearHere": "Notifications will appear here",
+    "loadMore": "Load more",
+    "noMoreNotifications": "No more notifications",
+    "new": "New",
+    "markAsRead": "Mark as read",
+    "deleteNotification": "Delete notification",
+    "noTitle": "No title",
+    "noContent": "No content",
+    "loading": "Loading..."
+  },
+  "not_artist_display": {
+    "title": "Unlock Your Artist Journey",
+    "description": "Transform your profile into an artist showcase and join our vibrant creative community.",
+    "features": {
+      "curate": {
+        "title": "Curate Exhibitions",
+        "description": "Design immersive digital galleries to showcase your artwork in innovative ways."
+      },
+      "visibility": {
+        "title": "Gain Visibility",
+        "description": "Showcase your portfolio to art enthusiasts, collectors, and curators worldwide."
+      },
+      "community": {
+        "title": "Build Community",
+        "description": "Connect with fellow artists, collaborate on projects, and share inspiration."
+      }
+    },
+    "become_artist": "Become an Artist"
   },
   "header": {
     "home": "Home",
@@ -265,7 +297,61 @@
       "preview": "Preview"
     },
     "artwork_description": "Artwork Description",
-    "preview_note": "Preview Note"
+    "preview_note": "Preview Note",
+    "zoom_in": "Zoom in",
+    "zoom_out": "Zoom out",
+    "swipe_to_change_tabs": "Swipe to change tabs",
+    "comments": "Comments",
+    "info": "Information",
+    "view_profile": "View profile",
+    "add_to_collection": "Add to collection",
+    "buy_now": "Buy now",
+    "your_work": "Your artwork",
+    "no_comments": "No comments yet",
+    "add_comment": "Add a comment",
+    "no_artwork_info": "No artwork information available",
+    "price": "Price",
+    "downloading": "Downloading...",
+    "loading": "Loading...",
+    "preview_note": "Preview Note",
+    "toggle_details": "Toggle details",
+    "drag_to_pan": "Drag to pan",
+    "remove_from_favorites": "Remove from favorites",
+    "add_to_favorites": "Add to favorites",
+    "comments_standard_view": "Switch to standard view for comments",
+    "zoom_in": "Zoom in",
+    "zoom_out": "Zoom out",
+    "reset_zoom": "Reset zoom",
+    "loading_image": "Loading image...",
+    "download_not_available": "Download not available",
+    "please_use_standard_view": "Please use standard view for this action",
+    "purchase_not_available": "Purchase not available",
+    "collection_not_available": "Collection not available",
+    "swipe_to_change_tabs": "Swipe to change tabs",
+    "no_description": "No description provided",
+    "no_comments": "No comments yet",
+    "info": "Info",
+    "comments": "Comments",
+    "report_artwork": "Report artwork",
+    "yours": "Yours",
+    "purchased": "Purchased",
+    "buy": "Buy",
+    "save": "Save",
+    "download": "Download",
+    "description": "Description",
+    "be_first_comment": "Be the first to comment",
+    "add_comment": "Add a comment",
+    "user": "User",
+    "days_ago": "{days} days ago",
+    "comment_example": "Great artwork! I love the composition and colors.",
+    "downloading": "Downloading...",
+    "download_success": "Downloaded successfully",
+    "download_error": "Download error",
+    "no_artwork_info": "No artwork information available",
+    "standard_view": "Standard view",
+    "immersive_view": "Immersive view",
+    "close_details": "Close details",
+    "categories": "Categories"
   },
   "artwork_management": {
     "title": "Artwork Management",
@@ -316,7 +402,8 @@
       "following": "Following",
       "artist_badge": "Artist",
       "premium_badge": "Premium",
-      "become_artist": "Become Artist"
+      "become_artist": "Become Artist",
+      "email": "Email"
     },
     "view": {
       "edit_profile": "Edit Profile",
@@ -324,7 +411,15 @@
       "collections": "Collections",
       "professional_artist": "Professional Artist",
       "view_profile": "View Profile",
-      "collection_title": "Collection {number}"
+      "collection_title": "Collection {number}",
+      "about": "About",
+      "biography": "Biography",
+      "contact_info": "Contact Information",
+      "joined_date": "Joined Date",
+      "no_address": "No address provided",
+      "default_bio": "is a talented artist with a passion for art. Add your biography in the edit profile section.",
+      "no_followers": "No followers yet",
+      "no_following": "You are not following anyone yet"
     },
     "edit": {
       "title": "Edit Profile",
@@ -352,6 +447,15 @@
         "auth_error": "Please sign in to update your profile",
         "update_success": "Profile updated successfully",
         "update_error": "Failed to update profile"
+      },
+      "validation": {
+        "name_min_length": "Name must be at least 2 characters",
+        "name_max_length": "Name must not exceed 50 characters",
+        "name_no_special_chars": "Name must not contain special characters",
+        "address_max_length": "Address must not exceed 200 characters",
+        "bio_max_length": "Biography must not exceed 1000 characters",
+        "max_genres": "Cannot select more than 10 art styles",
+        "genre_max_length": "Each art style must not exceed 30 characters"
       }
     }
   },
@@ -365,9 +469,10 @@
     "artists": "Artists",
     "materials": "Materials",
     "waysToBuy": "Ways to Buy",
-    "size": "Size"
+    "size": "Size",
+    "status": "Status"
   },
-  "artworkPage":{
+  "artworkPage": {
     "filter": {
       "priceRange": "Price Range",
       "categories": "Categories",
@@ -381,6 +486,26 @@
     }
   },
   "exhibitions": {
+    "no_search_results": "No exhibitions found for your search",
+    "try_different_search": "Try different keywords or browse exhibitions by category",
+    "no_exhibitions_featured": "No featured exhibitions available",
+    "no_exhibitions_trending": "No trending exhibitions yet",
+    "no_exhibitions_recent": "No recent exhibitions to show",
+    "check_back_later": "Please check back later for new exhibitions",
+    "clear_search": "Clear search",
+    "discover_title": "Discover Amazing Virtual Galleries",
+    "discover_description": "Explore curated exhibitions from artists around the world. Experience art in immersive virtual spaces.",
+    "search_placeholder": "Search exhibitions, artists, or styles...",
+    "search": "Search",
+    "tabs": {
+      "featured": "Featured",
+      "trending": "Trending",
+      "recent": "Recent"
+    },
+    "featured": "Featured",
+    "error_loading": "There was an error loading exhibitions",
+    "try_again": "Try Again",
+    "enter_exhibition": "Enter Exhibition",
     "my_exhibitions": "My Exhibitions",
     "create_exhibition": "Create Exhibition",
     "no_exhibitions_found": "No exhibitions found",
@@ -443,6 +568,8 @@
     "discovery_update_failed": "Failed to update discovery settings",
     "link_name_updated": "Link name updated successfully",
     "link_name_update_failed": "Failed to update link name",
+    "exhibition_pending": "Exhibition is pending approval",
+    "exhibition_pending_failed": "Failed to request publication",
     "exhibition_published": "Exhibition published successfully",
     "publish_failed": "Failed to publish exhibition",
     "exhibition_unpublished": "Exhibition unpublished successfully",
@@ -492,7 +619,20 @@
     "saving": "Saving...",
     "publish_exhibition": "Publish Exhibition",
     "unpublish": "Unpublish",
-    "unpublishing": "Unpublishing..."
+    "unpublishing": "Unpublishing...",
+    "status": {
+      "PUBLISHED": "Published",
+      "DRAFT": "Draft",
+      "UNPUBLISHED": "Unpublished",
+      "PENDING": "Pending",
+      "REJECTED": "Rejected"
+    },
+    "purchase_ticket": "Purchase Ticket",
+    "get_ticket": "Get Free Ticket",
+    "checking_ticket": "Checking ticket status...",
+    "already_purchased": "Already Purchased",
+    "ticket_purchased_success": "Ticket purchased successfully",
+    "ticket_purchase_failed": "Failed to purchase ticket"
   },
   "wallet": {
     "current_balance": "Current Balance",
@@ -523,7 +663,21 @@
       "download": "Download",
       "downloading": "Downloading {title}...",
       "download_success": "Downloaded {title} successfully",
-      "download_error": "Could not download image. Please try again later."
+      "download_error": "Could not download image. Please try again later.",
+      "zoom_in": "Zoom in",
+    "zoom_out": "Zoom out",
+    "swipe_to_change_tabs": "Swipe to change tabs",
+    "comments": "Comments",
+    "info": "Information",
+    "view_profile": "View profile",
+    "add_to_collection": "Add to collection",
+    "buy_now": "Buy now",
+    "your_work": "Your artwork",
+      "no_comments": "No comments yet",
+      "add_comment": "Add a comment",
+      "no_artwork_info": "No artwork information available",
+      "price": "Price",
+      "loading": "Loading..."
     }
   },
   "artist_layout": {
@@ -538,5 +692,67 @@
     "main_section": "Main",
     "content_section": "Content",
     "account_section": "Account"
+  },
+  "artcard": {
+    "sold": "Sold",
+    "display_only": "Display Only",
+    "not_for_sale": "Not For Sale",
+    "view_artwork_details": "View {title} artwork details"
+  },
+  "artworks": {
+    "list_view_disabled": "List view temporarily disabled",
+    "end_of_list": "All {count} of {total} artworks loaded",
+    "no_artworks_found": "No artworks found",
+    "loading_more": "Loading more artworks..."
+  },
+  "report": {
+    "button": "Report",
+    "buttonAriaLabel": "Click to report",
+    "closeAriaLabel": "Close dialog",
+    "cancelAriaLabel": "Cancel report",
+    "submitAriaLabel": "Submit report",
+    "title": "Report Content",
+    "description": "Please let us know why you're reporting this content. Your report will be reviewed by our moderation team.",
+    "fields": {
+      "reason": "Reason",
+      "url": "URL",
+      "type": "Type",
+      "description": "Description",
+      "evidence": "Evidence Images",
+      "optional": "optional"
+    },
+    "placeholders": {
+      "description": "Please provide details about this report",
+      "url": "Link to related content",
+      "noFiles": "No files selected"
+    },
+    "help": {
+      "description": "More specific descriptions help us process reports faster",
+      "evidence": "Upload images to support your report"
+    },
+    "button": {
+      "submit": "Submit Report",
+      "submitting": "Submitting..."
+    },
+    "toast": {
+      "success": "Report submitted successfully",
+      "error": "Failed to submit report"
+    },
+    "reasons": {
+      "spam": "Spam",
+      "harassment": "Harassment",
+      "hate_speech": "Hate Speech",
+      "violence": "Violence",
+      "nudity": "Nudity",
+      "copyright": "Copyright Violation",
+      "others": "Other",
+      "inappropriate": "Inappropriate Content",
+      "other": "Other"
+    },
+    "types": {
+      "user": "User",
+      "artwork": "Artwork",
+      "blog": "Blog"
+    }
   }
 }

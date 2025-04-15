@@ -6,6 +6,7 @@ import ExhibitionSkeleton from "../components/exhibition-skeleton";
 import ExhibitionNavigation from "../components/exhibition-navigation";
 import ExhibitionContextProvider from "../context/exhibition-provider";
 import { getCurrentUser } from "@/lib/session";
+
 export default async function CreatorLayout({
     children,
     params
@@ -18,12 +19,18 @@ export default async function CreatorLayout({
         notFound();
     }
 
-    const exhibitionResponse = await getExhibitionById(params.id);
-    if (!exhibitionResponse.data?.exhibition) {
+    let exhibition;
+    try {
+        const exhibitionResponse = await getExhibitionById(params.id);
+        if (!exhibitionResponse.data?.exhibition) {
+            notFound();
+        }
+        exhibition = exhibitionResponse.data.exhibition;
+    } catch (error) {
+        console.error("Failed to fetch exhibition:", error);
         notFound();
     }
 
-    const exhibition = exhibitionResponse.data.exhibition;
     return (
         <ExhibitionContextProvider initialData={exhibition}>
             <div className="flex container mx-auto min-h-screen">

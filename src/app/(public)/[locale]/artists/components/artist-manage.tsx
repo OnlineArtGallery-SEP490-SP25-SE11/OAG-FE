@@ -26,7 +26,7 @@ import EditArtworkForm from '../components/artist-update';
 import ConfirmationDialog from '../components/confirmation-dialog';
 import {ITEMS_PER_PAGE, ARTWORK_STATUS} from '../constant';
 import {Artwork} from '../interface';
-import AddArtworkCollection from '@/components/ui.custom/add-artwork-collection';
+import AddArtworkCollection from '@/components/ui.custom/add-artwork-collection-in-artist';
 import { useTranslations } from 'next-intl';
 import React from 'react';
 // Simplified animation variants

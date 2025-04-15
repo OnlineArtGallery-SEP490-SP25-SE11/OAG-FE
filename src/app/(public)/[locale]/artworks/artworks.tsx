@@ -1,316 +1,209 @@
 'use client';
 
 import { fetchArtPiecesByRange } from '@/app/(public)/[locale]/artworks/api';
-import ArtCard from '@/app/(public)/[locale]/artworks/components/art-card';
 import ArtModal from '@/app/(public)/[locale]/artworks/components/art-modal';
-import ArtFeed from '@/app/(public)/[locale]/artworks/components/art-feed';
 import { Artwork } from '@/types/marketplace';
-import { LoadMoreItemsCallback, Masonry, useInfiniteLoader } from 'masonic';
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import ArtCategory from '@/app/(public)/[locale]/artworks/components/art-category';
 import ArtFilter from '@/app/(public)/[locale]/artworks/components/art-filter';
 import { useWindowSize } from '@react-hook/window-size';
-import ArtSidebar from '@/app/(public)/[locale]/artworks/components/art-sidebar';
+import { CustomMasonry } from '@/app/(public)/[locale]/artworks/components/custom-masonry';
+import { useTranslations } from 'next-intl';
+import { useSetSelectedArt, useIsArtModalOpen, useIsArtModalClosing } from '@/hooks/useArtModal';
 
-const MasonryLayout = memo(
-	({
-		 items,
-		 loadMore
-	 }: {
-		items: Artwork[];
-		loadMore: LoadMoreItemsCallback<unknown>;
-	}) => {
-		const [windowWidth] = useWindowSize();
-		const isMobile = windowWidth < 768;
-
-		const animation = {
-			variants: {
-				hidden: { opacity: 0, y: 20 },
-				visible: { opacity: 1, y: 0 },
-				exit: { opacity: 0, y: -20 }
-			},
-			transition: {
-				type: 'spring',
-				stiffness: 300,
-				damping: 30,
-				duration: 0.2
-			}
-		};
-
-		const getColumnWidth = () => {
-			if (isMobile) {
-				return (windowWidth - 30) / 2;
-			}
-			return 380;
-		};
-
-		const columnCount = isMobile ? 2 : undefined;
-
-		return (
-			<motion.div
-				key='masonry'
-				initial='hidden'
-				animate='visible'
-				exit='exit'
-				variants={animation.variants}
-				transition={animation.transition}
-			>
-				<Masonry
-					onRender={loadMore}
-					items={items}
-					columnGutter={30}
-					columnWidth={getColumnWidth()}
-					overscanBy={1.5}
-					render={ArtCard}
-					columnCount={columnCount}
-				/>
-			</motion.div>
-		);
-	}
-);
-
-const ListLayout = memo(
-	({
-		 items,
-		 setArtPieces
-	 }: {
-		items: Artwork[];
-		setArtPieces: (items: Artwork[]) => void;
-	}) => {
-		const animation = {
-			variants: {
-				hidden: { opacity: 0, y: 20 },
-				visible: { opacity: 1, y: 0 },
-				exit: { opacity: 0, y: -20 }
-			},
-			transition: {
-				type: 'spring',
-				stiffness: 300,
-				damping: 30,
-				duration: 0.2
-			}
-		};
-
-		const containerRef = useRef<HTMLDivElement>(null);
-		const observerRef = useRef<IntersectionObserver | null>(null);
-		const [startIndex, setStartIndex] = useState(items.length);
-		const [loadingMore, setLoadingMore] = useState(false);
-		const itemHeight = window.innerHeight - 80;
-		const threshold = 100;
-
-		const triggerLoadMore = useCallback(async () => {
-			if (loadingMore) return;
-			setLoadingMore(true);
-			console.log('Loading more at startIndex:', startIndex);
-
-			const stopIndex = startIndex + 10;
-			const nextArtWorks = (await fetchArtPiecesByRange(
-				startIndex,
-				stopIndex
-			)) as Artwork[];
-
-			const newItems = Array.from(
-				new Set([...items, ...nextArtWorks].map((item) => item?._id))
-			)
-				.map((id) =>
-					[...items, ...nextArtWorks].find((item) => item?._id === id)
-				)
-				.filter((item): item is Artwork => item !== undefined);
-			console.log('New items length:', newItems.length);
-
-			if (JSON.stringify(items) !== JSON.stringify(newItems)) {
-				setArtPieces(newItems);
-			}
-
-			setStartIndex(stopIndex);
-			setLoadingMore(false);
-		}, [loadingMore, startIndex, items, setArtPieces]);
-
-		useEffect(() => {
-			if (!containerRef.current) return;
-
-			const handleScroll = () => {
-				const totalHeight = items.length * itemHeight;
-				const scrollTop = containerRef.current!.scrollTop;
-				const containerHeight = containerRef.current!.clientHeight;
-				if (
-					scrollTop + containerHeight >= totalHeight - threshold &&
-					!loadingMore
-				) {
-					triggerLoadMore();
-				}
-			};
-
-			containerRef.current.addEventListener('scroll', handleScroll);
-			return () =>
-				containerRef.current?.removeEventListener(
-					'scroll',
-					handleScroll
-				);
-		}, [items, triggerLoadMore, loadingMore]);
-
-		useEffect(() => {
-			if (!containerRef.current) return;
-
-			observerRef.current = new IntersectionObserver(
-				(entries) => {
-					entries.forEach((entry) => {
-						if (entry.isIntersecting) {
-							const index = Number(
-								entry.target.getAttribute('data-index')
-							);
-							const scrollTop = index * (window.innerHeight - 80);
-							containerRef.current!.scrollTo({
-								top: scrollTop,
-								behavior: 'smooth'
-							});
-						}
-					});
-				},
-				{ threshold: 0.5 }
-			);
-
-			const snapItems =
-				containerRef.current.querySelectorAll('.snap-item');
-			snapItems.forEach((item) => observerRef.current!.observe(item));
-
-			return () => {
-				if (observerRef.current) {
-					observerRef.current.disconnect();
-				}
-			};
-		}, [items]);
-
-		return (
-			<motion.div
-				key='list'
-				initial='hidden'
-				animate='visible'
-				exit='exit'
-				variants={animation.variants}
-				transition={animation.transition}
-				ref={containerRef}
-				className='w-full h-[calc(100vh-80px)] overflow-y-auto snap-y snap-mandatory scrollbar-hide scroll-py-0'
-			>
-				{items.map((item, index) => (
-					<div
-						key={index}
-						data-index={index}
-						className='snap-item w-full h-full snap-center p-0 m-0'
-					>
-						<ArtFeed data={item} index={index} />
-					</div>
-				))}
-			</motion.div>
-		);
-	}
-);
-
-MasonryLayout.displayName = 'MasonryLayout';
-ListLayout.displayName = 'ListLayout';
-
-export default function Artworks({ artworks }: { artworks: Artwork[] }) {
+export default function Artworks({ 
+    artworks, 
+    initialTotal = 0 
+}: { 
+    artworks: Artwork[],
+    initialTotal?: number
+}) {
+	const router = useRouter();
 	const searchParams = useSearchParams();
-	const [selectedId, setSelectedId] = useState<string | null>(null);
-	const [artPieces, setArtPieces] = useState<Artwork[]>(artworks);
-	const [masonryLayout, setMasonryLayout] = useState<boolean>(true);
+	const setSelectedArt = useSetSelectedArt();
+	const isModalOpen = useIsArtModalOpen();
+	const isModalClosing = useIsArtModalClosing();
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	const scrollPositionRef = useRef<number>(0);
 	const [windowWidth] = useWindowSize();
 	const isMobile = windowWidth < 768;
-	const loadMore = useCallback(
-		useInfiniteLoader(
-			async (startIndex, stopIndex, currentItems) => {
-				const nextArtWorks = (await fetchArtPiecesByRange(
-					startIndex,
-					stopIndex
-				)) as Artwork[];
-				setArtPieces((current) => {
-					const newItems = [...current, ...nextArtWorks];
-					if (JSON.stringify(current) === JSON.stringify(newItems))
-						return current;
-					return newItems;
-				});
-			},
-			{
-				isItemLoaded: (index, items) => !!items[index],
-				minimumBatchSize: 10,
-				threshold: 5
-			}
-		),
-		[]
-	);
-
+	const [isLoading, setIsLoading] = useState(false);
+	const [artPieces, setArtPieces] = useState<Artwork[]>(artworks);
+	const [masonryLayout, setMasonryLayout] = useState<boolean>(true);
+	const [totalArtworks, setTotalArtworks] = useState<number>(initialTotal);
+	const [hasAllArtworks, setHasAllArtworks] = useState<boolean>(false);
+	const t = useTranslations();
+	
+	// Update hasAllArtworks whenever artPieces or totalArtworks change
 	useEffect(() => {
-		if (masonryLayout) {
-			const id = searchParams.get('id');
-			if (id !== selectedId) {
-				if (id && scrollContainerRef.current) {
+		// Initialize total with at least what we have
+		if (totalArtworks === 0 && artworks.length > 0) {
+			setTotalArtworks(Math.max(artworks.length, totalArtworks));
+		}
+		
+		// Check if we've already loaded all available artworks
+		if (totalArtworks > 0 && artPieces.length >= totalArtworks) {
+			setHasAllArtworks(true);
+		}
+	}, [artworks.length, artPieces.length, totalArtworks]);
+	
+	// Function to fetch more artworks
+	const loadMoreArtworks = useCallback(async () => {
+		// Don't fetch if we're already loading or have all artworks
+		if (isLoading || hasAllArtworks) return;
+		
+		// Skip fetching if we already have all the artworks
+		if (totalArtworks > 0 && artPieces.length >= totalArtworks) {
+			setHasAllArtworks(true);
+			return;
+		}
+		
+		setIsLoading(true);
+		try {
+			const startIndex = artPieces.length;
+			const stopIndex = startIndex + 10;
+			
+			const response = await fetchArtPiecesByRange(startIndex, stopIndex);
+			const nextArtworks = response.data.artworks;
+			
+			// Always update total count with the most recent value
+			setTotalArtworks(response.data.total);
+			
+			// If no more artworks were returned, we've reached the end
+			if (!nextArtworks || nextArtworks.length === 0) {
+				setHasAllArtworks(true);
+				return;
+			}
+			
+			// Deduplicate artworks based on ID
+			const newArtPieces = [...artPieces];
+			const existingIds = new Set(artPieces.map(art => art._id));
+			
+			nextArtworks.forEach(artwork => {
+				if (!existingIds.has(artwork._id)) {
+					newArtPieces.push(artwork);
+					existingIds.add(artwork._id);
+				}
+			});
+			
+			setArtPieces(newArtPieces);
+			
+			// Check if we've loaded all available artworks
+			if (newArtPieces.length >= response.data.total) {
+				setHasAllArtworks(true);
+			}
+		} catch (error) {
+			console.error('Error loading more artworks:', error);
+		} finally {
+			setIsLoading(false);
+		}
+	}, [artPieces, isLoading, totalArtworks, hasAllArtworks]);
+	
+	// Layout toggle function is modified to always use masonry
+	const toggleLayout = useCallback((isGrid: boolean) => {
+		// Always set to true (masonry) for now
+		if (!isGrid) {
+			console.log(t('artworks.list_view_disabled'));
+			// Optional: Show notification that list view is disabled
+			return;
+		}
+		
+		setMasonryLayout(true);
+	}, [t]);
+	
+	// Handle URL changes and modal states - optimized
+	useEffect(() => {
+		const id = searchParams.get('id');
+		
+		if (id) {
+			// Find the artwork in our collection to avoid fetching
+			const artwork = artPieces.find(a => a._id === id) || null;
+			
+			// Only update state if we found the artwork or when closing
+			if (artwork) {
+				if (scrollContainerRef.current) {
 					scrollPositionRef.current = scrollContainerRef.current.scrollTop;
-					document.body.style.overflow = 'hidden';
-				} else if (!id && scrollContainerRef.current) {
-					document.body.style.overflow = '';
+				}
+				document.body.style.overflow = 'hidden';
+				setSelectedArt(artwork); // Direct state update without useState
+			}
+		} else if (isModalOpen) {
+			// Only execute this code when modal was previously open
+			document.body.style.overflow = '';
+			setSelectedArt(null); // Direct state update without useState
+			
+			// Restore scroll position after closing
+			setTimeout(() => {
+				if (scrollContainerRef.current) {
 					scrollContainerRef.current.scrollTop = scrollPositionRef.current;
 				}
-				setSelectedId(id);
-			}
-		} else {
-			setSelectedId(null);
-			document.body.style.overflow = '';
+			}, 50);
 		}
-	}, [searchParams, selectedId, masonryLayout]);
-
-	const CurrentLayout = useMemo(() => {
-		return masonryLayout ? (
-			<MasonryLayout items={artPieces} loadMore={loadMore} />
-		) : (
-			<ListLayout items={artPieces} setArtPieces={setArtPieces} />
-		);
-	}, [masonryLayout, artPieces, loadMore]);
-
+	}, [searchParams, artPieces, isModalOpen, setSelectedArt]);
+	
+	// Handle artwork click - optimized to set artwork directly
+	const handleArtworkClick = useCallback((id: string) => {
+		// Save current scroll position
+		if (scrollContainerRef.current) {
+			scrollPositionRef.current = scrollContainerRef.current.scrollTop;
+		}
+		
+		// Find artwork in memory to avoid fetches
+		const artwork = artPieces.find(a => a._id === id);
+		if (artwork) {
+			// Set artwork directly to avoid unnecessary renders
+			setSelectedArt(artwork);
+		}
+		
+		// Update URL with query param
+		router.push(`?id=${id}`, { scroll: false });
+	}, [router, artPieces, setSelectedArt]);
+	
 	return (
-		<div className='flex flex-col min-h-screen  m-0'>
+		<div className='flex flex-col min-h-screen m-0'>
 			{/* Header Section */}
-			{masonryLayout && (
-				<div className='flex-shrink-0'>
-					<ArtCategory />
-					{!isMobile && (
-						<div style={{ height: '80px' }}>
-							<ArtFilter
-								onLayoutChange={(isGrid) => setMasonryLayout(!isGrid)}
-								headerHeight={80}
-							/>
-						</div>
-					)}
+			<div className='flex-shrink-0'>
+				<ArtCategory />
+				
+				<div style={{ height: '80px' }} className="bg-white dark:bg-gray-900">
+					<ArtFilter
+						onLayoutChange={toggleLayout}
+						headerHeight={80}
+					/>
 				</div>
-			)}
-
-			{/* Main Content */}
-			<div
-				className='flex-grow p-0 m-0'
-				ref={scrollContainerRef}>
-				{/* <ArtSidebar changeLayout={() => setMasonryLayout(!masonryLayout)} /> */}
-				<AnimatePresence mode='wait'>
-					<motion.div layout>{CurrentLayout}</motion.div>
-				</AnimatePresence>
 			</div>
 
-			{/* Bottom Bar */}
-			{(isMobile || !masonryLayout) && (
-				<div className='fixed bottom-0 left-0 right-0 z-50 bg-white shadow-lg border-t border-gray-200'>
-					<div className='max-w-7xl mx-auto px-4' style={{ height: '80px' }}>
-						<ArtFilter
-							onLayoutChange={(isGrid) => setMasonryLayout(!isGrid)}
-							headerHeight={80}
-						/>
-					</div>
+			{/* Main Content - Only Masonry layout for now */}
+			<div
+				className="flex-grow masonry-container px-4 md:px-6 py-4"
+				ref={scrollContainerRef}
+			>
+				<CustomMasonry
+					items={artPieces}
+					onItemClick={handleArtworkClick}
+					loadMore={loadMoreArtworks}
+					hasMore={!hasAllArtworks}
+					isLoading={isLoading}
+					totalCount={totalArtworks}
+				/>
+			</div>
+			
+			{/* Bottom Bar - only for mobile - optimized structure with no padding/margin */}
+			{isMobile && (
+				<div 
+					className='fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-gray-900/95 backdrop-blur-sm shadow-lg dark:shadow-gray-950/30 border-t border-gray-200 dark:border-gray-800'
+					style={{ height: '80px' }}
+				>
+					<ArtFilter
+						onLayoutChange={toggleLayout}
+						headerHeight={80}
+					/>
 				</div>
 			)}
 
-			{/* Modal - chỉ hiển thị ở masonry layout */}
-			{masonryLayout && selectedId && <ArtModal id={selectedId} setId={setSelectedId} />}
+			{/* Modal for artwork details - modified to keep showing while closing */}
+			{(isModalOpen || isModalClosing) && <ArtModal />}
 
 			<style jsx global>{`
                 .scrollbar-hide::-webkit-scrollbar {
@@ -325,12 +218,7 @@ export default function Artworks({ artworks }: { artworks: Artwork[] }) {
                         padding-bottom: 80px;
                     }
                 }
-                @media (min-width: 768px) {
-                    .flex-grow {
-                        padding-bottom: ${!masonryLayout ? '80px' : '0'};
-                    }
-                }
-			`}</style>
+            `}</style>
 		</div>
 	);
 }

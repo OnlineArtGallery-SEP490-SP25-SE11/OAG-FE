@@ -29,7 +29,23 @@ const collectionService = {
             if(!axios){
                 throw new Error('Failed to create axios instance');
             }
-            const res = await axios.get(`/collection`);
+            const res = await axios.get(`/collection/in-user`);
+            console.log('res', res.data);
+            return res.data;
+        }
+        catch(error){
+            console.error('Error getting collections by userId:', error);
+            return null;
+        }
+    },
+
+    async getByArtistId(){
+        try{
+            const axios = await createAxiosInstance({ useToken: true });
+            if(!axios){
+                throw new Error('Failed to create axios instance');
+            }
+            const res = await axios.get(`/collection/in-artist`);
             console.log('res', res.data);
             return res.data;
         }
@@ -56,14 +72,33 @@ const collectionService = {
         }
     },
     //create collection
-    async create(data: CollectionForm) {
+    async createInUser(data: CollectionForm) {
         try{
             const axios = await createAxiosInstance({ useToken: true });
             if(!axios){
                 throw new Error('Failed to create axios instance');
             }
             const imageArray = Array.isArray(data.artworks) ? data.artworks : [data.artworks].filter(Boolean);
-            const res = await axios.post('/collection', {
+            const res = await axios.post('/collection/in-user', {
+                title: data.title,
+                description: data.description,
+                artworks: imageArray,
+            });
+            return res.data;
+        }
+        catch(error){
+            console.error('Error creating collection:', error);
+            throw new Error('Error creating collection');
+        }
+    },
+    async createArtist(data: CollectionForm) {
+        try{
+            const axios = await createAxiosInstance({ useToken: true });
+            if(!axios){
+                throw new Error('Failed to create axios instance');
+            }
+            const imageArray = Array.isArray(data.artworks) ? data.artworks : [data.artworks].filter(Boolean);
+            const res = await axios.post('/collection/in-artist', {
                 title: data.title,
                 description: data.description,
                 artworks: imageArray,

@@ -23,12 +23,12 @@ import { LoaderButton } from '@/components/ui.custom/loader-button';
 const availableLanguages = [
   { code: 'en', name: 'English' },
   { code: 'vi', name: 'Vietnamese' },
-  { code: 'fr', name: 'French' },
-  { code: 'ja', name: 'Japanese' },
-  { code: 'ko', name: 'Korean' },
-  { code: 'zh', name: 'Chinese' },
-  { code: 'es', name: 'Spanish' },
-  { code: 'de', name: 'German' },
+  // { code: 'fr', name: 'French' },
+  // { code: 'ja', name: 'Japanese' },
+  // { code: 'ko', name: 'Korean' },
+  // { code: 'zh', name: 'Chinese' },
+  // { code: 'es', name: 'Spanish' },
+  // { code: 'de', name: 'German' },
 ] as const;
 
 interface AddLanguageModalProps {

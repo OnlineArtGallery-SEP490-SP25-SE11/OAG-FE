@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useTranslations } from "next-intl";
 import { PlusCircle } from "lucide-react";
 
-export default function CreateExhibitionButton() {
+export default function CreateExhibitionButton( { isPremium }: { isPremium: boolean }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const router = useRouter();
     const { toast } = useToast();
@@ -56,6 +56,7 @@ export default function CreateExhibitionButton() {
             </Button>
 
             <TemplateSelectionModal
+                isPremium={isPremium}
                 isOpen={isModalOpen}
                 onOpenChange={setIsModalOpen}
                 onSelectTemplate={handleTemplateSelect}

@@ -1,7 +1,6 @@
 import { createApi } from "@/lib/axios";
 import { ApiResponse } from "@/types/response";
 import { handleApiError } from "@/utils/error-handler";
-import { Artwork } from "@/types/marketplace";
 
 export interface ArtworkWarehouseItem {
     _id: string;
@@ -44,7 +43,7 @@ export const getArtworkWarehouse = async (
         return res.data;
     } catch (error) {
         console.error('Lỗi khi lấy kho tranh:', error);
-        return handleApiError<ArtworkWarehouseResponse>(
+        throw handleApiError<ArtworkWarehouseResponse>(
             error,
             'Không thể lấy danh sách tranh trong kho'
         );

@@ -32,7 +32,20 @@
     "cancel": "Hủy",
     "delete": "Xóa",
     "processing": "Đang xử lý...",
-    "close": "Đóng"
+    "close": "Đóng",
+    "you": "Bạn",
+    "notifications": "Thông báo",
+    "markAllAsRead": "Đánh dấu tất cả là đã đọc",
+    "noNotifications": "Không có thông báo",
+    "notificationsWillAppearHere": "Thông báo sẽ xuất hiện ở đây",
+    "loadMore": "Tải thêm",
+    "noMoreNotifications": "Không còn thông báo",
+    "new": "Mới",
+    "markAsRead": "Đánh dấu đã đọc",
+    "deleteNotification": "Xóa thông báo",
+    "noTitle": "Không có tiêu đề",
+    "noContent": "Không có nội dung",
+    "loading": "Đang tải..."
   },
   "header": {
     "settings": "Cài đặt",
@@ -51,7 +64,7 @@
     "messages": "Tin nhắn",
     "my_blogs": "Bài viết",
     "premium": "Premium",
-     "artwork_warehouse": "Kho tranh"
+    "artwork_warehouse": "Kho tranh"
   },
   "auth": {
     "loginTitle": "Đăng nhập vào tài khoản",
@@ -263,7 +276,63 @@
       "preview": "Xem trước"
     },
     "artwork_description": "Mô tả Tác phẩm",
-    "preview_note": "Ghi chú Xem trước"
+    "preview_note": "Ghi chú Xem trước",
+    "toggle_details": "Hiển thị/ẩn chi tiết",
+    "drag_to_pan": "Kéo để di chuyển",
+    "remove_from_favorites": "Xóa khỏi yêu thích",
+    "add_to_favorites": "Thêm vào yêu thích",
+    "comments_standard_view": "Chuyển sang chế độ tiêu chuẩn để xem bình luận",
+    "zoom_in": "Phóng to",
+    "zoom_out": "Thu nhỏ",
+    "reset_zoom": "Đặt lại",
+    "loading_image": "Đang tải ảnh...",
+    "download_not_available": "Tải xuống không khả dụng",
+    "please_use_standard_view": "Vui lòng sử dụng chế độ tiêu chuẩn cho thao tác này",
+    "purchase_not_available": "Mua tranh không khả dụng",
+    "collection_not_available": "Bộ sưu tập không khả dụng",
+    "swipe_to_change_tabs": "Vuốt để chuyển tab",
+    "no_description": "Không có mô tả",
+    "no_comments": "Chưa có bình luận nào",
+    "info": "Thông tin",
+    "comments": "Bình luận",
+    "report_artwork": "Báo cáo tranh",
+    "yours": "Của bạn",
+    "purchased": "Đã mua",
+    "buy": "Mua",
+    "save": "Lưu",
+    "download": "Tải xuống",
+    "description": "Mô tả",
+    "be_first_comment": "Hãy là người đầu tiên bình luận",
+    "add_comment": "Thêm bình luận",
+    "user": "Người dùng",
+    "days_ago": "{days} ngày trước",
+    "comment_example": "Tác phẩm tuyệt đẹp! Tôi thích bố cục và màu sắc.",
+    "downloading": "Đang tải xuống...",
+    "download_success": "Đã tải xuống thành công",
+    "download_error": "Lỗi tải xuống",
+    "no_artwork_info": "Không có thông tin về tác phẩm",
+    "standard_view": "Chế độ tiêu chuẩn",
+    "immersive_view": "Chế độ đắm chìm",
+    "close_details": "Đóng chi tiết",
+    "categories": "Danh mục",
+    "preview_note": "Ghi chú Xem trước",
+    "zoom_in": "Phóng to",
+    "zoom_out": "Thu nhỏ",
+    "swipe_to_change_tabs": "Vuốt để chuyển tab",
+    "comments": "Bình luận",
+    "info": "Thông tin",
+    "view_profile": "Xem hồ sơ",
+    "add_to_collection": "Thêm vào bộ sưu tập",
+    "buy_now": "Mua ngay",
+    "your_work": "Tác phẩm của bạn",
+    "no_comments": "Chưa có bình luận nào",
+    "add_comment": "Thêm bình luận",
+    "no_artwork_info": "Không có thông tin tác phẩm",
+    "loading": "Đang tải...",
+    "description": "Mô tả",
+    "price": "Giá",
+    "downloading": "Đang tải...",
+    "download_success": "Tải xuống thành công"
   },
   "artwork_management": {
     "title": "Quản lý tác phẩm",
@@ -314,7 +383,8 @@
       "following": "Đang theo dõi",
       "artist_badge": "Nghệ sĩ",
       "premium_badge": "Premium",
-      "become_artist":"Trở thành nghệ sĩ"
+      "become_artist": "Trở thành nghệ sĩ",
+      "email": "Email"
     },
     "view": {
       "edit_profile": "Chỉnh sửa hồ sơ",
@@ -322,7 +392,15 @@
       "collections": "Bộ sưu tập",
       "professional_artist": "Nghệ sĩ chuyên nghiệp",
       "view_profile": "Xem hồ sơ",
-      "collection_title": "Bộ sưu tập {number}"
+      "collection_title": "Bộ sưu tập {number}",
+      "about": "Thông tin cá nhân",
+      "biography": "Tiểu sử",
+      "contact_info": "Thông tin liên hệ",
+      "joined_date": "Ngày tham gia",
+      "no_address": "Chưa cập nhật địa chỉ",
+      "default_bio": "là một nghệ sĩ tài năng với niềm đam mê về nghệ thuật. Hãy thêm tiểu sử của bạn trong phần chỉnh sửa hồ sơ.",
+      "no_followers": "Chưa có người theo dõi",
+      "no_following": "Bạn chưa theo dõi ai"
     },
     "edit": {
       "title": "Chỉnh sửa hồ sơ",
@@ -354,8 +432,11 @@
       "validation": {
         "name_min_length": "Tên phải có ít nhất 2 ký tự",
         "name_max_length": "Tên không được vượt quá 50 ký tự",
+        "name_no_special_chars": "Tên không được chứa ký tự đặc biệt",
+        "address_max_length": "Địa chỉ không được vượt quá 200 ký tự",
         "bio_max_length": "Tiểu sử không được vượt quá 1000 ký tự",
-        "max_genres": "Không thể chọn quá 10 phong cách nghệ thuật"
+        "max_genres": "Không thể chọn quá 10 phong cách nghệ thuật",
+        "genre_max_length": "Mỗi phong cách nghệ thuật không được vượt quá 30 ký tự"
       }
     }
   },
@@ -369,7 +450,8 @@
     "artists": "Nghệ sĩ",
     "materials": "Chất liệu",
     "waysToBuy": "Cách mua",
-    "size": "Kích thước"
+    "size": "Kích thước",
+    "status": "Trạng thái"
   },
   "artworkPage": {
     "filter": {
@@ -385,6 +467,26 @@
     }
   },
   "exhibitions": {
+    "no_search_results": "Không tìm thấy triển lãm nào cho từ khóa tìm kiếm của bạn",
+    "try_different_search": "Thử tìm kiếm với từ khóa khác hoặc duyệt triển lãm theo danh mục",
+    "no_exhibitions_featured": "Hiện không có triển lãm nổi bật nào",
+    "no_exhibitions_trending": "Chưa có triển lãm thịnh hành nào",
+    "no_exhibitions_recent": "Chưa có triển lãm mới nào",
+    "check_back_later": "Vui lòng quay lại sau để xem triển lãm mới",
+    "clear_search": "Xóa tìm kiếm",
+    "discover_title": "Khám Phá Phòng Trưng Bày Ảo Tuyệt Vời",
+    "discover_description": "Khám phá các triển lãm được tuyển chọn từ các nghệ sĩ trên toàn thế giới. Trải nghiệm nghệ thuật trong không gian ảo sống động.",
+    "search_placeholder": "Tìm kiếm triển lãm, nghệ sĩ hoặc phong cách...",
+    "search": "Tìm kiếm",
+    "tabs": {
+      "featured": "Nổi bật",
+      "trending": "Xu hướng",
+      "recent": "Mới nhất"
+    },
+    "featured": "Nổi bật",
+    "error_loading": "Đã xảy ra lỗi khi tải triển lãm",
+    "try_again": "Thử lại",
+    "enter_exhibition": "Xem triễn lãm",
     "my_exhibitions": "Phòng trưng bày của tôi",
     "create_exhibition": "Tạo phòng trưng bày",
     "no_exhibitions_found": "Không tìm thấy phòng trưng bày nào",
@@ -496,7 +598,20 @@
     "saving": "Đang lưu...",
     "publish_exhibition": "Xuất bản phòng trưng bày",
     "unpublish": "Hủy xuất bản",
-    "unpublishing": "Đang hủy xuất bản..."
+    "unpublishing": "Đang hủy xuất bản...",
+    "status": {
+      "PUBLISHED": "Đã công khai",
+      "DRAFT": "Bản nháp",
+      "UNPUBLISHED": "Chưa công khai",
+      "PENDING": "Đang chờ",
+      "REJECTED": "Bị từ chối"
+    },
+    "purchase_ticket": "Mua vé",
+    "get_ticket": "Nhận vé miễn phí",
+    "checking_ticket": "Đang kiểm tra trạng thái vé...",
+    "already_purchased": "Đã mua vé",
+    "ticket_purchased_success": "Mua vé thành công",
+    "ticket_purchase_failed": "Mua vé thất bại"
   },
   "wallet": {
     "current_balance": "Số dư hiện tại",
@@ -527,7 +642,21 @@
       "download": "Tải ảnh",
       "downloading": "Đang tải {title}...",
       "download_success": "Đã tải {title} thành công",
-      "download_error": "Không thể tải ảnh. Vui lòng thử lại sau."
+      "download_error": "Không thể tải ảnh. Vui lòng thử lại sau.",
+      "zoom_in": "Phóng to",
+      "zoom_out": "Thu nhỏ",
+      "swipe_to_change_tabs": "Vuốt để chuyển tab",
+      "comments": "Bình luận",
+      "info": "Thông tin",
+      "view_profile": "Xem hồ sơ",
+      "add_to_collection": "Thêm vào bộ sưu tập",
+      "buy_now": "Mua ngay",
+      "your_work": "Tác phẩm của bạn",
+      "no_comments": "Chưa có bình luận nào",
+      "add_comment": "Thêm bình luận",
+      "no_artwork_info": "Không có thông tin tác phẩm",
+      "price": "Giá",
+      "loading": "Đang tải..."
     }
   },
   "artist_layout": {
@@ -542,5 +671,86 @@
     "main_section": "Chính",
     "content_section": "Nội dung",
     "account_section": "Tài khoản"
+  },
+  "artcard": {
+    "sold": "Đã bán",
+    "display_only": "Chỉ trưng bày",
+    "not_for_sale": "Không bán",
+    "view_artwork_details": "Xem chi tiết tác phẩm {title}"
+  },
+  "artworks": {
+    "list_view_disabled": "Chế độ xem danh sách tạm thời bị vô hiệu hóa",
+    "end_of_list": "Đã tải tất cả {count} trong tổng số {total} tác phẩm",
+    "no_artworks_found": "Không tìm thấy tác phẩm nào",
+    "loading_more": "Đang tải thêm tác phẩm..."
+  },
+  "report": {
+    "button": "Báo cáo",
+    "buttonAriaLabel": "Nhấn để báo cáo",
+    "closeAriaLabel": "Đóng hộp thoại",
+    "cancelAriaLabel": "Hủy báo cáo",
+    "submitAriaLabel": "Gửi báo cáo",
+    "title": "Báo cáo nội dung",
+    "description": "Hãy cho chúng tôi biết lý do bạn muốn báo cáo nội dung này. Báo cáo của bạn sẽ được xử lý bởi đội ngũ kiểm duyệt của chúng tôi.",
+    "fields": {
+      "reason": "Lý do",
+      "url": "Đường dẫn",
+      "type": "Loại",
+      "description": "Mô tả",
+      "evidence": "Hình ảnh minh chứng",
+      "optional": "không bắt buộc"
+    },
+    "placeholders": {
+      "description": "Vui lòng cung cấp chi tiết về báo cáo này",
+      "url": "Đường dẫn đến nội dung liên quan",
+      "noFiles": "Chưa có tệp nào được chọn"
+    },
+    "help": {
+      "description": "Mô tả càng cụ thể càng giúp chúng tôi xử lý báo cáo nhanh hơn",
+      "evidence": "Tải lên hình ảnh để hỗ trợ báo cáo của bạn"
+    },
+    "button": {
+      "submit": "Gửi báo cáo",
+      "submitting": "Đang gửi..."
+    },
+    "toast": {
+      "success": "Gửi báo cáo thành công",
+      "error": "Không thể gửi báo cáo"
+    },
+    "reasons": {
+      "spam": "Spam",
+      "harassment": "Quấy rối",
+      "hate_speech": "Phát ngôn thù địch",
+      "violence": "Bạo lực",
+      "nudity": "Khỏa thân",
+      "copyright": "Vi phạm bản quyền",
+      "others": "Khác",
+      "inappropriate": "Nội dung không phù hợp",
+      "other": "Khác"
+    },
+    "types": {
+      "user": "Người dùng",
+      "artwork": "Tác phẩm",
+      "blog": "Bài viết"
+    }
+  },
+  "not_artist_display": {
+    "title": "Khởi Đầu Hành Trình Nghệ Thuật",
+    "description": "Chuyển đổi hồ sơ của bạn thành không gian triển lãm nghệ thuật và tham gia cộng đồng sáng tạo sôi động của chúng tôi.",
+    "features": {
+      "curate": {
+        "title": "Tổ Chức Triển Lãm",
+        "description": "Thiết kế phòng trưng bày kỹ thuật số để giới thiệu tác phẩm nghệ thuật của bạn một cách đột phá."
+      },
+      "visibility": {
+        "title": "Tăng Độ Nhận Diện",
+        "description": "Giới thiệu tác phẩm của bạn đến những người yêu nghệ thuật, nhà sưu tập và người quản lý triển lãm trên toàn thế giới."
+      },
+      "community": {
+        "title": "Xây Dựng Cộng Đồng",
+        "description": "Kết nối với các nghệ sĩ, hợp tác dự án và chia sẻ cảm hứng."
+      }
+    },
+    "become_artist": "Trở Thành Nghệ Sĩ"
   }
 }

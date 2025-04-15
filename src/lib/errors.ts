@@ -101,3 +101,4 @@ export class InvalidFileError extends PublicError {
 		this.name = 'InvalidFileError';
 	}
 }
+

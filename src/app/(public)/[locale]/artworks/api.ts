@@ -124,7 +124,11 @@ export async function purchaseArt(
 export async function fetchArtPiecesByRange(
 	startIndex: number,
 	stopIndex: number
-): Promise<Artwork[]> {
+): Promise<BaseResponse<{
+	artworks:Artwork[],
+	total: number
+}
+>> {
 	const skip = startIndex;
 	const take = stopIndex - startIndex + 1;
 	try {
@@ -133,7 +137,8 @@ export async function fetchArtPiecesByRange(
 		
 		// Lấy cả tranh có trạng thái selling và available
 		const response = await axios.get(`/artwork?skip=${skip}&take=${take}&status=selling&status=available`);
-		return response.data.data.artworks;
+		console.log(response.data)
+		return response.data;
 	} catch {
 		throw new Error('Error fetching artworks');
 	}

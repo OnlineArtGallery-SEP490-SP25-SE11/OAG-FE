@@ -1,4 +1,3 @@
-import SessionWrapper from '@/components/session-wrapper';
 import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import localFont from 'next/font/local';
@@ -42,9 +41,7 @@ export default function RootLayout({
 				className={`${poppins.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
 				suppressHydrationWarning
 			>
-				<SessionWrapper>
 					<Providers>{children}</Providers>
-				</SessionWrapper>
 				<Toaster />
 			</body>
 		</html>

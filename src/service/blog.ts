@@ -12,7 +12,7 @@ export async function getBlogById(blogId: string) {
 		return res.data;
 	} catch (err) {
 		console.error(`Error when get blog by id: ${err}`);
-		return handleApiError<BlogRequestResponse>(err, 'Failed to get blog by id', 'get_blog_by_id_error');
+		throw handleApiError<BlogRequestResponse>(err, 'Failed to get blog by id', 'get_blog_by_id_error');
 	}
 }
 
@@ -22,7 +22,7 @@ export async function getLastEditedBlogId(accessToken: string)  {
 		return res.data;
 	} catch (err) {
 		console.error(`Error when get last edited blog id: ${err}`);
-		return handleApiError<BlogRequestResponse>(err, 'Failed to get last edited blog id', 'get_last_edited_blog_id_error');
+		throw handleApiError<BlogRequestResponse>(err, 'Failed to get last edited blog id', 'get_last_edited_blog_id_error');
 	}
 }
 
@@ -47,7 +47,7 @@ export async function createBlog({
 
 	} catch (err) {
 		console.error(`Error when creating blog:`, err);
-		return handleApiError<BlogRequestResponse>(
+		throw handleApiError<BlogRequestResponse>(
 			err,
 			'Failed to create blog',
 		)
@@ -87,7 +87,7 @@ export async function updateBlog({
 		return res.data;
 	} catch (error) {
 			console.error(`Error when updating blog:`, error);
-			return handleApiError<BlogRequestResponse>(
+			throw handleApiError<BlogRequestResponse>(
 				error,
 				'Failed to update blog',
 				'update_blog_error'
@@ -101,7 +101,7 @@ export async function getBlogs(accessToken: string) {
 		return res.data;
 	} catch (err) {
 		console.error(`Error when get blogs: ${err}`);
-		return handleApiError<BlogRequestResponse>(err, 'Failed to get blogs', 'get_blogs_error');
+		throw handleApiError<BlogRequestResponse>(err, 'Failed to get blogs', 'get_blogs_error');
 	}
 }
 
@@ -173,7 +173,7 @@ export async function createPublicRequest({
 		return res.data;
 	} catch (error) {
 		console.error(`Error when create public request:`, error);
-		return handleApiError<BlogRequestResponse>(
+		throw handleApiError<BlogRequestResponse>(
 			error,
 			'Failed to create public request'
 		);
@@ -191,7 +191,7 @@ export async function getUserBlogs(accessToken: string): Promise<ApiResponse<Use
 		return response.data;
 	} catch (error) {
 		console.error(`Error when get user blogs:`, error);
-		return handleApiError<UserBlogsResponse>(
+		throw handleApiError<UserBlogsResponse>(
 			error,
 			'Failed to fetch user blogs'
 		);

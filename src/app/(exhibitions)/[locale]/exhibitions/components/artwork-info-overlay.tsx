@@ -1,104 +1,109 @@
-import { useState } from 'react';
+// src/app/(exhibitions)/[locale]/exhibitions/[linkname]/components/artwork-info-overlay.tsx
+import { useState, useCallback } from 'react';
 import {
-	Heart,
 	MoreHorizontal,
 	ArrowLeft,
 	Volume2,
 	Volume1
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useSpeechSynthesis } from '@/hooks/use-speech-synthesis';
+import { OverlayButton } from './overlay-button';
+import { LikeArtworkButton } from './like-artwork-button';
+import { Session } from 'next-auth';
+
+type User = Session['user'];
 
 interface IArtworkInfoOverlayProps {
+	artworkId: string;
+	exhibitionId: string;
+	likes?: {
+		userIds: string[];
+		count: number;
+	};
 	title?: string;
-	size?: string;
+	size?: string; // Keep if used elsewhere, otherwise remove
 	description?: string;
+	user: User | undefined | null;
 	onClose: () => void;
+    // Removed onOverlayHoverChange prop
 }
 
 export function ArtworkInfoOverlay({
 	title,
+	artworkId,
+	exhibitionId,
+	likes,
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	size,
 	description,
+	user,
 	onClose
+    // Removed onOverlayHoverChange from destructuring
 }: IArtworkInfoOverlayProps) {
 	const [isExpanded, setIsExpanded] = useState(false);
-	const [isLiked, setIsLiked] = useState(false);
-	const [isPlaying, setIsPlaying] = useState(false);
+	const { isPlaying, toggle } = useSpeechSynthesis();
 
-	const handleAudioToggle = () => {
-		setIsPlaying(!isPlaying);
-		// TODO: Implement audio playback logic
-	};
+	const handleAudioToggle = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation(); // Add stopPropagation here too
+		toggle(description || "No description available");
+	}, [toggle, description]);
+
+	const handleClose = useCallback(() => {
+		onClose(); // Just call the passed onClose
+	}, [onClose]);
+
+    const handleExpandToggle = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation(); // Add stopPropagation here too
+        setIsExpanded(prev => !prev);
+    };
+
+	const fallbackTitle = 'Artwork Title';
+	const fallbackDescription = 'No description available for this artwork.';
 
 	return (
 		<AnimatePresence>
+			{/* No need for mouse enter/leave here */}
 			<motion.div
-				className='fixed bottom-2 w-[80%] ml-[10%] bg-white opacity-90 rounded-md shadow-lg'
-				// style={{
-				//   width: "min(95%, 1200px)",
-				//   maxWidth: "1200px",
-				//   margin: "0 200px",
-				// }}
+				className='fixed bottom-2 w-[80%] ml-[10%] bg-white opacity-90 rounded-md shadow-lg pointer-events-auto'
 				initial={{ y: '100%' }}
 				animate={{ y: isExpanded ? '0%' : '80%' }}
 				transition={{ type: 'spring', damping: 20 }}
+				onClick={(e) => e.stopPropagation()} 
 			>
-				<div className='flex items-center justify-between p-4 border-b border-gray-200'>
-					<button
-						onClick={onClose}
-						className='p-2 rounded-full hover:bg-gray-100 transition-colors duration-200'
-						aria-label='Close'
-					>
-						<ArrowLeft className='w-6 h-6' />
-					</button>
+				<header className="flex items-center justify-between p-4 border-b border-gray-200">
+					{/* Close button doesn't need stopPropagation as it calls handleClose which resets state */}
+                    <OverlayButton onClick={handleClose} aria-label='Close'>
+						<ArrowLeft className="w-6 h-6" />
+					</OverlayButton>
 
-					<div className='flex items-center gap-2'>
-						<button
-							onClick={handleAudioToggle}
-							className='p-2 rounded-full hover:bg-gray-100 transition-colors duration-200'
-							aria-label={isPlaying ? 'Stop audio' : 'Play audio'}
-						>
+					<div className="flex items-center gap-2">
+						<OverlayButton onClick={handleAudioToggle} aria-label={isPlaying ? 'Stop audio' : 'Play audio'}>
 							{isPlaying ? (
-								<Volume2 className='w-6 h-6 text-blue-500' />
+								<Volume2 className="w-6 h-6 text-blue-500" />
 							) : (
-								<Volume1 className='w-6 h-6 text-gray-600' />
+								<Volume1 className="w-6 h-6 text-gray-600" />
 							)}
-						</button>
+						</OverlayButton>
 
-						<button
-							onClick={() => setIsLiked(!isLiked)}
-							className='p-2 rounded-full hover:bg-gray-100 transition-colors duration-200'
-							aria-label={isLiked ? 'Unlike' : 'Like'}
-						>
-							<Heart
-								className={`w-6 h-6 transition-colors duration-200 ${
-									isLiked
-										? 'fill-red-500 text-red-500'
-										: 'text-gray-600'
-								}`}
-							/>
-						</button>
+						{/* Like button already has stopPropagation */}
+						<LikeArtworkButton
+							artworkId={artworkId}
+							exhibitionId={exhibitionId}
+							likes={likes || { userIds: [], count: 0 }}
+							user={user}
+						/>
 
-						<button
-							onClick={() => setIsExpanded(!isExpanded)}
-							className='p-2 rounded-full hover:bg-gray-100 transition-colors duration-200'
-							aria-label={isExpanded ? 'Collapse' : 'Expand'}
-						>
-							<MoreHorizontal className='w-6 h-6 text-gray-600' />
-						</button>
+						<OverlayButton onClick={handleExpandToggle} aria-label={isExpanded ? 'Collapse' : 'Expand'}>
+							<MoreHorizontal className="w-6 h-6 text-gray-600" />
+						</OverlayButton>
 					</div>
-				</div>
+				</header>
 
-				<div className='p-6 space-y-4'>
-					<h2 className='text-xl font-bold text-gray-900'>
-						{title || 'Lorem ipsum dolor sit amet'}
-					</h2>
-					<h2 className='text-gray-600'>{size || '800x800'}</h2>
-					<p className='text-gray-600 leading-relaxed'>
-						{description ||
-							'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tristique commodo mi vitae luctus. Etiam iaculis bibendum finibus. Praesent eu augue eget eros vehicula imperdiet. Mauris dictum eros ipsum. Sed dapibus tellus vitae aliquet mollis. Sed ultrices nibh id lacus pretium maximus. Nulla at ultrices nisl. Phasellus tempor eros vitae aliquet faucibus. Ut ante mi, molestie dictum molestie quis, finibus in massa. In eleifend ultricies vulputate. Suspendisse euismod sollicitudin ex ut faucibus. Donec congue ipsum in ex tincidunt pharetra.'}
-					</p>
-				</div>
+				<section className="p-6 space-y-4">
+					<h2 className="text-xl font-bold text-gray-900">{title || fallbackTitle}</h2>
+					<p className="text-gray-600 leading-relaxed">{description || fallbackDescription}</p>
+				</section>
 			</motion.div>
 		</AnimatePresence>
 	);

@@ -1,7 +1,8 @@
 'use client';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CalendarDays, MapPin, Users, Clock, Share2, Info, ExternalLink } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { CalendarDays, MapPin, Users, Clock, Share2, Info, ExternalLink, Tag } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
@@ -27,6 +28,7 @@ export interface Event {
   participants: {
     userId: string
   }[];
+  link: string;
 }
 
 export function EventFeed() {
@@ -34,6 +36,21 @@ export function EventFeed() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
+  
+  // Helper function to get status badge color
+  const getStatusColor = (status: EventStatus) => {
+    switch (status) {
+      case EventStatus.UPCOMING:
+        return 'bg-blue-500 hover:bg-blue-600 text-white';
+      case EventStatus.ONGOING:
+        return 'bg-green-500 hover:bg-green-600 text-white';
+      case EventStatus.COMPLETED:
+        return 'bg-gray-500 hover:bg-gray-600 text-white';
+      default:
+        return 'bg-gray-500 hover:bg-gray-600 text-white';
+    }
+  };
+
   const { data, isLoading } = useQuery({
     queryKey: ['events'],
     queryFn: async () => {
@@ -55,6 +72,11 @@ export function EventFeed() {
     return event.participants.some(participant =>
       participant.userId === user.id
     );
+  };
+
+  // Check if event is completed
+  const isEventCompleted = (event: Event) => {
+    return event.status === EventStatus.COMPLETED;
   };
 
   const mutationRegister = useMutation({
@@ -101,6 +123,9 @@ export function EventFeed() {
       return;
     };
     const event = data?.find((event: Event) => event._id === eventId)
+    if (!event || isEventCompleted(event)) {
+      return; // Don't proceed if event is completed
+    }
     if (isParticipated(event)) {
       cancelParticipate(eventId)
     } else {
@@ -166,10 +191,21 @@ export function EventFeed() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
             <div className="absolute bottom-4 left-4 right-4 text-white">
-              <h2 className="text-xl md:text-2xl font-bold mb-1">{event.title}</h2>
+              <div className="flex items-center justify-between mb-1">
+                <h2 className="text-xl md:text-2xl font-bold">{event.title}</h2>
+                <Badge className={getStatusColor(event.status)}>
+                  {EventStatus[event.status]}
+                </Badge>
+              </div>
               <div className="flex items-center text-white/90 text-sm">
                 <CalendarDays className="mr-1 h-4 w-4" />
                 <span className="font-medium">{formatDate(new Date(event.startDate))}</span>
+                {event.type && (
+                  <div className="ml-3 flex items-center">
+                    <Tag className="mr-1 h-3 w-3" />
+                    <span>{event.type}</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -247,6 +283,35 @@ export function EventFeed() {
                       <span className="font-medium">Organizer:</span> {event.organizer}
                     </div>
                   </div>
+                  
+                  <div className="flex items-center text-sm">
+                    <div className="mr-2 h-4 w-4 text-primary flex items-center justify-center">
+                      <span className="h-3 w-3 rounded-full bg-primary"></span>
+                    </div>
+                    <div>
+                      <span className="font-medium">Status:</span>{" "}
+                      <Badge className={getStatusColor(event.status)}>
+                        {EventStatus[event.status]}
+                      </Badge>
+                    </div>
+                  </div>
+                  
+                  {isParticipated(event) && event.link && (
+                    <div className="flex items-center text-sm mt-2">
+                      <ExternalLink className="mr-2 h-4 w-4 text-primary" />
+                      <div>
+                        <span className="font-medium">Event Link: </span> 
+                        <a 
+                          href={event.link} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline"
+                        >
+                          Join Event
+                        </a>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -269,8 +334,22 @@ export function EventFeed() {
                   <Share2 className="h-4 w-4 mr-2" />
                   Share
                 </Button>
-                <Button size="sm" className="flex-1 sm:flex-none" onClick={() => handleParticipate(event._id)}>
-                  {isParticipated(event) ? 'Cancel Registration' : 'Register Now'}
+                <Button 
+                  size="sm" 
+                  className={`flex-1 sm:flex-none ${
+                    isEventCompleted(event) ? 'bg-gray-500' : 
+                    isParticipated(event) ? 'bg-red-500 hover:bg-red-600' : 
+                    'bg-primary'
+                  }`}
+                  onClick={() => handleParticipate(event._id)}
+                  disabled={isEventCompleted(event)}
+                >
+                  {event.status === EventStatus.COMPLETED 
+                    ? 'Event Completed' 
+                    : isParticipated(event) 
+                      ? 'Cancel Registration' 
+                      : 'Register Now'
+                  }
                 </Button>
               </div>
             </div>

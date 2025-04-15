@@ -87,10 +87,11 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
           linkNameForm.reset({ linkName });
           setCurrentOperation(null);
         },
-        onError: () => {
+        onError: (error) => {
+          console.log('Error updating link name:', error);
           toast({
             title: tCommon('error'),
-            description: t('link_name_update_failed'),
+            description: t(error.err?.message || 'link_name_update_failed'),
             variant: 'destructive',
           });
           setCurrentOperation(null);
@@ -188,10 +189,10 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
           });
           setCurrentOperation(null);
         },
-        onError: () => {
+        onError: (error) => {
           toast({
             title: tCommon('error'),
-            description: t('unpublish_failed'),
+            description: t(error.err?.message || 'unpublish_failed'),
             variant: 'destructive',
           });
           setCurrentOperation(null);
@@ -219,7 +220,7 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
     await updateExhibition(
       {
         linkName,
-        status: ExhibitionStatus.PUBLISHED,
+        status: ExhibitionStatus.PENDING,
         startDate,
         endDate
       },
@@ -228,15 +229,15 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
           setIsPublished(true);
           toast({
             title: tCommon('success'),
-            description: t('exhibition_published'),
+            description: t('exhibition_pending'),
             variant: 'success',
           });
           setCurrentOperation(null);
         },
-        onError: () => {
+        onError: (error) => {
           toast({
             title: tCommon('error'),
-            description: t('publish_failed'),
+            description: t(error.err?.message || 'exhibition_pending_failed'),
             variant: 'destructive',
           });
           setCurrentOperation(null);

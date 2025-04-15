@@ -1,5 +1,5 @@
 import { ARTWORK_URL } from '@/utils/constants';
-import { GalleryTemplateData } from '@/types/gallery';
+import { GalleryRequestResponse, GalleryTemplateData } from '@/types/gallery';
 import { GetGalleriesResponse } from '@/types/gallery';
 import { ApiResponse } from '@/types/response';
 import { createApi } from '@/lib/axios';
@@ -278,7 +278,7 @@ export async function getGalleryTemplates(params?: {
       return res.data;
   } catch (error) {
       console.error('Error getting gallery templates:', error);
-      return handleApiError<GetGalleriesResponse>(
+      throw handleApiError<GetGalleriesResponse>(
           error,
           'Failed to fetch gallery templates'
       );
@@ -286,13 +286,13 @@ export async function getGalleryTemplates(params?: {
 }
 
 // Function to get a single gallery template by ID
-export async function getGalleryTemplate(id: string): Promise<ApiResponse<GalleryTemplateData>> {
+export async function getGalleryTemplate(id: string): Promise<ApiResponse<GalleryRequestResponse>> {
   try {
       const res = await createApi().get(`/gallery/${id}`);
       return res.data;
   } catch (error) {
       console.error(`Error getting gallery template ${id}:`, error);
-      return handleApiError<GalleryTemplateData>(
+      throw handleApiError<GalleryRequestResponse>(
           error,
           'Failed to fetch gallery template'
       );
