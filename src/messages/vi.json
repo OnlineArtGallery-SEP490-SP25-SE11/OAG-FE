@@ -33,6 +33,7 @@
     "delete": "Xóa",
     "processing": "Đang xử lý...",
     "close": "Đóng",
+    "you": "Bạn",
     "notifications": "Thông báo",
     "markAllAsRead": "Đánh dấu tất cả là đã đọc",
     "noNotifications": "Không có thông báo",
@@ -274,7 +275,24 @@
       "preview": "Xem trước"
     },
     "artwork_description": "Mô tả Tác phẩm",
-    "preview_note": "Ghi chú Xem trước"
+    "preview_note": "Ghi chú Xem trước",
+    "zoom_in": "Phóng to",
+    "zoom_out": "Thu nhỏ",
+    "swipe_to_change_tabs": "Vuốt để chuyển tab",
+    "comments": "Bình luận",
+    "info": "Thông tin",
+    "view_profile": "Xem hồ sơ",
+    "add_to_collection": "Thêm vào bộ sưu tập",
+    "buy_now": "Mua ngay",
+    "your_work": "Tác phẩm của bạn",
+    "no_comments": "Chưa có bình luận nào",
+    "add_comment": "Thêm bình luận",
+    "no_artwork_info": "Không có thông tin tác phẩm",
+    "loading": "Đang tải...",
+    "description": "Mô tả",
+    "price": "Giá",
+    "downloading": "Đang tải...",
+    "download_success": "Tải xuống thành công"
   },
   "artwork_management": {
     "title": "Quản lý tác phẩm",
@@ -374,8 +392,11 @@
       "validation": {
         "name_min_length": "Tên phải có ít nhất 2 ký tự",
         "name_max_length": "Tên không được vượt quá 50 ký tự",
+        "name_no_special_chars": "Tên không được chứa ký tự đặc biệt",
+        "address_max_length": "Địa chỉ không được vượt quá 200 ký tự",
         "bio_max_length": "Tiểu sử không được vượt quá 1000 ký tự",
-        "max_genres": "Không thể chọn quá 10 phong cách nghệ thuật"
+        "max_genres": "Không thể chọn quá 10 phong cách nghệ thuật",
+        "genre_max_length": "Mỗi phong cách nghệ thuật không được vượt quá 30 ký tự"
       }
     }
   },
@@ -579,7 +600,21 @@
       "download": "Tải ảnh",
       "downloading": "Đang tải {title}...",
       "download_success": "Đã tải {title} thành công",
-      "download_error": "Không thể tải ảnh. Vui lòng thử lại sau."
+      "download_error": "Không thể tải ảnh. Vui lòng thử lại sau.",
+      "zoom_in": "Phóng to",
+      "zoom_out": "Thu nhỏ",
+      "swipe_to_change_tabs": "Vuốt để chuyển tab",
+      "comments": "Bình luận",
+      "info": "Thông tin",
+      "view_profile": "Xem hồ sơ",
+      "add_to_collection": "Thêm vào bộ sưu tập",
+      "buy_now": "Mua ngay",
+      "your_work": "Tác phẩm của bạn",
+      "no_comments": "Chưa có bình luận nào",
+      "add_comment": "Thêm bình luận",
+      "no_artwork_info": "Không có thông tin tác phẩm",
+      "price": "Giá",
+      "loading": "Đang tải..."
     }
   },
   "artist_layout": {
