@@ -1,4 +1,4 @@
-import { createApi } from "@/lib/axios";
+import { createApi, createAxiosInstance } from "@/lib/axios";
 import { ArtworksResponse } from "@/types/artwork";
 import { ApiResponse } from "@/types/response";
 import { handleApiError } from "@/utils/error-handler";
@@ -9,7 +9,7 @@ export const getArtistArtworks = async (accessToken: string): Promise<ApiRespons
         return res.data;
     } catch (error) {
         console.error('Error getting artist artworks:', error);
-        throw handleApiError<ArtworksResponse>(
+        return handleApiError<ArtworksResponse>(
             error,
             'Failed to fetch artist artworks'
         );
@@ -31,7 +31,7 @@ export const getUserBalance = async (accessToken: string): Promise<ApiResponse<{
         return res.data;
     } catch (error) {
         console.error('Lỗi khi lấy số dư ví:', error);
-        throw handleApiError<{ balance: number }>(
+        return handleApiError<{ balance: number }>(
             error,
             'Không thể lấy thông tin số dư ví'
         );
@@ -48,7 +48,7 @@ export const purchaseArtwork = async (
         return res.data;
     } catch (error) {
         console.error('Lỗi khi mua tranh:', error);
-        throw handleApiError<PurchaseArtworkResponse>(
+        return handleApiError<PurchaseArtworkResponse>(
             error,
             'Không thể hoàn tất giao dịch mua tranh'
         );
@@ -84,9 +84,66 @@ export const checkUserPurchased = async (
         return res.data;
     } catch (error) {
         console.error('Lỗi khi kiểm tra trạng thái mua tranh:', error);
-        throw handleApiError<{ hasPurchased: boolean }>(
+        return handleApiError<{ hasPurchased: boolean }>(
             error,
             'Không thể kiểm tra trạng thái mua tranh'
         );
     }
 };
+
+
+const artworkService = {
+    async getUserBalance (): Promise<ApiResponse<{ balance: number }>> {
+        try {
+            const axios = await createAxiosInstance({ useToken: true });
+            if (!axios) {
+                throw new Error("Failed to create axios instance");
+            }
+            const res = await axios.get("/wallet");
+            // const res = await createApi(accessToken).get('/wallet');
+            return res.data;
+        } catch (error) {
+            console.error('Lỗi khi lấy số dư ví:', error);
+            return handleApiError<{ balance: number }>(
+                error,
+                'Không thể lấy thông tin số dư ví'
+            );
+        }
+    },
+    async checkUserPurchased (artworkId: string): Promise<ApiResponse<{ hasPurchased: boolean }>> {
+        try {
+            const axios = await createAxiosInstance({ useToken: true });
+            if (!axios) {
+                throw new Error("Failed to create axios instance");
+            }
+            const res = await axios.get(`/artwork/${artworkId}/check-purchased`);
+            // const res = await createApi(accessToken).get(`/artwork/${artworkId}/check-purchased`);
+            // console.log('rescac', res.data);
+            return res.data;
+        } catch (error) {
+            console.error('Lỗi khi kiểm tra trạng thái mua tranh:', error);
+            return handleApiError<{ hasPurchased: boolean }>(
+                error,
+                'Không thể kiểm tra trạng thái mua tranh'
+            );
+        }
+    },
+    async purchaseArtwork (artworkId: string): Promise<ApiResponse<PurchaseArtworkResponse>> {
+        try {
+            const axios = await createAxiosInstance({ useToken: true });
+            if (!axios) {
+                throw new Error("Failed to create axios instance");
+            }
+            const res = await axios.post(`/artwork/${artworkId}/purchase`);
+            // const res = await createApi(accessToken).post(`/artwork/${artworkId}/purchase`);
+            return res.data;
+        } catch (error) {
+            console.error('Lỗi khi mua tranh:', error);
+            return handleApiError<PurchaseArtworkResponse>(
+                error,
+                'Không thể hoàn tất giao dịch mua tranh'
+            );
+        }
+    }
+}
+export default artworkService;

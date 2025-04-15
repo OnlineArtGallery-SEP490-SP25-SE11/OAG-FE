@@ -44,7 +44,8 @@
     "markAsRead": "Mark as read",
     "deleteNotification": "Delete notification",
     "noTitle": "No title",
-    "noContent": "No content"
+    "noContent": "No content",
+    "loading": "Loading..."
   },
   "not_artist_display": {
     "title": "Unlock Your Artist Journey",
@@ -311,7 +312,46 @@
     "no_artwork_info": "No artwork information available",
     "price": "Price",
     "downloading": "Downloading...",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "preview_note": "Preview Note",
+    "toggle_details": "Toggle details",
+    "drag_to_pan": "Drag to pan",
+    "remove_from_favorites": "Remove from favorites",
+    "add_to_favorites": "Add to favorites",
+    "comments_standard_view": "Switch to standard view for comments",
+    "zoom_in": "Zoom in",
+    "zoom_out": "Zoom out",
+    "reset_zoom": "Reset zoom",
+    "loading_image": "Loading image...",
+    "download_not_available": "Download not available",
+    "please_use_standard_view": "Please use standard view for this action",
+    "purchase_not_available": "Purchase not available",
+    "collection_not_available": "Collection not available",
+    "swipe_to_change_tabs": "Swipe to change tabs",
+    "no_description": "No description provided",
+    "no_comments": "No comments yet",
+    "info": "Info",
+    "comments": "Comments",
+    "report_artwork": "Report artwork",
+    "yours": "Yours",
+    "purchased": "Purchased",
+    "buy": "Buy",
+    "save": "Save",
+    "download": "Download",
+    "description": "Description",
+    "be_first_comment": "Be the first to comment",
+    "add_comment": "Add a comment",
+    "user": "User",
+    "days_ago": "{days} days ago",
+    "comment_example": "Great artwork! I love the composition and colors.",
+    "downloading": "Downloading...",
+    "download_success": "Downloaded successfully",
+    "download_error": "Download error",
+    "no_artwork_info": "No artwork information available",
+    "standard_view": "Standard view",
+    "immersive_view": "Immersive view",
+    "close_details": "Close details",
+    "categories": "Categories"
   },
   "artwork_management": {
     "title": "Artwork Management",
@@ -429,7 +469,8 @@
     "artists": "Artists",
     "materials": "Materials",
     "waysToBuy": "Ways to Buy",
-    "size": "Size"
+    "size": "Size",
+    "status": "Status"
   },
   "artworkPage": {
     "filter": {
@@ -606,6 +647,7 @@
       "recent": "Recently Purchased",
       "downloaded": "Downloaded",
       "not_downloaded": "Not Downloaded"
+
     },
     "empty": {
       "title": "No artworks in warehouse",
@@ -650,5 +692,67 @@
     "main_section": "Main",
     "content_section": "Content",
     "account_section": "Account"
+  },
+  "artcard": {
+    "sold": "Sold",
+    "display_only": "Display Only",
+    "not_for_sale": "Not For Sale",
+    "view_artwork_details": "View {title} artwork details"
+  },
+  "artworks": {
+    "list_view_disabled": "List view temporarily disabled",
+    "end_of_list": "All {count} of {total} artworks loaded",
+    "no_artworks_found": "No artworks found",
+    "loading_more": "Loading more artworks..."
+  },
+  "report": {
+    "button": "Report",
+    "buttonAriaLabel": "Click to report",
+    "closeAriaLabel": "Close dialog",
+    "cancelAriaLabel": "Cancel report",
+    "submitAriaLabel": "Submit report",
+    "title": "Report Content",
+    "description": "Please let us know why you're reporting this content. Your report will be reviewed by our moderation team.",
+    "fields": {
+      "reason": "Reason",
+      "url": "URL",
+      "type": "Type",
+      "description": "Description",
+      "evidence": "Evidence Images",
+      "optional": "optional"
+    },
+    "placeholders": {
+      "description": "Please provide details about this report",
+      "url": "Link to related content",
+      "noFiles": "No files selected"
+    },
+    "help": {
+      "description": "More specific descriptions help us process reports faster",
+      "evidence": "Upload images to support your report"
+    },
+    "button": {
+      "submit": "Submit Report",
+      "submitting": "Submitting..."
+    },
+    "toast": {
+      "success": "Report submitted successfully",
+      "error": "Failed to submit report"
+    },
+    "reasons": {
+      "spam": "Spam",
+      "harassment": "Harassment",
+      "hate_speech": "Hate Speech",
+      "violence": "Violence",
+      "nudity": "Nudity",
+      "copyright": "Copyright Violation",
+      "others": "Other",
+      "inappropriate": "Inappropriate Content",
+      "other": "Other"
+    },
+    "types": {
+      "user": "User",
+      "artwork": "Artwork",
+      "blog": "Blog"
+    }
   }
 }
