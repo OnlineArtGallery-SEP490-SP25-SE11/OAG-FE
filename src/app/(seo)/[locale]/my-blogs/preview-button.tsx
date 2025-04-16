@@ -6,11 +6,11 @@ import { useTranslations } from 'next-intl';
 
 interface PreviewButtonProps {
 	blog: {
-		id: string;
+		_id: string;
 		title: string;
 		content: string;
 		createdAt: Date;
-		imageUrl: string;
+		image: string;
 	};
 }
 

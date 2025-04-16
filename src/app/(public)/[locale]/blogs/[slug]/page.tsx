@@ -18,7 +18,7 @@ export default async function BlogPage({
 		getCurrentUser(),
 		getBlogById(blogId)
 	]);
-	const blog = res.data;
+	const blog = res.data?.blog;
 	if (!blog) {
 		throw new NotFoundError('Blog not found');
 	}

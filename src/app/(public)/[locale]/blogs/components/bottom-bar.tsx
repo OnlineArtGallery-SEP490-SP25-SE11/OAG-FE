@@ -1,16 +1,17 @@
 "use client"; // 🔹 Thêm dòng này vào đầu file
 
 import { useEffect, useState } from "react";
-import { Heart, MessageCircle, Bookmark, MoreVertical } from "lucide-react";
+import { Heart, MessageCircle, MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ToggleHeartButton } from "@/components/ui.custom/toggle-heart-button";
 import { HeartCountDisplay } from "@/components/ui.custom/heart-count-display";
-import { ToggleBookmarkButton } from "@/components/ui.custom/toggle-bookmark-button";
+// import { ToggleBookmarkButton } from "@/components/ui.custom/toggle-bookmark-button";
 import { TooltipCustom } from "@/components/ui.custom/tooltip-custom";
 import { getCurrentUser } from "@/lib/session";
 
 export function BottomBar({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isBookmarked,
   userId,
   isHearted,
@@ -63,7 +64,7 @@ export function BottomBar({
           <MessageCircle className="w-5 h-5" />
         )}
         <Separator />
-        {userId ? (
+        {/* {userId ? (
           <ToggleBookmarkButton
             blogId={blogId}
             initialBookmarked={isBookmarked}
@@ -75,7 +76,7 @@ export function BottomBar({
               <Bookmark className="w-5 h-5" />
             )}
           </Link>
-        )}
+        )} */}
         <Separator />
         {renderIconButton("More Options", <MoreVertical className="w-5 h-5" />)}
       </div>

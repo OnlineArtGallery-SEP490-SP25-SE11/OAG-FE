@@ -20,9 +20,10 @@ export default function CreateExhibitionButton( { isPremium }: { isPremium: bool
     const { execute, isPending } = useServerAction(createExhibitionAction, {
         onSuccess: (result) => {
             toast({
+                variant: "success",
                 title: tCommon("success"),
                 description: t("exhibition_created_success"),
-                variant: "success"
+                className: "bg-green-500 text-white"
             });
             setIsModalOpen(false);
             router.push(`/creator/${result.data.exhibition._id}/artworks`);
