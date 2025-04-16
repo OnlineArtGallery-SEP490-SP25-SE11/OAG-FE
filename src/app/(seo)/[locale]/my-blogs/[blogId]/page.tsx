@@ -17,7 +17,7 @@ export default async function DraftPage({
 		notFound();
 	}
 	const res = await getBlogById(blogId);
-	const blog = res.data;
+	const blog = res.data?.blog;
 	if (!blog || blog.author._id !== user.id) {
 		notFound();	
 	}

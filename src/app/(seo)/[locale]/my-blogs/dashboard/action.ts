@@ -1,8 +1,9 @@
 'use server';
 
 import { authenticatedAction } from '@/lib/safe-action';
+import { deleteBlog } from '@/service/blog';
+import { revalidatePath } from 'next/cache';
 // import { deleteBlogUseCase } from "@/use-cases/blogs";
-import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
 export const deleteBlogAction = authenticatedAction
@@ -13,8 +14,8 @@ export const deleteBlogAction = authenticatedAction
 		})
 	)
 	.handler(async ({ input, ctx }) => {
-		// const blogId = input.blogId;
-		// await deleteBlogUseCase(blogId);
-		console.log('input delete blog', input, ctx);
-		redirect('/blogs/dashboard/posts');
+		const blogId = input.blogId;
+		const res = await deleteBlog(ctx.user.accessToken, blogId);
+		revalidatePath('/my-blogs');
+		return res.data; 
 	});

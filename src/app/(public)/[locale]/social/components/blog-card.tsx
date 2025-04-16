@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  BookmarkPlusIcon,
+  // BookmarkPlusIcon,
   Flag,
   Heart,
   MessagesSquare,
@@ -13,7 +13,7 @@ import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 import { createExcerpt, sanitizeBlogContent } from "@/app/utils";
-import { ToggleBookmarkButton } from "@/components/ui.custom/toggle-bookmark-button";
+// import { ToggleBookmarkButton } from "@/components/ui.custom/toggle-bookmark-button";
 import { ToggleHeartButton } from "@/components/ui.custom/toggle-heart-button";
 import { useParams } from "next/navigation";
 import ReportButton from "@/components/ui.custom/report-button";
@@ -81,6 +81,7 @@ export function BlogCard({
   publishedAt,
   readTime,
   slug,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isBookmarked,
   isSignedIn,
   isHearted,
@@ -533,7 +534,7 @@ export function BlogCard({
             </Link>
           )}
         </div>
-        {isSignedIn ? (
+        {/* {isSignedIn ? (
           <ToggleBookmarkButton
             blogId={slug}
             initialBookmarked={isBookmarked}
@@ -548,7 +549,7 @@ export function BlogCard({
               <BookmarkPlusIcon className="text-gray-600 dark:text-gray-300" />
             </Button>
           </Link>
-        )}
+        )} */}
       </div>
     </div>
   );

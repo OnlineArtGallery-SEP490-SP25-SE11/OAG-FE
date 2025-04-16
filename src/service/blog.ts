@@ -6,7 +6,7 @@ import { BlogStatus } from '@/utils/enums';
 import axiosInstance from 'axios';
 import { handleApiError } from '@/utils/error-handler';
 
-export async function getBlogById(blogId: string) {
+export async function getBlogById(blogId: string) :Promise<ApiResponse<BlogRequestResponse>> {
 	try {
 		const res = await createApi().get(`/blog/${blogId}`);
 		return res.data;
@@ -16,7 +16,7 @@ export async function getBlogById(blogId: string) {
 	}
 }
 
-export async function getLastEditedBlogId(accessToken: string)  {
+export async function getLastEditedBlogId(accessToken: string): Promise<ApiResponse<BlogRequestResponse>> {
 	try {
 		const res = await createApi(accessToken).get('/blog/last-edited');
 		return res.data;
@@ -183,11 +183,6 @@ export async function createPublicRequest({
 export async function getUserBlogs(accessToken: string): Promise<ApiResponse<UserBlogsResponse>> {
 	try {
 		const response = await createApi(accessToken).get('/blog/user-blogs');
-
-		if (response.status !== 200) {
-			throw new Error(response.data.message || 'Failed to fetch blogs');
-		}
-		console.log(response.data, 'user blogs');
 		return response.data;
 	} catch (error) {
 		console.error(`Error when get user blogs:`, error);
@@ -200,7 +195,19 @@ export async function getUserBlogs(accessToken: string): Promise<ApiResponse<Use
 
 
 
-
+//delete blog
+export async function deleteBlog(accessToken: string, blogId: string) :Promise<ApiResponse<BlogRequestResponse>> {
+	try {
+		const res = await createApi(accessToken).delete(`/blog/${blogId}`);
+		return res.data;
+	} catch (error) {
+		console.error(`Error when delete blog:`, error);
+		throw handleApiError<BlogRequestResponse>(
+			error,
+			'Failed to delete blog'
+		);
+	}
+}
 
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
