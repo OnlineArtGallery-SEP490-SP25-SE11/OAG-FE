@@ -42,6 +42,21 @@ const eventService = {
             console.error("Error participating in event:", error);
             return null;
         }
+    },
+    
+    async getUpcomingEvents(){
+        try{
+            const axios = await createAxiosInstance({useToken:false})
+            if(!axios){
+                throw new Error("Failed to create axios instance");
+            }
+            const res = await axios.get("/event/upcoming")
+            return res.data.data;
+        }
+        catch(error){
+            console.error("Error getting upcoming events:", error);
+            return null;
+        }
     }
 }
 

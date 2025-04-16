@@ -74,7 +74,7 @@ export default function AuthButton() {
 	
 	return (
 		<div className='flex flex-row space-x-2'>
-			<Notification />
+			{/* <Notification /> */}
 			<CustomDropdown 
 				trigger={
 					<HeaderButton
