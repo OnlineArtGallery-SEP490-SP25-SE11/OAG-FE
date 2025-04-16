@@ -177,3 +177,14 @@ export async function isFollowing(token: string, targetUserId: string): Promise<
 	}
 }
 
+// 🔹 Get user profile by ID
+export async function getUserProfile(token: string, userId: string): Promise<{user: User, isFollowing: boolean}> {
+	try {
+		const res = await createApi(token).get(`/user/profile/${userId}`)
+		return res.data
+	} catch (error) {
+		console.error('Failed to fetch user profile', error);
+		throw error;
+	}
+}
+

@@ -128,8 +128,8 @@ const ArtCard: React.FC<ArtCardProps> = ({ data, width, index }) => {
 
 						{!artworkStatus || (data.status !== 'display' && data.price > 0) ? (
 							<span className="text-xs font-medium text-gray-900 dark:text-gray-100 whitespace-nowrap ml-2">
-                {vietnamCurrency(data.price)}
-              </span>
+								{vietnamCurrency(data.price)}
+							</span>
 						) : null}
 					</div>
 				</div>

@@ -606,9 +606,13 @@ function Modal({
                                                                     </p>
                                                                 </div>
                                                             </div>
-                                                            <Badge variant="outline" className="bg-white/5 hover:bg-white/10 text-xs sm:text-sm whitespace-nowrap">
+                                                            <Button
+                                                                variant="outline"
+                                                                className="bg-white/5 hover:bg-white/10 text-xs sm:text-sm whitespace-nowrap"
+                                                                onClick={() => artwork.artistId?._id && router.push(`/${pathname.split('/')[1] || 'vi'}/settings/profile/${artwork.artistId._id}`)}
+                                                            >
                                                                 {t('artwork.view_profile')}
-                                                            </Badge>
+                                                            </Button>
                                                         </div>
                                                     )}
 
