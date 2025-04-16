@@ -3,13 +3,16 @@ import { BlogContentRenderer } from './blog-conten-renderer';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { BookOpen } from 'lucide-react';
 import { BottomBar } from './bottom-bar';
-import { User } from 'next-auth';
 import { Blog } from '@/types/blog';
 import { calculateReadingTime } from '@/app/utils';
 
 interface BlogPostProps {
 	blog: Blog;
-	author: User;
+	author: {
+		_id: string;
+		name: string;
+		image: string;
+	};
 	userId?: string;
 	isBookmarked: boolean;
 	isHearted: boolean;
@@ -57,7 +60,11 @@ function BlogAuthorInfo({
 	postDate,
 	readingTime
 }: {
-	author: User;
+	author: {
+		_id: string;
+		name: string;
+		image: string;
+	};
 	postDate: string;
 	readingTime: number;
 }) {

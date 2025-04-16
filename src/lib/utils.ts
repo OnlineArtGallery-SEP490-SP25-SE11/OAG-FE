@@ -6,6 +6,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { jwtDecode } from 'jwt-decode';
 import { twMerge } from 'tailwind-merge';
 import slugify from 'slugify';
+import { Exhibition } from '@/types/exhibition';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -16,6 +17,24 @@ export const formatTime = (seconds: number) =>  {
 	const remainingSeconds = seconds % 60;
 	return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
+
+const padZero = (num: number): string => String(num).padStart(2, '0');
+
+export const formatDate = (date: Date): string => {
+  if (!(date instanceof Date) || isNaN(date.getTime())) {
+    console.error("Invalid date passed to formatDate:", date);
+    return "Invalid Date";
+  }
+
+  const year = date.getFullYear();
+  const month = padZero(date.getMonth() + 1); // getMonth() is 0-indexed (0-11)
+  const day = padZero(date.getDate());
+//   const hour = padZero(date.getHours());
+//   const minute = padZero(date.getMinutes());
+//   const second = padZero(date.getSeconds());
+
+  return `${day}-${month}-${year}`;
+}
 
 export const isTokenExpired = (token: string): boolean => {
 	if (!token) return true;
@@ -58,3 +77,22 @@ export function createSlug(title: string): string {
 		remove: /[*+~.()'"!:@]/g // Remove specific characters
 	});
 }
+
+
+
+export function getLocalizedContent(exhibition: Exhibition, locale: string) {
+	// Try to find content matching current locale
+	const localContent = exhibition.contents.find(
+	  content => content.languageCode === locale
+	);
+  
+	if (!localContent) {
+	  // If no match, try to find content in default language
+	  const defaultLang = exhibition.languageOptions.find(lang => lang.isDefault);
+	  return exhibition.contents.find(
+		content => content.languageCode === defaultLang?.code
+	  ) || exhibition.contents[0]; // Fallback to first content if no default found
+	}
+  
+	return localContent;
+  }

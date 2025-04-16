@@ -23,6 +23,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Blog } from '@/types/blog';
+import { DeleteBlogButton } from './dashboard/delete-blog-button';
+import { BlogStatus } from '@/utils/enums';
 
 const DropdownMenuItemWithIcon = ({
 	icon: Icon,
@@ -85,8 +87,8 @@ const BlogEntryDropdown = ({
 						onClick={() =>
 							copyArticleLink(
 								process.env.NEXT_PUBLIC_HOST_NAME +
-									'/blogs/' +
-									id
+								'/blogs/' +
+								id
 							)
 						}
 					/>
@@ -109,12 +111,14 @@ const BlogEntryDropdown = ({
                     <DropdownMenuItemWithIcon icon={Eye} iconColor="green" text="Preview draft" /> */}
 				</>
 			)}
-			<DropdownMenuItemWithIcon
-				icon={Trash}
-				iconColor='red'
-				text='Delete'
-				className='cursor-not-allowed'
-			/>
+			<DeleteBlogButton blogId={id}>
+				<DropdownMenuItem onSelect={(event) => {
+					event.preventDefault();
+				}} className='flex items-center space-x-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer text-red-500'>
+					<Trash size={16} />
+					<span className='text-gray-700 dark:text-gray-300'>Delete</span>
+				</DropdownMenuItem>
+			</DeleteBlogButton>
 		</DropdownMenuContent>
 	</DropdownMenu>
 );
@@ -173,9 +177,15 @@ const BlogSection = ({ title, blogs }: { title: string; blogs: Blog[] }) => (
 				{title}
 			</AccordionTrigger>
 			<AccordionContent>
-				{blogs.map((blog) => (
-					<BlogEntry key={blog._id} blog={blog} />
-				))}
+				{blogs.length === 0 ? (
+					<div className="py-2 px-3 text-sm text-gray-500 italic">
+						No blogs yet
+					</div>
+				) : (
+					blogs.map((blog) => (
+						<BlogEntry key={blog._id} blog={blog} />
+					))
+				)}
 			</AccordionContent>
 		</AccordionItem>
 	</Accordion>
@@ -186,9 +196,16 @@ interface BlogSectionProps {
 }
 
 export function SidebarBlogSection({ blogs }: BlogSectionProps) {
-	const publishedBlogs = blogs.filter((blog) => blog.status === 'PUBLISHED');
-	const draftBlogs = blogs.filter((blog) => blog.status !== 'PUBLISHED' ); // DRAFT , PENDING_REVIEW, REJECTED
-
+	let publishedBlogs: Blog[] = [];
+	let draftBlogs: Blog[] = [];
+	console.log('blogz1', blogs);
+	if (blogs.length > 0) {
+		publishedBlogs = blogs.filter((blog) => blog.status === BlogStatus.PUBLISHED) ?? [];
+		draftBlogs = blogs.filter((blog) => blog.status !== BlogStatus.PUBLISHED) ?? [];
+		
+		console.log('Published Blogs:', publishedBlogs);
+		console.log('Draft Blogs:', draftBlogs);
+	}
 	return (
 		<div>
 			<BlogSection title='MY DRAFT' blogs={draftBlogs} />

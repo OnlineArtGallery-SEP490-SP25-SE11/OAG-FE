@@ -1,7 +1,6 @@
 'use client'
 import { Canvas } from "@react-three/fiber";
 import { Environment, PerspectiveCamera, PointerLockControls, Preload } from "@react-three/drei";
-import { ModernRoom } from "../../../../(exhibitions)/[locale]/exhibitions/components/rooms/modern-room";
 import { Suspense, useState, useCallback } from "react";
 import { Physics } from "@react-three/cannon";
 import Image from "next/image";
@@ -9,6 +8,7 @@ import { GalleryPreviewLoader } from "./gallery-preview-loader";
 import { GALLERY_CONFIG } from "@/utils/gallery-config";
 import { Crosshair } from "../../../../(exhibitions)/[locale]/exhibitions/components/crosshair";
 import Player from "../../../../(exhibitions)/[locale]/exhibitions/components/player";
+import CozyGallery from "./cozy-room";
 
 export function FeaturedGalleryPreview() {
   const [isPointerLocked, setIsPointerLocked] = useState(false);
@@ -53,10 +53,8 @@ export function FeaturedGalleryPreview() {
               gravity={GALLERY_CONFIG.PHYSICS.GRAVITY}
               defaultContactMaterial={GALLERY_CONFIG.PHYSICS.CONTACT_MATERIAL}
             >
-              {/* <SecondFloor /> */}
-              {/* <Floor /> */}
               <Player />
-              <ModernRoom />
+              <CozyGallery />
             </Physics>
 
             <Preload all />

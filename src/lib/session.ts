@@ -82,6 +82,24 @@ export const assertAdmin = async () => {
 	}
 };
 
+export const assertArtist = async () => {
+	try {
+		const user = await assertAuthenticated();
+		if (!user || !user.role.includes('artist')) {
+			throw new AuthorizationError();
+		}
+		return user;
+	} catch (error) {
+		if (error instanceof AuthenticationError) {
+			redirect('/sign-in');
+		}
+		if (error instanceof AuthorizationError) {
+			redirect('/403');
+		}
+		throw error;
+	}
+}
+
 export async function getTokens(): Promise<TokenPair | undefined> {
 	const accessToken = cookies().get('accessToken')?.value;
 	const refreshToken = cookies().get('refreshToken')?.value;

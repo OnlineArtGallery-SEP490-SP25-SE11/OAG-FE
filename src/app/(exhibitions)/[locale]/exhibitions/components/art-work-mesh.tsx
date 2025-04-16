@@ -1,222 +1,224 @@
+// src/app/(exhibitions)/[locale]/exhibitions/[linkname]/components/art-work-mesh.tsx
 'use client'
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState, useEffect } from "react";
 import { Mesh, Vector3, BoxGeometry, PlaneGeometry, MeshStandardMaterial, MeshBasicMaterial } from "three";
 import { Vec3 } from "@/types/gallery";
 import { useRaycaster } from "@/hooks/useRaycaster";
 import { ArtworkPortal } from "./artwork-portal";
-
 import { ArtworkInfoOverlay } from './artwork-info-overlay';
-
 import { useCameraTransition } from '@/hooks/useCameraTransition';
 import { useCameraStore } from '@/store/cameraStore';
 import { TEXTURE_URL } from '@/utils/constants';
 import { useCloudinaryAsset } from '@/hooks/useCloudinaryAsset';
+import { GalleryArtwork } from './gallery';
+import { Session } from "next-auth";
 
-// Định nghĩa các hằng số
-const FRAME_THICKNESS = 0.1; // Độ dày của khung tranh
-const BASE_HEIGHT = 2; // Chiều cao cơ bản của tranh
+// Constants
+const FRAME_THICKNESS = 0.1;
+const BASE_HEIGHT = 2;
 const METALNESS = 0.1;
 const ROUGHNESS = 0.8;
 const ENV_MAP_INTENSITY = 0.5;
 
-// Định nghĩa interface cho dữ liệu tranh
-interface Artwork {
-	id: number; // ID duy nhất của tranh
-	url: string; // Đường dẫn đến hình ảnh tranh
-	position: Vec3; // Vị trí trong không gian 3D (x, y, z)
-	rotation?: Vec3; // Góc quay của tranh (tùy chọn)
-	title?: string; // Tiêu đề tranh (tùy chọn)
-	description?: string; // Mô tả tranh (tùy chọn),
-}
-
-// Props cho component khung tranh
+// Props for frame mesh
 interface FrameMeshProps {
-	width: number; // Chiều rộng khung
-	height: number; // Chiều cao khung
+    width: number;
+    height: number;
 }
 
-// Định nghĩa hàm tạo geometry cho khung tranh
+// Define geometry creation functions for the frame
 const FRAME_GEOMETRY = {
-	// Tạo thanh ngang của khung
-	createHorizontal: (width: number) =>
-		new BoxGeometry(width + FRAME_THICKNESS * 2, FRAME_THICKNESS, 0.1),
-	// Tạo thanh dọc của khung
-	createVertical: (height: number) =>
-		new BoxGeometry(FRAME_THICKNESS, height, 0.1)
+    createHorizontal: (width: number) =>
+        new BoxGeometry(width + FRAME_THICKNESS * 2, FRAME_THICKNESS, 0.1),
+    createVertical: (height: number) =>
+        new BoxGeometry(FRAME_THICKNESS, height, 0.1)
 };
 
-// Component khung tranh
-const FrameMesh: React.FC<FrameMeshProps> = React.memo(({ width, height}) => {
-	// Load texture cho khung tranh
-	const frameTexture = useCloudinaryAsset(TEXTURE_URL.FLOOR);
-
-	// Điều chỉnh material để giảm ảnh hưởng của ánh sáng
-	const frameMaterial = useMemo(
-		() =>
-			new MeshStandardMaterial({
-				map: frameTexture,
-				metalness: METALNESS, // Giảm độ phản chiếu kim loại
-				roughness: ROUGHNESS, // Tăng độ nhám để giảm độ bóng
-				envMapIntensity: ENV_MAP_INTENSITY // Giảm cường độ phản chiếu môi trường
-			}),
-		[frameTexture]
-	);
-
-	// Tạo và tái sử dụng các geometry cho khung
-	const geometries = useMemo(
-		() => ({
-			horizontal: FRAME_GEOMETRY.createHorizontal(width),
-			vertical: FRAME_GEOMETRY.createVertical(height)
-		}),
-		[width, height]
-	);
-
-	return (
-		<group>
-			{/* Thanh ngang phía trên */}
-			<mesh
-				position={[0, height / 2 + FRAME_THICKNESS / 2, 0]}
-				geometry={geometries.horizontal}
-				material={frameMaterial}
-			/>
-			{/* Thanh ngang phía dưới */}
-			<mesh
-				position={[0, -height / 2 - FRAME_THICKNESS / 2, 0]}
-				geometry={geometries.horizontal}
-				material={frameMaterial}
-			/>
-			{/* Thanh dọc bên trái */}
-			<mesh
-				position={[-width / 2 - FRAME_THICKNESS / 2, 0, 0]}
-				geometry={geometries.vertical}
-				material={frameMaterial}
-			/>
-			{/* Thanh dọc bên phải */}
-			<mesh
-				position={[width / 2 + FRAME_THICKNESS / 2, 0, 0]}
-				geometry={geometries.vertical}
-				material={frameMaterial}
-			/>
-		</group>
-	);
+// Frame component
+const FrameMesh: React.FC<FrameMeshProps> = React.memo(({ width, height }) => {
+    const frameTexture = useCloudinaryAsset(TEXTURE_URL.FLOOR);
+    const frameMaterial = useMemo(
+        () =>
+            new MeshStandardMaterial({
+                map: frameTexture,
+                metalness: METALNESS,
+                roughness: ROUGHNESS,
+                envMapIntensity: ENV_MAP_INTENSITY
+            }),
+        [frameTexture]
+    );
+    const geometries = useMemo(
+        () => ({
+            horizontal: FRAME_GEOMETRY.createHorizontal(width),
+            vertical: FRAME_GEOMETRY.createVertical(height)
+        }),
+        [width, height]
+    );
+    return (
+        <group>
+            <mesh position={[0, height / 2 + FRAME_THICKNESS / 2, 0]} geometry={geometries.horizontal} material={frameMaterial} />
+            <mesh position={[0, -height / 2 - FRAME_THICKNESS / 2, 0]} geometry={geometries.horizontal} material={frameMaterial} />
+            <mesh position={[-width / 2 - FRAME_THICKNESS / 2, 0, 0]} geometry={geometries.vertical} material={frameMaterial} />
+            <mesh position={[width / 2 + FRAME_THICKNESS / 2, 0, 0]} geometry={geometries.vertical} material={frameMaterial} />
+        </group>
+    );
 });
 
-// Component chính hiển thị tranh
-export const ArtworkMesh: React.FC<{ artwork: Artwork }> = React.memo(
-	({ artwork }) => {
-		// State quản lý hiển thị chi tiết và modal
-		const [showDetails, setShowDetails] = useState(false);
-		const [shouldShowModal, setShouldShowModal] = useState(false);
+interface ArtworkMeshProps {
+    galleryArtwork: GalleryArtwork;
+    session: Session | null;
+}
 
-		// Ref cho mesh chính
-		const meshRef = useRef<Mesh>(null);
+// Main artwork component
+export const ArtworkMesh: React.FC<ArtworkMeshProps> = React.memo(
+    ({ galleryArtwork, session }) => {
+        // State:
+        // showDetails: Has the interaction process started (prevents re-triggering intersect)?
+        // shouldShowModal: Should the modal content actually be rendered?
+        const [showDetails, setShowDetails] = useState(false);
+        const [shouldShowModal, setShouldShowModal] = useState(false);
+        const meshRef = useRef<Mesh>(null);
+        const interactionTimerRef = useRef<NodeJS.Timeout | null>(null); // Timer for modal delay
+        const { setTargetPosition } = useCameraStore();
 
-		// Hook để điều khiển camera
-		const { setTargetPosition } = useCameraStore();
-		useCameraTransition();
+        // Hooks
+        useCameraTransition(); // Listens to targetPosition changes
 
-		// Xử lý khi người dùng click vào tranh
-		const handleIntersect = useCallback(() => {
-			if (!meshRef.current) return;
+        // Props extraction
+        const { artwork, placement, exhibitionId, likes } = galleryArtwork;
+        const user = session?.user;
 
-			// Lấy vị trí trong không gian thế giới
-			const worldPosition = new Vector3();
-			meshRef.current.getWorldPosition(worldPosition);
+        // --- Interaction Handlers ---
 
-			// Cập nhật vị trí camera và hiển thị chi tiết
-			setTargetPosition(worldPosition);
-			setShowDetails(true);
+        const handleIntersect = useCallback(() => {
+            // Ignore if interaction already started or mesh doesn't exist
+            if (showDetails || !meshRef.current) {
+                // console.log("Intersect ignored: showDetails =", showDetails);
+                return;
+            }
 
-			// Hiển thị modal sau 1 giây
-			setTimeout(() => {
-				setShouldShowModal(true);
-			}, 1000);
-		}, [meshRef, setTargetPosition]);
+            // console.log("Intersect triggered - Starting interaction");
+            setShowDetails(true); // Lock this interaction sequence
 
-		// Xử lý đóng modal
-		const handleClose = useCallback(() => {
-			setShouldShowModal(false);
-			setShowDetails(false);
-			setTargetPosition(null);
-		}, [setTargetPosition]);
+            // Trigger camera transition
+            const worldPosition = new Vector3();
+            meshRef.current.getWorldPosition(worldPosition);
+            setTargetPosition(worldPosition);
 
-		// Xử lý khi click ra ngoài tranh
-		const handleMiss = useCallback(() => {
-			if (showDetails) {
-				handleClose();
-			}
-		}, [showDetails, handleClose]);
+            // Clear any previous timer just in case
+            if (interactionTimerRef.current) {
+                clearTimeout(interactionTimerRef.current);
+            }
 
-		// Hook xử lý raycasting
-		useRaycaster({
-			meshRef,
-			onIntersect: handleIntersect,
-			onMiss: handleMiss
-		});
+            // Set timer to show the modal content after a delay
+            interactionTimerRef.current = setTimeout(() => {
+                // console.log("Timeout finished - Setting shouldShowModal=true");
+                // No need to check showDetails here again, handleClose clears the timer
+                setShouldShowModal(true);
+                interactionTimerRef.current = null; // Clear ref after execution
+            }, 1000); // 1 second delay
 
-		// Load texture cho tranh
-		const texture = useCloudinaryAsset(artwork.url);
+        }, [showDetails, meshRef, setTargetPosition]); // Dependencies
 
-		// Tạo material cho tranh
-		const artworkMaterial = useMemo(
-			() =>
-				new MeshBasicMaterial({
-					map: texture
-				}),
-			[texture]
-		);
+        const handleClose = useCallback((e?: React.MouseEvent | MouseEvent) => {
+            // If event exists and it's coming from a button click, ignore it
+            if (e?.target instanceof HTMLButtonElement) {
+              return;
+            }            // console.log("handleClose called");
 
-		// Tính toán kích thước và tạo geometry cho tranh
-		const { geometry, dimensions } = useMemo(() => {
-			const { width, height } = texture.image;
-			const aspectRatio = width / height;
-			const dims = {
-				width: BASE_HEIGHT * aspectRatio,
-				height: BASE_HEIGHT
-			};
+            // Clear the timer if it's still pending
+            if (interactionTimerRef.current) {
+                // console.log("Clearing pending interaction timer");
+                clearTimeout(interactionTimerRef.current);
+                interactionTimerRef.current = null;
+            }
 
-			return {
-				geometry: new PlaneGeometry(dims.width, dims.height),
-				dimensions: dims
-			};
-		}, [texture]);
+            // Reset all states
+            setShouldShowModal(false);
+            setShowDetails(false); // Unlock for next interaction
 
-		return (
-			<group 
-			position={artwork.position} 
-			rotation={artwork.rotation || [0, 0, 0]}>
-				{/* Mesh chính hiển thị tranh */}
-				<mesh
-					ref={meshRef}
-					geometry={geometry}
-					material={artworkMaterial}
-				/>
+            // Reset camera target (triggers useCameraTransition to move back)
+            setTargetPosition(null);
 
-				{/* Khung tranh */}
-				<FrameMesh
-					width={dimensions.width}
-					height={dimensions.height}
-				/>
+        }, [setTargetPosition]); // Dependency
 
-				{/* Modal hiển thị thông tin chi tiết */}
-				{shouldShowModal && (
-					<ArtworkPortal isOpen={true} onClose={handleClose}>
-						<ArtworkInfoOverlay
-							title={artwork.title}
-							description={artwork.description}
-							onClose={() => {
-								setShouldShowModal(false);
-								setTargetPosition(null);
-								setShowDetails(false);
-							}}
-						/>
-					</ArtworkPortal>
-				)}
-			</group>
-		);
-	}
+        const handleMiss = useCallback(() => {
+            // Only trigger close if the interaction sequence HAD started.
+            // This prevents closing if the mouse just brushes past without clicking.
+            if (showDetails) {
+                handleClose();
+            }
+        }, [showDetails, handleClose]); // Dependencies
+
+        // Setup raycaster
+        useRaycaster({
+            meshRef,
+            onIntersect: handleIntersect,
+            onMiss: handleMiss
+        });
+
+        // Cleanup timer on component unmount
+        useEffect(() => {
+            return () => {
+                if (interactionTimerRef.current) {
+                    clearTimeout(interactionTimerRef.current);
+                }
+            };
+        }, []);
+
+        // --- Rendering Logic ---
+        const texture = useCloudinaryAsset(artwork.url);
+        texture.colorSpace = 'srgb';
+        const artworkMaterial = useMemo(() => new MeshBasicMaterial({ map: texture, toneMapped: false }), [texture]);
+        const { geometry, dimensions } = useMemo(() => {
+            if (!texture?.image) return { geometry: undefined, dimensions: { width: 0, height: 0}}; // Handle texture loading
+            const { width, height } = texture.image;
+            const aspectRatio = width / height;
+            const dims = { width: BASE_HEIGHT * aspectRatio, height: BASE_HEIGHT };
+            return { geometry: new PlaneGeometry(dims.width, dims.height), dimensions: dims };
+        }, [texture]);
+
+        // Memoize overlay content to prevent unnecessary re-renders
+        const overlayContent = useMemo(() => (
+            shouldShowModal ? (
+                artwork._id && exhibitionId ? (
+                    <ArtworkPortal isOpen={true} onClose={handleClose}>
+                    <ArtworkInfoOverlay
+                        artworkId={artwork._id}
+                        exhibitionId={exhibitionId}
+                        title={artwork.title}
+                        likes={likes}
+                        description={artwork.description}
+                        user={user}
+                        onClose={handleClose} // Pass the stable handleClose
+                    />
+                    </ArtworkPortal>
+                ) : null
+            ) : null
+        // Dependencies: only re-render if modal should show/hide or data changes
+        ), [shouldShowModal, handleClose, artwork._id, exhibitionId, artwork.title, likes, artwork.description, user]);
+
+        // Don't render mesh if geometry isn't ready
+        if (!geometry) return null;
+
+        return (
+            <group
+                position={placement.position as Vec3}
+                rotation={placement.rotation as Vec3 || [0, 0, 0]}>
+                <mesh
+                    ref={meshRef}
+                    geometry={geometry}
+                    material={artworkMaterial}
+                />
+                <FrameMesh
+                    width={dimensions.width}
+                    height={dimensions.height}
+                />
+                {overlayContent}
+            </group>
+        );
+    }
 );
 
-// Đặt tên hiển thị cho các component
 FrameMesh.displayName = 'FrameMesh';
-ArtworkMesh.displayName = 'ArtworkMesh';
+ArtworkMesh.displayName = 'ArtworkMesh';    

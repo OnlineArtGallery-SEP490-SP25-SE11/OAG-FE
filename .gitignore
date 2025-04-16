@@ -42,4 +42,9 @@ next-env.d.ts
 # router test
 app/test/
 
-/public
+
+bun.lockb
+.idea
+src/app/test/artwork/
+
+public

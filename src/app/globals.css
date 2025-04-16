@@ -110,6 +110,115 @@ body {
 		-ms-overflow-style: none;
 		scrollbar-width: none;
 	}
+
+	/** Add animations for tab transitions */
+	@keyframes shimmer {
+		0% { background-position: 100% 0; }
+		100% { background-position: 0% 0; }
+	}
+
+	.animate-shimmer {
+		animation: shimmer 2s infinite linear;
+	}
+
+	/* Added smooth tab transitions */
+	.tab-transition {
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	/* Improved card hover effects */
+	.artwork-card-hover {
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+	}
+
+	.artwork-card-hover:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+	}
+
+	/* Heart button animations */
+	@keyframes heartbeat {
+		0% { transform: scale(1); }
+		25% { transform: scale(1.2); }
+		50% { transform: scale(0.95); }
+		75% { transform: scale(1.1); }
+		100% { transform: scale(1); }
+	}
+
+	.animate-heartbeat {
+		animation: heartbeat 0.4s ease-in-out;
+	}
+
+	@keyframes ping {
+		0% { transform: scale(1); opacity: 1; }
+		75%, 100% { transform: scale(2); opacity: 0; }
+	}
+
+	.animate-ping {
+		animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+	}
+
+	@keyframes ping-once {
+		0% { transform: scale(1); opacity: 0.7; }
+		75%, 100% { transform: scale(2.5); opacity: 0; }
+	}
+
+	.animate-ping-once {
+		animation: ping-once 0.8s ease-out forwards;
+	}
+
+	@keyframes float-heart {
+		0% { transform: scale(0.8) translateY(0); opacity: 0.9; }
+		50% { opacity: 0.5; }
+		100% { transform: scale(1.5) translateY(-100px); opacity: 0; }
+	}
+
+	.animate-float-heart {
+		animation: float-heart 0.8s ease-out forwards;
+	}
+
+	.drop-shadow-glow {
+		filter: drop-shadow(0 0 3px rgba(239, 68, 68, 0.5));
+	}
+
+	/* Optimize the pop-heart animation to be more visible */
+	@keyframes pop-heart {
+		0% { transform: scale(0); opacity: 0; }
+		15% { transform: scale(1.4); opacity: 1; }
+		30% { transform: scale(0.9); opacity: 1; }
+		45% { transform: scale(1.2); opacity: 1; }
+		60% { transform: scale(1); opacity: 1; }
+		100% { transform: scale(1); opacity: 0.8; }
+	}
+
+	.animate-pop-heart {
+		animation: pop-heart 450ms ease-out forwards;
+	}
+
+	/* Updated mini heart animations with synchronized timing */
+	@keyframes float-mini-heart-1 {
+		0% { transform: translate(0, 0) scale(0.7); opacity: 0; }
+		15% { transform: translate(5px, -8px) scale(0.8); opacity: 1; }
+		100% { transform: translate(25px, -45px) scale(0.9); opacity: 0; }
+	}
+
+	@keyframes float-mini-heart-2 {
+		0% { transform: translate(0, 0) scale(0.7); opacity: 0; }
+		15% { transform: translate(-7px, -5px) scale(0.8); opacity: 1; }
+		100% { transform: translate(-35px, -25px) scale(0.8); opacity: 0; }
+	}
+
+	@keyframes float-mini-heart-3 {
+		0% { transform: translate(0, 0) scale(0.7); opacity: 0; }
+		15% { transform: translate(-5px, -8px) scale(0.8); opacity: 1; }
+		100% { transform: translate(-20px, -40px) scale(0.7); opacity: 0; }
+	}
+
+	@keyframes float-mini-heart-4 {
+		0% { transform: translate(0, 0) scale(0.7); opacity: 0; }
+		15% { transform: translate(7px, -4px) scale(0.8); opacity: 1; }
+		100% { transform: translate(35px, -20px) scale(1); opacity: 0; }
+	}
 }
 
 @layer base {
@@ -297,6 +406,19 @@ body {
 	span {
 		@apply dark:text-gray-400 !important;
 	}
+}
+
+/* Prevent image selection and dragging */
+.select-none img {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-webkit-user-drag: none;
+	-khtml-user-drag: none;
+	-moz-user-drag: none;
+	-o-user-drag: none;
+	pointer-events: auto;
 }
 
 /* Button styles */

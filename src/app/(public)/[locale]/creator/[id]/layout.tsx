@@ -1,70 +1,52 @@
-'use client';
-import { cn } from '@/lib/utils';
-import {
-	BookText,
-	Earth,
-	Eye,
-	ImageIcon,
-	SlidersHorizontal,
-	TrendingUp
-} from 'lucide-react';
-import { useRouter, usePathname } from 'next/navigation';
+import { notFound } from "next/navigation";
+import { getExhibitionById } from "@/service/exhibition";
+import { Suspense } from "react";
+import ExhibitionHeader from "../components/exhibition-header";
+import ExhibitionSkeleton from "../components/exhibition-skeleton";
+import ExhibitionNavigation from "../components/exhibition-navigation";
+import ExhibitionContextProvider from "../context/exhibition-provider";
+import { getCurrentUser } from "@/lib/session";
 
-export default function CreatorLayout({
-	children,
-	params
+export default async function CreatorLayout({
+    children,
+    params
 }: {
-	children: React.ReactNode;
-	params: { id: string };
+    children: React.ReactNode;
+    params: { id: string, locale: string };
 }) {
-	const { id } = params;
-	const router = useRouter();
-	const pathname = usePathname();
-	const currentTab = pathname.split('/').pop() || 'artworks';
+    const user = await getCurrentUser();
+    if (!user) {
+        notFound();
+    }
 
-	const tabs = [
-		{ value: 'artworks', label: 'Artworks', icon: <ImageIcon /> },
-		{ value: 'content', label: 'Content', icon: <BookText /> },
-		{ value: 'settings', label: 'Settings', icon: <SlidersHorizontal /> },
-		{ value: 'result', label: 'Result', icon: <Eye /> },
-		{ value: 'preview', label: 'Preview', icon: <Earth /> },
-		{ value: 'publish', label: 'Publish', icon: <TrendingUp /> }
-	];
+    let exhibition;
+    try {
+        const exhibitionResponse = await getExhibitionById(params.id);
+        if (!exhibitionResponse.data?.exhibition) {
+            notFound();
+        }
+        exhibition = exhibitionResponse.data.exhibition;
+    } catch (error) {
+        console.error("Failed to fetch exhibition:", error);
+        notFound();
+    }
 
-	return (
-		<div className='flex'>
-			{/* Left Sidebar with Vertical Tabs */}
-			<div className='w-64 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800'>
-				<div className='p-6'>
-					<h1 className='text-2xl font-bold mb-6'>
-						Exhibition Creator
-					</h1>
-					<nav className='space-y-1'>
-						{tabs.map((tab) => (
-							<button
-								key={tab.value}
-								onClick={() =>
-									router.push(`/creator/${id}/${tab.value}`)
-								}
-								className={cn(
-									'w-full flex items-center space-x-3 px-4 py-3 text-left rounded-lg transition-colors hover:bg-muted',
-									currentTab === tab.value
-										? 'border-l-2 border-primary text-primary'
-										: 'text-muted-foreground'
-								)}
-							>
-								<span className='text-xl'>{tab.icon}</span>
-								<span>{tab.label}</span>
-							</button>
-						))}
-					</nav>
-				</div>
-			</div>
+    return (
+        <ExhibitionContextProvider initialData={exhibition}>
+            <div className="flex container mx-auto min-h-screen">
+                {/* Sidebar Navigation */}
+                <div className="w-64 pt-20">
+                    <ExhibitionNavigation exhibition={exhibition} />
+                </div>
+                {/* Main Content */}
+                <div className="flex-1 overflow-auto">
+                    <Suspense fallback={<ExhibitionSkeleton />}>
+                        <ExhibitionHeader exhibition={exhibition} />
+                    </Suspense>
 
-			{/* Main Content */}
-			<div className='flex-1 overflow-auto'>
-				<div className='p-6'>{children}</div>
-			</div>
-		</div>
-	);
+                    <div className="p-6">{children}</div>
+                </div>
+            </div>
+        </ExhibitionContextProvider>
+    )
 }

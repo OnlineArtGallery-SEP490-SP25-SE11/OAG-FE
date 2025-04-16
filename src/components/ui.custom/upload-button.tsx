@@ -1,52 +1,68 @@
-import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import React, { useRef, useState } from 'react';
+import { Camera } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface UploadButtonProps {
-	onUpload: (url: string) => void;
-	children?: React.ReactNode;
+	onUpload: (file: File) => Promise<void>;
 	className?: string;
+	children?: React.ReactNode;
 }
 
-export function UploadButton({
+export const UploadButton: React.FC<UploadButtonProps> = ({
 	onUpload,
-	children,
-	className
-}: UploadButtonProps) {
-	const [loading, setLoading] = useState(false);
+	className,
+	children
+}) => {
+	const fileInputRef = useRef<HTMLInputElement>(null);
+	const [isLoading, setIsLoading] = useState(false);
 
-	const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-		const file = e.target.files?.[0];
+	const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
 		if (!file) return;
 
-		setLoading(true);
+		// Validate file type
+		if (!file.type.startsWith('image/')) {
+			alert('Please upload an image file');
+			return;
+		}
+
+		// Validate file size (5MB)
+		if (file.size > 5 * 1024 * 1024) {
+			alert('File size should be less than 5MB');
+			return;
+		}
+
 		try {
-			const base64 = await convertToBase64(file);
-			onUpload(base64 as string);
+			setIsLoading(true);
+			await onUpload(file);
 		} catch (error) {
-			console.error('Upload failed:', error);
+			console.error('Error uploading file:', error);
+			alert('Failed to upload file');
 		} finally {
-			setLoading(false);
+			setIsLoading(false);
 		}
 	};
 
 	return (
-		<Button variant='outline' className={className} disabled={loading}>
+		<div className={cn('relative', className)}>
 			<input
-				type='file'
-				className='absolute inset-0 w-full h-full opacity-0 cursor-pointer'
+				type="file"
+				ref={fileInputRef}
 				onChange={handleFileChange}
-				accept='image/*'
+				accept="image/*"
+				className="hidden"
+				disabled={isLoading}
 			/>
-			{loading ? <span className='animate-spin'>⏳</span> : children}
-		</Button>
+			<button
+				onClick={() => fileInputRef.current?.click()}
+				className={cn(
+					'flex items-center justify-center rounded-full',
+					isLoading && 'opacity-50 cursor-not-allowed'
+				)}
+				disabled={isLoading}
+			>
+				{children || <Camera className="w-4 h-4" />}
+			</button>
+		</div>
 	);
-}
-
-const convertToBase64 = (file: File): Promise<string> => {
-	return new Promise((resolve, reject) => {
-		const reader = new FileReader();
-		reader.readAsDataURL(file);
-		reader.onload = () => resolve(reader.result as string);
-		reader.onerror = (error) => reject(error);
-	});
 };

@@ -1,5 +1,6 @@
 import { BlogStatus } from '@/utils/enums';
 import { z } from 'zod';
+import { Pagination } from './response';
 
 export const blogSchema = z.object({
 	_id: z.string(),
@@ -9,7 +10,12 @@ export const blogSchema = z.object({
 	status: z.nativeEnum(BlogStatus),
 	createdAt: z.date(),
 	updatedAt: z.date(),
-	heartCount: z.number()
+	heartCount: z.number(),
+	author: z.object({
+		_id: z.string(),
+		name: z.string(),
+		image: z.string(),
+	})
 });
 export type Blog = z.infer<typeof blogSchema>;
 export type PageInfo = {
@@ -36,4 +42,14 @@ export type GetPublishedBlogsResponse = {
 		hasNextPage: boolean;
 		endCursor: string;
 	};
+};
+
+export type UserBlogsResponse = {
+    blogs: Blog[];
+    pagination: Pagination;
+}
+
+//CRUD
+export type BlogRequestResponse = {
+	blog: Blog | null;
 };

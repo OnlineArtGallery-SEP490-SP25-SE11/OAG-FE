@@ -1,24 +1,33 @@
 // import { env } from "process";
-import { assertAdmin, assertAuthenticated } from '@/lib/session';
+import { assertAdmin, assertArtist, assertAuthenticated } from '@/lib/session';
 import { createServerActionProcedure } from 'zsa';
 import { PublicError } from '@/lib/errors';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function shapeErrors({ err }: any) {
 	const isAllowedError = err instanceof PublicError;
+
+	/*
+	{
+	status
+	errorCode
+	details
+	message
+	}
+	*/
 	// let's all errors pass through to the UI so debugging locally is easier
 	// const isDev = env.NODE_ENV === "development";
-	const isDev = false;
+	const isDev = true;
 	if (isAllowedError || isDev) {
 		console.error(err);
 		return {
 			code: err.code ?? 'ERROR',
-			message: `${isDev ? 'DEV ONLY ENABLED - ' : ''}${err.message}`
+			message: err.errorCode ?? 'somethingWentWrong'
 		};
 	} else {
 		return {
 			code: 'ERROR',
-			message: 'somethingWentWrong'
+			message: err.errorCode ?? 'somethingWentWrong'
 		};
 	}
 }
@@ -42,3 +51,10 @@ export const adminOnlyAction = createServerActionProcedure()
 		const user = await assertAdmin();
 		return { user };
 	});
+
+export const artistOnlyAction = createServerActionProcedure()
+	.experimental_shapeError(shapeErrors)
+	.handler(async () => {
+		const user = await assertArtist();
+		return { user };
+	})

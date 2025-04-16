@@ -2,7 +2,7 @@ import ReusableSidebar from './sidebar';
 import { ArrowLeftIcon } from 'lucide-react';
 import CreateDraftButton from './create-draft-button';
 import { SidebarBlogSection } from './sidebar-blog-section';
-import { getBlogs } from '@/service/blog';
+import { getUserBlogs } from '@/service/blog';
 import Link from 'next/link';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
@@ -11,8 +11,10 @@ import { getCurrentUser } from '@/lib/session';
 const BlogSidebar: React.FC = async () => {
 	const user = await getCurrentUser();
 	if (!user) redirect('/');
-	const blogs = await getBlogs(user.accessToken);
 
+	const response = await getUserBlogs(user.accessToken);
+	const blogs = response.data?.blogs || [];
+console.log('bloz', blogs);
 	const header = (
 		<Link href='/' className='mx-auto '>
 			<Image
@@ -39,11 +41,11 @@ const BlogSidebar: React.FC = async () => {
       </Link> */}
 			<Link
 				href={
-						user?.role.includes('admin')
+					user?.role.includes('admin')
 						? '/admin/dashboard'
 						: user?.role.includes('artist')
-						? '/my-blogs'
-						: '/'
+							? '/'
+							: '/sign-in'
 				}
 				className='flex items-center py-3 px-4 transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-slate-900 rounded-md'
 			>

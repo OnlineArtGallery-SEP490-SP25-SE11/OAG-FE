@@ -1,7 +1,6 @@
 'use client';
 
 // import { Button } from '@/components/ui/button';
-import DivWithEffect from '@/components/ui.custom/div-effect';
 import { Lightbox } from '@/components/ui.custom/lightbox';
 import useFileUpload, {
 	FileUpload,
@@ -13,18 +12,33 @@ import { File, Upload, X } from 'lucide-react';
 import Image from 'next/image';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+
 interface FileUploaderProps {
 	multiple?: boolean;
 	accept?: Record<string, string[]>;
 	maxFiles?: number;
 	maxSize?: number;
+	icon?: React.ReactNode;
 	previewLayout?: 'horizontal' | 'vertical';
 	onFilesChange?: (files: File[]) => void;
 	options?: {
 		refId?: string;
 		refType?: string;
 	};
-	onFileUpload?: (url: string | string[]) => void; // Thêm onUpload để lưu path file
+	// onFileUpload?: (
+	// 	url: string | string[],
+	// 	width?: number,
+	// 	height?: number,
+	// 	_id?: string
+	// ) => void; // Thêm onUpload để lưu path file
+	onFileUpload?: (
+		files: {
+			url: string;
+			width?: number;
+			height?: number;
+			_id?: string;
+		}[]
+	) => void;
 }
 
 const DropZone = memo(
@@ -35,7 +49,8 @@ const DropZone = memo(
 		isDragActive,
 		multiple,
 		maxFiles,
-		maxSize
+		maxSize,
+		icon
 	}: {
 		getInputProps: () => React.InputHTMLAttributes<HTMLInputElement>;
 		isDragAccept: boolean;
@@ -44,6 +59,7 @@ const DropZone = memo(
 		multiple: boolean;
 		maxFiles: number;
 		maxSize: number;
+		icon?: React.ReactNode;
 	}) => {
 		const motionProps = {
 			initial: { opacity: 0.6 },
@@ -68,7 +84,7 @@ const DropZone = memo(
 			return isDragActive ? 'text-primary' : 'text-gray-500';
 		};
 		return (
-			<DivWithEffect className='rounded-lg'>
+			<div className='rounded-lg'>
 				<motion.div
 					className={`p-4 sm:p-8 border-2 border-dashed rounded-lg text-center cursor-pointer transition-colors duration-200 ${getDropzoneColor()}`}
 					{...motionProps}
@@ -79,9 +95,15 @@ const DropZone = memo(
 						animate={{ scale: isDragActive ? 1.1 : 1 }}
 						transition={{ duration: 0.2 }}
 					>
-						<Upload
-							className={`mx-auto h-8 w-8 sm:h-12 sm:w-12 transition-colors duration-200 ${getDropzoneIconColor()}`}
-						/>
+						{icon ? (
+							<div className={`flex justify-center items-center mx-auto transition-colors duration-200 ${getDropzoneIconColor()}`}>
+								{icon}
+							</div>
+						) : (
+							<Upload
+								className={`mx-auto h-8 w-8 sm:h-12 sm:w-12 transition-colors duration-200 ${getDropzoneIconColor()}`}
+							/>
+						)}
 					</motion.div>
 					<p
 						className={`mt-2 text-xs sm:text-sm transition-colors duration-200 ${getDropzoneTextColor()}`}
@@ -95,12 +117,12 @@ const DropZone = memo(
 					>
 						{multiple
 							? `Up to ${maxFiles} files, each up to ${formatFileSize(
-									maxSize
-							  )}`
+								maxSize
+							)}`
 							: `One file up to ${formatFileSize(maxSize)}`}
 					</p>
 				</motion.div>
-			</DivWithEffect>
+			</div>
 		);
 	}
 );
@@ -186,36 +208,36 @@ const Preview = memo(
 														upload.file.name ===
 														item.file.name
 												) && (
-													<motion.div
-														className='flex items-center justify-center space-x-2 w-full h-full absolute inset-0 bg-black/50'
-														initial={{ opacity: 0 }}
-														animate={{ opacity: 1 }}
-														exit={{ opacity: 0 }}
-														transition={{
-															duration: 0.3
-														}}
-													>
-														{/* Spinning Loader */}
 														<motion.div
-															className='w-5 h-5 border-4 border-t-transparent border-white rounded-full animate-spin'
-															style={{
-																animationDuration:
-																	'0.75s'
-															}}
-														/>
-														<motion.p
-															className='text-white text-sm font-medium'
+															className='flex items-center justify-center space-x-2 w-full h-full absolute inset-0 bg-black/50'
+															initial={{ opacity: 0 }}
+															animate={{ opacity: 1 }}
+															exit={{ opacity: 0 }}
 															transition={{
-																repeat: Infinity,
-																repeatType:
-																	'reverse',
-																duration: 0.5
+																duration: 0.3
 															}}
 														>
-															Uploading...
-														</motion.p>
-													</motion.div>
-												)}
+															{/* Spinning Loader */}
+															<motion.div
+																className='w-5 h-5 border-4 border-t-transparent border-white rounded-full animate-spin'
+																style={{
+																	animationDuration:
+																		'0.75s'
+																}}
+															/>
+															<motion.p
+																className='text-white text-sm font-medium'
+																transition={{
+																	repeat: Infinity,
+																	repeatType:
+																		'reverse',
+																	duration: 0.5
+																}}
+															>
+																Uploading...
+															</motion.p>
+														</motion.div>
+													)}
 
 												<motion.div
 													className='absolute inset-0 bg-black/50 flex items-center justify-center opacity-0'
@@ -265,35 +287,35 @@ const Preview = memo(
 												upload.file.name ===
 												item.file.name
 										) && (
-											<motion.div
-												className='flex items-center justify-center space-x-2 w-full h-full border rounded-lg absolute inset-0 bg-black/50'
-												initial={{ opacity: 0 }}
-												animate={{ opacity: 1 }}
-												exit={{ opacity: 0 }}
-												transition={{
-													duration: 0.3
-												}}
-											>
-												{/* Spinning Loader */}
 												<motion.div
-													className='w-5 h-5 border-4 border-t-transparent border-white rounded-full animate-spin'
-													style={{
-														animationDuration:
-															'0.75s'
-													}}
-												/>
-												<motion.p
-													className='text-white text-sm font-medium'
+													className='flex items-center justify-center space-x-2 w-full h-full border rounded-lg absolute inset-0 bg-black/50'
+													initial={{ opacity: 0 }}
+													animate={{ opacity: 1 }}
+													exit={{ opacity: 0 }}
 													transition={{
-														repeat: Infinity,
-														repeatType: 'reverse',
-														duration: 0.5
+														duration: 0.3
 													}}
 												>
-													Uploading...
-												</motion.p>
-											</motion.div>
-										)}
+													{/* Spinning Loader */}
+													<motion.div
+														className='w-5 h-5 border-4 border-t-transparent border-white rounded-full animate-spin'
+														style={{
+															animationDuration:
+																'0.75s'
+														}}
+													/>
+													<motion.p
+														className='text-white text-sm font-medium'
+														transition={{
+															repeat: Infinity,
+															repeatType: 'reverse',
+															duration: 0.5
+														}}
+													>
+														Uploading...
+													</motion.p>
+												</motion.div>
+											)}
 										<div className='flex items-start space-x-2 sm:space-x-3'>
 											<div className='flex-shrink-0'>
 												<File className='h-6 w-6 sm:h-8 sm:w-8 text-blue-500' />
@@ -333,6 +355,7 @@ Preview.displayName = 'Preview';
 const FileUploader: React.FC<FileUploaderProps> = ({
 	multiple = false,
 	accept,
+	icon,
 	maxFiles = 5,
 	maxSize = 5 * 1024 * 1024, // 5MB
 	previewLayout = 'horizontal',
@@ -449,13 +472,21 @@ const FileUploader: React.FC<FileUploaderProps> = ({
 		});
 
 		if (newCompletedFiles.length > 0) {
-			const newUrls = newCompletedFiles.map((file) => file.url);
-			onFileUpload(newUrls);
+			// const newUrls = newCompletedFiles.map((file) => file.url);
+			// onFileUpload(newUrls);
+			const newFiles = newCompletedFiles.map((file) => ({
+				url: file.url,
+				width: file.width,
+				height: file.height,
+				id: file.id
+			}));
+			// console.log('New files:', newFiles);
+			onFileUpload(newFiles);
 		}
 	}, [completedUploads, onFileUpload, pendingUploads]);
 	return (
 		<>
-			<div className='space-y-4 w-full max-w-full shadow-lg rounded p-2'>
+			<div className='space-y-4 w-full max-w-full p-2'>
 				{/* <Button
 					onClick={handleUpload}
 					disabled={pendingUploads.length === 0}
@@ -477,6 +508,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
 						multiple={multiple}
 						maxFiles={maxFiles}
 						maxSize={maxSize}
+						icon={icon}
 					/>
 				</div>
 				<Preview

@@ -13,14 +13,13 @@ export default async function DraftPage({
 }) {
 	const { blogId } = params;
 	const user = await getCurrentUser();
-
 	if (!user) {
 		notFound();
 	}
-	const blog = await getBlogById(blogId);
-	console.log(blog, 'blog');
+	const res = await getBlogById(blogId);
+	const blog = res.data?.blog;
 	if (!blog || blog.author._id !== user.id) {
-		notFound();
+		notFound();	
 	}
 
 	return (
@@ -48,6 +47,7 @@ export default async function DraftPage({
 					_id={blogId}
 					blogTitle={blog.title}
 					isAdminOrAuthor={!!user}
+					status={blog.status}
 				/>
 			</div>
 		</>

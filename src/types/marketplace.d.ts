@@ -1,10 +1,24 @@
-export interface ArtPiece {
-	id: string;
+export type Artwork = {
+	_id: string;
 	title: string;
-	artist: string;
-	imageUrl: string;
-	price: number;
 	description: string;
-	width: number;
-	height: number;
-}
+	artistId?: {
+		_id: string;
+		name: string;
+		image: string;
+	};
+	category: string[];
+	dimensions: {
+		width: number;
+		height: number;
+		_id: string;
+	};
+	url: string;
+	status: string;
+	moderationStatus?: string;
+	views: number;
+	price: number;
+	createdAt: string;
+	updatedAt: string;
+	__v?: number;
+};
