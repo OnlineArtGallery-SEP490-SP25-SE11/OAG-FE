@@ -15,7 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
 import { useServerAction } from 'zsa-react';
 import { deleteBlogAction } from './action';
-import { useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
 export function DeleteBlogButton({
@@ -27,7 +27,6 @@ export function DeleteBlogButton({
 }) {
     const { toast } = useToast();
     const [isOpen, setIsOpen] = useState(false);
-    const router = useRouter();
     const tCommon = useTranslations('common');
     const tBlog = useTranslations('blog');
     
@@ -39,7 +38,7 @@ export function DeleteBlogButton({
                 variant: 'success'
             });
             setIsOpen(false);
-            router.refresh(); // Refresh to update UI after deletion
+            redirect('/my-blogs');
         },
         onError() {
             toast({

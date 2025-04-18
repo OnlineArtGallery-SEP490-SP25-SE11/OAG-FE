@@ -478,6 +478,7 @@
     }
   },
   "exhibitions": {
+    "no_templates_available": "Không có mẫu nào khả dụng",
     "insufficient_balance": "Số dư không đủ",
     "remove_artwork_confirmation" : "Xác nhận gỡ tác phẩm",
     "remove_artwork_description" : "Bạn có chắc chắn muốn gỡ tác phẩm này khỏi vị trí này không?",
