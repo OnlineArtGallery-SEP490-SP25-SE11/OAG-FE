@@ -1,5 +1,4 @@
 import { createApi, createAxiosInstance } from '@/lib/axios';
-import { getCurrentUser } from '@/lib/session';
 import { EventStatus } from "@/utils/enums";
 
 export interface Event {
@@ -22,8 +21,7 @@ const eventService = {
             // }
             // const res = await axios.get("/event")
             // return res.data.data;
-            const user = await getCurrentUser();
-            const res = await createApi(user?.accessToken).get("/event")
+            const res = await createApi().get("/event")
             return res.data.data;
         }
         catch(error){
