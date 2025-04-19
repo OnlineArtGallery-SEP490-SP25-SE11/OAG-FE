@@ -40,42 +40,24 @@ export default function SubscriptionOptions() {
   // Mutation để mua gói Premium
   const purchaseMutation = useMutation({
     mutationFn: () => buyPremium(session?.user.accessToken as string),
-    onSuccess: (response) => {
-      if (response.status === 200) {
-        setShowBuyConfirm(false);
-        setShowSuccess(true);
+    onSuccess: () => {
+      setShowBuyConfirm(false);
+      setShowSuccess(true);
 
-        // Thay đổi toast hiển thị để giống với giao diện (màu đỏ và nội dung tiếng Anh)
-        toast({
-          variant: 'destructive',
-          title: 'Lỗi',
-          description: 'Premium subscription activated successfully'
-        });
+      toast({
+        variant: 'success',
+        title: t('common.success'),
+        description: t('premium.subscription.success_description1')
+      });
 
-        // Cập nhật lại thông tin số dư và trạng thái Premium
-        queryClient.invalidateQueries({ queryKey: ['userBalance'] });
-        queryClient.invalidateQueries({ queryKey: ['isPremium'] });
+      // Cập nhật lại thông tin số dư và trạng thái Premium
+      queryClient.invalidateQueries({ queryKey: ['userBalance'] });
+      queryClient.invalidateQueries({ queryKey: ['isPremium'] });
 
-        // Tự động reload lại trang sau 1 giây
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      } else {
-        if (response.message?.includes('không đủ')) {
-          toast({
-            title: t('wallet.insufficient_balance'),
-            description: t('premium.subscription.insufficient_balance'),
-            variant: 'destructive'
-          });
-          router.push('/wallet/deposit');
-        } else {
-          toast({
-            title: t('common.error'),
-            description: response.message || t('error.somethingWentWrong'),
-            variant: 'destructive'
-          });
-        }
-      }
+      // Tự động reload lại trang sau 1 giây
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     },
     onError: (error: Error) => {
       setError(error.message);
@@ -90,35 +72,23 @@ export default function SubscriptionOptions() {
   // Mutation để hủy gói Premium
   const cancelMutation = useMutation({
     mutationFn: () => cancelPremium(session?.user.accessToken as string),
-    onSuccess: (response) => {
-      if (response.status === 200) {
-        setShowCancelConfirm(false);
-        toast({
-          variant: 'success',
-          title: t('common.success'),
-          description: t('premium.subscription.cancel_success', { defaultMessage: 'Bạn đã hủy gia hạn gói Premium thành công! Bạn vẫn có thể sử dụng các tính năng Premium cho đến hết thời hạn.' })
-        });
-
-        // Cập nhật lại trạng thái Premium
-        queryClient.invalidateQueries({ queryKey: ['isPremium'] });
-
-        // Tự động reload lại trang sau 1 giây
-        setTimeout(() => {
-          router.push('/premium');
-        }, 1000);
-      } else {
-        toast({
-          variant: 'destructive',
-          title: t('common.error'),
-          description: response.message || t('premium.subscription.cancel_error', { defaultMessage: 'Không thể hủy gói Premium' })
-        });
-      }
+    onSuccess: () => {
+      setShowCancelConfirm(false);
+      toast({
+        variant: 'success',
+        title: t('common.success'),
+        description: t('premium.subscription.confirm_cancel_button')
+      });
+      queryClient.invalidateQueries({ queryKey: ['isPremium'] });
+      setTimeout(() => {
+        router.push('/premium');
+      }, 1500);
     },
     onError: (error: Error) => {
       setError(error.message);
       toast({
         title: t('common.error'),
-        description: error.message || t('premium.subscription.cancel_error', { defaultMessage: 'Không thể hủy gói Premium' }),
+        description: error.message || t('premium.subscription.cancel_error'),
         variant: 'destructive'
       });
     }
@@ -128,7 +98,7 @@ export default function SubscriptionOptions() {
     if (!session) {
       toast({
         title: t('auth.loginTitle'),
-        description: t('premium.subscription.login_required', { defaultMessage: 'Bạn cần đăng nhập để mua gói Premium' }),
+        description: t('premium.subscription.login_required'),
         variant: 'destructive'
       });
       router.push('/auth/login');
@@ -148,7 +118,7 @@ export default function SubscriptionOptions() {
     if (45000 > userBalance) {
       toast({
         title: t('wallet.insufficient_balance'),
-        description: t('premium.subscription.insufficient_balance', { defaultMessage: 'Số dư ví của bạn không đủ để mua gói Premium' }),
+        description: t('premium.subscription.insufficient_balance'),
         variant: 'destructive'
       });
       setShowBuyConfirm(false);
@@ -192,8 +162,8 @@ export default function SubscriptionOptions() {
               </div>
               <h3 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent mb-4">Premium</h3>
               <div className="text-3xl font-bold text-gray-900 mb-6">
-                45,000 VND
-                <span className="text-sm text-gray-500 font-normal">/tháng</span>
+                {t('premium.subscription.plan.price')}
+                <span className="text-sm text-gray-500 font-normal">{t('premium.subscription.plan.period')}</span>
               </div>
 
               {userBalance !== null && !isPremium && (
@@ -223,7 +193,7 @@ export default function SubscriptionOptions() {
                 disabled:opacity-70 disabled:cursor-not-allowed`}
               >
                 {isPremium
-                  ? (cancelMutation.isPending ? t('common.processing') : t('premium.subscription.cancel_subscription', { defaultMessage: 'Hủy gia hạn' }))
+                  ? (cancelMutation.isPending ? t('common.processing') : t('premium.subscription.cancel_subscription'))
                   : (purchaseMutation.isPending ? t('common.processing') : t('premium.subscription.plan.cta'))
                 }
               </button>
@@ -252,13 +222,13 @@ export default function SubscriptionOptions() {
       <AlertDialog open={showBuyConfirm} onOpenChange={setShowBuyConfirm}>
         <AlertDialogContent className="bg-white border text-black">
           <AlertDialogHeader>
-            <AlertDialogTitle>{t('premium.subscription.confirm_purchase', { defaultMessage: 'Xác nhận đăng ký Premium' })}</AlertDialogTitle>
+            <AlertDialogTitle>{t('premium.subscription.confirm_purchase')}</AlertDialogTitle>
             <AlertDialogDescription className="text-gray-800">
               <div className="space-y-4 my-4">
                 <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                  <h3 className="font-medium mb-1">{t('premium.subscription.plan_title', { defaultMessage: 'Gói Premium' })}</h3>
-                  <p className="text-sm text-gray-700">{t('premium.subscription.duration', { defaultMessage: 'Thời hạn: 1 tháng' })}</p>
-                  <p className="text-xl font-bold mt-2">45,000 VND</p>
+                  <h3 className="font-medium mb-1">{t('premium.subscription.plan_title')}</h3>
+                  <p className="text-sm text-gray-700">{t('premium.subscription.duration')}</p>
+                  <p className="text-xl font-bold mt-2">{t('premium.subscription.plan.price')}</p>
                 </div>
 
                 <div className="bg-gray-50 p-3 rounded-lg">
@@ -296,7 +266,7 @@ export default function SubscriptionOptions() {
                   {t('common.processing')}
                 </>
               ) : (
-                t('premium.subscription.confirm_buy', { defaultMessage: 'Xác nhận mua' })
+                t('premium.subscription.confirm_buy')
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -307,16 +277,16 @@ export default function SubscriptionOptions() {
       <AlertDialog open={showCancelConfirm} onOpenChange={setShowCancelConfirm}>
         <AlertDialogContent className="bg-white border text-black">
           <AlertDialogHeader>
-            <AlertDialogTitle>{t('premium.subscription.confirm_cancel', { defaultMessage: 'Xác nhận hủy gia hạn Premium' })}</AlertDialogTitle>
+            <AlertDialogTitle>{t('premium.subscription.confirm_cancel')}</AlertDialogTitle>
             <AlertDialogDescription className="text-gray-800">
               <div className="space-y-4 my-4">
                 <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                  <p className="text-sm text-gray-700">{t('premium.subscription.confirm_cancel_description', { defaultMessage: 'Bạn có chắc chắn muốn hủy gia hạn gói Premium không?' })}</p>
-                  <p className="text-sm text-gray-700 mt-2">{t('premium.subscription.note', { defaultMessage: 'Lưu ý:' })}</p>
+                  <p className="text-sm text-gray-700">{t('premium.subscription.confirm_cancel_description')}</p>
+                  <p className="text-sm text-gray-700 mt-2">{t('premium.subscription.note')}</p>
                   <ul className="list-disc pl-5 text-sm text-gray-700 mt-1">
-                    <li>{t('premium.subscription.note_item1', { defaultMessage: 'Bạn vẫn sẽ là người dùng Premium và có thể sử dụng đầy đủ tính năng Premium cho đến khi hết hạn' })}</li>
-                    <li>{t('premium.subscription.note_item2', { defaultMessage: 'Bạn sẽ không được hoàn tiền cho thời gian còn lại' })}</li>
-                    <li>{t('premium.subscription.note_item3', { defaultMessage: 'Sau khi hết hạn, bạn sẽ tự động trở về gói miễn phí' })}</li>
+                    <li>{t('premium.subscription.note_item1')}</li>
+                    <li>{t('premium.subscription.note_item2')}</li>
+                    <li>{t('premium.subscription.note_item3')}</li>
                   </ul>
                 </div>
               </div>
@@ -335,7 +305,7 @@ export default function SubscriptionOptions() {
                   {t('common.processing')}
                 </>
               ) : (
-                t('premium.subscription.confirm_cancel_button', { defaultMessage: 'Xác nhận hủy gia hạn' })
+                t('premium.subscription.confirm_cancel_button')
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -352,14 +322,14 @@ export default function SubscriptionOptions() {
       }}>
         <AlertDialogContent className="bg-white border text-black">
           <AlertDialogHeader>
-            <AlertDialogTitle>{t('premium.subscription.success_title', { defaultMessage: 'Đăng ký Premium thành công' })}</AlertDialogTitle>
+            <AlertDialogTitle>{t('premium.subscription.success_title')}</AlertDialogTitle>
             <AlertDialogDescription className="text-gray-800">
               <div className="text-center my-4 space-y-4">
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
                   <Check className="h-8 w-8 text-green-600" />
                 </div>
-                <p>{t('premium.subscription.success_description1', { defaultMessage: 'Cảm ơn bạn đã đăng ký gói Premium!' })}</p>
-                <p className="text-sm">{t('premium.subscription.success_description2', { defaultMessage: 'Bây giờ bạn có thể trải nghiệm đầy đủ tính năng của trang web.' })}</p>
+                <p>{t('premium.subscription.success_description1')}</p>
+                <p className="text-sm">{t('premium.subscription.success_description2')}</p>
               </div>
             </AlertDialogDescription>
           </AlertDialogHeader>

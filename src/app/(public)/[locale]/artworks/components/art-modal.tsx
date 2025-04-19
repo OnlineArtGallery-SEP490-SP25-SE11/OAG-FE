@@ -15,7 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useSwipeable } from 'react-swipeable';
 import { useToast } from '@/hooks/use-toast';
-import artworkService,{ getUserBalance, purchaseArtwork, downloadArtwork, checkUserPurchased } from '@/service/artwork';
+import artworkService, { downloadArtwork } from '@/service/artwork';
 import { getArtworkWarehouse, downloadWarehouseArtwork } from '@/service/artwork-warehouse';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { AlertCircle, Check } from 'lucide-react';
@@ -23,7 +23,7 @@ import { useTranslations } from 'next-intl';
 import ArtFeed from './art-feed';
 import useAuth from '@/hooks/useAuth-client';
 import { AuthDialog } from '@/components/ui.custom/auth-dialog';
-import { useSelectedArt, useSelectedArtId, useSetSelectedArt, useResetArtModal, useIsArtModalClosing, useStartClosingArtModal } from '@/hooks/useArtModal';
+import { useSelectedArt, useSelectedArtId, useResetArtModal, useIsArtModalClosing, useStartClosingArtModal } from '@/hooks/useArtModal';
 
 // Simplified animation variants
 const animations = {
@@ -92,7 +92,7 @@ function ImageSection({ artwork, isZoomed, toggleZoom, imageLoaded, setImageLoad
             <ZoomIn className="w-4 h-4 text-white" />
           )}
         </button>
-        
+
         {isZoomed && (
           <button
             className="p-1.5 rounded-full hover:bg-black/50 active:bg-black/70 transition-colors"
@@ -161,13 +161,13 @@ function DetailTab({ artwork, userHasPurchased, isArtworkCreator, handleBuy, han
       default: return 'bg-blue-500/10 text-blue-400 border-blue-500/30';
     }
   };
-  
+
   // Calculate optimal description height based on screen size and content
   const getDescriptionHeight = () => {
     const windowHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
     const availableHeight = windowHeight - (isMobile ? 400 : 200);
     const maxHeight = Math.max(availableHeight * 0.4, isMobile ? 100 : 150);
-    
+
     if (isMobile) {
       return windowHeight < 700 ? '80px' : Math.min(maxHeight, 150) + 'px';
     } else {
@@ -210,7 +210,7 @@ function DetailTab({ artwork, userHasPurchased, isArtworkCreator, handleBuy, han
                 <span className='font-medium text-white text-xs'>
                   ${artwork.price.toLocaleString()}
                 </span>
-                
+
                 {/* Status badges moved inline with price */}
                 {isArtworkCreator && (
                   <Badge variant="outline" className="bg-blue-500/20 text-blue-300 border-blue-500/30 px-1 py-0.5 text-[10px] ml-1">
@@ -225,7 +225,7 @@ function DetailTab({ artwork, userHasPurchased, isArtworkCreator, handleBuy, han
                 )}
               </div>
             )}
-            
+
             {/* Artist */}
             {artwork.artistId && (
               <div className="bg-white/10 p-2 rounded-md flex items-center gap-1.5 col-span-1 overflow-hidden">
@@ -279,7 +279,7 @@ function DetailTab({ artwork, userHasPurchased, isArtworkCreator, handleBuy, han
                   {t('artwork.save')}
                 </button>
               }
-              onSuccess={() => {/* Optional success handling */}}
+              onSuccess={() => {/* Optional success handling */ }}
             />
           </div>
 
@@ -288,8 +288,8 @@ function DetailTab({ artwork, userHasPurchased, isArtworkCreator, handleBuy, han
             <h3 className='text-sm font-medium text-white mb-1'>
               {t('artwork.description')}
             </h3>
-            <div 
-              className="overflow-auto pr-2 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent" 
+            <div
+              className="overflow-auto pr-2 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent"
               style={{ maxHeight: getDescriptionHeight() }}
             >
               <p className='text-xs text-white/90 leading-relaxed whitespace-pre-line'>
@@ -419,17 +419,19 @@ interface PurchaseConfirmationProps {
   isProcessing: boolean;
   t: any;
   tCommon: any;
+  router: ReturnType<typeof useRouter>;
 }
 
-function PurchaseConfirmation({ 
-  artwork, 
-  userBalance, 
-  isOpen, 
-  setIsOpen, 
-  onConfirm, 
-  isProcessing, 
-  t, 
-  tCommon 
+function PurchaseConfirmation({
+  artwork,
+  userBalance,
+  isOpen,
+  setIsOpen,
+  onConfirm,
+  isProcessing,
+  t,
+  tCommon,
+  router
 }: PurchaseConfirmationProps) {
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
@@ -461,6 +463,19 @@ function PurchaseConfirmation({
                     <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
                     <p className="text-sm">{t('wallet.insufficient_balance')}</p>
                   </div>
+                )}
+
+                {userBalance < artwork.price && (
+                  <button
+                    onClick={() => {
+                      setIsOpen(false);
+                      router.push('/wallet');
+                    }}
+                    className="mt-3 w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white py-2 px-3 rounded flex items-center justify-center gap-2"
+                  >
+                    <DollarSignIcon className="h-4 w-4" />
+                    {t('wallet.add_funds')}
+                  </button>
                 )}
               </div>
             </div>
@@ -548,7 +563,7 @@ function Modal() {
   const resetArtModal = useResetArtModal();
   const isClosing = useIsArtModalClosing();
   const startClosing = useStartClosingArtModal();
-  
+
   const t = useTranslations();
   const tCommon = useTranslations('common');
   const { toast } = useToast();
@@ -566,9 +581,9 @@ function Modal() {
   const [isMobile, setIsMobile] = useState(false);
   const { user, status } = useAuth();
   const accessToken = user?.accessToken;
-  
+
   const [showAuthDialog, setShowAuthDialog] = useState(false);
-  
+
   const [alternativeLayout, setAlternativeLayout] = useState(false);
   const [isLayoutTransitioning, setIsLayoutTransitioning] = useState(false);
 
@@ -600,7 +615,7 @@ function Modal() {
   const userBalance = balanceData?.data?.balance || 0;
   const userHasPurchased = purchaseData?.data?.hasPurchased || false;
   const artwork = data?.data as Artwork;
-  
+
   const isArtworkCreator = useMemo(() => {
     return user && artwork && artwork.artistId && user.id === artwork.artistId._id;
   }, [user, artwork]);
@@ -638,9 +653,9 @@ function Modal() {
             description: t('artwork.already_purchased'),
           });
         } else {
-          toast({ 
-            title: response.message || t('common.error'), 
-            description: response.message || t('common.error') 
+          toast({
+            title: response.message || t('common.error'),
+            description: response.message || t('common.error')
           });
         }
       }
@@ -658,9 +673,9 @@ function Modal() {
     }
 
     if (userHasPurchased) {
-      toast({ 
-        title: t('artwork.already_purchased'), 
-        description: t('artwork.already_purchased') 
+      toast({
+        title: t('artwork.already_purchased'),
+        description: t('artwork.already_purchased')
       });
       return;
     }
@@ -670,7 +685,7 @@ function Modal() {
 
   const confirmBuy = useCallback(() => {
     if (!artwork) return;
-    
+
     if (artwork.price > userBalance) {
       toast({
         title: t('wallet.insufficient_balance'),
@@ -686,7 +701,7 @@ function Modal() {
 
   const handleDownload = useCallback(async () => {
     if (!selectedId) return;
-    
+
     if (!accessToken) {
       setShowAuthDialog(true);
       return;
@@ -755,14 +770,14 @@ function Modal() {
   const handleClose = useCallback(() => {
     // First mark as closing (this triggers CSS transition)
     startClosing();
-    
+
     // Then actually close after transition completes
     setTimeout(() => {
       document.body.style.overflow = '';
       document.body.style.paddingRight = '0';
-      
+
       resetArtModal();
-      
+
       const currentPath = pathname.split('?')[0];
       const langPrefix = pathname.startsWith('/en') ? '/en' : '';
       const artworksBasePath = `${langPrefix}/artworks`;
@@ -773,13 +788,13 @@ function Modal() {
   const toggleZoom = useCallback(() => {
     setIsZoomed(prev => !prev);
   }, []);
-  
+
   const toggleLayout = useCallback(() => {
     if (isLayoutTransitioning) return;
-    
+
     setIsLayoutTransitioning(true);
     setAlternativeLayout(prev => !prev);
-    
+
     setTimeout(() => {
       setIsLayoutTransitioning(false);
     }, 200);
@@ -834,18 +849,16 @@ function Modal() {
   return (
     <Fragment>
       <div
-        className={`fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-3 bg-black/80 backdrop-blur-sm transition-opacity duration-150 ${
-          isClosing ? 'opacity-0' : 'opacity-100'
-        }`}
+        className={`fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-3 bg-black/80 backdrop-blur-sm transition-opacity duration-150 ${isClosing ? 'opacity-0' : 'opacity-100'
+          }`}
         onClick={handleClose}
       >
         <div
           ref={modalRef}
           tabIndex={-1}
           onClick={(e) => e.stopPropagation()}
-          className={`w-full max-w-[1400px] relative rounded-lg sm:rounded-xl overflow-hidden flex flex-col lg:flex-row border border-white/20 bg-black/90 h-[100vh] sm:h-[95vh] md:h-[90vh] transition-transform duration-150 ${
-            isClosing ? 'scale-95 opacity-0' : 'scale-100 opacity-100'
-          }`}
+          className={`w-full max-w-[1400px] relative rounded-lg sm:rounded-xl overflow-hidden flex flex-col lg:flex-row border border-white/20 bg-black/90 h-[100vh] sm:h-[95vh] md:h-[90vh] transition-transform duration-150 ${isClosing ? 'scale-95 opacity-0' : 'scale-100 opacity-100'
+            }`}
         >
           {/* Layout toggle button */}
           <button
@@ -857,7 +870,7 @@ function Modal() {
           >
             {alternativeLayout ? <Rows className="h-4 w-4" /> : <Grid className="h-4 w-4" />}
           </button>
-          
+
           {/* Control buttons */}
           <div className="absolute top-3 right-3 flex items-center gap-2 z-[51]">
             <CreateReport
@@ -874,7 +887,7 @@ function Modal() {
                 </button>
               }
             />
-            
+
             <button
               className='p-2 rounded-full bg-black/50 hover:bg-black/60 active:bg-black/80 transition-colors'
               onClick={handleClose}
@@ -884,23 +897,23 @@ function Modal() {
               <X className='w-4 h-4 text-white' />
             </button>
           </div>
-          
+
           {/* Layout switching */}
           {alternativeLayout ? (
             <div className="w-full h-full relative">
-              <ArtFeed 
-                data={artwork} 
-                index={0} 
+              <ArtFeed
+                data={artwork}
+                index={0}
                 isActive={true}
                 isInModal={true}
               />
             </div>
           ) : (
             <div className="w-full h-full flex flex-col lg:flex-row">
-              <ImageSection 
-                artwork={artwork} 
-                isZoomed={isZoomed} 
-                toggleZoom={toggleZoom} 
+              <ImageSection
+                artwork={artwork}
+                isZoomed={isZoomed}
+                toggleZoom={toggleZoom}
                 imageLoaded={imageLoaded}
                 setImageLoaded={setImageLoaded}
                 t={t}
@@ -916,29 +929,27 @@ function Modal() {
                     <div className='flex justify-start gap-2 border-b border-white/20'>
                       <button
                         onClick={() => setActiveTab('details')}
-                        className={`px-3 py-2 text-sm relative ${
-                          activeTab === 'details'
-                            ? 'text-white border-b-2 border-white'
-                            : 'text-white/60 hover:text-white/80'
-                        }`}
+                        className={`px-3 py-2 text-sm relative ${activeTab === 'details'
+                          ? 'text-white border-b-2 border-white'
+                          : 'text-white/60 hover:text-white/80'
+                          }`}
                       >
                         <span className="flex items-center gap-1.5">
                           <Info className='w-4 h-4' />
                           {t('artwork.info')}
                         </span>
                       </button>
-                      
+
                       <button
                         onClick={() => setActiveTab('comments')}
-                        className={`px-3 py-2 text-sm relative ${
-                          activeTab === 'comments'
-                            ? 'text-white border-b-2 border-white'
-                            : 'text-white/60 hover:text-white/80'
-                        }`}
+                        className={`px-3 py-2 text-sm relative ${activeTab === 'comments'
+                          ? 'text-white border-b-2 border-white'
+                          : 'text-white/60 hover:text-white/80'
+                          }`}
                       >
                         <span className="flex items-center gap-1.5">
                           <BiComment className='w-4 h-4' />
-                          {t('artwork.comments')} 
+                          {t('artwork.comments')}
                           {((artwork as any)?.commentsCount || 0) > 0 && (
                             <span className="inline-flex items-center justify-center ml-1 bg-white/20 text-xs rounded-full w-5 h-5">
                               {(artwork as any).commentsCount}
@@ -956,11 +967,11 @@ function Modal() {
                   {/* Tab content */}
                   <div className="flex-1 px-3 sm:px-4 pb-3 sm:pb-4 overflow-hidden">
                     {activeTab === 'details' ? (
-                      <DetailTab 
-                        artwork={artwork} 
-                        userHasPurchased={userHasPurchased} 
+                      <DetailTab
+                        artwork={artwork}
+                        userHasPurchased={userHasPurchased}
                         isArtworkCreator={!!isArtworkCreator}
-                        handleBuy={handleBuy} 
+                        handleBuy={handleBuy}
                         handleDownload={handleDownload}
                         downloadToken={downloadToken}
                         isProcessing={isProcessing}
@@ -968,9 +979,9 @@ function Modal() {
                         t={t}
                       />
                     ) : (
-                      <CommentsTab 
-                        artwork={artwork} 
-                        t={t} 
+                      <CommentsTab
+                        artwork={artwork}
+                        t={t}
                       />
                     )}
                   </div>
@@ -990,6 +1001,7 @@ function Modal() {
         isProcessing={isProcessing}
         t={t}
         tCommon={tCommon}
+        router={router}
       />
 
       <SuccessDialog
@@ -1001,7 +1013,7 @@ function Modal() {
         tCommon={tCommon}
       />
 
-      <AuthDialog 
+      <AuthDialog
         isOpen={showAuthDialog}
         setIsOpen={setShowAuthDialog}
       />

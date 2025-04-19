@@ -209,7 +209,7 @@
       "title": "Choose the Premium plan that's right for you",
       "subtitle": "Experience unlimited art with Premium. Enjoy the highest quality and exclusive features.",
       "plan": {
-        "price": "40,000 VND",
+        "price": "45,000 VND",
         "period": "/month",
         "features": {
           "gallery": "Unlimited 3D gallery views",
@@ -223,7 +223,25 @@
       "footer": {
         "terms": "Terms and conditions apply. Offer not valid for previous Premium subscribers.",
         "vat": "* Price includes VAT. Secure payment through encrypted payment gateways."
-      }
+      },
+      "confirm_purchase": "Confirm Premium Subscription",
+      "confirm_buy": "Confirm Purchase",
+      "confirm_cancel": "Confirm Premium Cancellation",
+      "confirm_cancel_description": "Are you sure you want to cancel your Premium subscription?",
+      "note": "Note:",
+      "note_item1": "You will still be a Premium user and have access to all Premium features until expiration",
+      "note_item2": "You will not be refunded for the remaining time",
+      "note_item3": "After expiration, you will automatically revert to the free plan",
+      "confirm_cancel_button": "Confirm Cancellation",
+      "success_title": "Premium Subscription Successful",
+      "success_description1": "Thank you for subscribing to Premium!",
+      "success_description2": "You can now enjoy all Premium features of our platform.",
+      "cancel_subscription": "Cancel Subscription",
+      "login_required": "You need to log in to purchase Premium",
+      "insufficient_balance": "Your wallet balance is insufficient to purchase Premium",
+      "cancel_error": "Unable to cancel Premium subscription",
+      "plan_title": "Premium Plan",
+      "duration": "Duration: 1 month"
     }
   },
   "artwork": {
@@ -659,7 +677,8 @@
   "wallet": {
     "current_balance": "Current Balance",
     "after_purchase": "After Purchase",
-    "insufficient_balance": "Insufficient balance to purchase this artwork. Please add funds."
+    "insufficient_balance": "Insufficient balance to purchase this artwork. Please add funds.",
+    "add_funds": "Add Funds"
   },
   "warehouse": {
     "title": "My Artwork Warehouse",
