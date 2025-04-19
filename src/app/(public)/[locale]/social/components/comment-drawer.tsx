@@ -35,22 +35,24 @@ interface Comment {
   author: {
     _id: string;
     name: string;
-    avatar: string;
+    image: string;
   };
   replies?: string[];
 }
 
-interface BlogCommentDrawerProps {
-  blogId: string;
+interface CommentDrawerProps {
+  contentId: string;
+  contentType: "blog" | "artwork";
   authorId: string;
   isSignedIn: boolean;
 }
 
-export default function BlogCommentDrawer({
-  blogId,
+export default function CommentDrawer({
+  contentId,
+  contentType,
   authorId,
   isSignedIn,
-}: BlogCommentDrawerProps) {
+}: CommentDrawerProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
@@ -66,7 +68,7 @@ export default function BlogCommentDrawer({
     setLoading(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/comments/blog/${blogId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/comments/target/${contentType}/${contentId}`
       );
       const data = await response.json();
       setComments(data);
@@ -80,7 +82,6 @@ export default function BlogCommentDrawer({
   useEffect(() => {
     const fetchCurrentUser = async () => {
       const user = await getCurrentUser();
-
       if (user) {
         setToken(user.accessToken);
         setUserId(user.id);
@@ -95,10 +96,14 @@ export default function BlogCommentDrawer({
     try {
       const comment = await createComment({
         accessToken: currentUser.accessToken,
-        blogId,
+        targetId: contentId,
+        targetType: contentType,
         content: newComment,
+        parentId: null,
+        onModel: contentType,
       });
       setComments((prev) => [comment, ...prev]);
+      fetchComments();
       setNewComment("");
     } catch (err) {
       console.error("Error creating comment:", err);
@@ -111,7 +116,7 @@ export default function BlogCommentDrawer({
     const comment = comments.find((c) => c._id === commentId);
     if (!comment) return;
 
-    const updated = await updateComment({
+    await updateComment({
       accessToken: currentUser.accessToken,
       commentId,
       content: editContent,
@@ -138,38 +143,159 @@ export default function BlogCommentDrawer({
   const handleSubmitReply = async (parentId: string, replyContent: string) => {
     if (!replyContent.trim()) return;
     try {
-      console.log("Submitting reply...");
       setLoading(true);
-
       const user = await getCurrentUser();
-      console.log("Current user:", user);
-
       if (!user) throw new Error("User not authenticated.");
 
-      console.log("Sending request to create comment with parentId...");
       const newReply = await createComment({
         accessToken: user.accessToken,
-        blogId: blogId,
+        targetId: contentId,
+        targetType: contentType,
         content: replyContent,
-        parentId: parentId, // Gửi parentId để lưu vào comment con
+        parentId,
+        onModel: contentType,
       });
 
-      console.log("New reply created:", newReply);
-
       if (newReply) {
-        console.log("Updating state with newReply...");
         setComments((prevComments) => [...prevComments, newReply]);
-
-        setReplyContent(""); // Clear input
-        console.log("Reply content cleared.");
+        setReplyContent("");
       }
+      fetchComments();
     } catch (error) {
       console.error("Failed to add reply:", error);
     } finally {
       setLoading(false);
-      console.log("Loading state set to false.");
     }
   };
+
+  const renderComment = (comment: Comment, isReply = false) => (
+    <div
+      key={comment._id}
+      className={`flex space-x-3 items-start ${isReply ? "mt-2 ml-6" : ""}`}
+    >
+      <Avatar className="h-8 w-8">
+        <AvatarImage src={comment.author?.image || ""} />
+        <AvatarFallback>{comment.author?.name?.[0]}</AvatarFallback>
+      </Avatar>
+      <div className="flex-1">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <p className="text-sm font-medium">{comment.author?.name}</p>
+            <span className="text-xs text-muted-foreground">
+              {new Date(comment.createdAt).toLocaleDateString()}
+            </span>
+          </div>
+          <div className="flex items-center justify-end space-x-2 ml-auto">
+            {comment.author?._id === currentUser?.id && (
+              <div className="relative z-10">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <MoreHorizontal className="w-4 h-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem
+                      onClick={() => {
+                        setEditingCommentId(comment._id);
+                        setEditContent(comment.content);
+                      }}
+                    >
+                      Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={async () => {
+                        const user = await getCurrentUser();
+                        if (user?.accessToken) {
+                          handleDeleteComment(comment._id);
+                        } else {
+                          console.error("User not authenticated.");
+                        }
+                      }}
+                    >
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            )}
+            {isSignedIn && comment.author?._id !== currentUser?._id && (
+              <div className="z-0">
+                <ReportButton
+                  refId={comment._id}
+                  refType={RefType.COMMENT}
+                  url={
+                    typeof window !== "undefined" ? window.location.href : ""
+                  }
+                  triggerElement={
+                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <Flag className="w-3.5 h-3.5" />
+                    </Button>
+                  }
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        <p className="text-sm text-muted-foreground mt-1">{comment.content}</p>
+
+        {editingCommentId === comment._id && (
+          <div className="flex items-center space-x-2 mt-2">
+            <Input
+              value={editContent}
+              onChange={(e) => setEditContent(e.target.value)}
+            />
+            <Button
+              variant="ghost"
+              onClick={() => handleUpdateComment(comment._id)}
+            >
+              Save
+            </Button>
+          </div>
+        )}
+
+        {!isReply && replyTo === comment._id && (
+          <div className="flex items-center space-x-2 mt-2">
+            <Input
+              placeholder="Write a reply..."
+              value={replyContent}
+              onChange={(e) => setReplyContent(e.target.value)}
+            />
+            <Button
+              variant="ghost"
+              onClick={() => {
+                handleSubmitReply(comment._id, replyContent);
+                setReplyContent("");
+                setReplyTo(null);
+              }}
+            >
+              Reply
+            </Button>
+          </div>
+        )}
+
+        {!isReply && (
+          <Button
+            variant="link"
+            onClick={() => setReplyTo(comment._id)}
+            className="text-xs mt-1"
+          >
+            Reply
+          </Button>
+        )}
+
+        {comment.replies && comment.replies.length > 0 && (
+          <div className="mt-2">
+            {comment.replies.map((replyId) => {
+              const reply = comments.find((c) => c._id === replyId);
+              return reply ? renderComment(reply, true) : null;
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 
   return (
     <Drawer onOpenChange={(open) => open && fetchComments()}>
@@ -184,7 +310,7 @@ export default function BlogCommentDrawer({
           <DrawerHeader>
             <DrawerTitle>Comments</DrawerTitle>
             <DrawerDescription>
-              Write your thoughts about this blog.
+              Write your thoughts about this {contentType}.
             </DrawerDescription>
           </DrawerHeader>
 
@@ -192,168 +318,17 @@ export default function BlogCommentDrawer({
             {loading ? (
               <p>Loading comments...</p>
             ) : comments.length > 0 ? (
-              comments.map((comment) => (
-                <div key={comment._id} className="flex space-x-3 items-start">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={comment.author?.avatar || ""} />
-                    <AvatarFallback>{comment.author?.name?.[0]}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <p className="text-sm font-medium">
-                          {comment.author?.name}
-                        </p>
-                        <span className="text-xs text-muted-foreground">
-                          {new Date(comment.createdAt).toLocaleDateString()}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center justify-end space-x-2 ml-auto">
-                        {(comment.author?._id === currentUser?.id ||
-                          authorId === currentUser?.id) && (
-                          <div className="relative z-10">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon">
-                                  <MoreHorizontal className="w-4 h-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                {comment.author?._id === currentUser?.id && (
-                                  <DropdownMenuItem
-                                    onClick={() => {
-                                      setEditingCommentId(comment._id);
-                                      setEditContent(comment.content);
-                                    }}
-                                  >
-                                    Edit
-                                  </DropdownMenuItem>
-                                )}
-                                <DropdownMenuItem
-                                  onClick={async () => {
-                                    const user = await getCurrentUser();
-                                    if (user?.accessToken) {
-                                      handleDeleteComment(comment._id);
-                                    } else {
-                                      console.error("User not authenticated.");
-                                    }
-                                  }}
-                                >
-                                  Delete
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </div>
-                        )}
-
-                        {isSignedIn &&
-                          comment.author?._id !== currentUser?._id && (
-                            <div className="z-0">
-                              <ReportButton
-                                refId={comment._id}
-                                refType={RefType.COMMENT}
-                                url={
-                                  typeof window !== "undefined"
-                                    ? window.location.href
-                                    : ""
-                                }
-                                triggerElement={
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-8 w-8"
-                                  >
-                                    <Flag className="w-3.5 h-3.5" />
-                                  </Button>
-                                }
-                              />
-                            </div>
-                          )}
-                      </div>
-                    </div>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {comment.content}
-                    </p>
-
-                    {editingCommentId === comment._id && (
-                      <div className="flex items-center space-x-2 mt-2">
-                        <Input
-                          value={editContent}
-                          onChange={(e) => setEditContent(e.target.value)}
-                        />
-                        <Button
-                          variant="ghost"
-                          onClick={() => handleUpdateComment(comment._id)}
-                        >
-                          Save
-                        </Button>
-                      </div>
-                    )}
-
-                    {replyTo === comment._id && (
-                      <div className="flex items-center space-x-2 mt-2">
-                        <Input
-                          placeholder="Write a reply..."
-                          value={replyContent}
-                          onChange={(e) => setReplyContent(e.target.value)}
-                        />
-                        <Button
-                          variant="ghost"
-                          onClick={() => {
-                            handleSubmitReply(comment._id, replyContent);
-                            setReplyContent("");
-                            setReplyTo(null);
-                          }}
-                        >
-                          Reply
-                        </Button>
-                      </div>
-                    )}
-
-                    <Button
-                      variant="link"
-                      size="sm"
-                      className="text-blue-600 hover:underline mt-2"
-                      onClick={() => setReplyTo(comment._id)}
-                    >
-                      Reply
-                    </Button>
-                    {comment.replies?.map((replyId) => {
-                      const reply = comments.find((c) => c._id === replyId);
-
-                      if (!reply) return null;
-
-                      return (
-                        <div
-                          key={reply._id}
-                          className="ml-8 mt-2 flex space-x-3 items-start"
-                        >
-                          <Avatar className="h-6 w-6">
-                            <AvatarImage src={reply.author?.avatar || ""} />
-                            <AvatarFallback>
-                              {reply.author?.name?.[0]}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1">
-                            <div className="d-flex">
-                              <p className="text-sm font-medium">
-                                {reply.author?.name}
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                {new Date(reply.createdAt).toLocaleDateString()}
-                              </p>
-                            </div>
-                            <p className="text-sm text-muted-foreground mt-1">
-                              {reply.content}
-                            </p>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))
+              (() => {
+                const repliedCommentIds = new Set(
+                  comments.flatMap((c) => c.replies || [])
+                );
+                const topLevelComments = comments.filter(
+                  (c) => !repliedCommentIds.has(c._id)
+                );
+                return topLevelComments.map((comment) =>
+                  renderComment(comment)
+                );
+              })()
             ) : (
               <p>No comments yet.</p>
             )}
