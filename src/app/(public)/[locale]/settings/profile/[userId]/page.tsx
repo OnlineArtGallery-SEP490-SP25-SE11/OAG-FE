@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth-client';
 import { getUserProfile, followUser, unfollowUser } from '@/service/user';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -74,7 +74,7 @@ export default function UserProfilePage({ params }: { params: { userId: string }
   const accessToken = currentUser?.accessToken;
   const [activeTab, setActiveTab] = useState("about");
   const queryClient = useQueryClient();
-
+  const { toast } = useToast();
   // Sử dụng useQuery để fetch user profile
   const { data: userProfileData, isLoading } = useQuery<UserProfileResponse, Error>({
     queryKey: ['userProfile', userId, accessToken],
@@ -104,28 +104,39 @@ export default function UserProfilePage({ params }: { params: { userId: string }
   const followMutation = useMutation({
     mutationFn: () => followUser(accessToken!, userId),
     onSuccess: () => {
-      toast.success('Đã theo dõi');
+      toast({
+        title: 'Đã theo dõi',
+        description: 'Bạn đã theo dõi người dùng này',
+      });
       queryClient.invalidateQueries({ queryKey: ['userProfile', userId] });
     },
     onError: () => {
-      toast.error('Thao tác không thành công');
+      toast({
+        title: 'Thao tác không thành công',
+      });
     }
   });
 
   const unfollowMutation = useMutation({
     mutationFn: () => unfollowUser(accessToken!, userId),
     onSuccess: () => {
-      toast.success('Đã hủy theo dõi');
+      toast({
+        title: 'Đã hủy theo dõi',
+      });
       queryClient.invalidateQueries({ queryKey: ['userProfile', userId] });
     },
     onError: () => {
-      toast.error('Thao tác không thành công');
+      toast({
+        title: 'Thao tác không thành công',
+      });
     }
   });
 
   const handleFollow = async () => {
     if (!accessToken) {
-      toast.error('Vui lòng đăng nhập để thực hiện thao tác này');
+      toast({
+        title: 'Vui lòng đăng nhập để thực hiện thao tác này',
+      });
       return;
     }
 

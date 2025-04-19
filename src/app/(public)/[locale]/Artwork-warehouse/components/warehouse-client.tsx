@@ -12,16 +12,16 @@ import { useToast } from '@/hooks/use-toast';
 
 import {
     Card,
-    CardContent,
-    CardDescription,
+    
+    
     CardFooter,
     CardHeader,
-    CardTitle,
+  
 } from '@/components/ui/card';
-import { Download, Image as ImageIcon, ExternalLink, Calendar, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Download, Image as ImageIcon, ExternalLink,  ChevronRight, ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Badge } from '@/components/ui/badge';
+
 import { format } from 'date-fns';
 import { vi, enUS } from 'date-fns/locale';
 import { useTranslations } from 'next-intl';
