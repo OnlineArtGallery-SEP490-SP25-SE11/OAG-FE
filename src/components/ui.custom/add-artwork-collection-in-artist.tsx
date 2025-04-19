@@ -61,7 +61,7 @@ export default function AddArtworkCollection({artworkId, triggerButton, onSucces
             toast({
                 title: "Success",
                 description: "Artwork added to collection successfully",
-                className: 'bg-green-500 text-white border-green-600'
+                
             });
             
             setIsOpen(false);
@@ -74,7 +74,7 @@ export default function AddArtworkCollection({artworkId, triggerButton, onSucces
             toast({
                 title: "Error",
                 description: error instanceof Error ? error.message : "Failed to add artwork to collection",
-                className: 'bg-red-500 text-white border-red-600'
+                
             });
         }
     });
