@@ -12,8 +12,8 @@ export default async function ArtworksPage({
   const exhibition = res.data?.exhibition;
  
   // Calculate positions on server
-  const totalPositions = exhibition?.gallery?.artworkPlacements?.length || 68;
-  const positions = Array.from({ length: totalPositions }, (_, i) => i + 1);
+  const totalPositions = exhibition?.gallery?.artworkPlacements?.length || 0;
+  const positions = Array.from({ length: totalPositions }, (_, i) => i);
 
   return (
     <ArtworksContent

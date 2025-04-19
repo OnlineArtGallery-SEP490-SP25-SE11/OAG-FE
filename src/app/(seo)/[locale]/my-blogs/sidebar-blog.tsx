@@ -10,13 +10,11 @@ import { getCurrentUser } from '@/lib/session';
 
 const BlogSidebar: React.FC = async () => {
 	const user = await getCurrentUser();
-	let blogs = [];
 	if (!user) redirect('/');
 
 	const response = await getUserBlogs(user.accessToken);
-
-	blogs = response.data?.blogs || [];
-
+	const blogs = response.data?.blogs || [];
+console.log('bloz', blogs);
 	const header = (
 		<Link href='/' className='mx-auto '>
 			<Image

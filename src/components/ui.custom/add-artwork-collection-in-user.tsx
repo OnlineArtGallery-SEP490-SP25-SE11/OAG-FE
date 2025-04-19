@@ -9,9 +9,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
-import { Loader2 } from "lucide-react";
+import { Loader2, PlusCircle } from "lucide-react";
 import useAuthClient from "@/hooks/useAuth-client";
 import { AuthDialog } from "./auth-dialog";
+import CreateCollection from "@/app/(public)/[locale]/settings/profile/components/create-collection";
 
 interface AddArtworktProps {
     artworkId: string;
@@ -113,6 +114,18 @@ export default function AddArtworkCollection({artworkId, triggerButton, onSucces
             setIsOpen(true);
         }
     };
+
+    const handleCollectionCreated = async () => {
+        // Refresh collections after creating a new one
+        queryClient.invalidateQueries({ queryKey: ['collections'] });
+        
+        // Toast notification
+        toast({
+            title: "Success",
+            description: "Collection created successfully! You can now add your artwork to it.",
+            className: 'bg-green-500 text-white border-green-600'
+        });
+    };
     
     return (
         <>
@@ -163,15 +176,17 @@ export default function AddArtworkCollection({artworkId, triggerButton, onSucces
                                 ))}
                             </div>
                         ) : (
-                            <div className="text-center py-4">
-                                <p>You don't have any collections yet.</p>
-                                <Button 
-                                    variant="link" 
-                                    className="mt-2"
-                                    onClick={() => setIsOpen(false)}
-                                >
-                                    Create a collection first
-                                </Button>
+                            <div className="text-center py-4 flex flex-col items-center">
+                                <p className="mb-4">You don't have any collections yet.</p>
+                                <CreateCollection 
+                                    onSuccess={handleCollectionCreated} 
+                                    triggerButton={
+                                        <Button className="flex items-center gap-2">
+                                            <PlusCircle size={16} />
+                                            Create a new collection
+                                        </Button>
+                                    }
+                                />
                             </div>
                         )}
                     </div>

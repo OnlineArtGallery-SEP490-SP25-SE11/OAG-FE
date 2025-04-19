@@ -48,6 +48,7 @@ export interface Gallery {
     previewImage?: string;
     planImage?: string;
     isPremium?: boolean;
+    isActive?: boolean;
     customColliders: CustomCollider[];
     artworkPlacements: ArtworkPlacement[];
 }
