@@ -1,12 +1,12 @@
 'use client';
 
-import { fetchArtPiecesByRange } from '@/app/(public)/[locale]/artworks/api';
+import { fetchArtPiecesByRange, ArtworkFilterParams } from '@/app/(public)/[locale]/artworks/api';
 import ArtModal from '@/app/(public)/[locale]/artworks/components/art-modal';
 import { Artwork } from '@/types/marketplace';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ArtCategory from '@/app/(public)/[locale]/artworks/components/art-category';
-import ArtFilter from '@/app/(public)/[locale]/artworks/components/art-filter';
+import ArtFilter, { FilterState } from '@/app/(public)/[locale]/artworks/components/art-filter';
 import { useWindowSize } from '@react-hook/window-size';
 import { CustomMasonry } from '@/app/(public)/[locale]/artworks/components/custom-masonry';
 import { useTranslations } from 'next-intl';
@@ -33,6 +33,7 @@ export default function Artworks({
 	const [masonryLayout, setMasonryLayout] = useState<boolean>(true);
 	const [totalArtworks, setTotalArtworks] = useState<number>(initialTotal);
 	const [hasAllArtworks, setHasAllArtworks] = useState<boolean>(false);
+	const [activeFilters, setActiveFilters] = useState<ArtworkFilterParams>({});
 	const t = useTranslations();
 	
 	// Update hasAllArtworks whenever artPieces or totalArtworks change
@@ -48,7 +49,7 @@ export default function Artworks({
 		}
 	}, [artworks.length, artPieces.length, totalArtworks]);
 	
-	// Function to fetch more artworks
+	// Function to fetch artworks with filters
 	const loadMoreArtworks = useCallback(async () => {
 		// Don't fetch if we're already loading or have all artworks
 		if (isLoading || hasAllArtworks) return;
@@ -64,7 +65,8 @@ export default function Artworks({
 			const startIndex = artPieces.length;
 			const stopIndex = startIndex + 10;
 			
-			const response = await fetchArtPiecesByRange(startIndex, stopIndex);
+			// Apply all active filters to the API request
+			const response = await fetchArtPiecesByRange(startIndex, stopIndex, activeFilters);
 			const nextArtworks = response.data.artworks;
 			
 			// Always update total count with the most recent value
@@ -98,8 +100,78 @@ export default function Artworks({
 		} finally {
 			setIsLoading(false);
 		}
-	}, [artPieces, isLoading, totalArtworks, hasAllArtworks]);
+	}, [artPieces, isLoading, totalArtworks, hasAllArtworks, activeFilters]);
+		// Handle filter changes - reset and refetch artwork
+	const handleFilterChange = useCallback((filterState: FilterState) => {
+		// Map filter state to API parameters
+		const apiFilters: ArtworkFilterParams = {
+			keyword: filterState.search || undefined,
+			category: filterState.categories.length > 0 ? filterState.categories : undefined,
+			minPrice: filterState.priceRange[0] > 0 ? filterState.priceRange[0] : undefined,
+			maxPrice: filterState.priceRange[1] < 10000000 ? filterState.priceRange[1] : undefined,
+			sortBy: filterState.sortBy,
+			sortOrder: filterState.sortOrder,
+			status: []
+		};
+		
+		// Add status filters
+		if (filterState.status.available) apiFilters.status?.push('available');
+		if (filterState.status.selling) apiFilters.status?.push('selling');
+		
+		// Map artists if any - use empty array if no artists array
+		const artists = filterState.artists || [];
+		if (artists.length > 0) {			const artistNames = artists.map((id: string) => {
+				// Find artist name by ID 
+				// This is a simplified version - you may need to update based on your actual artist data structure
+				return id.includes('artist') ? id.replace('artist', '') : id;
+			}).filter(Boolean);
+			
+			if (artistNames.length > 0) {
+				apiFilters.artistName = artistNames.join(',');
+			}
+		}
+		
+		// Reset artwork list when filters change
+		setArtPieces([]);
+		setHasAllArtworks(false);
+		setActiveFilters(apiFilters);
+	}, []);
 	
+	// Reset and load initial data when filters change
+	useEffect(() => {
+		const fetchInitial = async () => {
+			setIsLoading(true);
+			try {
+				const response = await fetchArtPiecesByRange(0, 10, activeFilters);
+				setArtPieces(response.data.artworks || []);
+				setTotalArtworks(response.data.total || 0);
+				if (response.data.artworks?.length >= response.data.total) {
+					setHasAllArtworks(true);
+				}
+			} catch (error) {
+				console.error('Error loading filtered artworks:', error);
+				// Show empty state when filtering fails
+				setArtPieces([]);
+				setTotalArtworks(0);
+				setHasAllArtworks(true);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+		
+		// Initial load with empty filters
+		if (Object.keys(activeFilters).length === 0) {
+			if (artworks.length > 0) {
+				setArtPieces(artworks);
+			} else {
+				fetchInitial();
+			}
+		} else {
+			// Fetch with filters when filters change
+			fetchInitial();
+		}
+	}, [activeFilters, artworks]);
+
 	// Layout toggle function is modified to always use masonry
 	const toggleLayout = useCallback((isGrid: boolean) => {
 		// Always set to true (masonry) for now
@@ -160,16 +232,42 @@ export default function Artworks({
 		router.push(`?id=${id}`, { scroll: false });
 	}, [router, artPieces, setSelectedArt]);
 	
+	// Handle category selection from ArtCategory component
+	const handleCategorySelect = useCallback((category: string) => {
+		// Create new filters with the selected category
+		const newFilters: ArtworkFilterParams = {
+			...activeFilters,
+			// Use undefined for empty category to clear filter
+			category: category ? [category] : undefined
+		};
+		
+		setActiveFilters(newFilters);
+		
+		// Reset UI state
+		setArtPieces([]);
+		setHasAllArtworks(false);
+		setTotalArtworks(0);
+	}, [activeFilters]);
+	
+	// Check URL for category parameter on mount
+	useEffect(() => {
+		const categoryParam = searchParams.get('category');
+		if (categoryParam) {
+			handleCategorySelect(categoryParam);
+		}
+	}, []);
+
 	return (
 		<div className='flex flex-col min-h-screen m-0'>
 			{/* Header Section */}
 			<div className='flex-shrink-0'>
-				<ArtCategory />
+				<ArtCategory onSelectCategory={handleCategorySelect} />
 				
 				<div style={{ height: '80px' }} className="bg-white dark:bg-gray-900">
 					<ArtFilter
 						onLayoutChange={toggleLayout}
 						headerHeight={80}
+						onFilterChange={handleFilterChange}
 					/>
 				</div>
 			</div>
@@ -198,6 +296,7 @@ export default function Artworks({
 					<ArtFilter
 						onLayoutChange={toggleLayout}
 						headerHeight={80}
+						onFilterChange={handleFilterChange}
 					/>
 				</div>
 			)}

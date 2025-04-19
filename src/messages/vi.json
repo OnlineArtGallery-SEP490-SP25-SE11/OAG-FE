@@ -276,7 +276,7 @@
       "preview": "Xem trước"
     },
     "artwork_description": "Mô tả Tác phẩm",
-    "preview_note": "Ghi chú Xem trước",
+    "preview_note": "Ghi chú Xem trước", 
     "toggle_details": "Hiển thị/ẩn chi tiết",
     "drag_to_pan": "Kéo để di chuyển",
     "remove_from_favorites": "Xóa khỏi yêu thích",
@@ -451,7 +451,35 @@
     "materials": "Chất liệu",
     "waysToBuy": "Cách mua",
     "size": "Kích thước",
-    "status": "Trạng thái"
+    "status": "Trạng thái",
+    "sort": "Sắp xếp",
+    "sortBy": "Sắp xếp theo",
+    "sortByPrice": "Giá",
+    "sortByDate": "Ngày",
+    "apply": "Áp dụng",
+    "reset": "Đặt lại",
+    "applyFilters": "Áp dụng bộ lọc",
+    "clearFilters": "Xóa bộ lọc",
+    "clearAll": "Xóa tất cả",
+    "clearSelection": "Xóa lựa chọn",
+    "showMore": "Xem thêm",
+    "showLess": "Thu gọn",
+    "selectCategories": "Chọn danh mục",
+    "priceLowToHigh": "Giá: Thấp đến cao",
+    "priceHighToLow": "Giá: Cao đến thấp",
+    "newest": "Mới nhất",
+    "oldest": "Cũ nhất",
+    "allCategories": "Tất cả danh mục",
+    "resetPriceRange": "Đặt lại khoảng giá",
+    "done": "Xong",
+    "artwork": {
+      "status": {
+        "available": "Có sẵn",
+        "selling": "Đang bán",
+        "hidden": "Ẩn",
+        "sold": "Đã bán"
+      }
+    }
   },
   "artworkPage": {
     "filter": {

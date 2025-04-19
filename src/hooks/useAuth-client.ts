@@ -24,22 +24,44 @@ type SessionResponse = {
   expires: string;
 };
 
-export default function useAuthClient() {
-  const { data: session, status, update } = useSession({ required: false });
-  const resultRef = useRef<AuthResult>({ user: null, status: 'loading' });
+// export default function useAuthClient() {
+//   const { data: session, status, update } = useSession({ required: false });
+//   const resultRef = useRef<AuthResult>({ user: null, status: 'loading' });
 
-  // Memoize the result to prevent unnecessary re-renders
-  const result = useMemo(() => {
-    const newUser = session?.user as User || null;
-    return { user: newUser, status };
-  }, [session?.user, status]);
+//   // Memoize the result to prevent unnecessary re-renders
+//   const result = useMemo(() => {
+//     const newUser = session?.user as User || null;
+//     return { user: newUser, status };
+//   }, [session?.user, status]);
 
-  // Update ref for stability
+//   // Update ref for stability
+//   useEffect(() => {
+//     resultRef.current = result;
+//   }, [result]);
+
+//   return resultRef.current;
+// }
+export default function useAuthClient(): AuthResult {
+  const [authResult, setAuthResult] = useState<AuthResult>({ user: null, status: 'loading' });
+  const {data: session, status } = useSession({ required: false });
+  
   useEffect(() => {
-    resultRef.current = result;
-  }, [result]);
-
-  return resultRef.current;
+    let isMounted = true;
+    
+    if (isMounted) {
+      setAuthResult({
+        user: session?.user || null,
+        status
+      });
+    }
+    
+    // Clean-up function that runs when component unmounts
+    return () => {
+      isMounted = false;
+    };
+  }, [session, status]);
+  
+  return authResult;
 }
 
 

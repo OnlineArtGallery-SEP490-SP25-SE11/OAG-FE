@@ -1,9 +1,13 @@
 'use client';
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import useNotification from '@/hooks/useNotification';
-import {Notification as NotificationType} from '@/service/notification';
+import { Notification as NotificationType } from '@/service/notification';
+import { useNotificationStore } from '@/store/notificationStore';
 import { formatCreatedAt } from '@/utils/date';
-import { Bell, BellIcon, BellOff, Check, Trash2, CheckCheck, Loader2 } from 'lucide-react';
+import { 
+  Bell, BellIcon, BellOff, Check, Trash2, CheckCheck, Loader2,
+  Calendar as CalendarDays, AlertTriangle, Paintbrush as PaintBrush 
+} from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import HeaderButton from '@/app/(public)/[locale]/_header/components/header-button';
@@ -62,6 +66,7 @@ export default function Notification() {
     left: 0
   });
   
+  // Get data from the hook (API-related functionality)
   const {
     notifications,
     unreadCount,
@@ -72,8 +77,12 @@ export default function Notification() {
     handleMarkAllAsRead,
     handleMarkAsRead,
     handleDeleteNotification,
-    setNotificationPanelOpen,
   } = useNotification();
+  
+  // Get UI state directly from Zustand store
+  const { 
+    setNotificationPanelOpen 
+  } = useNotificationStore();
 
   const displayUnreadCount = typeof unreadCount === 'number' ? unreadCount : 0;
   const hasUnreadNotifications = displayUnreadCount > 0;
@@ -228,7 +237,7 @@ export default function Notification() {
             top: `${dropdownStyles.top}px`, 
             left: `${dropdownStyles.left}px`,
             width: '350px',
-            maxWidth: 'calc(100vw-24px)'
+            maxWidth: 'calc(100vw - 24px)'
           }}
           ref={dropdownRef}
           onMouseEnter={() => setIsHovering(true)}
@@ -244,7 +253,11 @@ export default function Notification() {
                 variant="ghost" 
                 size="sm" 
                 className="h-8 px-2" 
-                onClick={handleMarkAllAsRead}
+                onClick={() => {
+                  handleMarkAllAsRead();
+                  // Also update the Zustand store
+                  useNotificationStore.getState().markAllAsRead();
+                }}
                 disabled={notifications.length === 0 || notifications.every(n => n.isRead)}
               >
                 <CheckCheck className="h-4 w-4 mr-1" />
@@ -369,10 +382,12 @@ function NotificationList({
   );
 }
 
-// Memoized notification item
+// Memoized notification item with improved comparison function
 const MemorizedNotificationItem = React.memo(NotificationItem, (prev, next) => {
   return prev.notification._id === next.notification._id && 
-         prev.notification.isRead === next.notification.isRead;
+         prev.notification.isRead === next.notification.isRead &&
+         prev.notification.title === next.notification.title &&
+         prev.notification.content === next.notification.content;
 });
 
 function NotificationItem({
@@ -387,24 +402,75 @@ function NotificationItem({
   const locale = useLocale();
   const [isHovered, setIsHovered] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const { markAsRead } = useNotificationStore();
   
   const handleDelete = useCallback(() => {
     setIsDeleting(true);
     setTimeout(() => {
       onDelete(notification._id);
+      // Also update the Zustand store
+      useNotificationStore.getState().deleteNotification(notification._id);
     }, 300);
   }, [notification._id, onDelete]);
   
-  const containerClasses = cn(
-    "relative p-3 border-b border-border transition-all",
-    !notification.isRead && "bg-primary/5 dark:bg-primary/10",
-    isHovered && "bg-muted/50",
-    isDeleting && "opacity-0 h-0 overflow-hidden"
-  );
+  const handleMarkAsRead = useCallback(() => {
+    onMarkAsRead(notification._id);
+    markAsRead(notification._id);
+  }, [notification._id, onMarkAsRead, markAsRead]);
+
+  const handleExpandClick = useCallback(() => {
+    setIsExpanded(prev => !prev);
+  }, []);
+  
+  // Get icon based on notification type with smaller size
+  const getNotificationIcon = () => {
+    switch (notification.refType) {
+      case 'artwork':
+        return (
+          <div className="bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400 h-7 w-7 rounded-full flex items-center justify-center">
+            <PaintBrush className="h-3.5 w-3.5" />
+          </div>
+        );
+      case 'event':
+        return (
+          <div className="bg-violet-100 text-violet-600 dark:bg-violet-900/30 dark:text-violet-400 h-7 w-7 rounded-full flex items-center justify-center">
+            <CalendarDays className="h-3.5 w-3.5" />
+          </div>
+        );
+      case 'maintenance':
+        return (
+          <div className="bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400 h-7 w-7 rounded-full flex items-center justify-center">
+            <AlertTriangle className="h-3.5 w-3.5" />
+          </div>
+        );
+      default:
+        return (
+          <div className={cn(
+            "h-7 w-7 rounded-full flex items-center justify-center",
+            notification.isSystem 
+              ? "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
+              : "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400"
+          )}>
+            <Bell className="h-3.5 w-3.5" />
+          </div>
+        );
+    }
+  };
+  
+  const hasLongTitle = notification.title && notification.title.length > 35;
+  const hasContent = notification.content && notification.content?.trim().length > 0;
+  const shouldShowExpandButton = (hasLongTitle && notification.title.length > 50) || 
+                                (hasContent && notification.content && notification.content.length > 120);
   
   return (
     <div
-      className={containerClasses}
+      className={cn(
+        "relative py-2 px-2.5 border-b border-border transition-all group",
+        !notification.isRead && "bg-primary/5 dark:bg-primary/10",
+        isHovered && "bg-muted/50",
+        isDeleting && "opacity-0 h-0 p-0 overflow-hidden"
+      )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -412,90 +478,126 @@ function NotificationItem({
         <span className="absolute left-0 top-0 bottom-0 w-1 bg-primary" />
       )}
       
-      <div className="flex items-start gap-3">
-        <div className="flex-shrink-0 mt-1">
-          <div className={cn(
-            "h-9 w-9 rounded-full flex items-center justify-center",
-            notification.isSystem 
-              ? "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
-              : "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400"
-          )}>
-            <Bell className="h-4 w-4" />
-          </div>
+      <div className="flex items-start gap-2">
+        {/* Left: Icon */}
+        <div className="flex-shrink-0">
+          {getNotificationIcon()}
         </div>
         
-        <div className="flex-grow min-w-0 space-y-1">
-          <p className={cn(
-            "text-sm font-medium line-clamp-1",
-            !notification.isRead && "font-semibold"
-          )}>
+        {/* Middle: Content */}
+        <div className="flex-grow min-w-0">
+          {/* Title */}
+          <h3 
+            className={cn(
+              "text-xs font-medium leading-tight mb-1",
+              isExpanded ? "" : (hasLongTitle ? "line-clamp-2" : "line-clamp-1"),
+              !notification.isRead && "font-semibold"
+            )}
+            onClick={handleExpandClick}
+          >
             {notification.title || 'No title'}
-          </p>
+          </h3>
           
-          <p className="text-sm text-muted-foreground line-clamp-2">
-            {notification.content || 'No content'}
-          </p>
+          {/* Content */}
+          {hasContent && (
+            <div
+              className={cn(
+                "text-[11px] text-muted-foreground cursor-pointer leading-relaxed mb-1",
+                isExpanded ? "" : "line-clamp-3"
+              )}
+              onClick={handleExpandClick}
+            >
+              {notification.content}
+            </div>
+          )}
           
-          <div className="flex items-center text-xs text-muted-foreground">
-            <span>
-              {formatCreatedAt(notification.createdAt, locale as 'vi' | 'en')}
-            </span>
+          {/* Footer */}
+          <div className="flex items-center justify-between mt-1">
+            <div className="flex flex-wrap items-center text-[9px] text-muted-foreground gap-1">
+              <span className="opacity-80">
+                {formatCreatedAt(notification.createdAt, locale as 'vi' | 'en')}
+              </span>
+              
+              {!notification.isRead && (
+                <Badge variant="outline" className="px-1 py-0 h-3 text-[8px] font-normal border-primary/30 text-primary">
+                  New
+                </Badge>
+              )}
+              
+              {notification.refType && (
+                <Badge 
+                  variant="outline" 
+                  className="px-1 py-0 h-3 text-[8px] font-normal border-muted-foreground/30 text-muted-foreground"
+                >
+                  {notification.refType}
+                </Badge>
+              )}
+            </div>
             
-            {!notification.isRead && (
-              <Badge variant="outline" className="ml-2 px-1 py-0 h-4 text-[10px] font-normal border-primary/30 text-primary">
-                New
-              </Badge>
+            {/* Show more/less button */}
+            {shouldShowExpandButton && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={handleExpandClick}
+                className="h-4 text-[8px] px-1 py-0 opacity-70 hover:opacity-100"
+              >
+                {isExpanded ? "Less" : "More"}
+              </Button>
             )}
           </div>
         </div>
-      </div>
-      
-      {isHovered && (
-        <div className="absolute right-2 top-2 flex items-center gap-1 animate-in fade-in slide-in-from-right-1 duration-150">
+        
+        {/* Right: Action Buttons Column */}
+        <div className="flex flex-col items-center gap-1.5 flex-shrink-0 ml-1">
           {!notification.isRead && (
             <Button
               size="icon"
               variant="ghost"
-              className="h-7 w-7 hover:bg-primary/10 hover:text-primary"
-              onClick={() => onMarkAsRead(notification._id)}
+              className="h-5 w-5 hover:bg-primary/10 hover:text-primary"
+              onClick={handleMarkAsRead}
               title="Mark as read"
             >
-              <Check className="h-3.5 w-3.5" />
+              <Check className="h-2.5 w-2.5" />
             </Button>
           )}
           
           <Button
             size="icon"
             variant="ghost"
-            className="h-7 w-7 text-destructive/70 hover:text-destructive hover:bg-destructive/10"
+            className="h-5 w-5 text-destructive/70 hover:text-destructive hover:bg-destructive/10"
             onClick={handleDelete}
             title="Delete notification"
           >
-            <Trash2 className="h-3.5 w-3.5" />
+            <Trash2 className="h-2.5 w-2.5" />
           </Button>
         </div>
-      )}
+      </div>
     </div>
   );
 }
 
 function NotificationItemSkeleton() {
   return (
-    <div className="p-3 border-b border-border">
-      <div className="flex items-start gap-3">
+    <div className="py-2 px-2.5 border-b border-border">
+      <div className="flex items-start gap-2">
         <div className="flex-shrink-0">
-          <div className="h-9 w-9 rounded-full bg-muted/60 animate-pulse" />
+          <div className="h-7 w-7 rounded-full bg-muted/60 animate-pulse" />
         </div>
         
-        <div className="flex-grow min-w-0 space-y-2">
-          <div className="h-4 w-3/4 bg-muted/60 animate-pulse rounded" />
-          <div className="space-y-1">
-            <div className="h-3 w-5/6 bg-muted/60 animate-pulse rounded" />
-            <div className="h-3 w-4/6 bg-muted/60 animate-pulse rounded" />
+        <div className="flex-grow min-w-0">
+          <div className="h-3 w-3/4 bg-muted/60 animate-pulse rounded mb-1.5" />
+          <div className="space-y-1 mb-1.5">
+            <div className="h-2 w-5/6 bg-muted/60 animate-pulse rounded" />
+            <div className="h-2 w-4/6 bg-muted/60 animate-pulse rounded" />
           </div>
           <div className="flex items-center gap-2">
-            <div className="h-3 w-1/4 bg-muted/60 animate-pulse rounded" />
+            <div className="h-2 w-1/4 bg-muted/60 animate-pulse rounded" />
           </div>
+        </div>
+        
+        <div className="w-5 flex-shrink-0">
+          <div className="h-5 w-5 rounded bg-muted/40 animate-pulse" />
         </div>
       </div>
     </div>
