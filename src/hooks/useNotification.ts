@@ -1,51 +1,46 @@
 'use client';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
-import useAuthClient from '@/hooks/useAuth-client';
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery, useMutation } from '@tanstack/react-query';
 import notificationService, { Notification } from '@/service/notification';
-
-// Type-safe socket creation with better options typing
-const createSocket = (url: string, options: {
-  reconnectionAttempts?: number;
-  reconnectionDelay?: number;
-  timeout?: number;
-  transports?: string[];
-  autoConnect: boolean;
-}) => io(url, options);
-
-// Create a global socket reference to ensure only one socket connection exists
-// This will be shared between useNotification and useNotificationToaster
-let globalSocketRef: Socket | null = null;
-let socketInitializationInProgress = false;
-let registeredUsers = new Set<string>();
-
-export function getGlobalSocket(): Socket | null {
-  return globalSocketRef;
-}
+import useAuthClient from '@/hooks/useAuth-client';
+import { useNotificationStore, NOTIFICATION_EVENTS, notificationEmitter } from '@/store/notificationStore';
 
 export default function useNotification() {
   const { user } = useAuthClient();
   const userRef = useRef(user);
   const queryClient = useQueryClient();
-  const isInitializedRef = useRef(false);
+  
+  // Get state and actions from Zustand store
+  const { 
+    socketStatus: status, 
+    initializeSocket,
+    notifications: storeNotifications,
+    unreadCount: storeUnreadCount,
+    isNotificationPanelOpen,
+    setNotificationPanelOpen,
+    markAsRead,
+    markAllAsRead,
+    deleteNotification,
+    setNotifications,
+    setUnreadCount,
+    updateQueryData
+  } = useNotificationStore();
 
   useEffect(() => {
     userRef.current = user;
-  }, [user]);
-
-  const [status, setStatus] = useState<'connect' | 'disconnect'>('disconnect');
-  const [isNotificationPanelOpen, setIsNotificationPanelOpen] = useState(false);
+    
+    // Initialize socket when user is available
+    if (user?.id) {
+      initializeSocket(user.id);
+    }
+  }, [user, initializeSocket]);
 
   const notificationsQueryKey = useMemo(() => ['notifications'], []);
   const unreadCountQueryKey = useMemo(() => ['notifications', 'unread'], []);
 
   const isEnabled = Boolean(userRef.current?.id);
-  // Track first mount to fetch unread count only once
-  const hasInitializedUnreadCount = useRef(false);
-
-  // Track whether the component is mounted
-  const isMounted = useRef(false);
   const fetchedOnMount = useRef(false);
 
   // Force a one-time fetch of unread count on component mount
@@ -55,11 +50,77 @@ export default function useNotification() {
       // Directly fetch unread count and update cache
       notificationService.fetchUnreadCount().then(count => {
         queryClient.setQueryData(unreadCountQueryKey, count);
+        setUnreadCount(count); // Update Zustand store
       }).catch(error => {
         console.error('Failed to fetch unread count:', error);
       });
     }
-  }, [isEnabled, queryClient, unreadCountQueryKey]);
+  }, [isEnabled, queryClient, unreadCountQueryKey, setUnreadCount]);
+
+  // Listen for real-time notifications from socket (via event emitter)
+  useEffect(() => {
+    if (!isEnabled) return;
+
+    // Handler for new notifications coming from socket
+    const handleNewNotification = (newNotification: Notification) => {
+      console.log('Received new notification event in useNotification', newNotification);
+      
+      // Temporarily pause any ongoing refetches to reduce UI flicker
+      queryClient.cancelQueries({ queryKey: notificationsQueryKey });
+      queryClient.cancelQueries({ queryKey: unreadCountQueryKey });
+      
+      // Update the unread count in React Query
+      queryClient.setQueryData(unreadCountQueryKey, (old: number = 0) => old + 1);
+      
+      // Update the notifications list in React Query
+      queryClient.setQueryData(notificationsQueryKey, (old: any) => {
+        if (!old || !old.pages || !old.pages.length) {
+          return {
+            pages: [{ 
+              notifications: [newNotification], 
+              total: 1, 
+              nextPage: undefined 
+            }],
+            pageParams: [0]
+          };
+        }
+        
+        // Check if this notification already exists in cache
+        const notificationExists = old.pages.some((page: any) => 
+          page.notifications.some((n: Notification) => n._id === newNotification._id)
+        );
+        
+        // Don't add duplicates
+        if (notificationExists) return old;
+        
+        // Create a new first page with the notification at the top
+        const updatedPages = [...old.pages];
+        updatedPages[0] = {
+          ...updatedPages[0],
+          notifications: [newNotification, ...updatedPages[0].notifications],
+          total: updatedPages[0].total + 1
+        };
+        
+        return {
+          ...old,
+          pages: updatedPages
+        };
+      });
+    };
+    
+    // Subscribe to new notification events
+    const unsubscribe = notificationEmitter.on(
+      NOTIFICATION_EVENTS.NEW_NOTIFICATION, 
+      handleNewNotification
+    );
+    
+    return () => {
+      // Clean up event listener
+      if (typeof unsubscribe === 'function') {
+        unsubscribe();
+      }
+    };
+  }, [isEnabled, queryClient, notificationsQueryKey, unreadCountQueryKey]);
 
   const {
     data,
@@ -97,10 +158,23 @@ export default function useNotification() {
     [data]
   );
 
+  // Update the Zustand store whenever the notifications data changes
+  useEffect(() => {
+    if (data) {
+      // Type cast data to match NotificationQueryData type exactly
+      const safeData = {
+        pages: data.pages.map(page => page || { notifications: [], total: 0 }),
+        pageParams: data.pageParams as number[]
+      };
+      updateQueryData(safeData);
+    }
+  }, [data, updateQueryData]);
+
+  // Mark as read mutation adapted to use Zustand store
   const markAsReadMutation = useMutation({
     mutationFn: notificationService.markAsRead,
     onMutate: async (id?: string) => {
-      // Cancel any outgoing refetches to avoid overwriting our optimistic update
+      // Cancel any outgoing refetches
       await Promise.all([
         queryClient.cancelQueries({ queryKey: notificationsQueryKey }),
         queryClient.cancelQueries({ queryKey: unreadCountQueryKey }),
@@ -125,6 +199,9 @@ export default function useNotification() {
           };
         });
         
+        // Update Zustand store
+        markAsRead(id);
+        
         // Decrement unread count by 1
         queryClient.setQueryData(unreadCountQueryKey, (old: number = 0) => Math.max(0, old - 1));
       } else {
@@ -143,6 +220,9 @@ export default function useNotification() {
           };
         });
         
+        // Update Zustand store
+        markAllAsRead();
+        
         // Reset unread count to 0
         queryClient.setQueryData(unreadCountQueryKey, 0);
       }
@@ -157,7 +237,6 @@ export default function useNotification() {
         queryClient.invalidateQueries({ queryKey: unreadCountQueryKey });
       }
     },
-
     onSettled: () => {
       // Always refetch after error or success to ensure data is correct
       queryClient.invalidateQueries({ queryKey: notificationsQueryKey });
@@ -165,6 +244,7 @@ export default function useNotification() {
     },
   });
 
+  // Delete notification mutation adapted to use Zustand store
   const deleteNotificationMutation = useMutation({
     mutationFn: notificationService.deleteNotification,
     onMutate: async (id: string) => {
@@ -181,6 +261,9 @@ export default function useNotification() {
         })),
       }));
 
+      // Update Zustand store
+      deleteNotification(id);
+
       if (wasUnread) {
         queryClient.setQueryData(unreadCountQueryKey, (old: number = 0) => Math.max(0, old - 1));
       }
@@ -195,143 +278,6 @@ export default function useNotification() {
   const handleMarkAllAsRead = useCallback(() => markAsReadMutation.mutate(undefined), [markAsReadMutation]);
   const handleMarkAsRead = useCallback((id: string) => markAsReadMutation.mutate(id), [markAsReadMutation]);
   const handleDeleteNotification = useCallback((id: string) => deleteNotificationMutation.mutate(id), [deleteNotificationMutation]);
-
-  // Initialize socket on login, not dependent on panel opening
-  useEffect(() => {
-    // Early return if no user
-    if (!userRef.current?.id) {
-      return;
-    }
-
-    // Don't reinitialize if already connected
-    if (globalSocketRef?.connected && isInitializedRef.current && registeredUsers.has(userRef.current.id)) {
-      setStatus('connect');
-      return;
-    }
-
-    // Wait if another initialization is in progress
-    if (socketInitializationInProgress) {
-      const checkInterval = setInterval(() => {
-        if (!socketInitializationInProgress && globalSocketRef?.connected) {
-          clearInterval(checkInterval);
-          if (!registeredUsers.has(userRef.current?.id || '')) {
-            globalSocketRef.emit('register', userRef.current?.id);
-            registeredUsers.add(userRef.current?.id || '');
-          }
-          setStatus('connect');
-          isInitializedRef.current = true;
-        }
-      }, 100);
-      
-      return () => clearInterval(checkInterval);
-    }
-
-    // Initialize new socket
-    try {
-      socketInitializationInProgress = true;
-      
-      const socket = createSocket(process.env.NEXT_PUBLIC_SOCKET_URL as string, {
-        reconnectionAttempts: 5,
-        reconnectionDelay: 1000, // Faster reconnection
-        timeout: 10000,
-        transports: ['websocket', 'polling'],
-        autoConnect: true
-      });
-
-      globalSocketRef = socket;
-      
-      // Register user with socket
-      socket.emit('register', userRef.current.id);
-      registeredUsers.add(userRef.current.id);
-      
-      setStatus('connect');
-      isInitializedRef.current = true;
-
-      socket.on('connect', () => {
-        setStatus('connect');
-        // Re-register on reconnect
-        if (userRef.current?.id) {
-          socket.emit('register', userRef.current.id);
-        }
-      });
-      
-      socket.on('disconnect', () => setStatus('disconnect'));
-      
-      socket.on('connect_error', (error) => {
-        console.error('Socket connection error:', error);
-        setStatus('disconnect');
-      });
-      
-      socket.on('notifications', (newNotification: Notification) => {
-        const formattedNotification = {
-          ...newNotification,
-          createdAt: new Date(newNotification.createdAt),
-          updatedAt: new Date(newNotification.updatedAt),
-          isRead: false,
-        };
-        console.log('New notification received in useNotification:', formattedNotification);
-
-        // Update notification data
-        queryClient.setQueryData(notificationsQueryKey, (old: any) => {
-          if (!old?.pages || !old.pages.length) {
-            return {
-              pages: [{ notifications: [formattedNotification], total: 1, nextPage: undefined }],
-              pageParams: [0],
-            };
-          }
-          const updatedPages = [...old.pages];
-          updatedPages[0] = {
-            ...updatedPages[0],
-            notifications: [formattedNotification, ...(updatedPages[0]?.notifications || [])],
-            total: (updatedPages[0]?.total || 0) + 1,
-          };
-          return { ...old, pages: updatedPages };
-        });
-
-        // Update unread count immediately
-        queryClient.setQueryData(unreadCountQueryKey, (old: number = 0) => old + 1);
-      });
-
-      socketInitializationInProgress = false;
-
-      return () => {
-        // Don't disconnect the socket, just clean up event listeners
-        // This allows other components to continue using the socket
-        if (globalSocketRef) {
-          socket.off('connect');
-          socket.off('disconnect');
-          socket.off('connect_error');
-          socket.off('notifications');
-          
-          // Only remove this user from registered users
-          if (userRef.current?.id) {
-            registeredUsers.delete(userRef.current.id);
-          }
-          
-          // Only disconnect if no more users are registered
-          if (registeredUsers.size === 0) {
-            globalSocketRef.disconnect();
-            globalSocketRef = null;
-          }
-          
-          isInitializedRef.current = false;
-        }
-      };
-    } catch (error) {
-      console.error('Socket initialization error:', error);
-      setStatus('disconnect');
-      socketInitializationInProgress = false;
-      return () => {};
-    }
-  }, [queryClient, notificationsQueryKey, unreadCountQueryKey, user?.id]);
-
-  const setNotificationPanelOpen = useCallback((isOpen: boolean) => {
-    setIsNotificationPanelOpen(isOpen);
-    // Temporarily disabled auto mark-all-as-read
-    // if (isOpen && unreadCount > 0) {
-    //   setTimeout(() => handleMarkAllAsRead(), 2000);
-    // }
-  }, [handleMarkAllAsRead, unreadCount]);
 
   return {
     status,

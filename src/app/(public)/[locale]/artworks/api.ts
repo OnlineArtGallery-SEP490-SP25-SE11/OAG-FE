@@ -121,27 +121,86 @@ export async function purchaseArt(
 // 	return mockArtPieces.slice(startIndex, stopIndex + 1);
 // }
 
-export async function fetchArtPiecesByRange(
-	startIndex: number,
-	stopIndex: number
-): Promise<BaseResponse<{
-	artworks:Artwork[],
-	total: number
+// Define a type for filter parameters
+export interface ArtworkFilterParams {
+  keyword?: string;
+  artistName?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  category?: string[];
+  status?: string[];
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+  skip?: number;
+  take?: number;
 }
->> {
-	const skip = startIndex;
-	const take = stopIndex - startIndex + 1;
-	try {
-		const axios = await createAxiosInstance({ useToken: false });
-		if (!axios) throw new Error('Failed to create Axios instance');
-		
-		// Lấy cả tranh có trạng thái selling và available
-		const response = await axios.get(`/artwork?skip=${skip}&take=${take}&status=selling&status=available`);
-		console.log(response.data)
-		return response.data;
-	} catch {
-		throw new Error('Error fetching artworks');
-	}
+
+export async function fetchArtPiecesByRange(
+  startIndex: number,
+  stopIndex: number,
+  filters: ArtworkFilterParams = {}
+): Promise<BaseResponse<{
+  artworks: Artwork[],
+  total: number
+}>> {
+  const skip = startIndex;
+  const take = stopIndex - startIndex + 1;
+  
+  try {
+    const axios = await createAxiosInstance({ useToken: false });
+    if (!axios) throw new Error('Failed to create Axios instance');
+    
+    // Build query string manually to ensure proper encoding
+    let queryParams = `skip=${skip}&take=${take}`;
+    
+    // Add status filters (default to both selling and available)
+    if (filters.status && filters.status.length) {
+      filters.status.forEach(status => {
+        queryParams += `&status=${encodeURIComponent(status)}`;
+      });
+    } else {
+      queryParams += '&status=selling&status=available';
+    }
+    
+    // Add keyword search if provided - ensure proper space encoding with %20
+    if (filters.keyword) {
+      queryParams += `&keyword=${encodeURIComponent(filters.keyword)}`;
+    }
+    
+    // Add artist name filter if provided
+    if (filters.artistName) {
+      queryParams += `&artistName=${encodeURIComponent(filters.artistName)}`;
+    }
+    
+    // Add price range filters if provided
+    if (filters.minPrice !== undefined && filters.minPrice > 0) {
+      queryParams += `&minPrice=${filters.minPrice}`;
+    }
+    if (filters.maxPrice !== undefined && filters.maxPrice > 0) {
+      queryParams += `&maxPrice=${filters.maxPrice}`;
+    }
+    
+    // Add category filters if provided
+    if (filters.category && filters.category.length) {
+      filters.category.forEach(cat => {
+        queryParams += `&category=${encodeURIComponent(cat)}`;
+      });
+    }
+    
+    // Add sorting parameters if provided
+    if (filters.sortBy) {
+      queryParams += `&sortBy=${encodeURIComponent(filters.sortBy)}`;
+      queryParams += `&sortOrder=${encodeURIComponent(filters.sortOrder || 'asc')}`;
+    }
+
+    const response = await axios.get(`/artwork?${queryParams}`);
+    console.log('API request:', `/artwork?${queryParams}`);
+    console.log('API response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching artworks:', error);
+    throw new Error('Error fetching artworks');
+  }
 }
 
 export async function fetchArtworkById(id: string): Promise<BaseResponse<Artwork>> {
