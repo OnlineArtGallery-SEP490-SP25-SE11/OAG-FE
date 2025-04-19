@@ -350,7 +350,7 @@ function DetailTab({
               artworkId={artwork._id}
               triggerButton={
                 <button
-                  className={`flex items-center justify-center bg-zinc-700 hover:bg-zinc-600 active:bg-zinc-800 text-white text-xs h-9 rounded-md transition-colors ${!isArtworkCreator && userHasPurchased ? "" : "col-span-2"
+                  className={`flex items-center px-4 w-fit justify-center bg-zinc-700 hover:bg-zinc-600 active:bg-zinc-800 text-white text-xs h-9 rounded-md transition-colors ${!isArtworkCreator && userHasPurchased ? "" : "col-span-2"
                     }`}
                 >
                   <BookmarkIcon className="mr-1.5 h-3.5 w-3.5" />
