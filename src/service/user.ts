@@ -118,7 +118,9 @@ export async function getFollowingCount(axiosInstance: AxiosInstance): Promise<n
 export async function getFollowersCount(axiosInstance: AxiosInstance): Promise<number> {
 	try {
 		const res = await axiosInstance.get('/user/followers');
+		console.log('vcllllllll222222', res.data)
 		return res.data.followers?.length || 0;
+		
 	} catch (error) {
 		console.error('Failed to fetch followers count:', error);
 		return 0;

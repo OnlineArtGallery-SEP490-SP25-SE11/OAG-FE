@@ -164,24 +164,30 @@ export default function WarehouseClient() {
                         >
                             <Card className="overflow-hidden h-full flex flex-col bg-white/5 border border-white/10 hover:border-white/20 transition-colors">
                                 <div className="relative w-full h-52 overflow-hidden">
-                                    <Image
-                                        src={item.artworkId.url}
-                                        alt={item.artworkId.title}
-                                        fill
-                                        className="object-cover"
-                                    />
+                                    {item.artworkId?.url ? (
+                                        <Image
+                                            src={item.artworkId.url}
+                                            alt={item.artworkId.title || t('artwork.untitled')}
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    ) : (
+                                        <div className="flex items-center justify-center w-full h-full bg-gray-800/50">
+                                            <ImageIcon className="h-12 w-12 text-white/50" />
+                                        </div>
+                                    )}
                                     <div className="absolute top-2 right-2">
-                                        <Badge className="bg-blue-500/80 text-white">
+                                        {/* <Badge className="bg-blue-500/80 text-white">
                                             {item.downloadCount > 0
                                                 ? t('artwork.download_count', { count: item.downloadCount })
                                                 : t('artwork.not_downloaded')}
-                                        </Badge>
+                                        </Badge> */}
                                     </div>
                                 </div>
-                                <CardHeader>
-                                    <CardTitle className="text-white truncate">{item.artworkId.title}</CardTitle>
+                                {/* <CardHeader>
+                                    <CardTitle className="text-white truncate">{item.artworkId?.title || t('artwork.untitled')}</CardTitle>
                                     <CardDescription>
-                                        {t('artwork.artist')}: {item.artworkId.artistId?.name || t('artwork.unknown_artist')}
+                                        {t('artwork.artist')}: {item.artworkId?.artistId?.name || t('artwork.unknown_artist')}
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent className="flex-grow">
@@ -189,12 +195,12 @@ export default function WarehouseClient() {
                                         <Calendar className="h-4 w-4 mr-1.5" />
                                         <span>{t('artwork.purchased_on')}: {formatDate(item.purchasedAt)}</span>
                                     </div>
-                                </CardContent>
+                                </CardContent> */}
                                 <CardFooter className="pt-2 gap-2">
                                     <Button
                                         variant="outline"
                                         className="flex-1"
-                                        onClick={() => handleDownload(item._id, item.artworkId.title)}
+                                        onClick={() => handleDownload(item._id, item.artworkId?.title || t('artwork.untitled'))}
                                     >
                                         <Download className="h-4 w-4 mr-2" />
                                         {t('artwork.download')}
@@ -240,7 +246,7 @@ export default function WarehouseClient() {
                         <TabsTrigger value="all">{t('tabs.all')}</TabsTrigger>
                         <TabsTrigger value="recent">{t('tabs.recent')}</TabsTrigger>
                         <TabsTrigger value="downloaded">{t('tabs.downloaded')}</TabsTrigger>
-                        <TabsTrigger value="not_downloaded">{t('tabs.not_downloaded')}</TabsTrigger>
+                        {/* <TabsTrigger value="not_downloaded">{t('tabs.not_downloaded')}</TabsTrigger> */}
                     </TabsList>
 
                     <TabsContent value="all" className="space-y-6">
@@ -255,9 +261,9 @@ export default function WarehouseClient() {
                         {renderWarehouseItems()}
                     </TabsContent>
 
-                    <TabsContent value="not_downloaded" className="space-y-6">
+                    {/* <TabsContent value="not_downloaded" className="space-y-6">
                         {renderWarehouseItems()}
-                    </TabsContent>
+                    </TabsContent> */}
                 </Tabs>
             </div>
         </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth-client';
 import { getUserProfile, followUser, unfollowUser } from '@/service/user';
 import { toast } from 'sonner';
@@ -19,60 +19,109 @@ import {
   FileText,
   MessageSquare
 } from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
-interface User {
+interface BaseUser {
   _id: string;
   name: string;
   email: string;
   image?: string;
   role: string[];
   createdAt: string;
-  artworksCount?: number;
-  artistProfile?: {
-    bio?: string;
-    genre?: string[] | string;
-    experience?: string;
-    socialLinks?: {
-      instagram?: string;
-      twitter?: string;
-      website?: string;
-    };
+  provider: string;
+  providerId?: string;
+  phone: string;
+}
+
+interface ArtistProfile {
+  bio?: string;
+  genre?: string[] | string;
+  experience?: string;
+  socialLinks?: {
+    instagram?: string;
+    twitter?: string;
+    website?: string;
   };
-  following: { _id: string; name: string; email: string; image?: string }[];
-  followers: { _id: string; name: string; email: string; image?: string }[];
+}
+
+interface User extends BaseUser {
+  artworksCount: number;
+  artistProfile: ArtistProfile | null;
+  following: BaseUser[];
+  followers: BaseUser[];
+}
+
+interface UserProfileResponse {
+  user: User;
+  isFollowing: boolean;
+}
+
+interface APIUserResponse extends BaseUser {
+  artworksCount?: number;
+  artistProfile?: ArtistProfile;
+  following?: BaseUser[];
+  followers?: BaseUser[];
+}
+
+interface APIResponse {
+  user: APIUserResponse;
+  isFollowing: boolean;
 }
 
 export default function UserProfilePage({ params }: { params: { userId: string } }) {
   const { userId } = params;
   const { user: currentUser } = useAuth();
   const accessToken = currentUser?.accessToken;
-  const [user, setUser] = useState<User | null>(null);
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("about");
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        setLoading(true);
-        if (!accessToken) {
-          toast.error('Vui lòng đăng nhập để xem thông tin người dùng');
-          setLoading(false);
-          return;
-        }
-        const response = await getUserProfile(accessToken, userId);
-        setUser(response.user as unknown as User);
-        setIsFollowing(response.isFollowing);
-      } catch (error) {
-        toast.error('Không thể tải thông tin người dùng');
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Sử dụng useQuery để fetch user profile
+  const { data: userProfileData, isLoading } = useQuery<UserProfileResponse, Error>({
+    queryKey: ['userProfile', userId, accessToken],
+    queryFn: async () => {
+      if (!accessToken) throw new Error('Vui lòng đăng nhập để xem thông tin người dùng');
+      const response = await getUserProfile(accessToken, userId) as APIResponse;
 
-    fetchUserProfile();
-  }, [userId, accessToken]);
+      const userData: User = {
+        ...response.user,
+        artworksCount: response.user.artworksCount || 0,
+        artistProfile: response.user.artistProfile || null,
+        following: response.user.following || [],
+        followers: response.user.followers || []
+      };
+
+      return {
+        user: userData,
+        isFollowing: response.isFollowing
+      };
+    },
+    enabled: !!accessToken,
+    staleTime: 1000 * 60 * 5,
+    retry: 1
+  });
+
+  // Mutation cho follow/unfollow
+  const followMutation = useMutation({
+    mutationFn: () => followUser(accessToken!, userId),
+    onSuccess: () => {
+      toast.success('Đã theo dõi');
+      queryClient.invalidateQueries({ queryKey: ['userProfile', userId] });
+    },
+    onError: () => {
+      toast.error('Thao tác không thành công');
+    }
+  });
+
+  const unfollowMutation = useMutation({
+    mutationFn: () => unfollowUser(accessToken!, userId),
+    onSuccess: () => {
+      toast.success('Đã hủy theo dõi');
+      queryClient.invalidateQueries({ queryKey: ['userProfile', userId] });
+    },
+    onError: () => {
+      toast.error('Thao tác không thành công');
+    }
+  });
 
   const handleFollow = async () => {
     if (!accessToken) {
@@ -80,23 +129,14 @@ export default function UserProfilePage({ params }: { params: { userId: string }
       return;
     }
 
-    try {
-      if (isFollowing) {
-        await unfollowUser(accessToken, userId);
-        setIsFollowing(false);
-        toast.success('Đã hủy theo dõi');
-      } else {
-        await followUser(accessToken, userId);
-        setIsFollowing(true);
-        toast.success('Đã theo dõi');
-      }
-    } catch (error) {
-      toast.error('Thao tác không thành công');
-      console.error(error);
+    if (userProfileData?.isFollowing) {
+      unfollowMutation.mutate();
+    } else {
+      followMutation.mutate();
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="max-w-7xl mx-auto px-4 mt-12 animate-pulse">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
@@ -112,14 +152,15 @@ export default function UserProfilePage({ params }: { params: { userId: string }
     );
   }
 
-  if (!user) {
-    return <div className="container mx-auto mt-10 px-4">Không tìm thấy người dùng.</div>;
-  }
+  // if (!userProfileData?.user) {
+  //   return <div className="container mx-auto mt-10 px-4">Không tìm thấy người dùng.</div>;
+  // }
 
-  const isArtist = user.role?.includes('artist');
-  const genres = Array.isArray(user.artistProfile?.genre)
-    ? user.artistProfile?.genre
-    : user.artistProfile?.genre ? [user.artistProfile.genre] : [];
+  const user = userProfileData?.user;
+  const isArtist = user?.role?.includes('artist');
+  const genres = Array.isArray(user?.artistProfile?.genre)
+    ? user?.artistProfile?.genre
+    : user?.artistProfile?.genre ? [user?.artistProfile?.genre] : [];
 
   return (
     <div className="max-w-7xl mx-auto px-4 mt-12">
@@ -130,10 +171,10 @@ export default function UserProfilePage({ params }: { params: { userId: string }
             {/* Avatar */}
             <div className="flex flex-col items-center space-y-3">
               <Avatar className="h-24 w-24">
-                <AvatarImage src={user.image || '/default-avatar.png'} alt={user.name} />
-                <AvatarFallback>{user.name.substring(0, 2).toUpperCase()}</AvatarFallback>
+                <AvatarImage src={user?.image || '/default-avatar.png'} alt={user?.name} />
+                <AvatarFallback>{user?.name.substring(0, 2).toUpperCase()}</AvatarFallback>
               </Avatar>
-              <h1 className="text-2xl font-bold text-center">{user.name}</h1>
+              <h1 className="text-2xl font-bold text-center">{user?.name}</h1>
 
               {/* Badges */}
               <div className="flex flex-wrap gap-2 justify-center">
@@ -152,11 +193,11 @@ export default function UserProfilePage({ params }: { params: { userId: string }
             <div className="space-y-2 pt-2">
               {currentUser && currentUser.id !== userId && (
                 <Button
-                  variant={isFollowing ? "outline" : "default"}
+                  variant={userProfileData?.isFollowing ? "outline" : "default"}
                   onClick={handleFollow}
                   className="w-full"
                 >
-                  {isFollowing ? (
+                  {userProfileData?.isFollowing ? (
                     <>
                       <UserCheck className="mr-2 h-4 w-4" />
                       Đang theo dõi
@@ -175,19 +216,19 @@ export default function UserProfilePage({ params }: { params: { userId: string }
             <div className="grid grid-cols-3 gap-2 pt-3 border-t border-gray-200">
               <div className="text-center">
                 <p className="text-xl font-bold text-purple-600">
-                  {user.artworksCount || 0}
+                  {user?.artworksCount || 0}
                 </p>
                 <p className="text-gray-600 text-xs">Tác phẩm</p>
               </div>
               <div className="text-center">
                 <p className="text-xl font-bold text-pink-600">
-                  {user.followers?.length || 0}
+                  {user?.followers?.length || 0}
                 </p>
                 <p className="text-gray-600 text-xs">Người theo dõi</p>
               </div>
               <div className="text-center">
                 <p className="text-xl font-bold text-purple-600">
-                  {user.following?.length || 0}
+                  {user?.following?.length || 0}
                 </p>
                 <p className="text-gray-600 text-xs">Đang theo dõi</p>
               </div>
@@ -254,12 +295,12 @@ export default function UserProfilePage({ params }: { params: { userId: string }
                 {/* Cover Image và Thông tin nổi bật */}
                 <div className="relative w-full h-64 overflow-hidden rounded-xl mb-8 bg-gradient-to-r from-purple-100 to-pink-100">
                   {/* Ảnh bìa từ avatar */}
-                  {user.image && (
+                  {user?.image && (
                     <div className="absolute inset-0 w-full h-full">
                       <div
                         className="w-full h-full bg-center bg-no-repeat bg-cover"
                         style={{
-                          backgroundImage: `url(${user.image})`,
+                          backgroundImage: `url(${user?.image})`,
                           filter: 'blur(2px)',
                           transform: 'scale(1.1)',
                           opacity: '0.8'
@@ -283,7 +324,7 @@ export default function UserProfilePage({ params }: { params: { userId: string }
                         </div>
                         <div className="ml-3">
                           <p className="text-sm font-medium text-gray-900">Email</p>
-                          <p className="text-sm text-gray-500">{user.email}</p>
+                          <p className="text-sm text-gray-500">{user?.email}</p>
                         </div>
                       </div>
                       <div className="flex items-start">
@@ -293,7 +334,7 @@ export default function UserProfilePage({ params }: { params: { userId: string }
                         <div className="ml-3">
                           <p className="text-sm font-medium text-gray-900">Ngày tham gia</p>
                           <p className="text-sm text-gray-500">
-                            {new Date(user.createdAt).toLocaleDateString(
+                            {new Date(user?.createdAt || '').toLocaleDateString(
                               "vi-VN",
                               {
                                 day: "numeric",
@@ -315,8 +356,8 @@ export default function UserProfilePage({ params }: { params: { userId: string }
               <div className="space-y-6">
                 <h2 className="text-2xl font-bold border-b pb-2">Người theo dõi</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {user.followers.length > 0 ? (
-                    user.followers.map((follower) => (
+                  {(user?.followers || []).length > 0 ? (
+                    user?.followers?.map((follower: { _id: string; name: string; email: string; image?: string }) => (
                       <div
                         key={follower._id}
                         className="flex items-center justify-between p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
@@ -354,8 +395,8 @@ export default function UserProfilePage({ params }: { params: { userId: string }
               <div className="space-y-6">
                 <h2 className="text-2xl font-bold border-b pb-2">Đang theo dõi</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {user.following.length > 0 ? (
-                    user.following.map((following) => (
+                  {(user?.following || []).length > 0 ? (
+                    user?.following?.map((following: { _id: string; name: string; email: string; image?: string }) => (
                       <div
                         key={following._id}
                         className="flex items-center justify-between p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
@@ -393,9 +434,9 @@ export default function UserProfilePage({ params }: { params: { userId: string }
               <div className="space-y-6">
                 <h2 className="text-2xl font-bold border-b pb-2">Thông tin nghệ sĩ</h2>
                 <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                  {user.artistProfile ? (
+                  {user?.artistProfile ? (
                     <div className="space-y-6">
-                      {user.artistProfile.bio && (
+                      {user?.artistProfile?.bio && (
                         <div>
                           <h4 className="text-lg font-semibold mb-2 text-gray-800 flex items-center">
                             <FileText className="w-5 h-5 mr-2 text-purple-500" />
@@ -412,7 +453,7 @@ export default function UserProfilePage({ params }: { params: { userId: string }
                             Thể loại
                           </h4>
                           <div className="flex flex-wrap gap-2">
-                            {genres.map((genre, index) => (
+                            {genres.map((genre: string, index: number) => (
                               <Badge
                                 key={index}
                                 variant="secondary"
