@@ -48,39 +48,45 @@ interface AxiosInstanceOptions {
  *
  */
 export async function createAxiosInstance({
-	useToken = false,
-	onError
-}: AxiosInstanceOptions): Promise<AxiosInstance | null> {
-	const session = useToken ? await getSession() : null;
-	const accessToken = session?.user.accessToken;
-	if (useToken && !accessToken) {
-		const error = new Error('Access token is missing from the session.');
-		console.error(error.message);
-		if (onError) onError(error);
-		return null;
-	}
-	const instance = axios.create({
-		baseURL: env.NEXT_PUBLIC_API_URL,
-		headers: {
-			'Content-Type': 'application/json',
-			...(accessToken && {
-				Authorization: `Bearer ${accessToken}`
-			})
-		}
-	});
+  useToken = false,
+  onError
+}: AxiosInstanceOptions): Promise<AxiosInstance> {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json'
+  };
 
-	instance.interceptors.response.use(
-		(response) => response,
-		(error) => {
-			if (axios.isAxiosError(error)) {
-				console.error('Axios Error:', error.message);
-				if (onError) onError(error);
-			} else {
-				console.error('Unexpected Error:', error);
-				if (onError) onError(error as Error);
-			}
-			return Promise.reject(error);
-		}
-	);
-	return instance;
+  if (useToken) {
+    const session = await getSession();
+    const accessToken = session?.user.accessToken;
+    
+    if (!accessToken) {
+      const error = new Error('Access token is missing from the session.');
+      console.error(error.message);
+      if (onError) onError(error);
+      throw error;
+    }
+    
+    headers['Authorization'] = `Bearer ${accessToken}`;
+  }
+
+  const instance = axios.create({
+    baseURL: env.NEXT_PUBLIC_API_URL,
+    headers
+  });
+
+  instance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (axios.isAxiosError(error)) {
+        console.error('Axios Error:', error.message);
+      } else {
+        console.error('Unexpected Error:', error);
+      }
+      
+      if (onError) onError(error as Error);
+      return Promise.reject(error);
+    }
+  );
+
+  return instance;
 }

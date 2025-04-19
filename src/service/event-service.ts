@@ -1,4 +1,4 @@
-import { createAxiosInstance } from '@/lib/axios';
+import { createApi, createAxiosInstance } from '@/lib/axios';
 import { EventStatus } from "@/utils/enums";
 
 export interface Event {
@@ -15,13 +15,14 @@ export interface Event {
 const eventService = {
     async get(){
         try{
-            const axios = await createAxiosInstance({useToken:false})
-            if(!axios){
-                throw new Error("Failed to create axios instance");
-            }
-            const res = await axios.get("/event")
+            // const axios = await createAxiosInstance({useToken:false})
+            // if(!axios){
+            //     throw new Error("Failed to create axios instance");
+            // }
+            // const res = await axios.get("/event")
+            // return res.data.data;
+            const res = await createApi().get("/event")
             return res.data.data;
-
         }
         catch(error){
             console.error("Error getting events:", error);

@@ -118,7 +118,9 @@ export async function getFollowingCount(axiosInstance: AxiosInstance): Promise<n
 export async function getFollowersCount(axiosInstance: AxiosInstance): Promise<number> {
 	try {
 		const res = await axiosInstance.get('/user/followers');
+		console.log('vcllllllll222222', res.data)
 		return res.data.followers?.length || 0;
+		
 	} catch (error) {
 		console.error('Failed to fetch followers count:', error);
 		return 0;
@@ -173,6 +175,17 @@ export async function isFollowing(token: string, targetUserId: string): Promise<
 		return res.data;
 	} catch (error) {
 		console.error('Failed to check following status', error);
+		throw error;
+	}
+}
+
+// 🔹 Get user profile by ID
+export async function getUserProfile(token: string, userId: string): Promise<{user: User, isFollowing: boolean}> {
+	try {
+		const res = await createApi(token).get(`/user/profile/${userId}`)
+		return res.data
+	} catch (error) {
+		console.error('Failed to fetch user profile', error);
 		throw error;
 	}
 }

@@ -105,6 +105,7 @@ export default function ExhibitionDateManager({
                 selected={startDate}
                 onSelect={(date) => handleDateChange('startDate', date)}
                 initialFocus
+                disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
               />
             </PopoverContent>
           </Popover>

@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Eye, Loader2 } from 'lucide-react';
+import { Eye, AlertTriangle } from 'lucide-react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -12,6 +12,7 @@ import { useTranslations } from "next-intl";
 import { getGalleryTemplates } from '@/service/gallery';
 import { Gallery } from '@/types/new-gallery';
 import PreviewModal from './preview-modal';
+import { LoaderButton } from '@/components/ui.custom/loader-button';
 
 interface TemplateSelectionModalProps {
     isOpen: boolean;
@@ -82,6 +83,14 @@ export default function TemplateSelectionModal({
                         <div className="flex justify-center py-8">
                             <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
                         </div>
+                    ) : templates.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-10 text-center">
+                            <AlertTriangle className="h-12 w-12 text-yellow-500 mb-4" />
+                            <h3 className="text-lg font-medium mb-2">{t("no_templates_available")}</h3>
+                            <p className="text-sm text-muted-foreground">
+                                Empty
+                            </p>
+                        </div>
                     ) : (
                         <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-4 -mr-4">
                             <div>
@@ -151,7 +160,6 @@ export default function TemplateSelectionModal({
                                     </div>
                                 ))}
                             </div>
-
                         </div>
                     )}
 
@@ -159,19 +167,13 @@ export default function TemplateSelectionModal({
                         <Button variant="outline" onClick={() => onOpenChange(false)}>
                             {t("cancel")}
                         </Button>
-                        <Button
+                        <LoaderButton
+                            isLoading ={isCreating}
                             onClick={handleCreateExhibition}
                             disabled={!selectedTemplate || isLoading || isCreating}
-                        >
-                            {isCreating ? (
-                                <>
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    {t("creating")}
-                                </>
-                            ) : (
-                                t("create")
-                            )}
-                        </Button>
+                        >                           
+                                {t("create")}
+                        </LoaderButton>
                     </div>
                 </DialogContent>
             </Dialog>

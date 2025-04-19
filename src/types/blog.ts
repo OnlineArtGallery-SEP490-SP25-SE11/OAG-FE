@@ -10,7 +10,12 @@ export const blogSchema = z.object({
 	status: z.nativeEnum(BlogStatus),
 	createdAt: z.date(),
 	updatedAt: z.date(),
-	heartCount: z.number()
+	heartCount: z.number(),
+	author: z.object({
+		_id: z.string(),
+		name: z.string(),
+		image: z.string(),
+	})
 });
 export type Blog = z.infer<typeof blogSchema>;
 export type PageInfo = {
@@ -46,5 +51,5 @@ export type UserBlogsResponse = {
 
 //CRUD
 export type BlogRequestResponse = {
-	blog: Blog;
+	blog: Blog | null;
 };

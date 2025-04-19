@@ -36,16 +36,6 @@ import { LoaderButton } from '@/components/ui.custom/loader-button';
 const MAX_UPLOAD_IMAGE_SIZE = 5000000; // 5MB
 const MAX_UPLOAD_IMAGE_SIZE_IN_MB = 5;
 
-const createDraftSchema = z.object({
-	title: z.string().min(5, 'Title must be at least 5 characters'),
-	image: z
-		.instanceof(File)
-		.refine((file) => file.size < MAX_UPLOAD_IMAGE_SIZE, {
-			message: `Image must be under ${MAX_UPLOAD_IMAGE_SIZE_IN_MB}MB`
-		}),
-	content: z.string()
-});
-
 export default function CreateDraftButton() {
 	const router = useRouter();
 	const { setIsOpen: setIsOverlayOpen } = useContext(ToggleContext);
@@ -54,21 +44,56 @@ export default function CreateDraftButton() {
 	const [isOpen, setIsOpen] = useState(false);
 	const tBlog = useTranslations('blog');
 	const tCommon = useTranslations('common');
-
+	const tValidation = useTranslations('validation');
+	const createDraftSchema = z.object({
+		title: z.string()
+			.trim() // Add this line to trim whitespace before validation
+			.min(5, {
+				message: tValidation('minLength', { field: tBlog('title'), length: 5 })
+			})
+			.refine(
+				(title) => /^[\p{L}\p{N}\s]+$/u.test(title),
+				{
+					message: tValidation('invalid_format', {
+						field: tBlog('title'),
+						requirements: tValidation('alphanumeric_only')
+					})
+				}
+			),
+		image: z
+			// First check if it's a File or nullish value
+			.custom((val) => val instanceof File || val === null || val === undefined)
+			// Then apply custom validation with proper error messages
+			.refine((val) => val instanceof File, {
+				message: tValidation('required', { field: tBlog('image') })
+			})
+			.refine((file) =>
+				file instanceof File ? file.size < MAX_UPLOAD_IMAGE_SIZE : true, {
+				message: tValidation('image_size_limit', { size: MAX_UPLOAD_IMAGE_SIZE_IN_MB })
+			}),
+		content: z.string().optional(),
+	});
 	const { execute, error, isPending } = useServerAction(createBlogAction, {
 		onSuccess: (draft) => {
+			// Start navigation before other UI updates
+			const draftId = draft.data.id;
+			router.prefetch(`/my-blogs/${draftId}`);
+
+			// Show success toast
 			toast({
 				title: tCommon('success'),
 				description: tBlog('draft_create_success'),
 				variant: 'success'
 			});
 
-			// Group related state updates together
+			// Reset form and UI states
+			form.reset();
+			setImagePreview(null);
 			setIsOpen(false);
 			setIsOverlayOpen(false);
 
-			// Navigation after successful creation
-			router.push(`/my-blogs/${draft.data.id}`);
+			// Use replace instead of push for smoother transition
+			router.replace(`/my-blogs/${draftId}`);
 			router.refresh();
 		},
 		onError: () => {
@@ -153,18 +178,57 @@ export default function CreateDraftButton() {
 											<Input
 												{...field}
 												type='file'
-												accept='image/*'
+												accept='image/jpeg,image/png,image/gif,image/webp'
 												onChange={(e) => {
-													const file =
-														e.target.files?.[0];
-													if (file) {
-														onChange(file);
-														setImagePreview(
-															URL.createObjectURL(
-																file
-															)
-														);
+													const file = e.target.files?.[0];
+
+													// Clear previous file/preview if user cancels selection
+													if (!file) {
+														onChange(undefined);
+														setImagePreview(null);
+														form.setError('image', {
+															type: 'manual',
+															message: tValidation('required', { field: tBlog('image') })
+														});
+														return;
 													}
+
+													// Validate file type
+													const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+													if (!validTypes.includes(file.type)) {
+														// Set form error instead of toast
+														form.setError('image', {
+															type: 'manual',
+															message: tValidation('invalid_file_type', { allowed: 'JPEG, PNG, GIF, WEBP' })
+														});
+														e.target.value = ''; // Clear the input
+														onChange(undefined); // Clear the form value
+														return;
+													}
+
+													// Validate file size
+													if (file.size > MAX_UPLOAD_IMAGE_SIZE) {
+														// Set form error instead of toast
+														form.setError('image', {
+															type: 'manual',
+															message: tValidation('image_size_limit', { size: MAX_UPLOAD_IMAGE_SIZE_IN_MB })
+														});
+														e.target.value = ''; // Clear the input
+														onChange(undefined); // Clear the form value
+														return;
+													}
+
+													// Clear any previous errors when valid file is selected
+													form.clearErrors('image');
+
+													// Create a safe object URL and clean up the previous one if it exists
+													if (imagePreview) {
+														URL.revokeObjectURL(imagePreview);
+													}
+
+													// Set the validated file
+													onChange(file);
+													setImagePreview(URL.createObjectURL(file));
 												}}
 												className='hidden'
 												id='image-upload'
@@ -174,7 +238,7 @@ export default function CreateDraftButton() {
 												className='cursor-pointer inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2'
 											>
 												<Upload className='mr-2 h-4 w-4' />{' '}
-												{tBlog('upload_image')}
+												{imagePreview ? tBlog('change_image') : tBlog('upload_image')}
 											</label>
 											{imagePreview && (
 												<Image
@@ -182,7 +246,7 @@ export default function CreateDraftButton() {
 													alt='Preview'
 													width={50}
 													height={50}
-													className='rounded-full object-cover'
+													className='object-cover'
 												/>
 											)}
 										</div>
