@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { getArtistArtworks } from '@/service/artwork';
 import { getCurrentUser } from '@/lib/session';
+import { LoaderButton } from '@/components/ui.custom/loader-button';
 
 // Type for artwork
 interface Artwork {
@@ -53,6 +54,7 @@ interface ArtworkSelectionModalProps {
     select_artwork_for_position: string;
     replace_artwork_at_position: string;
     remove_artwork_confirmation: string;
+    remove_artwork_description: string;
     no_artworks_found: string;
     create_artwork: string;
     cancel: string;
@@ -144,7 +146,7 @@ export function ArtworkSelectionModal({
               {t.remove_artwork_confirmation}
             </DialogTitle>
             <DialogDescription>
-              Are you sure you want to remove &quot;{existingArtworkPosition.artwork.title}&quot; from position {position}?
+            {t.remove_artwork_description}
             </DialogDescription>
           </DialogHeader>
 
@@ -167,23 +169,14 @@ export function ArtworkSelectionModal({
             >
               {t.cancel}
             </Button>
-            <Button
+            <LoaderButton
+              isLoading={isPlacingArtwork}
               variant="destructive"
               onClick={handleConfirmClick}
               disabled={isPlacingArtwork}
             >
-              {isPlacingArtwork ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t.placing}
-                </>
-              ) : (
-                <>
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  {t.remove_artwork}
-                </>
-              )}
-            </Button>
+              {t.remove_artwork}
+            </LoaderButton>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -195,9 +188,9 @@ export function ArtworkSelectionModal({
       <DialogContent className="max-w-4xl">
         <DialogHeader>
           <DialogTitle>
-            {existingArtworkPosition 
-              ? `${t.replace_artwork_at_position} ${position}`
-              : `${t.select_artwork_for_position} ${position}`}
+            {existingArtworkPosition
+              ? `${t.replace_artwork_at_position} ${position! + 1}`
+              : `${t.select_artwork_for_position} ${position! + 1}`}
           </DialogTitle>
         </DialogHeader>
 
@@ -205,7 +198,7 @@ export function ArtworkSelectionModal({
         {existingArtworkPosition && (
           <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-md flex items-center gap-3">
             <div className="relative h-16 w-16 rounded overflow-hidden flex-shrink-0">
-              <Image 
+              <Image
                 src={existingArtworkPosition.artwork.url}
                 alt={existingArtworkPosition.artwork.title}
                 fill
@@ -216,7 +209,7 @@ export function ArtworkSelectionModal({
               <p className="font-medium">Currently: {existingArtworkPosition.artwork.title}</p>
               <p className="text-sm text-muted-foreground">Select a new artwork below or remove this one</p>
             </div>
-            <Button 
+            <Button
               variant="destructive"
               size="sm"
               onClick={handleRemoveClick}
@@ -262,11 +255,10 @@ export function ArtworkSelectionModal({
                 <div
                   key={artwork._id}
                   onClick={() => handleArtworkSelect(artwork)}
-                  className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all duration-200 cursor-pointer group ${
-                    selectedArtwork?._id === artwork._id
+                  className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all duration-200 cursor-pointer group ${selectedArtwork?._id === artwork._id
                       ? 'border-primary ring-2 ring-primary/20 scale-[0.98]'
                       : 'border-transparent hover:border-primary/50'
-                  }`}
+                    }`}
                   role="button"
                   tabIndex={0}
                   aria-pressed={selectedArtwork?._id === artwork._id}

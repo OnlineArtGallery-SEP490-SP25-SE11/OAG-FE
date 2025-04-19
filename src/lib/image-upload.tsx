@@ -17,10 +17,24 @@ export function ImageUploader({ onUploadSuccess, folder }: ImageUploaderProps) {
 				onSuccess={async (result) => {
 					if (
 						typeof result.info === 'object' &&
-						'secure_url' in result.info
-					) {
-						await onUploadSuccess(result.info.secure_url);
-					}
+						'secure_url' in result.info &&
+						typeof result.info.secure_url === 'string'
+					  ) {
+						const url = result.info.secure_url;
+						// Check if URL ends with common image extensions
+						const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp'];
+						const hasImageExtension = imageExtensions.some(ext => 
+						  url.toLowerCase().endsWith(ext)
+						);
+						
+						if (hasImageExtension) {
+						  onUploadSuccess(url);
+						} else {
+						  // Handle non-image URL - you might want to show an error or log this
+						  console.error('Uploaded file is not a recognized image format');
+						  // Optionally still accept the URL or show user feedback
+						}
+					  }
 				}}
 				options={{
 					singleUploadAutoClose: true,

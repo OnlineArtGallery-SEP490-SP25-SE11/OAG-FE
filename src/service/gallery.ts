@@ -183,118 +183,121 @@ export async function getExhibitions(id: string) {
 
 // Function to upload an asset to cloud storage
 export async function uploadAsset(file: File) {
-  // Create a FormData object to send the file
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('upload_preset', 'gallery_assets'); // Your Cloudinary upload preset
+    // Create a FormData object to send the file
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'gallery_assets'); // Your Cloudinary upload preset
 
-  try {
-    // Replace with your actual upload endpoint
-    const response = await fetch('https://api.cloudinary.com/v1_1/your-cloud-name/upload', {
-      method: 'POST',
-      body: formData,
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Upload failed with status ${response.status}`);
+    try {
+        // Replace with your actual upload endpoint
+        const response = await fetch('https://api.cloudinary.com/v1_1/your-cloud-name/upload', {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (!response.ok) {
+            throw new Error(`Upload failed with status ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        return {
+            url: data.secure_url,
+            publicId: data.public_id,
+            width: data.width,
+            height: data.height,
+            format: data.format,
+        };
+    } catch (error) {
+        console.error('Error uploading asset:', error);
+        throw new Error('Failed to upload asset');
     }
-    
-    const data = await response.json();
-    
-    return {
-      url: data.secure_url,
-      publicId: data.public_id,
-      width: data.width,
-      height: data.height,
-      format: data.format,
-    };
-  } catch (error) {
-    console.error('Error uploading asset:', error);
-    throw new Error('Failed to upload asset');
-  }
 }
 
 // Function to save or update a gallery template
 export async function saveGalleryTemplate(templateData: GalleryTemplateData): Promise<GalleryTemplateData> {
-  try {
-    // For new templates (no ID)
-    if (!templateData.id) {
-      // In a real app, call your API endpoint
-      // const response = await fetch('/api/gallery/templates', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(templateData),
-      // });
-      
-      // For this example, we'll simulate an API response
-      console.log('Creating new template:', templateData);
-      
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Return mock response with generated ID
-      return {
-        ...templateData,
-        id: `template_${Date.now()}`,
-      };
-    } 
-    // For updating existing templates
-    else {
-      // const response = await fetch(`/api/gallery/templates/${templateData.id}`, {
-      //   method: 'PUT',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(templateData),
-      // });
-      
-      console.log('Updating template:', templateData);
-      
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Return the updated template
-      return templateData;
+    try {
+        // For new templates (no ID)
+        if (!templateData.id) {
+            // In a real app, call your API endpoint
+            // const response = await fetch('/api/gallery/templates', {
+            //   method: 'POST',
+            //   headers: { 'Content-Type': 'application/json' },
+            //   body: JSON.stringify(templateData),
+            // });
+
+            // For this example, we'll simulate an API response
+            console.log('Creating new template:', templateData);
+
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            // Return mock response with generated ID
+            return {
+                ...templateData,
+                id: `template_${Date.now()}`,
+            };
+        }
+        // For updating existing templates
+        else {
+            // const response = await fetch(`/api/gallery/templates/${templateData.id}`, {
+            //   method: 'PUT',
+            //   headers: { 'Content-Type': 'application/json' },
+            //   body: JSON.stringify(templateData),
+            // });
+
+            console.log('Updating template:', templateData);
+
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            // Return the updated template
+            return templateData;
+        }
+    } catch (error) {
+        console.error('Error saving gallery template:', error);
+        throw new Error('Failed to save gallery template');
     }
-  } catch (error) {
-    console.error('Error saving gallery template:', error);
-    throw new Error('Failed to save gallery template');
-  }
 }
 
 export async function getGalleryTemplates(params?: {
-  page?: number;
-  limit?: number;
-  sort?: Record<string, 1 | -1>;
-  search?: string;
+    page?: number;
+    limit?: number;
+    sort?: Record<string, 1 | -1>;
+    search?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    filter?: Record<string, any>;
 }): Promise<ApiResponse<GetGalleriesResponse>> {
-  try {
-      const queryParams = new URLSearchParams();
-      if (params?.page) queryParams.set('page', params.page.toString());
-      if (params?.limit) queryParams.set('limit', params.limit.toString());
-      if (params?.sort) queryParams.set('sort', JSON.stringify(params.sort));
-      if (params?.search) queryParams.set('search', params.search);
+    try {
+        const queryParams = new URLSearchParams();
+        if (params?.page) queryParams.set('page', params.page.toString());
+        if (params?.limit) queryParams.set('limit', params.limit.toString());
+        if (params?.sort) queryParams.set('sort', JSON.stringify(params.sort));
+        if (params?.search) queryParams.set('search', params.search);
+        if (params?.filter) queryParams.set('filter', JSON.stringify(params.filter)); 
 
-      const url = `/gallery${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
-      const res = await createApi().get(url);
-      return res.data;
-  } catch (error) {
-      console.error('Error getting gallery templates:', error);
-      throw handleApiError<GetGalleriesResponse>(
-          error,
-          'Failed to fetch gallery templates'
-      );
-  }
+        const url = `/gallery/public${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+        const res = await createApi().get(url);
+        return res.data;
+    } catch (error) {
+        console.error('Error getting gallery templates:', error);
+        throw handleApiError<GetGalleriesResponse>(
+            error,
+            'Failed to fetch gallery templates'
+        );
+    }
 }
 
 // Function to get a single gallery template by ID
 export async function getGalleryTemplate(id: string): Promise<ApiResponse<GalleryRequestResponse>> {
-  try {
-      const res = await createApi().get(`/gallery/${id}`);
-      return res.data;
-  } catch (error) {
-      console.error(`Error getting gallery template ${id}:`, error);
-      throw handleApiError<GalleryRequestResponse>(
-          error,
-          'Failed to fetch gallery template'
-      );
-  }
+    try {
+        const res = await createApi().get(`/gallery/${id}`);
+        return res.data;
+    } catch (error) {
+        console.error(`Error getting gallery template ${id}:`, error);
+        throw handleApiError<GalleryRequestResponse>(
+            error,
+            'Failed to fetch gallery template'
+        );
+    }
 }

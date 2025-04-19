@@ -35,9 +35,9 @@ export const createBlogAction = authenticatedAction
 				image: secure_url
 			}
 		});
-		const { blog } = res.data!;
-		revalidatePath(`/blogs/${blog._id}`);
-		return { id: blog._id };
+		const blog = res.data?.blog;
+		revalidatePath(`/blogs/${blog?._id}`);
+		return { id: blog?._id };
 	});
 
 export const updateBlogAction = authenticatedAction
@@ -87,9 +87,9 @@ export const updateBlogAction = authenticatedAction
 			accessToken: ctx.user.accessToken,
 			updateData
 		});
-		const { blog } = res.data!;
-		revalidatePath(`/blogs/${blog._id}`);
-		return { id: blog._id };
+		const blog = res.data?.blog;
+		revalidatePath(`/blogs/${blog?._id}`);
+		return { id: blog?._id };
 	});
 
 export const createPublicRequestAction = authenticatedAction
@@ -124,9 +124,9 @@ export const cancelPublicRequestAction = authenticatedAction
 			updateData: { _id: input.id, status: BlogStatus.DRAFT }
 		});
 		console.log('cancelPublicRequestAction', res);
-		const { blog } = res.data!;
-		revalidatePath(`/blogs/${blog._id}`);
-		return { id: blog._id };
+		const blog = res.data?.blog;
+		revalidatePath(`/blogs/${blog?._id}`);
+		return { id: blog?._id };
 	});
 // export const publishBlogAction = authenticatedAction
 // 	.createServerAction()

@@ -24,7 +24,7 @@ interface BlogPreviewOverlayProps {
 		title: string;
 		content: string;
 		createdAt: Date;
-		imageUrl: string;
+		image: string;
 	};
 }
 

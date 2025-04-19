@@ -81,7 +81,11 @@
     "invalidPhoneNumber": "Số điện thoại không hợp lệ",
     "otpLength": "OTP phải có 6 chữ số",
     "passwordLength": "Mật khẩu phải có ít nhất 8 ký tự",
-    "invalidPassword": "Mật khẩu không hợp lệ"
+    "invalidPassword": "Mật khẩu không hợp lệ",
+    "image_size_limit": "Hình ảnh phải nhỏ hơn {size}MB",
+    "invalid_file_type": "Loại tệp không hợp lệ. Định dạng được phép: {allowed}",
+    "invalid_format": "{field} có định dạng không hợp lệ: {requirements}",
+    "alphanumeric_only": "chỉ cho phép chữ cái, số và dấu cách"
   },
   "signup": {
     "otpSent": "OTP đã gửi",
@@ -109,6 +113,13 @@
     "credentialsSignin": "Thông tin đăng nhập không hợp lệ"
   },
   "blog": {
+    "change_image": "Thay đổi hình ảnh",
+    "delete_blog_title": "Xóa bài viết",
+    "delete_blog_confirmation": "Bạn có chắc chắn muốn xóa bài viết này? Tất cả dữ liệu sẽ bị xóa vĩnh viễn khỏi hệ thống.",
+    "blog_deleted_success": "Bài viết đã được xóa thành công",
+    "blog_delete_error": "Không thể xóa bài viết. Vui lòng thử lại.",
+    "no-blogs-title": "Chưa có bài viết nào",
+    "no-blogs-description": "Bạn chưa tạo bài viết nào. Hãy bắt đầu viết và chia sẻ ý tưởng của bạn.",
     "preview_draft": "Xem trước bản nháp",
     "public": "Xuất bản",
     "private": "Ẩn",
@@ -455,6 +466,14 @@
     }
   },
   "exhibitions": {
+    "no_templates_available": "Không có mẫu nào khả dụng",
+    "insufficient_balance": "Số dư không đủ",
+    "remove_artwork_confirmation" : "Xác nhận gỡ tác phẩm",
+    "remove_artwork_description" : "Bạn có chắc chắn muốn gỡ tác phẩm này khỏi vị trí này không?",
+    "remove_artwork": "Xóa tác phẩm",
+    "replace_artwork": "Thay thế tác phẩm",
+    "replace_artwork_at_position": "Thay thế tác phẩm tại vị trí",
+    "exhibition_created_success": "Triển lãm đã được tạo thành công",
     "no_search_results": "Không tìm thấy triển lãm nào cho từ khóa tìm kiếm của bạn",
     "try_different_search": "Thử tìm kiếm với từ khóa khác hoặc duyệt triển lãm theo danh mục",
     "no_exhibitions_featured": "Hiện không có triển lãm nổi bật nào",
@@ -488,6 +507,8 @@
     "create": "Tạo mới",
     "draft": "Bản nháp",
     "published": "Đã xuất bản",
+    "pending": "Đang chờ",
+    "rejected": "Bị từ chối",
     "choose_template": "Chọn mẫu phòng trưng bày",
     "artworks": "Tác phẩm",
     "content": "Nội dung",

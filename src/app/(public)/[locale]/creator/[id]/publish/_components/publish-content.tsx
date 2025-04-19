@@ -80,9 +80,10 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
       {
         onSuccess: () => {
           toast({
+            variant: 'success',
             title: tCommon('success'),
             description: t('link_name_updated'),
-            variant: 'success',
+            className: "bg-green-500 text-white"
           });
           linkNameForm.reset({ linkName });
           setCurrentOperation(null);

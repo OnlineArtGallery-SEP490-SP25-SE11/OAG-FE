@@ -114,6 +114,7 @@ export function ArtworksContent({
         select_artwork_for_position: t("select_artwork_for_position"),
         replace_artwork_at_position: t("replace_artwork_at_position"),
         remove_artwork_confirmation: t("remove_artwork_confirmation"),
+        remove_artwork_description: t("remove_artwork_description"),
         no_artworks_found: t("no_artworks_found"),
         create_artwork: t("create_artwork"),
         cancel: t("cancel"),
@@ -121,6 +122,7 @@ export function ArtworksContent({
         replace_artwork: t("replace_artwork"),
         remove_artwork: t("remove_artwork"),
         placing: t("placing"),
+
     };
 
     return (
