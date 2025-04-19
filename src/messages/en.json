@@ -245,6 +245,7 @@
     }
   },
   "artwork": {
+    "view_artist_profile": "View Artist Profile",
     "title": "Upload Artwork",
     "subtitle": "Enter details about your artwork piece",
     "field": {
@@ -433,6 +434,9 @@
       "joined": "Joined {date}"
     },
     "view": {
+      "view_detail": "View Detail",
+      "edit_profile": "Edit Profile",
+      "collections": "Collections",
       "about": "About",
       "followers_title": "Followers",
       "following_title": "Following",

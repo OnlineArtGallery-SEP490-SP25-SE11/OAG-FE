@@ -224,6 +224,7 @@
     }
   },
   "artwork": {
+    "view_artist_profile": "Xem hồ sơ nghệ sĩ",
     "title": "Tải lên tranh",
     "subtitle": "Nhập thông tin chi tiết về tác phẩm nghệ thuật của bạn",
     "field": {
@@ -384,6 +385,9 @@
       "joined": "Tham gia {date}"
     },
     "view": {
+      "view_detail": "Xem chi tiết",
+      "edit_profile": "Chỉnh sửa hồ sơ",
+      "collections":"Bộ sưu tập",
       "about": "Thông tin",
       "followers_title": "Người theo dõi",
       "following_title": "Đang theo dõi", 

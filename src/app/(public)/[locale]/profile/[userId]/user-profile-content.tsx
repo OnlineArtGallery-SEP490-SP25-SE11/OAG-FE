@@ -20,8 +20,10 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ProfileSkeleton } from '../components/profile-skeleton';
+import { ProfileSkeleton } from '../../settings/profile/components/profile-skeleton';
 import { useSession } from 'next-auth/react';
+import { getArtistArtworks } from '@/service/artwork';
+import Image from 'next/image';
 
 interface BaseUser {
   _id: string;
@@ -72,7 +74,7 @@ interface APIResponse {
 
 export default function UserProfileContent({ userId }: { userId: string }) {
   const t = useTranslations('profile');
-  const { data: currentUser  } = useSession();
+  const { data: currentUser } = useSession();
   const accessToken = currentUser?.user.accessToken;
   const [activeTab, setActiveTab] = useState("about");
   const queryClient = useQueryClient();
@@ -83,7 +85,7 @@ export default function UserProfileContent({ userId }: { userId: string }) {
     queryKey: ['userProfile', userId],
     queryFn: async () => {
       const response = await getUserProfile(userId) as APIResponse;
-      
+
       const userData: User = {
         ...response.user,
         artworksCount: response.user.artworksCount || 0,
@@ -91,15 +93,15 @@ export default function UserProfileContent({ userId }: { userId: string }) {
         following: response.user.following || [],
         followers: response.user.followers || []
       };
-
-      console.log('userData', response.isFollowing);
-
       return {
         user: userData,
         isFollowing: response.isFollowing
       };
     },
   });
+
+
+
 
   // Mutation cho follow/unfollow
   const followMutation = useMutation({
@@ -147,6 +149,17 @@ export default function UserProfileContent({ userId }: { userId: string }) {
       followMutation.mutate();
     }
   };
+
+  // Add this near the other queries
+  const { data: artworksData } = useQuery({
+    queryKey: ['artistArtworks', userId],
+    queryFn: async () => {
+      if (!userProfileData?.user?.role?.includes('artist')) return null;
+      const response = await getArtistArtworks(accessToken!);
+      return response.data?.artworks || [];
+    },
+    enabled: !!accessToken && !!userProfileData?.user?.role?.includes('artist')
+  });
 
   if (isLoading) {
     return <ProfileSkeleton />;
@@ -236,11 +249,10 @@ export default function UserProfileContent({ userId }: { userId: string }) {
             <nav className="flex flex-col">
               <button
                 onClick={() => setActiveTab("about")}
-                className={`px-6 py-3 text-left flex items-center ${
-                  activeTab === "about"
-                    ? "bg-purple-50 border-l-4 border-purple-500 text-purple-700"
-                    : "hover:bg-gray-50"
-                }`}
+                className={`px-6 py-3 text-left flex items-center ${activeTab === "about"
+                  ? "bg-purple-50 border-l-4 border-purple-500 text-purple-700"
+                  : "hover:bg-gray-50"
+                  }`}
               >
                 <Info className="w-4 h-4 mr-3" />
                 <span>{t('view.about')}</span>
@@ -374,7 +386,7 @@ export default function UserProfileContent({ userId }: { userId: string }) {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => window.location.href = `/settings/profile/${follower._id}`}
+                          onClick={() => window.location.href = `/profile/${follower._id}`}
                         >
                           Xem hồ sơ
                         </Button>
@@ -414,7 +426,7 @@ export default function UserProfileContent({ userId }: { userId: string }) {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => window.location.href = `/settings/profile/${following._id}`}
+                          onClick={() => window.location.href = `/profile/${following._id}`}
                         >
                           Xem hồ sơ
                         </Button>
@@ -537,28 +549,31 @@ export default function UserProfileContent({ userId }: { userId: string }) {
                         </h4>
 
                         {/* Hiển thị tác phẩm */}
-                        {user.artworksCount && user.artworksCount > 0 ? (
+                        {artworksData && artworksData.length > 0 ? (
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {/* Mẫu hiển thị ảnh - Trong thực tế sẽ lấy từ API */}
-                            {Array.from({ length: Math.min(6, user.artworksCount) }).map((_, index) => (
+                            {artworksData.map((artwork) => (
                               <div
-                                key={index}
+                                key={artwork._id}
                                 className="relative group overflow-hidden rounded-lg shadow-md aspect-square bg-gray-100 hover:shadow-xl transition-all duration-300"
+                                onClick={() => window.location.href = `/artworks?id=${artwork._id}`}
                               >
-                                {/* Ảnh mẫu (trong thực tế sẽ thay bằng ảnh thật) */}
-                                <div
-                                  className="w-full h-full bg-center bg-cover"
-                                  style={{
-                                    backgroundImage: user.image ?
-                                      `url(${user.image})` :
-                                      "url(/placeholder-artwork.jpg)"
-                                  }}
-                                ></div>
+                                {/* Actual artwork image */}
+                                <div className="relative w-full h-full">
+                                  <Image
+                                    src={artwork.url || '/placeholder-artwork.jpg'}
+                                    alt={artwork.title || 'Artwork'}
+                                    fill
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                    className="object-cover"
+                                    quality={50} // Decrease image quality to 50%
+                                    priority={false}
+                                  />
+                                </div>
 
                                 {/* Overlay khi hover */}
-                                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100">
+                                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 hover:cursor-pointer flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100">
                                   <span className="text-white font-medium text-sm px-3 py-2 rounded-full bg-purple-700 bg-opacity-80">
-                                    Xem chi tiết
+                                    {t('view.view_detail')}
                                   </span>
                                 </div>
                               </div>
@@ -571,18 +586,7 @@ export default function UserProfileContent({ userId }: { userId: string }) {
                           </div>
                         )}
 
-                        {/* Nút xem thêm */}
-                        {user.artworksCount && user.artworksCount > 6 && (
-                          <div className="text-center mt-4">
-                            <Button
-                              variant="outline"
-                              className="mt-4"
-                              onClick={() => window.location.href = `/artworks?artist=${userId}`}
-                            >
-                              Xem tất cả {user.artworksCount} tác phẩm
-                            </Button>
-                          </div>
-                        )}
+
                       </div>
                     </div>
                   ) : (

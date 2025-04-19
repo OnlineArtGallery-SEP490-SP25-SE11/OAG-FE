@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { motion } from 'framer-motion';
 import { DollarSignIcon, Eye, Info, RulerIcon, TagIcon, UserIcon, X, CalendarIcon, BookmarkIcon, Flag, ShoppingCart, Download, Grid, Rows, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
@@ -152,6 +153,7 @@ interface DetailTabProps {
 }
 
 function DetailTab({ artwork, userHasPurchased, isArtworkCreator, handleBuy, handleDownload, downloadToken, isProcessing, isMobile, t }: DetailTabProps) {
+  const router = useRouter();
   const getStatusBadge = (status: string) => {
     switch (status?.toLowerCase()) {
       case 'available': return 'bg-green-500/10 text-green-400 border-green-500/30';
@@ -228,19 +230,28 @@ function DetailTab({ artwork, userHasPurchased, isArtworkCreator, handleBuy, han
 
             {/* Artist */}
             {artwork.artistId && (
-              <div className="bg-white/10 p-2 rounded-md flex items-center gap-1.5 col-span-1 overflow-hidden">
-                <Avatar className="h-5 w-5 flex-shrink-0 border border-white/20">
-                  <AvatarImage
-                    src={artwork.artistId.image}
-                    alt={artwork.artistId.name || "Artist"}
-                  />
-                  <AvatarFallback className="bg-white/10 text-white text-[10px]">
-                    {artwork.artistId.name?.charAt(0) || <UserIcon className="h-3 w-3" />}
-                  </AvatarFallback>
-                </Avatar>
-                <p className='font-medium text-white text-xs truncate'>
-                  {artwork.artistId.name || t('artwork.unknown_artist')}
-                </p>
+              <div className="bg-white/10 p-2 rounded-md flex items-center gap-1.5 col-span-1 overflow-hidden w-fit">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push(`/profile/${artwork.artistId!._id}`);
+                  }}
+                  className="flex items-center gap-1.5 w-full hover:opacity-80 transition-opacity"
+                  title={t('artwork.view_artist_profile')}
+                >
+                  <Avatar className="h-12 w-12 flex-shrink-0 border border-white/20">
+                    <AvatarImage
+                      src={artwork.artistId.image}
+                      alt={artwork.artistId.name || "Artist"}
+                    />
+                    <AvatarFallback className="bg-white/10 text-white text-[10px]">
+                      {artwork.artistId.name?.charAt(0) || <UserIcon className="h-3 w-3" />}
+                    </AvatarFallback>
+                  </Avatar>
+                  <p className='font-medium text-white text-xs truncate'>
+                    {artwork.artistId.name || t('artwork.unknown_artist')}
+                  </p>
+                </button>
               </div>
             )}
           </div>
@@ -273,7 +284,7 @@ function DetailTab({ artwork, userHasPurchased, isArtworkCreator, handleBuy, han
               artworkId={artwork._id}
               triggerButton={
                 <button
-                  className={`flex items-center justify-center bg-zinc-700 hover:bg-zinc-600 active:bg-zinc-800 text-white text-xs h-9 rounded-md transition-colors ${!isArtworkCreator && userHasPurchased ? '' : 'col-span-2'}`}
+                  className={`flex items-center justify-center bg-zinc-700 hover:bg-zinc-600 active:bg-zinc-800 text-white text-xs h-9 px-4 rounded-md transition-colors w-fit ${!isArtworkCreator && userHasPurchased ? '' : 'col-span-2'}`}
                 >
                   <BookmarkIcon className="mr-1.5 h-3.5 w-3.5" />
                   {t('artwork.save')}
