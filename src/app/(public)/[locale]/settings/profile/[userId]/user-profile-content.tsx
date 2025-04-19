@@ -6,6 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { useTranslations } from 'next-intl';
 import {
   Calendar,
   Mail,
@@ -69,7 +70,8 @@ interface APIResponse {
   isFollowing: boolean;
 }
 
-export default function UserProfilePage({ userId }: { userId: string }) {
+export default function UserProfileContent({ userId }: { userId: string }) {
+  const t = useTranslations('profile');
   const { data: currentUser  } = useSession();
   const accessToken = currentUser?.user.accessToken;
   const [activeTab, setActiveTab] = useState("about");
@@ -150,10 +152,6 @@ export default function UserProfilePage({ userId }: { userId: string }) {
     return <ProfileSkeleton />;
   }
 
-  // if (!userProfileData?.user) {
-  //   return <div className="container mx-auto mt-10 px-4">Không tìm thấy người dùng.</div>;
-  // }
-
   const user = userProfileData?.user;
   const isArtist = user?.role?.includes('artist');
   const genres = Array.isArray(user?.artistProfile?.genre)
@@ -170,7 +168,7 @@ export default function UserProfilePage({ userId }: { userId: string }) {
             <div className="flex flex-col items-center space-y-3">
               <Avatar className="h-24 w-24">
                 <AvatarImage src={user?.image || '/default-avatar.png'} alt={user?.name} />
-                <AvatarFallback>{user?.name.substring(0, 2).toUpperCase()}</AvatarFallback>
+                <AvatarFallback>{user?.name?.substring(0, 2).toUpperCase()}</AvatarFallback>
               </Avatar>
               <h1 className="text-2xl font-bold text-center">{user?.name}</h1>
 
@@ -181,7 +179,7 @@ export default function UserProfilePage({ userId }: { userId: string }) {
                     variant="secondary"
                     className="bg-purple-100 text-purple-800 hover:bg-purple-200"
                   >
-                    Nghệ sĩ
+                    {t('common.artist_badge')}
                   </Badge>
                 )}
               </div>
@@ -198,12 +196,12 @@ export default function UserProfilePage({ userId }: { userId: string }) {
                   {userProfileData?.isFollowing ? (
                     <>
                       <UserCheck className="mr-2 h-4 w-4" />
-                      Đang theo dõi
+                      {t('view.following')}
                     </>
                   ) : (
                     <>
                       <UserPlus className="mr-2 h-4 w-4" />
-                      Theo dõi
+                      {t('view.follow')}
                     </>
                   )}
                 </Button>
@@ -216,19 +214,19 @@ export default function UserProfilePage({ userId }: { userId: string }) {
                 <p className="text-xl font-bold text-purple-600">
                   {user?.artworksCount || 0}
                 </p>
-                <p className="text-gray-600 text-xs">Tác phẩm</p>
+                <p className="text-gray-600 text-xs">{t('common.artworks')}</p>
               </div>
               <div className="text-center">
                 <p className="text-xl font-bold text-pink-600">
                   {user?.followers?.length || 0}
                 </p>
-                <p className="text-gray-600 text-xs">Người theo dõi</p>
+                <p className="text-gray-600 text-xs">{t('common.followers')}</p>
               </div>
               <div className="text-center">
                 <p className="text-xl font-bold text-purple-600">
                   {user?.following?.length || 0}
                 </p>
-                <p className="text-gray-600 text-xs">Đang theo dõi</p>
+                <p className="text-gray-600 text-xs">{t('common.following')}</p>
               </div>
             </div>
           </div>
@@ -238,13 +236,14 @@ export default function UserProfilePage({ userId }: { userId: string }) {
             <nav className="flex flex-col">
               <button
                 onClick={() => setActiveTab("about")}
-                className={`px-6 py-3 text-left flex items-center ${activeTab === "about"
-                  ? "bg-purple-50 border-l-4 border-purple-500 text-purple-700"
-                  : "hover:bg-gray-50"
-                  }`}
+                className={`px-6 py-3 text-left flex items-center ${
+                  activeTab === "about"
+                    ? "bg-purple-50 border-l-4 border-purple-500 text-purple-700"
+                    : "hover:bg-gray-50"
+                }`}
               >
                 <Info className="w-4 h-4 mr-3" />
-                <span>Thông tin</span>
+                <span>{t('view.about')}</span>
               </button>
               <button
                 onClick={() => setActiveTab("followers")}
@@ -254,7 +253,7 @@ export default function UserProfilePage({ userId }: { userId: string }) {
                   }`}
               >
                 <Users className="w-4 h-4 mr-3" />
-                <span>Người theo dõi</span>
+                <span>{t('view.followers_title')}</span>
               </button>
               <button
                 onClick={() => setActiveTab("following")}
@@ -264,7 +263,7 @@ export default function UserProfilePage({ userId }: { userId: string }) {
                   }`}
               >
                 <UserCheck className="w-4 h-4 mr-3" />
-                <span>Đang theo dõi</span>
+                <span>{t('view.following_title')}</span>
               </button>
               {isArtist && (
                 <button
@@ -275,7 +274,7 @@ export default function UserProfilePage({ userId }: { userId: string }) {
                     }`}
                 >
                   <Star className="w-4 h-4 mr-3" />
-                  <span>Thông tin nghệ sĩ</span>
+                  <span>{t('view.artist_info')}</span>
                 </button>
               )}
             </nav>
@@ -286,9 +285,10 @@ export default function UserProfilePage({ userId }: { userId: string }) {
         <div className="md:col-span-8 lg:col-span-9">
           {/* Tab Content */}
           <div className="bg-white rounded-lg shadow-sm p-8">
+            {/* About Tab */}
             {activeTab === "about" && (
               <div className="space-y-6">
-                <h2 className="text-2xl font-bold border-b pb-2">Thông tin</h2>
+                <h2 className="text-2xl font-bold border-b pb-2">{t('view.about')}</h2>
 
                 {/* Cover Image và Thông tin nổi bật */}
                 <div className="relative w-full h-64 overflow-hidden rounded-xl mb-8 bg-gradient-to-r from-purple-100 to-pink-100">
@@ -313,7 +313,7 @@ export default function UserProfilePage({ userId }: { userId: string }) {
                   <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
                     <h3 className="text-xl font-semibold mb-4 text-gray-800 flex items-center border-b pb-2">
                       <MessageSquare className="w-5 h-5 mr-2 text-purple-500" />
-                      Thông tin liên hệ
+                      {t('view.contact_info')}
                     </h3>
                     <div className="space-y-4">
                       <div className="flex items-start">
@@ -330,7 +330,7 @@ export default function UserProfilePage({ userId }: { userId: string }) {
                           <Calendar className="w-5 h-5 text-purple-600" />
                         </div>
                         <div className="ml-3">
-                          <p className="text-sm font-medium text-gray-900">Ngày tham gia</p>
+                          <p className="text-sm font-medium text-gray-900">{t('view.joined_date')}</p>
                           <p className="text-sm text-gray-500">
                             {new Date(user?.createdAt || '').toLocaleDateString(
                               "vi-VN",
@@ -350,9 +350,10 @@ export default function UserProfilePage({ userId }: { userId: string }) {
               </div>
             )}
 
+            {/* Followers Tab */}
             {activeTab === "followers" && (
               <div className="space-y-6">
-                <h2 className="text-2xl font-bold border-b pb-2">Người theo dõi</h2>
+                <h2 className="text-2xl font-bold border-b pb-2">{t('view.followers_title')}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {(user?.followers || []).length > 0 ? (
                     user?.followers?.map((follower: { _id: string; name: string; email: string; image?: string }) => (
@@ -389,9 +390,10 @@ export default function UserProfilePage({ userId }: { userId: string }) {
               </div>
             )}
 
+            {/* Following Tab */}
             {activeTab === "following" && (
               <div className="space-y-6">
-                <h2 className="text-2xl font-bold border-b pb-2">Đang theo dõi</h2>
+                <h2 className="text-2xl font-bold border-b pb-2">{t('view.following_title')}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {(user?.following || []).length > 0 ? (
                     user?.following?.map((following: { _id: string; name: string; email: string; image?: string }) => (
@@ -428,9 +430,10 @@ export default function UserProfilePage({ userId }: { userId: string }) {
               </div>
             )}
 
+            {/* Artist Tab */}
             {activeTab === "artist" && isArtist && (
               <div className="space-y-6">
-                <h2 className="text-2xl font-bold border-b pb-2">Thông tin nghệ sĩ</h2>
+                <h2 className="text-2xl font-bold border-b pb-2">{t('view.artist_info')}</h2>
                 <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
                   {user?.artistProfile ? (
                     <div className="space-y-6">
