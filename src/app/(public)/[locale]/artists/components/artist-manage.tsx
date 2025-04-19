@@ -56,6 +56,7 @@ const itemVariant = {
 };
 
 // Improved ArtworkCard Component with better text contrast, button effects and skeleton loading
+// eslint-disable-next-line react/display-name
 const ArtworkCard = React.memo(({ 
   artwork, 
   isMobile, 
@@ -905,3 +906,4 @@ export default function ManageArtworks() {
         </div>
     );
 }
+

@@ -274,7 +274,8 @@
       "upload": "Tải lên Tác phẩm",
       "uploading": "Đang tải lên...",
       "add": "Thêm",
-      "remove": "Xóa"
+      "remove": "Xóa",
+      "saving": "Đang lưu..."
     },
     "toast": {
       "successTitle": "Tải lên Thành công!",

@@ -295,7 +295,8 @@
       "upload": "Upload Artwork",
       "uploading": "Uploading...",
       "add": "Add",
-      "remove": "Remove"
+      "remove": "Remove",
+      "saving": "Saving..."
     },
     "toast": {
       "successTitle": "Upload Successful!",
