@@ -38,17 +38,36 @@ import { RefType } from "@/utils/enums";
 import AddArtworkCollection from "@/components/ui.custom/add-artwork-collection-in-user";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { useSwipeable } from 'react-swipeable';
-import { useToast } from '@/hooks/use-toast';
-import artworkService, { downloadArtwork } from '@/service/artwork';
-import { getArtworkWarehouse, downloadWarehouseArtwork } from '@/service/artwork-warehouse';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { AlertCircle, Check } from 'lucide-react';
-import { useTranslations } from 'next-intl';
-import ArtFeed from './art-feed';
-import useAuth from '@/hooks/useAuth-client';
-import { AuthDialog } from '@/components/ui.custom/auth-dialog';
-import { useSelectedArt, useSelectedArtId, useResetArtModal, useIsArtModalClosing, useStartClosingArtModal } from '@/hooks/useArtModal';
+import { useSwipeable } from "react-swipeable";
+import { useToast } from "@/hooks/use-toast";
+import artworkService, { downloadArtwork } from "@/service/artwork";
+import {
+  getArtworkWarehouse,
+  downloadWarehouseArtwork,
+} from "@/service/artwork-warehouse";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { AlertCircle, Check } from "lucide-react";
+import { useTranslations } from "next-intl";
+import ArtFeed from "./art-feed";
+import useAuth from "@/hooks/useAuth-client";
+import { AuthDialog } from "@/components/ui.custom/auth-dialog";
+import {
+  useSelectedArt,
+  useSelectedArtId,
+  useResetArtModal,
+  useIsArtModalClosing,
+  useStartClosingArtModal,
+} from "@/hooks/useArtModal";
+import CommentArtworkDrawer from "./comments-tab";
 
 // Simplified animation variants
 const animations = {
@@ -354,7 +373,9 @@ function DetailTab({
                   {t("artwork.save")}
                 </button>
               }
-              onSuccess={() => {/* Optional success handling */ }}
+              onSuccess={() => {
+                /* Optional success handling */
+              }}
             />
           </div>
 
@@ -499,72 +520,6 @@ function CommentItem({
   );
 }
 
-function CommentsTab({ artwork, t }: CommentsTabProps) {
-  const commentsCount = (artwork as any)?.commentsCount || 0;
-
-  return (
-    <motion.div
-      key="comments"
-      variants={animations.tabTransition}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      className="flex-1 h-full"
-    >
-      <ScrollArea className="h-full pr-2">
-        <div className="space-y-3 pb-4">
-          <div className="bg-white/5 p-3 rounded-md">
-            <div className="flex gap-2">
-              <Avatar className="h-8 w-8 flex-shrink-0">
-                <AvatarFallback className="bg-white/20 text-xs">
-                  {t("common.you").charAt(0)}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1 flex items-center">
-                <input
-                  type="text"
-                  placeholder={t("artwork.add_comment")}
-                  className="w-full bg-white/10 text-white text-sm rounded-full px-3 py-1.5 border border-transparent focus:border-white/30 focus:outline-none transition-colors"
-                />
-              </div>
-            </div>
-          </div>
-
-          {commentsCount > 0 ? (
-            Array.from({ length: commentsCount }).map((_, idx) => (
-              <div key={idx} className="bg-white/10 p-3 rounded-md">
-                <div className="flex items-center gap-2 mb-2">
-                  <Avatar className="h-7 w-7">
-                    <AvatarFallback className="bg-white/20 text-xs">
-                      {t("artwork.user")} {idx + 1}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="font-medium text-white text-sm">
-                      {t("artwork.user")} {idx + 1}
-                    </p>
-                    <p className="text-xs text-white/50">
-                      {t("artwork.days_ago", { days: 2 })}
-                    </p>
-                  </div>
-                </div>
-                <p className="text-sm text-white/90 pl-9">
-                  {t("artwork.comment_example")}
-                </p>
-              </div>
-            ))
-          ) : (
-            <div className="flex flex-col items-center justify-center py-10 text-white/50">
-              <BiComment className="w-8 h-8 mb-2 opacity-50" />
-              <p className="text-sm">{t("artwork.no_comments")}</p>
-              <p className="text-xs mt-1">{t("artwork.be_first_comment")}</p>
-            </div>
-          )}
-        </div>
-      </ScrollArea>
-    </motion.div>
-  );
-}
 
 interface PurchaseConfirmationProps {
   artwork: Artwork;
@@ -587,7 +542,7 @@ function PurchaseConfirmation({
   isProcessing,
   t,
   tCommon,
-  router
+  router,
 }: PurchaseConfirmationProps) {
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
@@ -642,12 +597,12 @@ function PurchaseConfirmation({
                   <button
                     onClick={() => {
                       setIsOpen(false);
-                      router.push('/wallet');
+                      router.push("/wallet");
                     }}
                     className="mt-3 w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white py-2 px-3 rounded flex items-center justify-center gap-2"
                   >
                     <DollarSignIcon className="h-4 w-4" />
-                    {t('wallet.add_funds')}
+                    {t("wallet.add_funds")}
                   </button>
                 )}
               </div>
@@ -832,8 +787,8 @@ function Modal() {
           });
         } else {
           toast({
-            title: response.message || t('common.error'),
-            description: response.message || t('common.error')
+            title: response.message || t("common.error"),
+            description: response.message || t("common.error"),
           });
         }
       }
@@ -852,8 +807,8 @@ function Modal() {
 
     if (userHasPurchased) {
       toast({
-        title: t('artwork.already_purchased'),
-        description: t('artwork.already_purchased')
+        title: t("artwork.already_purchased"),
+        description: t("artwork.already_purchased"),
       });
       return;
     }
@@ -954,13 +909,13 @@ function Modal() {
 
     // Then actually close after transition completes
     setTimeout(() => {
-      document.body.style.overflow = '';
-      document.body.style.paddingRight = '0';
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "0";
 
       resetArtModal();
 
-      const currentPath = pathname.split('?')[0];
-      const langPrefix = pathname.startsWith('/en') ? '/en' : '';
+      const currentPath = pathname.split("?")[0];
+      const langPrefix = pathname.startsWith("/en") ? "/en" : "";
       const artworksBasePath = `${langPrefix}/artworks`;
       router.replace(artworksBasePath, { scroll: false });
     }, 150); // Match this to CSS transition duration
@@ -974,7 +929,7 @@ function Modal() {
     if (isLayoutTransitioning) return;
 
     setIsLayoutTransitioning(true);
-    setAlternativeLayout(prev => !prev);
+    setAlternativeLayout((prev) => !prev);
 
     setTimeout(() => {
       setIsLayoutTransitioning(false);
@@ -1031,16 +986,18 @@ function Modal() {
   return (
     <Fragment>
       <div
-        className={`fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-3 bg-black/80 backdrop-blur-sm transition-opacity duration-150 ${isClosing ? 'opacity-0' : 'opacity-100'
-          }`}
+        className={`fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-3 bg-black/80 backdrop-blur-sm transition-opacity duration-150 ${
+          isClosing ? "opacity-0" : "opacity-100"
+        }`}
         onClick={handleClose}
       >
         <div
           ref={modalRef}
           tabIndex={-1}
           onClick={(e) => e.stopPropagation()}
-          className={`w-full max-w-[1400px] relative rounded-lg sm:rounded-xl overflow-hidden flex flex-col lg:flex-row border border-white/20 bg-black/90 h-[100vh] sm:h-[95vh] md:h-[90vh] transition-transform duration-150 ${isClosing ? 'scale-95 opacity-0' : 'scale-100 opacity-100'
-            }`}
+          className={`w-full max-w-[1400px] relative rounded-lg sm:rounded-xl overflow-hidden flex flex-col lg:flex-row border border-white/20 bg-black/90 h-[100vh] sm:h-[95vh] md:h-[90vh] transition-transform duration-150 ${
+            isClosing ? "scale-95 opacity-0" : "scale-100 opacity-100"
+          }`}
         >
           {/* Layout toggle button */}
           <button
@@ -1122,11 +1079,12 @@ function Modal() {
                   <div className="relative px-3 sm:px-4 pt-3 sm:pt-4 mb-1">
                     <div className="flex justify-start gap-2 border-b border-white/20">
                       <button
-                        onClick={() => setActiveTab('details')}
-                        className={`px-3 py-2 text-sm relative ${activeTab === 'details'
-                          ? 'text-white border-b-2 border-white'
-                          : 'text-white/60 hover:text-white/80'
-                          }`}
+                        onClick={() => setActiveTab("details")}
+                        className={`px-3 py-2 text-sm relative ${
+                          activeTab === "details"
+                            ? "text-white border-b-2 border-white"
+                            : "text-white/60 hover:text-white/80"
+                        }`}
                       >
                         <span className="flex items-center gap-1.5">
                           <Info className="w-4 h-4" />
@@ -1135,11 +1093,12 @@ function Modal() {
                       </button>
 
                       <button
-                        onClick={() => setActiveTab('comments')}
-                        className={`px-3 py-2 text-sm relative ${activeTab === 'comments'
-                          ? 'text-white border-b-2 border-white'
-                          : 'text-white/60 hover:text-white/80'
-                          }`}
+                        onClick={() => setActiveTab("comments")}
+                        className={`px-3 py-2 text-sm relative ${
+                          activeTab === "comments"
+                            ? "text-white border-b-2 border-white"
+                            : "text-white/60 hover:text-white/80"
+                        }`}
                       >
                         <span className="flex items-center gap-1.5">
                           <BiComment className="w-4 h-4" />
@@ -1161,7 +1120,7 @@ function Modal() {
 
                   {/* Tab content */}
                   <div className="flex-1 px-3 sm:px-4 pb-3 sm:pb-4 overflow-hidden">
-                    {activeTab === 'details' ? (
+                    {activeTab === "details" ? (
                       <DetailTab
                         artwork={artwork}
                         userHasPurchased={userHasPurchased}
@@ -1174,8 +1133,6 @@ function Modal() {
                         t={t}
                       />
                     ) : (
-                      // <CommentsTab artwork={artwork} t={t} />
-
                       <CommentArtworkDrawer
                         contentId={artwork._id}
                         contentType={"artwork"}
@@ -1212,10 +1169,7 @@ function Modal() {
         tCommon={tCommon}
       />
 
-      <AuthDialog
-        isOpen={showAuthDialog}
-        setIsOpen={setShowAuthDialog}
-      />
+      <AuthDialog isOpen={showAuthDialog} setIsOpen={setShowAuthDialog} />
     </Fragment>
   );
 }
