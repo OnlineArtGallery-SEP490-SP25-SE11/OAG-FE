@@ -1,4 +1,4 @@
-import axios, { createApi } from '@/lib/axios';
+import axios, { createApi, createAxiosInstance } from '@/lib/axios';
 import { ApiResponse } from '@/types/response';
 import { handleApiError } from '@/utils/error-handler';
 import { AxiosInstance } from 'axios';
@@ -180,13 +180,16 @@ export async function isFollowing(token: string, targetUserId: string): Promise<
 }
 
 // 🔹 Get user profile by ID
-export async function getUserProfile(token: string, userId: string): Promise<{user: User, isFollowing: boolean}> {
+export async function getUserProfile(userId: string): Promise<{user: User, isFollowing: boolean}> {
 	try {
-		const res = await createApi(token).get(`/user/profile/${userId}`)
-		return res.data
+		const axios = await createAxiosInstance({useToken: true});
+		const res = await axios.get(`/user/profile/${userId}`);
+		return res.data;
 	} catch (error) {
 		console.error('Failed to fetch user profile', error);
 		throw error;
 	}
 }
+
+
 

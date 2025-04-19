@@ -59,6 +59,7 @@ interface ProfileContentProps {
 }
 
 // Helper function to strip HTML tags
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const stripHtml = (html: string) => {
   return html.replace(/<[^>]*>/g, "");
 };
@@ -105,7 +106,6 @@ const ProfileContent = ({ initialData }: ProfileContentProps) => {
 
   const [followers, setFollowers] = useState<UserType[]>([]);
   const [following, setFollowing] = useState<UserType[]>([]);
-  console.log('followersdcmmmm', followers)
   useEffect(() => {
     async function fetchData() {
       try {
