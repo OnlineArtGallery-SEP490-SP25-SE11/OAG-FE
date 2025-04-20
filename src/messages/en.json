@@ -246,6 +246,7 @@
     }
   },
   "artwork": {
+    "view_artist_profile": "View Artist Profile",
     "title": "Upload Artwork",
     "subtitle": "Enter details about your artwork piece",
     "field": {
@@ -295,7 +296,8 @@
       "upload": "Upload Artwork",
       "uploading": "Uploading...",
       "add": "Add",
-      "remove": "Remove"
+      "remove": "Remove",
+      "saving": "Saving..."
     },
     "toast": {
       "successTitle": "Upload Successful!",
@@ -409,31 +411,36 @@
     }
   },
   "profile": {
-    "common": {
-      "joined": "Joined {date}",
+     "common": {
+      "artist_badge": "Artist",
       "artworks": "Artworks",
       "followers": "Followers",
       "following": "Following",
-      "artist_badge": "Artist",
-      "premium_badge": "Premium",
-      "become_artist": "Become Artist",
-      "email": "Email"
+      "email": "Email",
+      "joined": "Joined {date}"
     },
     "view": {
+      "view_detail": "View Detail",
       "edit_profile": "Edit Profile",
-      "favorites": "Favorites",
       "collections": "Collections",
-      "professional_artist": "Professional Artist",
-      "view_profile": "View Profile",
-      "collection_title": "Collection {number}",
       "about": "About",
+      "followers_title": "Followers",
+      "following_title": "Following",
+      "artist_info": "Artist Information", 
       "biography": "Biography",
       "contact_info": "Contact Information",
-      "joined_date": "Joined Date",
-      "no_address": "No address provided",
-      "default_bio": "is a talented artist with a passion for art. Add your biography in the edit profile section.",
+      "joined_date": "Join Date",
+      "follow": "Follow",
+      "following": "Following",
+      "view_profile": "View Profile",
       "no_followers": "No followers yet",
-      "no_following": "You are not following anyone yet"
+      "no_following": "Not following anyone",
+      "no_artist_info": "No artist information available",
+      "experience": "Experience",
+      "social_links": "Social Links",
+      "artworks_section": "Artworks",
+      "view_all_artworks": "View all {count} artworks",
+      "no_artworks": "No artworks yet"
     },
     "edit": {
       "title": "Edit Profile",

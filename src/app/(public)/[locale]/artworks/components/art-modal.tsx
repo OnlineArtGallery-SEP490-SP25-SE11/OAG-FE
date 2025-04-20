@@ -1,41 +1,17 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { motion } from "framer-motion";
-import {
-  DollarSignIcon,
-  Eye,
-  Info,
-  RulerIcon,
-  TagIcon,
-  UserIcon,
-  X,
-  CalendarIcon,
-  BookmarkIcon,
-  Flag,
-  ShoppingCart,
-  Download,
-  Grid,
-  Rows,
-  ZoomIn,
-  ZoomOut,
-  Maximize2,
-} from "lucide-react";
-import Image from "next/image";
-import {
-  Fragment,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { BiComment } from "react-icons/bi";
-import { useRouter, usePathname } from "next/navigation";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { fetchArtworkById } from "@/app/(public)/[locale]/artworks/api";
-import { Artwork } from "@/types/marketplace";
-import CreateReport from "@/components/ui.custom/report-button";
-import { RefType } from "@/utils/enums";
-import AddArtworkCollection from "@/components/ui.custom/add-artwork-collection-in-user";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { motion } from 'framer-motion';
+import { DollarSignIcon, Eye, Info, RulerIcon, TagIcon, UserIcon, X, CalendarIcon, BookmarkIcon, Flag, ShoppingCart, Download, Grid, Rows, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
+import Image from 'next/image';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { BiComment } from 'react-icons/bi';
+import { useRouter, usePathname } from 'next/navigation';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { fetchArtworkById } from '@/app/(public)/[locale]/artworks/api';
+import { Artwork } from '@/types/marketplace';
+import CreateReport from '@/components/ui.custom/report-button';
+import { RefType } from '@/utils/enums';
+import AddArtworkCollection from '@/components/ui.custom/add-artwork-collection-in-user';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useSwipeable } from "react-swipeable";
@@ -208,6 +184,7 @@ interface DetailTabProps {
   isProcessing: boolean;
   isMobile: boolean;
   t: any;
+  router: ReturnType<typeof useRouter>;
 }
 
 function DetailTab({
@@ -220,6 +197,7 @@ function DetailTab({
   isProcessing,
   isMobile,
   t,
+  router,
 }: DetailTabProps) {
   const getStatusBadge = (status: string) => {
     switch (status?.toLowerCase()) {
@@ -313,21 +291,28 @@ function DetailTab({
 
             {/* Artist */}
             {artwork.artistId && (
-              <div className="bg-white/10 p-2 rounded-md flex items-center gap-1.5 col-span-1 overflow-hidden">
-                <Avatar className="h-5 w-5 flex-shrink-0 border border-white/20">
-                  <AvatarImage
-                    src={artwork.artistId.image}
-                    alt={artwork.artistId.name || "Artist"}
-                  />
-                  <AvatarFallback className="bg-white/10 text-white text-[10px]">
-                    {artwork.artistId.name?.charAt(0) || (
-                      <UserIcon className="h-3 w-3" />
-                    )}
-                  </AvatarFallback>
-                </Avatar>
-                <p className="font-medium text-white text-xs truncate">
-                  {artwork.artistId.name || t("artwork.unknown_artist")}
-                </p>
+              <div className="bg-white/10 p-2 rounded-md flex items-center gap-1.5 col-span-1 overflow-hidden w-fit">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push(`/profile/${artwork.artistId!._id}`);
+                  }}
+                  className="flex items-center gap-1.5 w-full hover:opacity-80 transition-opacity"
+                  title={t('artwork.view_artist_profile')}
+                >
+                  <Avatar className="h-12 w-12 flex-shrink-0 border border-white/20">
+                    <AvatarImage
+                      src={artwork.artistId.image}
+                      alt={artwork.artistId.name || "Artist"}
+                    />
+                    <AvatarFallback className="bg-white/10 text-white text-[10px]">
+                      {artwork.artistId.name?.charAt(0) || <UserIcon className="h-3 w-3" />}
+                    </AvatarFallback>
+                  </Avatar>
+                  <p className='font-medium text-white text-xs truncate'>
+                    {artwork.artistId.name || t('artwork.unknown_artist')}
+                  </p>
+                </button>
               </div>
             )}
           </div>
@@ -365,9 +350,8 @@ function DetailTab({
               artworkId={artwork._id}
               triggerButton={
                 <button
-                  className={`flex items-center justify-center bg-zinc-700 hover:bg-zinc-600 active:bg-zinc-800 text-white text-xs h-9 rounded-md transition-colors ${
-                    !isArtworkCreator && userHasPurchased ? "" : "col-span-2"
-                  }`}
+                  className={`flex items-center px-4 w-fit justify-center bg-zinc-700 hover:bg-zinc-600 active:bg-zinc-800 text-white text-xs h-9 rounded-md transition-colors ${!isArtworkCreator && userHasPurchased ? "" : "col-span-2"
+                    }`}
                 >
                   <BookmarkIcon className="mr-1.5 h-3.5 w-3.5" />
                   {t("artwork.save")}
@@ -576,9 +560,8 @@ function PurchaseConfirmation({
                 <div className="flex justify-between items-center mt-1">
                   <span>{t("wallet.after_purchase")}:</span>
                   <span
-                    className={`font-medium ${
-                      userBalance < artwork.price ? "text-red-400" : ""
-                    }`}
+                    className={`font-medium ${userBalance < artwork.price ? "text-red-400" : ""
+                      }`}
                   >
                     ${(userBalance - artwork.price)?.toLocaleString()}
                   </span>
@@ -986,18 +969,16 @@ function Modal() {
   return (
     <Fragment>
       <div
-        className={`fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-3 bg-black/80 backdrop-blur-sm transition-opacity duration-150 ${
-          isClosing ? "opacity-0" : "opacity-100"
-        }`}
+        className={`fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-3 bg-black/80 backdrop-blur-sm transition-opacity duration-150 ${isClosing ? "opacity-0" : "opacity-100"
+          }`}
         onClick={handleClose}
       >
         <div
           ref={modalRef}
           tabIndex={-1}
           onClick={(e) => e.stopPropagation()}
-          className={`w-full max-w-[1400px] relative rounded-lg sm:rounded-xl overflow-hidden flex flex-col lg:flex-row border border-white/20 bg-black/90 h-[100vh] sm:h-[95vh] md:h-[90vh] transition-transform duration-150 ${
-            isClosing ? "scale-95 opacity-0" : "scale-100 opacity-100"
-          }`}
+          className={`w-full max-w-[1400px] relative rounded-lg sm:rounded-xl overflow-hidden flex flex-col lg:flex-row border border-white/20 bg-black/90 h-[100vh] sm:h-[95vh] md:h-[90vh] transition-transform duration-150 ${isClosing ? "scale-95 opacity-0" : "scale-100 opacity-100"
+            }`}
         >
           {/* Layout toggle button */}
           <button
@@ -1080,11 +1061,10 @@ function Modal() {
                     <div className="flex justify-start gap-2 border-b border-white/20">
                       <button
                         onClick={() => setActiveTab("details")}
-                        className={`px-3 py-2 text-sm relative ${
-                          activeTab === "details"
+                        className={`px-3 py-2 text-sm relative ${activeTab === "details"
                             ? "text-white border-b-2 border-white"
                             : "text-white/60 hover:text-white/80"
-                        }`}
+                          }`}
                       >
                         <span className="flex items-center gap-1.5">
                           <Info className="w-4 h-4" />
@@ -1094,11 +1074,10 @@ function Modal() {
 
                       <button
                         onClick={() => setActiveTab("comments")}
-                        className={`px-3 py-2 text-sm relative ${
-                          activeTab === "comments"
+                        className={`px-3 py-2 text-sm relative ${activeTab === "comments"
                             ? "text-white border-b-2 border-white"
                             : "text-white/60 hover:text-white/80"
-                        }`}
+                          }`}
                       >
                         <span className="flex items-center gap-1.5">
                           <BiComment className="w-4 h-4" />
@@ -1131,6 +1110,7 @@ function Modal() {
                         isProcessing={isProcessing}
                         isMobile={isMobile}
                         t={t}
+                        router={router}
                       />
                     ) : (
                       <CommentArtworkDrawer
