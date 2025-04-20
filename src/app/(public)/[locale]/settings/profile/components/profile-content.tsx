@@ -425,7 +425,7 @@ const ProfileContent = ({ initialData }: ProfileContentProps) => {
                             </p>
                           </div>
                         </div>
-                        <div className="flex items-start">
+                        {/* <div className="flex items-start">
                           <div className="flex-shrink-0 h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -455,7 +455,7 @@ const ProfileContent = ({ initialData }: ProfileContentProps) => {
                               {initialData.address || t("view.no_address")}
                             </p>
                           </div>
-                        </div>
+                        </div> */}
                         <div className="flex items-start">
                           <div className="flex-shrink-0 h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
                             <svg

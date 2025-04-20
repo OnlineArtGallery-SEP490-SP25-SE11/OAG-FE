@@ -18,10 +18,8 @@ import {
 	Info,
 	FileText,
 	MessageSquare,
-	Flag
 } from 'lucide-react';
-import ReportButton from '@/components/ui.custom/report-button';
-import { RefType } from '@/utils/enums';
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ProfileSkeleton } from '../../settings/profile/components/profile-skeleton';
 import { useSession } from 'next-auth/react';
@@ -364,73 +362,7 @@ export default function UserProfileContent({ userId }: { userId: string }) {
 											</div>
 										</div>
 									</div>
-								</div>
-
-								{/* Cover Image và Thông tin nổi bật */}
-								<div className='relative w-full h-64 overflow-hidden rounded-xl mb-8 bg-gradient-to-r from-purple-100 to-pink-100'>
-									{/* Ảnh bìa từ avatar */}
-									{user?.image && (
-										<div className='absolute inset-0 w-full h-full'>
-											<div
-												className='w-full h-full bg-center bg-no-repeat bg-cover'
-												style={{
-													backgroundImage: `url(${user?.image})`,
-													filter: 'blur(2px)',
-													transform: 'scale(1.1)',
-													opacity: '0.8'
-												}}
-											></div>
-											{/* Lớp gradient phủ */}
-											<div className='absolute inset-0 bg-gradient-to-t from-black/60 to-transparent'></div>
-										</div>
-									)}
-								</div>
-								<div className='space-y-6'>
-									<div className='bg-white rounded-xl p-6 shadow-sm border border-gray-100'>
-										<h3 className='text-xl font-semibold mb-4 text-gray-800 flex items-center border-b pb-2'>
-											<MessageSquare className='w-5 h-5 mr-2 text-purple-500' />
-											Thông tin liên hệ
-										</h3>
-										<div className='space-y-4'>
-											<div className='flex items-start'>
-												<div className='flex-shrink-0 h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center'>
-													<Mail className='w-5 h-5 text-purple-600' />
-												</div>
-												<div className='ml-3'>
-													<p className='text-sm font-medium text-gray-900'>
-														Email
-													</p>
-													<p className='text-sm text-gray-500'>
-														{user?.email}
-													</p>
-												</div>
-											</div>
-											<div className='flex items-start'>
-												<div className='flex-shrink-0 h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center'>
-													<Calendar className='w-5 h-5 text-purple-600' />
-												</div>
-												<div className='ml-3'>
-													<p className='text-sm font-medium text-gray-900'>
-														Ngày tham gia
-													</p>
-													<p className='text-sm text-gray-500'>
-														{new Date(
-															user?.createdAt ||
-															''
-														).toLocaleDateString(
-															'vi-VN',
-															{
-																day: 'numeric',
-																month: 'long',
-																year: 'numeric'
-															}
-														)}
-													</p>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
+								</div>								
 							</div>
 						)}
 

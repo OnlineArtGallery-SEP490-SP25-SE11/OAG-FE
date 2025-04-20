@@ -16,7 +16,7 @@ import { getArtistRequest } from "@/service/artist-request";
 export default function SettingsPage() {
   const [frontImage, setFrontImage] = useState<string | null>(null);
   const [backImage, setBackImage] = useState<string | null>(null);
-  const [status, setStatus] = useState<'pending' | 'approved' | 'rejected'>('pending');
+  const [status, setStatus] = useState<'pending' | 'approved' | 'rejected' | ''>('');
   const [token, setToken] = useState("");
   const [userId, setUserId] = useState("");
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -92,6 +92,7 @@ export default function SettingsPage() {
             requestResponse
           );
           alert("CCCD saved successfully. Request to become Artist sent!");
+          setStatus("pending"); // Cập nhật trạng thái thành "pending"
         } else {
           console.error("Failed to request becoming an Artist.");
           alert("CCCD saved, but failed to send request to become an Artist.");
@@ -272,7 +273,11 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
 
-          {status === 'approved' ? (
+                    {currentUser?.role === "artist" ? (
+            <p className="text-green-600 text-center col-span-2">
+              You are already an Artist.
+            </p>
+          ) : status === 'approved' ? (
             <p className="text-green-600 text-center col-span-2">
               Your request to become an Artist has been approved.
             </p>
@@ -281,14 +286,21 @@ export default function SettingsPage() {
               <p className="text-red-600 mb-2">
                 Your artist application was rejected.
               </p>
-              <Button onClick={handleSaveCCCD} className="w-full">
+              <Button 
+                onClick={handleSaveCCCD} 
+                className="w-full"
+                disabled={!frontImage || !backImage}
+              >
                 Send new request
               </Button>
             </div>
-          ) : status === 'pending' && (frontImage || backImage) ? (
-            <p className="text-yellow-600 text-center col-span-2">
-              Your request is pending approval.
-            </p>
+          ) : status === 'pending' ? (
+            <div className="col-span-2 text-center">
+              <p className="text-yellow-600 mb-2">
+                Your request is pending approval.
+              </p>
+           
+            </div>
           ) : (
             <Button
               onClick={handleSaveCCCD}
