@@ -20,7 +20,7 @@ const ACTIONS = [
         color: 'bg-green-500'
     },
     {
-        href: '/wallet/payment',
+        href: '/wallet/withdraw',
         title: 'Withdraw',
         icon: CreditCard,
         desc: 'Make a payment',

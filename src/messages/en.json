@@ -129,7 +129,8 @@
     "somethingWentWrong": "Something went wrong",
     "registerError": "Register failed",
     "accessDenied": "Access denied",
-    "credentialsSignin": "Invalid credentials"
+    "credentialsSignin": "Invalid credentials",
+    "isBanned": "This account is currently banned and cannot perform this function."
   },
   "blog": {
     "change_image": "Change Image",
