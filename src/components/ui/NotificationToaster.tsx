@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X, Bell, Calendar, Palette, Info, AlertTriangle, ExternalLink, Eye } from 'lucide-react';
-import useNotificationToaster, { NotificationToast } from '@/hooks/useNotificationToaster';
+import useNotificationToaster from '@/hooks/useNotificationToaster';
+import { NotificationToast, useNotificationStore } from '@/store/notificationStore';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { Button } from './button';
@@ -44,11 +45,12 @@ function NotificationItem({
   removeNotification: (id: string) => void 
 }) {
   const [expanded, setExpanded] = useState(false);
-  
-  // Set auto-dismiss timer
+    // Set auto-dismiss timer
   useEffect(() => {
     const timer = setTimeout(() => {
       removeNotification(notification._id);
+      // Also update the Zustand store to ensure synchronization
+      useNotificationStore.getState().removeToast(notification._id);
     }, notification.showDuration);
     
     return () => clearTimeout(timer);
@@ -208,12 +210,13 @@ function NotificationItem({
               notification.variant === 'success' ? "text-green-600 hover:text-green-700 hover:bg-green-50 dark:text-green-400 dark:hover:bg-green-900/20" :
               notification.variant === 'warning' ? "text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-900/20" : 
               notification.variant === 'info' ? "text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20" : ""
-            )}
-            onClick={() => {
+            )}            onClick={() => {
               if (notification.action) {
                 notification.action();
               }
               removeNotification(notification._id);
+              // Also update the Zustand store
+              useNotificationStore.getState().markAsRead(notification._id);
             }}
           >
             View details

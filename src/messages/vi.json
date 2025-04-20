@@ -188,7 +188,7 @@
       "title": "Chọn gói Premium phù hợp với bạn",
       "subtitle": "Trải nghiệm nghệ thuật không giới hạn với gói Premium. Tận hưởng chất lượng cao nhất và nhiều tính năng độc quyền.",
       "plan": {
-        "price": "40.000 ₫",
+        "price": "45.000 ₫",
         "period": "/1 tháng",
         "features": {
           "gallery": "Số lượt xem phòng tranh 3D không giới hạn",
@@ -202,10 +202,29 @@
       "footer": {
         "terms": "Có áp dụng điều khoản và điều kiện. Ưu đãi không áp dụng cho người dùng đã có gói Premium trước đây.",
         "vat": "* Giá đã bao gồm VAT. Thanh toán an toàn qua các cổng thanh toán được bảo mật."
-      }
+      },
+      "confirm_purchase": "Xác nhận đăng ký Premium",
+      "confirm_buy": "Xác nhận mua",
+      "confirm_cancel": "Xác nhận hủy gia hạn Premium",
+      "confirm_cancel_description": "Bạn có chắc chắn muốn hủy gia hạn gói Premium không?",
+      "note": "Lưu ý:",
+      "note_item1": "Bạn vẫn sẽ là người dùng Premium và có thể sử dụng đầy đủ tính năng Premium cho đến khi hết hạn",
+      "note_item2": "Bạn sẽ không được hoàn tiền cho thời gian còn lại",
+      "note_item3": "Sau khi hết hạn, bạn sẽ tự động trở về gói miễn phí",
+      "confirm_cancel_button": "Xác nhận hủy gia hạn",
+      "success_title": "Đăng ký Premium thành công",
+      "success_description1": "Cảm ơn bạn đã đăng ký gói Premium!",
+      "success_description2": "Bây giờ bạn có thể trải nghiệm đầy đủ tính năng của trang web.",
+      "cancel_subscription": "Hủy gia hạn",
+      "login_required": "Bạn cần đăng nhập để mua gói Premium",
+      "insufficient_balance": "Số dư ví của bạn không đủ để mua gói Premium",
+      "cancel_error": "Không thể hủy gói Premium",
+      "plan_title": "Gói Premium",
+      "duration": "Thời hạn: 1 tháng"
     }
   },
   "artwork": {
+    "view_artist_profile": "Xem hồ sơ nghệ sĩ",
     "title": "Tải lên tranh",
     "subtitle": "Nhập thông tin chi tiết về tác phẩm nghệ thuật của bạn",
     "field": {
@@ -255,7 +274,8 @@
       "upload": "Tải lên Tác phẩm",
       "uploading": "Đang tải lên...",
       "add": "Thêm",
-      "remove": "Xóa"
+      "remove": "Xóa",
+      "saving": "Đang lưu..."
     },
     "toast": {
       "successTitle": "Tải lên Thành công!",
@@ -287,7 +307,7 @@
       "preview": "Xem trước"
     },
     "artwork_description": "Mô tả Tác phẩm",
-    "preview_note": "Ghi chú Xem trước",
+    "preview_note": "Ghi chú Xem trước", 
     "toggle_details": "Hiển thị/ẩn chi tiết",
     "drag_to_pan": "Kéo để di chuyển",
     "remove_from_favorites": "Xóa khỏi yêu thích",
@@ -305,42 +325,13 @@
     "no_description": "Không có mô tả",
     "no_comments": "Chưa có bình luận nào",
     "info": "Thông tin",
-    "comments": "Bình luận",
-    "report_artwork": "Báo cáo tranh",
-    "yours": "Của bạn",
-    "purchased": "Đã mua",
-    "buy": "Mua",
-    "save": "Lưu",
-    "download": "Tải xuống",
-    "description": "Mô tả",
-    "be_first_comment": "Hãy là người đầu tiên bình luận",
-    "add_comment": "Thêm bình luận",
-    "user": "Người dùng",
-    "days_ago": "{days} ngày trước",
-    "comment_example": "Tác phẩm tuyệt đẹp! Tôi thích bố cục và màu sắc.",
-    "downloading": "Đang tải xuống...",
-    "download_success": "Đã tải xuống thành công",
-    "download_error": "Lỗi tải xuống",
-    "no_artwork_info": "Không có thông tin về tác phẩm",
-    "standard_view": "Chế độ tiêu chuẩn",
-    "immersive_view": "Chế độ đắm chìm",
-    "close_details": "Đóng chi tiết",
-    "categories": "Danh mục",
-    "preview_note": "Ghi chú Xem trước",
-    "zoom_in": "Phóng to",
-    "zoom_out": "Thu nhỏ",
-    "swipe_to_change_tabs": "Vuốt để chuyển tab",
-    "comments": "Bình luận",
-    "info": "Thông tin",
     "view_profile": "Xem hồ sơ",
     "add_to_collection": "Thêm vào bộ sưu tập",
     "buy_now": "Mua ngay",
     "your_work": "Tác phẩm của bạn",
-    "no_comments": "Chưa có bình luận nào",
     "add_comment": "Thêm bình luận",
     "no_artwork_info": "Không có thông tin tác phẩm",
     "loading": "Đang tải...",
-    "description": "Mô tả",
     "price": "Giá",
     "downloading": "Đang tải...",
     "download_success": "Tải xuống thành công"
@@ -388,30 +379,35 @@
   },
   "profile": {
     "common": {
-      "joined": "Tham gia {date}",
+      "artist_badge": "Nghệ sĩ",  
       "artworks": "Tác phẩm",
       "followers": "Người theo dõi",
       "following": "Đang theo dõi",
-      "artist_badge": "Nghệ sĩ",
-      "premium_badge": "Premium",
-      "become_artist": "Trở thành nghệ sĩ",
-      "email": "Email"
+      "email": "Email",
+      "joined": "Tham gia {date}"
     },
     "view": {
+      "view_detail": "Xem chi tiết",
       "edit_profile": "Chỉnh sửa hồ sơ",
-      "favorites": "Yêu thích",
-      "collections": "Bộ sưu tập",
-      "professional_artist": "Nghệ sĩ chuyên nghiệp",
-      "view_profile": "Xem hồ sơ",
-      "collection_title": "Bộ sưu tập {number}",
-      "about": "Thông tin cá nhân",
+      "collections":"Bộ sưu tập",
+      "about": "Thông tin",
+      "followers_title": "Người theo dõi",
+      "following_title": "Đang theo dõi", 
+      "artist_info": "Thông tin nghệ sĩ",
       "biography": "Tiểu sử",
       "contact_info": "Thông tin liên hệ",
       "joined_date": "Ngày tham gia",
-      "no_address": "Chưa cập nhật địa chỉ",
-      "default_bio": "là một nghệ sĩ tài năng với niềm đam mê về nghệ thuật. Hãy thêm tiểu sử của bạn trong phần chỉnh sửa hồ sơ.",
+      "follow": "Theo dõi",
+      "following": "Đang theo dõi",
+      "view_profile": "Xem hồ sơ",
       "no_followers": "Chưa có người theo dõi",
-      "no_following": "Bạn chưa theo dõi ai"
+      "no_following": "Chưa theo dõi ai",
+      "no_artist_info": "Không có thông tin nghệ sĩ",
+      "experience": "Kinh nghiệm",
+      "social_links": "Liên kết mạng xã hội",
+      "artworks_section": "Tác phẩm nghệ thuật",
+      "view_all_artworks": "Xem tất cả {count} tác phẩm",
+      "no_artworks": "Chưa có tác phẩm nào"
     },
     "edit": {
       "title": "Chỉnh sửa hồ sơ",
@@ -462,7 +458,35 @@
     "materials": "Chất liệu",
     "waysToBuy": "Cách mua",
     "size": "Kích thước",
-    "status": "Trạng thái"
+    "status": "Trạng thái",
+    "sort": "Sắp xếp",
+    "sortBy": "Sắp xếp theo",
+    "sortByPrice": "Giá",
+    "sortByDate": "Ngày",
+    "apply": "Áp dụng",
+    "reset": "Đặt lại",
+    "applyFilters": "Áp dụng bộ lọc",
+    "clearFilters": "Xóa bộ lọc",
+    "clearAll": "Xóa tất cả",
+    "clearSelection": "Xóa lựa chọn",
+    "showMore": "Xem thêm",
+    "showLess": "Thu gọn",
+    "selectCategories": "Chọn danh mục",
+    "priceLowToHigh": "Giá: Thấp đến cao",
+    "priceHighToLow": "Giá: Cao đến thấp",
+    "newest": "Mới nhất",
+    "oldest": "Cũ nhất",
+    "allCategories": "Tất cả danh mục",
+    "resetPriceRange": "Đặt lại khoảng giá",
+    "done": "Xong",
+    "artwork": {
+      "status": {
+        "available": "Có sẵn",
+        "selling": "Đang bán",
+        "hidden": "Ẩn",
+        "sold": "Đã bán"
+      }
+    }
   },
   "artworkPage": {
     "filter": {
@@ -599,7 +623,6 @@
     "background_media": "Phương tiện nền",
     "background_audio": "Âm thanh nền",
     "exhibition_name": "Tên phòng trưng bày",
-    "description": "Mô tả",
     "enter_name_in_lang": "Nhập tên bằng {lang}",
     "enter_description_in_lang": "Nhập mô tả bằng {lang}",
     "content_updated": "Cập nhật nội dung thành công",
@@ -637,7 +660,8 @@
   "wallet": {
     "current_balance": "Số dư hiện tại",
     "after_purchase": "Sau khi mua",
-    "insufficient_balance": "Số dư không đủ để mua tranh này. Hãy nạp thêm tiền."
+    "insufficient_balance": "Số dư không đủ để mua tranh này. Hãy nạp thêm tiền.",
+    "add_funds": "Nạp tiền"
   },
   "warehouse": {
     "title": "Kho tranh của tôi",

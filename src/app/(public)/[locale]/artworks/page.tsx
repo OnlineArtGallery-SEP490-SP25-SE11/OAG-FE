@@ -1,5 +1,4 @@
 import {fetchArtPiecesByRange} from '@/app/(public)/[locale]/artworks/api';
-import {Artwork} from '@/types/marketplace';
 import dynamic from 'next/dynamic';
 import {LoadingComponent} from '@/components/ui.custom/loading';
 

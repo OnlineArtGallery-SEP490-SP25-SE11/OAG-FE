@@ -1,4 +1,4 @@
-import axios, { createApi } from '@/lib/axios';
+import axios, { createApi, createAxiosInstance } from '@/lib/axios';
 import { ApiResponse } from '@/types/response';
 import { handleApiError } from '@/utils/error-handler';
 import { AxiosInstance } from 'axios';
@@ -119,6 +119,7 @@ export async function getFollowersCount(axiosInstance: AxiosInstance): Promise<n
 	try {
 		const res = await axiosInstance.get('/user/followers');
 		return res.data.followers?.length || 0;
+		
 	} catch (error) {
 		console.error('Failed to fetch followers count:', error);
 		return 0;
@@ -176,4 +177,18 @@ export async function isFollowing(token: string, targetUserId: string): Promise<
 		throw error;
 	}
 }
+
+// 🔹 Get user profile by ID
+export async function getUserProfile(userId: string): Promise<{user: User, isFollowing: boolean}> {
+	try {
+		const axios = await createAxiosInstance({useToken: true});
+		const res = await axios.get(`/user/profile/${userId}`);
+		return res.data;
+	} catch (error) {
+		console.error('Failed to fetch user profile', error);
+		throw error;
+	}
+}
+
+
 

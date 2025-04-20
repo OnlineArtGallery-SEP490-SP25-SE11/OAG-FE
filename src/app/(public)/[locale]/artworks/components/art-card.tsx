@@ -7,7 +7,7 @@ import { vietnamCurrency } from '@/utils/converters';
 import Image from 'next/image';
 import React, { useCallback, useMemo, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { Badge } from '@/components/ui/badge';
+// import { Badge } from '@/components/ui/badge';
 import { useTranslations } from 'next-intl';
 
 interface ArtCardProps {
@@ -90,16 +90,16 @@ const ArtCard: React.FC<ArtCardProps> = ({ data, width, index }) => {
 					/>
 
 					{/* Status indicator */}
-					{artworkStatus && (
+					{/* {artworkStatus && (
 						<div className="absolute top-2 left-2 z-10">
 							<Badge className={`${artworkStatus.color} text-white text-xs font-semibold px-2.5 py-0.5 rounded-sm shadow-sm`}>
 								{artworkStatus.label}
 							</Badge>
 						</div>
-					)}
+					)} */}
 
 					{/* Categories - show max 2 */}
-					{data.category && data.category.length > 0 && (
+					{/* {data.category && data.category.length > 0 && (
 						<div className="absolute bottom-2 left-2 flex flex-wrap gap-1.5 max-w-[95%]">
 							{data.category.slice(0, 2).map((category, idx) => (
 								<Badge 
@@ -111,7 +111,7 @@ const ArtCard: React.FC<ArtCardProps> = ({ data, width, index }) => {
 								</Badge>
 							))}
 						</div>
-					)}
+					)} */}
 				</div>
 
 				<div className="p-2.5 flex flex-col">

@@ -8,15 +8,15 @@ import axios from "axios";
 import { getCurrentUser } from "@/lib/session";
 import FileUploader from "@/components/ui.custom/file-uploader";
 import {
-  createCCCD,
-  getCCCDByUserId,
+  createArtistRequest,
   requestBecomeArtist,
 } from "@/service/cccd";
+import { getArtistRequest } from "@/service/artist-request";
 
 export default function SettingsPage() {
   const [frontImage, setFrontImage] = useState<string | null>(null);
   const [backImage, setBackImage] = useState<string | null>(null);
-
+  const [status, setStatus] = useState<'pending' | 'approved' | 'rejected' | ''>('');
   const [token, setToken] = useState("");
   const [userId, setUserId] = useState("");
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -51,13 +51,20 @@ export default function SettingsPage() {
       setUserId(user.id);
       setCurrentUser(user);
 
-      const data = await getCCCDByUserId({
-        accessToken: user.accessToken,
-        userId: user.id,
-      });
+      const data = await getArtistRequest();
+      console.log("dataz", data.data.artistRequest);
+      if (data.data.artistRequest) {
+        const artistRequest = data.data.artistRequest;
+        setCccdData(artistRequest.cccd); // Cập nhật thông tin CCCD
+        setStatus(artistRequest.status);
+        setFrontImage(artistRequest.cccd.imageFront);
+        setBackImage(artistRequest.cccd.imageBack);
 
-      if (data) {
-        setCccdData(data); // Cập nhật thông tin CCCD
+        setCccdData((prev) => ({
+          ...prev,
+          imageFront: artistRequest.cccd.imageFront,
+          imageBack: artistRequest.cccd.imageBack,
+        }));
       }
     }
   };
@@ -66,9 +73,9 @@ export default function SettingsPage() {
     try {
       console.log("token", token);
       // Lưu CCCD data
-      const response = await createCCCD({
+      const response = await createArtistRequest({
         accessToken: token,
-        cccdData: { ...cccdData, userId: userId },
+        cccdData: { ...cccdData, user: userId },
       });
 
       if (response) {
@@ -85,6 +92,7 @@ export default function SettingsPage() {
             requestResponse
           );
           alert("CCCD saved successfully. Request to become Artist sent!");
+          setStatus("pending"); // Cập nhật trạng thái thành "pending"
         } else {
           console.error("Failed to request becoming an Artist.");
           alert("CCCD saved, but failed to send request to become an Artist.");
@@ -265,15 +273,44 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
 
-          {currentUser?.role.includes("artist") ? (
+                    {currentUser?.role === "artist" ? (
+            <p className="text-green-600 text-center col-span-2">
+              You are already an Artist.
+            </p>
+          ) : status === 'approved' ? (
             <p className="text-green-600 text-center col-span-2">
               Your request to become an Artist has been approved.
             </p>
+          ) : status === 'rejected' ? (
+            <div className="col-span-2 text-center">
+              <p className="text-red-600 mb-2">
+                Your artist application was rejected.
+              </p>
+              <Button 
+                onClick={handleSaveCCCD} 
+                className="w-full"
+                disabled={!frontImage || !backImage}
+              >
+                Send new request
+              </Button>
+            </div>
+          ) : status === 'pending' ? (
+            <div className="col-span-2 text-center">
+              <p className="text-yellow-600 mb-2">
+                Your request is pending approval.
+              </p>
+           
+            </div>
           ) : (
-            <Button onClick={handleSaveCCCD} className="w-full col-span-2">
+            <Button
+              onClick={handleSaveCCCD}
+              className="w-full col-span-2"
+              disabled={!frontImage || !backImage}
+            >
               Send request to admin
             </Button>
           )}
+
         </div>
       </div>
     </div>
