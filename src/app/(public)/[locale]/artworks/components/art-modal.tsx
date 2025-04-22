@@ -152,12 +152,10 @@ interface DetailTabProps {
 }
 
 function DetailTab({ artwork, userHasPurchased, isArtworkCreator, handleBuy, handleDownload, downloadToken, isProcessing, isMobile, t }: DetailTabProps) {
-  const getStatusBadge = (status: string) => {
-    switch (status?.toLowerCase()) {
-      case 'available': return 'bg-green-500/10 text-green-400 border-green-500/30';
-      case 'sold': return 'bg-amber-500/10 text-amber-400 border-amber-500/30';
-      case 'selling': return 'bg-blue-500/10 text-blue-400 border-blue-500/30';
-      case 'unavailable': return 'bg-red-500/10 text-red-400 border-red-500/30';
+  const getartTypeBadge = (artType: string) => {
+    switch (artType?.toLowerCase()) {
+      case 'painting': return 'bg-green-500/10 text-green-400 border-green-500/30';
+      case 'digitalart': return 'bg-amber-500/10 text-amber-400 border-amber-500/30';
       default: return 'bg-blue-500/10 text-blue-400 border-blue-500/30';
     }
   };
@@ -191,9 +189,9 @@ function DetailTab({ artwork, userHasPurchased, isArtworkCreator, handleBuy, han
               {artwork.title}
             </h2>
             <div className='flex items-center gap-2 flex-wrap'>
-              {artwork.status && (
-                <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${getStatusBadge(artwork.status)}`}>
-                  {artwork.status}
+              {artwork.artType && (
+                <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${getartTypeBadge(artwork.artType)}`}>
+                  {artwork.artType}
                 </span>
               )}
             </div>

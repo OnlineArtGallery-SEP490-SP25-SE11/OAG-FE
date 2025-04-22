@@ -1,0 +1,20 @@
+ID	Định Nghĩa Quy Tắc
+BR-01	Chỉ được tạo một tài khoản cho mỗi số điện thoại hoặc email.
+BR-02	Quy định mật khẩu: ít nhất 8 ký tự, phải bao gồm ít nhất 1 chữ cái viết hoa và 1 ký tự đặc biệt.
+BR-03	Nghệ sĩ chỉ được phép chấp nhận yêu cầu trưng bày trong vòng 15 giây.
+BR-04	Liên kết đặt lại mật khẩu qua email sẽ hết hạn sau 15 phút.
+BR-05	Nghệ sĩ mới phải gửi thông tin đăng ký đầy đủ và tài liệu xác minh để được phê duyệt. Quản trị viên sẽ xem xét và phê duyệt yêu cầu.
+BR-06	Giá tác phẩm được tính dựa trên kích thước, chất liệu và thời gian sáng tạo. Hệ thống sẽ tính toán chính xác dựa trên thông số kỹ thuật.
+BR-07	Khi khách hàng đặt mua tác phẩm, hệ thống sẽ tự động thông báo cho nghệ sĩ. Nếu không có phản hồi từ nghệ sĩ trong khu vực, người dùng sẽ nhận được thông báo.
+BR-08	Khách hàng có quyền hủy đơn đặt hàng trước khi tác phẩm được gửi đi mà không bị tính phí hủy. Nếu hủy sau khi tác phẩm đã được gửi đi, có thể sẽ bị tính phí hủy.
+BR-09	Nghệ sĩ phải có đánh giá trung bình từ 3 sao trở lên. Nếu nghệ sĩ có đánh giá dưới mức này, tài khoản của họ sẽ bị chặn.
+BR-10	Chi phí của triển lãm chung sẽ được chia đều cho các nghệ sĩ dựa trên số lượng tác phẩm mỗi người đóng góp.
+BR-11	Mỗi khách hàng chỉ có thể áp dụng một mã khuyến mãi cho mỗi đơn hàng.
+BR-12	Ưu đãi và khuyến mãi chỉ có hiệu lực trong một khoảng thời gian cụ thể. Sau thời gian đó, mã sẽ tự động hết hạn.
+BR-13	Hệ thống Online Art Gallery hỗ trợ phương thức thanh toán trực tuyến và tiền mặt khi nhận hàng.
+BR-14	Khách hàng phải thanh toán đầy đủ sau khi hoàn tất việc mua tác phẩm. Hệ thống sẽ cập nhật từ xác nhận của nghệ sĩ khi giao dịch kết thúc.
+BR-15	Nếu khách hàng hoặc nghệ sĩ vi phạm điều khoản dịch vụ ba lần, tài khoản của họ sẽ bị đình chỉ hoặc khóa vĩnh viễn.
+BR-16	Nếu nghệ sĩ chưa từng bị đình chỉ trước đây: Nếu nghệ sĩ có ít nhất 20 đánh giá, đánh giá trung bình dưới 3 sao và 5+ đánh giá có điểm dưới 3 sao, tài khoản sẽ bị khóa và tự động mở khóa sau 14 ngày nếu quản trị viên không mở khóa.
+BR-17	Đã bị đình chỉ trước đó: Nếu nghệ sĩ có hơn 5 đánh giá có điểm dưới 3 sao trong vòng 30 ngày sau khi được mở khóa, tài khoản sẽ bị khóa lại.
+BR-18	Xử lý yêu cầu rút tiền:
+Khi quản trị viên nhận được yêu cầu rút tiền của nghệ sĩ, quản trị viên sẽ xem xét thông tin và tiến hành chuyển tiền thủ công cho nghệ sĩ. Sau khi chuyển khoản thành công, quản trị viên sẽ nhấp vào "Phê duyệt" và thông báo sẽ được gửi đến ứng dụng của nghệ sĩ. Đồng thời, số tiền trong ví của nghệ sĩ sẽ được khấu trừ từ số tiền yêu cầu. 
