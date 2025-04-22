@@ -256,7 +256,8 @@
       "height": "Height (px)",
       "price": "Price",
       "status": "Status",
-      "image": "Image"
+      "image": "Image",
+      "artType": "Art Type"
     },
     "placeholder": {
       "title": "Enter artwork title",

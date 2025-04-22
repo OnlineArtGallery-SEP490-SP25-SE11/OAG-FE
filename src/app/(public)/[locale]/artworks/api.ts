@@ -72,7 +72,8 @@ const mockArtPieces: Artwork[] = Array.from({ length: 1000 }, (_, i) => {
 		status: 'available',
 		views: 0,
 		createdAt: new Date().toISOString(),
-		updatedAt: new Date().toISOString()
+		updatedAt: new Date().toISOString(),
+		artType: 'painting'
 	};
 });
 

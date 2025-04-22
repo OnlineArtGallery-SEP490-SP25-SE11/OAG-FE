@@ -234,7 +234,8 @@
       "height": "Chiều cao (px)",
       "price": "Giá",
       "status": "Trạng thái",
-      "image": "Hình ảnh"
+      "image": "Hình ảnh",
+      "artType": "Loại tác phẩm"
     },
     "placeholder": {
       "title": "Nhập tiêu đề tác phẩm",
