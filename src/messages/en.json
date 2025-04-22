@@ -535,6 +535,7 @@
     }
   },
   "exhibitions": {
+    "free": "Free",
     "no_templates_available": "No templates available",
     "insufficient_balance": "Insufficient balance to purchase ticket",
     "remove_artwork_confirmation" : "Remove artwork confirmation",
