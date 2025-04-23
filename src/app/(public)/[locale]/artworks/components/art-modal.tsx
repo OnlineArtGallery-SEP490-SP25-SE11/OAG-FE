@@ -424,10 +424,6 @@ function DetailTab({
   );
 }
 
-interface CommentsTabProps {
-  artwork: Artwork;
-  t: any;
-}
 
 interface Comment {
   _id: string;
@@ -1117,7 +1113,7 @@ function Modal() {
                         contentId={artwork._id}
                         contentType={"artwork"}
                         authorId={artwork.artistId?._id ?? ""}
-                        isSignedIn={true}
+                        isSignedIn={!!user}
                       />
                     )}
                   </div>
