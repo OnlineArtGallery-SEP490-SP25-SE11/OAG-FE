@@ -48,6 +48,7 @@
     "loading": "Đang tải..."
   },
   "header": {
+    "become_artist": "Trở thành nghệ sĩ",
     "settings": "Cài đặt",
     "home": "Trang chủ",
     "about": "Giới thiệu",
@@ -502,6 +503,7 @@
     }
   },
   "exhibitions": {
+    "premium" : "Premium",
     "instruction": "Hướng dẫn",
     "controls": "Điều khiển",
     "look": "Chuột - Nhìn xung quanh",

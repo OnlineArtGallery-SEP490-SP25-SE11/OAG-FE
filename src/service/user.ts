@@ -64,16 +64,8 @@ type CheckIsArtistPremiumResponse = {
 export async function checkIsArtistPremium(token: string): Promise<ApiResponse<CheckIsArtistPremiumResponse>> {
 	try {
 		console.log('Checking if artist is premium with token:', token);
-		// const res = await createApi(token).get('/artist/premium-check');
-		return {
-			data: {
-				isPremium: true
-			},
-			details: null,
-			message: 'Success',
-			errorCode: '',
-			status: 200
-		};
+		const res = await createApi(token).get('/premium/status');
+		return res.data;
 	} catch (error) {
 		console.error('Error checking if artist is premium:', error);
 		throw handleApiError<CheckIsArtistPremiumResponse>(

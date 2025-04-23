@@ -67,6 +67,7 @@
     "become_artist": "Become an Artist"
   },
   "header": {
+    "become_artist": "Become an Artist",
     "home": "Home",
     "about": "About",
     "contact": "Contact",
@@ -535,6 +536,7 @@
     }
   },
   "exhibitions": {
+    "premium" : "Premium",
     "instruction": "Instruction",
     "controls": "Controls",
     "look": "Mouse - Look around",

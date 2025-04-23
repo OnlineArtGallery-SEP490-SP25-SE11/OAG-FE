@@ -13,6 +13,7 @@ import { ExhibitionInfoHeader } from '../../components/exhibition-info-header';
 import { ArtworkPositionsGrid } from './artwork-positions-grid';
 import { ArtworkSelectionModal } from './artwork-selection-modal';
 import { ArtworkPosition, Exhibition } from '@/types/exhibition';
+import { FloorPlanRenderer } from './floor-plan-renderer';
 
 // Types
 interface Artwork {
@@ -143,6 +144,16 @@ export function ArtworksContent({
                     title={t("floor_plan")}
                     // description={t("floor_plan_description")}
                 /> */}
+                <div className="w-full overflow-auto flex justify-center items-center p-4">
+                  <FloorPlanRenderer
+                    dimensions={exhibition.gallery.dimensions}
+                    wallThickness={exhibition.gallery.wallThickness}
+                    customColliders={exhibition.gallery.customColliders}
+                    artworkPlacements={exhibition.gallery.artworkPlacements}
+                    scale={8}
+                    className="mx-auto"
+                  />
+                </div>
 
                 {/* Artwork Positions Grid Component */}
                 <div className='p-6'>
