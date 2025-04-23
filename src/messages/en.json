@@ -561,6 +561,7 @@
     }
   },
   "exhibitions": {
+    "free" : "Free",
     "premium" : "Premium",
     "instruction": "Instruction",
     "controls": "Controls",
