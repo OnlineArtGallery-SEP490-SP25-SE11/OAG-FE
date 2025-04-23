@@ -502,6 +502,12 @@
     }
   },
   "exhibitions": {
+    "instruction": "Hướng dẫn",
+    "controls": "Điều khiển",
+    "look": "Chuột - Nhìn xung quanh",
+    "menu": "Hiển thị menu này / Thoát điều khiển",
+    "resume": "Tiếp tục",
+    "exit": "Thoát",
     "free": "Miễn phí",
     "no_templates_available": "Không có mẫu nào khả dụng",
     "insufficient_balance": "Số dư không đủ",
