@@ -10,9 +10,10 @@ import useAuthClient from '@/hooks/useAuth-client';
 import {
 	BookOpen,
 	CircleUserRoundIcon,
+	Key,
 	MessageCircle,
 	Palette,
-	SettingsIcon,
+	// SettingsIcon,
 	UserRoundPen,
 	WalletMinimal,
 	Warehouse
@@ -96,8 +97,8 @@ export default function AuthButton() {
 						href='/settings/profile'
 					/>
 					<DropdownItemWithIcon
-						icon={<SettingsIcon className='w-6 h-6' />}
-						text={t('settings')}
+						icon={<Key className='w-6 h-6' />}
+						text={t('become_artist')}
 						href='/settings'
 					/>
 					<DropdownItemWithIcon

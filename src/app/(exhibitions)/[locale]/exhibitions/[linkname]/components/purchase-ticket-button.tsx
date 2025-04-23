@@ -6,14 +6,15 @@ import { formatMoneyByLocale } from "@/utils/converters";
 import { LoaderButton } from "@/components/ui.custom/loader-button";
 
 interface PurchaseTicketButtonProps {
-  price?: number;
+  requiresPayment?: boolean;
+  price: number;
   className?: string;
   onPurchaseClick: () => void;
   isLoading?: boolean;
 }
 
 export function PurchaseTicketButton({ 
-  price, 
+  price = 0,
   className,
   onPurchaseClick,
   isLoading = false
@@ -28,7 +29,7 @@ export function PurchaseTicketButton({
       isLoading={isLoading}
     >
       <Ticket className="mr-2 h-4 w-4" />
-      {price ? `${t('purchase_ticket')} - ${formatMoneyByLocale(price, locale)}` : t('get_free_ticket')}
+      { `${t('purchase_ticket')} - ${formatMoneyByLocale(price, locale)}`}
     </LoaderButton>
   );
 }

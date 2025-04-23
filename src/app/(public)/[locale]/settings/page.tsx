@@ -19,6 +19,7 @@ export default function SettingsPage() {
   const [status, setStatus] = useState<'pending' | 'approved' | 'rejected' | ''>('');
   const [token, setToken] = useState("");
   const [userId, setUserId] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [currentUser, setCurrentUser] = useState<any>(null);
 
   // Biến lưu dữ liệu CCCD

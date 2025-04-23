@@ -9,10 +9,11 @@ import { updateExhibitionAction } from '../../../actions';
 
 // Import components
 import { ExhibitionInfoHeader } from '../../components/exhibition-info-header';
-import { ExhibitionFloorPlan } from './exhibition-floor-plan';
+// import { ExhibitionFloorPlan } from './exhibition-floor-plan';
 import { ArtworkPositionsGrid } from './artwork-positions-grid';
 import { ArtworkSelectionModal } from './artwork-selection-modal';
 import { ArtworkPosition, Exhibition } from '@/types/exhibition';
+import { FloorPlanRenderer } from './floor-plan-renderer';
 
 // Types
 interface Artwork {
@@ -137,12 +138,22 @@ export function ArtworksContent({
             {/* Container */}
             <div className='bg-white rounded-lg shadow-md'>
                 {/* Floor Plan Component */}
-                <ExhibitionFloorPlan
+                {/* <ExhibitionFloorPlan
                     imageUrl={exhibition.gallery?.planImage || 'https://res.cloudinary.com/djvlldzih/image/upload/v1739374668/gallery/modern_c1_plan.png'}
                     altText={t("floor_plan_alt")}
                     title={t("floor_plan")}
                     // description={t("floor_plan_description")}
-                />
+                /> */}
+                <div className="w-full overflow-auto flex justify-center items-center p-4">
+                  <FloorPlanRenderer
+                    dimensions={exhibition.gallery.dimensions}
+                    wallThickness={exhibition.gallery.wallThickness}
+                    customColliders={exhibition.gallery.customColliders}
+                    artworkPlacements={exhibition.gallery.artworkPlacements}
+                    scale={8}
+                    className="mx-auto"
+                  />
+                </div>
 
                 {/* Artwork Positions Grid Component */}
                 <div className='p-6'>
