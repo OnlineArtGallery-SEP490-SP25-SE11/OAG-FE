@@ -1,4 +1,4 @@
-import axios, { createApi } from '@/lib/axios';
+import axios, { createApi, createAxiosInstance } from '@/lib/axios';
 import { ApiResponse } from '@/types/response';
 import { handleApiError } from '@/utils/error-handler';
 import { AxiosInstance } from 'axios';
@@ -64,16 +64,8 @@ type CheckIsArtistPremiumResponse = {
 export async function checkIsArtistPremium(token: string): Promise<ApiResponse<CheckIsArtistPremiumResponse>> {
 	try {
 		console.log('Checking if artist is premium with token:', token);
-		// const res = await createApi(token).get('/artist/premium-check');
-		return {
-			data: {
-				isPremium: true
-			},
-			details: null,
-			message: 'Success',
-			errorCode: '',
-			status: 200
-		};
+		const res = await createApi(token).get('/premium/status');
+		return res.data;
 	} catch (error) {
 		console.error('Error checking if artist is premium:', error);
 		throw handleApiError<CheckIsArtistPremiumResponse>(
@@ -118,7 +110,6 @@ export async function getFollowingCount(axiosInstance: AxiosInstance): Promise<n
 export async function getFollowersCount(axiosInstance: AxiosInstance): Promise<number> {
 	try {
 		const res = await axiosInstance.get('/user/followers');
-		console.log('vcllllllll222222', res.data)
 		return res.data.followers?.length || 0;
 		
 	} catch (error) {
@@ -180,13 +171,16 @@ export async function isFollowing(token: string, targetUserId: string): Promise<
 }
 
 // 🔹 Get user profile by ID
-export async function getUserProfile(token: string, userId: string): Promise<{user: User, isFollowing: boolean}> {
+export async function getUserProfile(userId: string): Promise<{user: User, isFollowing: boolean}> {
 	try {
-		const res = await createApi(token).get(`/user/profile/${userId}`)
-		return res.data
+		const axios = await createAxiosInstance({useToken: true});
+		const res = await axios.get(`/user/profile/${userId}`);
+		return res.data;
 	} catch (error) {
 		console.error('Failed to fetch user profile', error);
 		throw error;
 	}
 }
+
+
 

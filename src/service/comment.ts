@@ -2,22 +2,29 @@
 import axios, { createApi } from '@/lib/axios';
 import axiosInstance from 'axios';
 
+// Tạo comment mới (cho blog hoặc artwork)
 export async function createComment({
   accessToken,
-  blogId,
+  targetId,
+  targetType,
   content,
-  parentId = null
+  parentId = null,
+  onModel
 }: {
   accessToken: string;
-  blogId: string;
+  targetId: string;
+  targetType: 'blog' | 'artwork';
   content: string;
   parentId?: string | null;
+  onModel: 'blog' | 'artwork';
 }) {
   try {
     const res = await createApi(accessToken).post('/comments', {
-      blogId,
+      targetId,
+      targetType,
       content,
-      parentId // null hoặc có giá trị đều được
+      parentId,
+      onModel
     }, {
       headers: {
         Authorization: `Bearer ${accessToken}`
@@ -38,9 +45,22 @@ export async function createComment({
   }
 }
 
-export async function getCommentsByBlogId(blogId: string) {
+// Lấy danh sách comment theo targetId (blog/artwork)
+export async function getCommentsByTarget({
+  targetId,
+  targetType,
+  accessToken
+}: {
+  targetId: string;
+  targetType: 'blog' | 'artwork';
+  accessToken: string;
+}) {
   try {
-    const res = await axios.get(`/comments/blog/${blogId}`);
+    const res = await axios.get(`/comments/target/${targetType}/${targetId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
     return res.data;
   } catch (err) {
     if (axiosInstance.isAxiosError(err)) {
@@ -52,6 +72,7 @@ export async function getCommentsByBlogId(blogId: string) {
   }
 }
 
+// Cập nhật comment (chỉ tác giả comment)
 export async function updateComment({
   accessToken,
   commentId,
@@ -64,7 +85,7 @@ export async function updateComment({
   replies: string[];
 }) {
   try {
-    console.log("⏳ Đang cập nhật comment cha...", {
+    console.log("⏳ Đang cập nhật comment...", {
       commentId,
       content,
       replies,
@@ -84,7 +105,7 @@ export async function updateComment({
     );
 
     if (res.status === 200) {
-      console.log("✅ Comment cha đã được cập nhật thành công:", res.data);
+      console.log("✅ Comment đã được cập nhật thành công:", res.data);
       return res.data; // Trả về comment sau khi cập nhật
     } else {
       console.error(`❌ Failed to update comment: ${res.statusText}`);
@@ -94,7 +115,7 @@ export async function updateComment({
   }
 }
 
-
+// Xóa comment (tác giả hoặc admin)
 export async function deleteComment({
   accessToken,
   commentId

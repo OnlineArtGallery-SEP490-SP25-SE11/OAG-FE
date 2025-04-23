@@ -7,8 +7,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
-  FormDescription
+  FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -99,13 +98,6 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
   const categories = form.watch("category");
   const status = form.watch("status");
 
-  // Validate status based on artwork type
-  useEffect(() => {
-    if (artwork.artType === 'painting' && status === 'selling') {
-      form.setValue('status', 'available');
-    }
-  }, [status, artwork.artType, form]);
-
   // Setup mutation for updating artwork
   const updateArtworkMutation = useMutation({
     mutationFn: (data: Partial<Artwork>) => {
@@ -138,7 +130,9 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
 
   const handleAddCategory = () => {
     if (newCategory.trim() !== "" && !categories.includes(newCategory.trim())) {
-      form.setValue("category", [...categories, newCategory.trim()]);
+      form.setValue("category", [...categories, newCategory.trim()], {
+        shouldDirty: true  // Add this option
+      });
       setNewCategory("");
     }
   };
@@ -146,7 +140,10 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
   const handleRemoveCategory = (category: string) => {
     form.setValue(
       "category",
-      categories.filter((cat) => cat !== category)
+      categories.filter((cat) => cat !== category),
+      {
+        shouldDirty: true  // Add this option
+      }
     );
   };
 
@@ -325,25 +322,23 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
                         )}
                       />
 
-                      {/* Price field - Only for digital art */}
-                      {artwork.artType === 'digitalart' && (
-                        <FormField
-                          control={form.control}
-                          name="price"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="flex items-center gap-1.5 text-sm">
-                                <DollarSign className="h-3.5 w-3.5 text-teal-600 dark:text-teal-400" />
-                                {t("field.price")} (VND)
-                              </FormLabel>
-                              <FormControl>
-                                <Input type="number" min="0" {...field} className="text-sm" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      )}
+                      {/* Price field */}
+                      <FormField
+                        control={form.control}
+                        name="price"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center gap-1.5 text-sm">
+                              <DollarSign className="h-3.5 w-3.5 text-teal-600 dark:text-teal-400" />
+                              {t("field.price")} (VND)
+                            </FormLabel>
+                            <FormControl>
+                              <Input type="number" min="0" {...field} className="text-sm" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </div>
 
                     {/* Categories */}
@@ -441,7 +436,7 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
           </div>
         )}
 
-        {/* Preview tab content */}
+        {/* Preview tab content - Horizontal display */}
         {activeTab === "preview" && (
           <div className="p-3 md:p-5">
             <div className="max-w-3xl mx-auto">
@@ -463,25 +458,16 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
                   </div>
                 </div>
 
-                {/* Content */}
+                {/* Content - Right side */}
                 <div className="md:w-1/2 p-4 md:p-6 flex flex-col h-full">
                   {/* Title and price */}
                   <div className="mb-3">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">
                       {form.getValues('title')}
                     </h3>
-                    {artwork.artType === 'digitalart' && (
-                      <p className="text-base font-medium text-teal-600 dark:text-teal-400">
-                        {vietnamCurrency(form.getValues('price'))}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Art Type Badge */}
-                  <div className="mb-4">
-                    <Badge variant="outline" className="bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 border-teal-200 dark:border-teal-800">
-                      {t(`artType.${artwork.artType}`)}
-                    </Badge>
+                    <p className="text-base font-medium text-teal-600 dark:text-teal-400">
+                      {vietnamCurrency(form.getValues('price'))}
+                    </p>
                   </div>
 
                   {/* Categories */}

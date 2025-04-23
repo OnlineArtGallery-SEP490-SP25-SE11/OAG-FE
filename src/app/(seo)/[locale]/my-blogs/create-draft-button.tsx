@@ -45,6 +45,7 @@ export default function CreateDraftButton() {
 	const tBlog = useTranslations('blog');
 	const tCommon = useTranslations('common');
 	const tValidation = useTranslations('validation');
+	const tError = useTranslations('error');
 	const createDraftSchema = z.object({
 		title: z.string()
 			.trim() // Add this line to trim whitespace before validation
@@ -73,7 +74,8 @@ export default function CreateDraftButton() {
 			}),
 		content: z.string().optional(),
 	});
-	const { execute, error, isPending } = useServerAction(createBlogAction, {
+	const { execute, isPending } = useServerAction(createBlogAction, {
+
 		onSuccess: (draft) => {
 			// Start navigation before other UI updates
 			const draftId = draft.data.id;
@@ -96,10 +98,13 @@ export default function CreateDraftButton() {
 			router.replace(`/my-blogs/${draftId}`);
 			router.refresh();
 		},
-		onError: () => {
+		onError: (error) => {
+			const errorRespone = error?.err;
+			console.log('errorRespone', errorRespone);
 			toast({
 				title: tCommon('error'),
-				description: tBlog('draft_create_error'),
+				// description: tBlog('draft_create_error'),
+				description: errorRespone.code === 'ERROR' ? tError('isBanned') : tBlog('draft_create_error'),
 				variant: 'destructive'
 			});
 		}
@@ -255,7 +260,7 @@ export default function CreateDraftButton() {
 								</FormItem>
 							)}
 						/>
-						{error && (
+						{/* {error && (
 							<Alert variant='destructive'>
 								<Terminal className='h-4 w-4' />
 								<AlertTitle>
@@ -265,7 +270,7 @@ export default function CreateDraftButton() {
 									{error.message}
 								</AlertDescription>
 							</Alert>
-						)}
+						)} */}
 						<LoaderButton
 							type='submit'
 							isLoading={isPending}

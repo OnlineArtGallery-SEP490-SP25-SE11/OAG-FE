@@ -37,7 +37,5 @@ export const purchaseTicketAction = authenticatedAction
       artworkId
     );
 
-    // Revalidate the exhibition page to reflect updated like status
-    revalidatePath(`/exhibitions/${exhibitionId}`);
     return result.data;
   });

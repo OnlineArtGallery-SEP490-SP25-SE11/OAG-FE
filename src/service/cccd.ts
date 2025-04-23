@@ -1,8 +1,8 @@
 "use server";
-import axios, { createApi } from '@/lib/axios';
+import { createApi } from '@/lib/axios';
 import axiosInstance from 'axios';
 
-export async function createCCCD({
+export async function createArtistRequest({
   accessToken,
   cccdData,
 }: {
@@ -20,18 +20,18 @@ export async function createCCCD({
     issue_loc: string;
     features?: string;
     mrz?: string;
-    userId: string;
+    user: string;
     imageFront?: string;
     imageBack?: string;
   };
 }) {
   try {
-    const res = await createApi(accessToken).post('/cccd', cccdData, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+    // const res = await createApi(accessToken).post('/cccd', cccdData);
+    //refacter to create  become artist request
+    console.log('cccdData', cccdData);
+    const res = await createApi(accessToken).post('/artist-request', {
+      cccd: cccdData
     });
-
     if (res.status === 201) {
       return res.data;
     } else {

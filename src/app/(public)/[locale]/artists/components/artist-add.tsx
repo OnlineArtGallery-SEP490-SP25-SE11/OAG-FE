@@ -30,11 +30,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { ArrowUp, Check, Eye, ImageIcon, Loader2, Plus, X } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useCallback, useRef, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-
 export default function UploadArtwork() {
     const [file, setFile] = useState<File | null>(null);
     const [isImageUploaded, setIsImageUploaded] = useState(false);
@@ -42,8 +42,8 @@ export default function UploadArtwork() {
     const [showPreview, setShowPreview] = useState(false);
     const categoryInputRef = useRef<HTMLInputElement>(null);
     const t = useTranslations('artwork');
+    const tError = useTranslations('error');
     const locale = useLocale();
-
     const form = useForm<ArtworkFormData>({
         resolver: zodResolver(artworkFormSchema(t)),
         defaultValues: {
@@ -68,7 +68,7 @@ export default function UploadArtwork() {
     const categories = data?.data || [];
     
     const { toast } = useToast();
-    
+   
     const mutation = useMutation({
         mutationFn: artworkService.upload,
         onSuccess: () => {
@@ -82,11 +82,12 @@ export default function UploadArtwork() {
             setIsImageUploaded(false);
             setPreviewUrl(null);
         },
-        onError: (error) => {
+        onError: (error:any) => {
+            const errorResponse = error.response.data
             toast({
                 variant: 'destructive',
                 title: t('toast.errorTitle'),
-                description: t('toast.errorDescription')
+                description: errorResponse.statusCode === 403 ? tError('isBanned') : t('toast.errorDescription')
             });
             console.error('Error uploading artwork:', error);
         }

@@ -101,7 +101,7 @@ export interface GalleryTemplateData {
 	modelRotation: [number, number, number];
 	modelPosition: [number, number, number];
 	previewImage: string;
-	planImage: string;
+	// planImage: string;
 	isPremium: boolean;
 	customColliders: ColliderConfig[];
 	// Add artwork positions configuration
