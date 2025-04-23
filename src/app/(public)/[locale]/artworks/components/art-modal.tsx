@@ -424,10 +424,6 @@ function DetailTab({
   );
 }
 
-interface CommentsTabProps {
-  artwork: Artwork;
-  t: any;
-}
 
 interface Comment {
   _id: string;
@@ -1005,20 +1001,22 @@ function Modal() {
 
           {/* Control buttons */}
           <div className="absolute top-3 right-3 flex items-center gap-2 z-[51]">
-            <CreateReport
-              refId={artwork._id}
-              refType={RefType.ARTWORK}
-              url={window.location.href}
-              triggerElement={
-                <button
-                  className="p-2 rounded-full bg-black/50 hover:bg-black/60 active:bg-black/80 transition-colors"
-                  aria-label={t("artwork.report_artwork")}
-                  title={t("artwork.report_artwork")}
-                >
-                  <Flag className="w-4 h-4 text-white" />
-                </button>
-              }
-            />
+            {user && artwork.artistId?._id !== user.id && ( // Add this condition
+              <CreateReport
+                refId={artwork._id}
+                refType={RefType.ARTWORK}
+                url={window.location.href}
+                triggerElement={
+                  <button
+                    className="p-2 rounded-full bg-black/50 hover:bg-black/60 active:bg-black/80 transition-colors"
+                    aria-label={t("artwork.report_artwork")}
+                    title={t("artwork.report_artwork")}
+                  >
+                    <Flag className="w-4 h-4 text-white" />
+                  </button>
+                }
+              />
+            )}
 
             <button
               className="p-2 rounded-full bg-black/50 hover:bg-black/60 active:bg-black/80 transition-colors"
@@ -1117,7 +1115,7 @@ function Modal() {
                         contentId={artwork._id}
                         contentType={"artwork"}
                         authorId={artwork.artistId?._id ?? ""}
-                        isSignedIn={true}
+                        isSignedIn={!!user}
                       />
                     )}
                   </div>
