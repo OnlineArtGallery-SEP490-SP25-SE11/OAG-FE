@@ -77,3 +77,7 @@ export const POINTER_LOCK_CONFIG = {
 	minPolarAngle: Math.PI * 0.3, // Limit looking down
 	pointerSpeed: 0.2,
 };
+
+export const EXHIBITION_CONSTANTS = {
+    POINTER_LOCK_DELAY: 200,
+} as const;
