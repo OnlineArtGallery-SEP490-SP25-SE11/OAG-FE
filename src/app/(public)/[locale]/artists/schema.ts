@@ -35,7 +35,6 @@ export const artworkFormUpdateSchema = z.object({
 		z.number().min(0)
 	]).optional().transform(val => typeof val === 'string' && val ? Number(val) : val),
 	artType: z.enum(['painting', 'digitalart']).optional(),
-	isSelling: z.boolean().optional()
 });
 export type ArtworkFormData = z.infer<ReturnType<typeof artworkFormSchema>>;
 

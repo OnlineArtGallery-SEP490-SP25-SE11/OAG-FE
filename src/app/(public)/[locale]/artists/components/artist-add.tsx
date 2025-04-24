@@ -66,9 +66,9 @@ export default function UploadArtwork() {
         placeholderData: (previousData) => previousData,
     });
     const categories = data?.data || [];
-    
+
     const { toast } = useToast();
-   
+
     const mutation = useMutation({
         mutationFn: artworkService.upload,
         onSuccess: () => {
@@ -82,7 +82,7 @@ export default function UploadArtwork() {
             setIsImageUploaded(false);
             setPreviewUrl(null);
         },
-        onError: (error:any) => {
+        onError: (error: any) => {
             const errorResponse = error.response.data
             toast({
                 variant: 'destructive',
@@ -252,7 +252,7 @@ export default function UploadArtwork() {
                     {/* Top section: Title, Art Type, Status */}
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
                         {/* Title */}
-                        <div className="md:col-span-6">
+                        <div className="md:col-span-4">
                             <FormField
                                 control={form.control}
                                 name="title"
@@ -306,6 +306,42 @@ export default function UploadArtwork() {
                                 )}
                             />
                         </div>
+
+                        {/* Price - Chỉ hiển thị cho digitalart */}
+                        {artType === 'digitalart' && (
+                            <div className="md:col-span-2">
+                                <FormField
+                                    control={form.control}
+                                    name="price"
+                                    render={({ field: { value, onChange, ...field } }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-base font-medium">
+                                                {t('field.price')}
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="number"
+                                                    placeholder={t('placeholder.price')}
+                                                    {...field}
+                                                    value={value || ''}
+                                                    onChange={(e) => {
+                                                        const val = e.target.value;
+                                                        onChange(val === '' ? '' : Number(val));
+                                                    }}
+                                                    min={0}
+                                                    step="0.01"
+                                                    className="h-10"
+                                                />
+                                            </FormControl>
+                                            <FormDescription>
+                                                {t('helper.price')}
+                                            </FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                        )}
 
                         {/* Status */}
                         <div className="md:col-span-3">
@@ -480,44 +516,6 @@ export default function UploadArtwork() {
                             </div>
                         </div>
                     </div>
-
-                    {/* Price - Chỉ hiển thị cho digitalart */}
-                    {artType === 'digitalart' && (
-                        <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
-                            <div className="md:col-span-3">
-                                <FormField
-                                    control={form.control}
-                                    name="price"
-                                    render={({ field: { value, onChange, ...field } }) => (
-                                        <FormItem>
-                                            <FormLabel className="text-base font-medium">
-                                                {t('field.price')}
-                                            </FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="number"
-                                                    placeholder={t('placeholder.price')}
-                                                    {...field}
-                                                    value={value || ''}
-                                                    onChange={(e) => {
-                                                        const val = e.target.value;
-                                                        onChange(val === '' ? '' : Number(val));
-                                                    }}
-                                                    min={0}
-                                                    step="0.01"
-                                                    className="h-10"
-                                                />
-                                            </FormControl>
-                                            <FormDescription>
-                                                {t('helper.price')}
-                                            </FormDescription>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-                        </div>
-                    )}
 
                     {/* Bottom section: Description and Image Upload */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">

@@ -100,7 +100,6 @@ export const artworkService = {
 			status: updatedData.status?.toLowerCase(),
 			price: updatedData.price ? Number(updatedData.price) : undefined,
 			artType: updatedData.artType,
-			isSelling: updatedData.isSelling
 		});
 
 		if (response.status === 200) {
