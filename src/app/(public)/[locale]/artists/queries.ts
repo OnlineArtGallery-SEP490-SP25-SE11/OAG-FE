@@ -17,7 +17,9 @@ export const artworkService = {
 			},
 			url: formData.imageUrl || '', // In real app, this would be from file upload
 			status: formData.status.toLowerCase(),
-			price: Number(formData.price)
+			price: Number(formData.price),
+			artType: formData.artType,
+			isSelling: formData.isSelling
 		});
 
 
@@ -96,7 +98,9 @@ export const artworkService = {
 			description: updatedData.description,
 			category: updatedData.categories,
 			status: updatedData.status?.toLowerCase(),
-			price: updatedData.price ? Number(updatedData.price) : undefined
+			price: updatedData.price ? Number(updatedData.price) : undefined,
+			artType: updatedData.artType,
+			isSelling: updatedData.isSelling
 		});
 
 		if (response.status === 200) {

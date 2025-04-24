@@ -16,7 +16,6 @@ import {
     FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import {
     Select,
     SelectContent,
@@ -34,7 +33,7 @@ import { ArrowUp, Check, Eye, ImageIcon, Loader2, Plus, X } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 export default function UploadArtwork() {
     const [file, setFile] = useState<File | null>(null);
@@ -55,7 +54,9 @@ export default function UploadArtwork() {
             height: '',
             price: 0,
             status: 'available',
-            imageUrl: ''
+            imageUrl: '',
+            artType: 'digitalart',
+            isSelling: false
         }
     });
 
@@ -92,7 +93,35 @@ export default function UploadArtwork() {
         }
     });
 
+    const artType = form.watch('artType');
+    const status = form.watch('status');
+
+    useEffect(() => {
+        if (status === 'selling') {
+            form.setValue('isSelling', true);
+        } else {
+            form.setValue('isSelling', false);
+        }
+    }, [status, form]);
+
+    useEffect(() => {
+        if (artType === 'painting' && status === 'selling') {
+            form.setValue('status', 'available');
+        }
+    }, [artType, status, form]);
+
     const onSubmit = (data: ArtworkFormData) => {
+        if (data.artType === 'painting' && data.status === 'selling') {
+            toast({
+                variant: 'destructive',
+                title: t('toast.error'),
+                description: t('validation.painting_cannot_sell')
+            });
+            return;
+        }
+
+        data.isSelling = data.status === 'selling';
+
         mutation.mutate(data);
     };
 
@@ -103,7 +132,7 @@ export default function UploadArtwork() {
             const value = e.currentTarget.value.trim();
             if (value && !form.getValues('categories').includes(value)) {
                 const currentCategories = form.getValues('categories');
-                form.setValue('categories', [...currentCategories, value], { 
+                form.setValue('categories', [...currentCategories, value], {
                     shouldValidate: true,
                     shouldDirty: true
                 });
@@ -115,7 +144,7 @@ export default function UploadArtwork() {
     // Handle adding a category with button
     const handleAddCategory = useCallback(() => {
         if (!categoryInputRef.current) return;
-        
+
         const value = categoryInputRef.current.value.trim();
         if (value && !form.getValues('categories').includes(value)) {
             const currentCategories = form.getValues('categories');
@@ -156,12 +185,12 @@ export default function UploadArtwork() {
     return (
         <div className="w-full max-w-[1300px] mx-auto px-4 sm:px-6">
             <Toaster />
-            
+
             <div className="flex items-center justify-between mb-6">
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100">
                     {t('title')}
                 </h1>
-                
+
                 {previewUrl && (
                     <Button
                         type="button"
@@ -175,7 +204,7 @@ export default function UploadArtwork() {
                     </Button>
                 )}
             </div>
-            
+
             {showPreview && previewUrl && (
                 <div className="relative mb-8 bg-white dark:bg-gray-800 p-2 rounded-lg shadow-lg overflow-hidden">
                     <div className="aspect-auto max-h-[400px] overflow-hidden rounded-md">
@@ -204,8 +233,8 @@ export default function UploadArtwork() {
                             {form.getValues('categories').length > 0 && (
                                 <div className="flex flex-wrap gap-2 mt-2">
                                     {form.getValues('categories').map((category, index) => (
-                                        <span 
-                                            key={index} 
+                                        <span
+                                            key={index}
                                             className="px-2 py-1 text-xs bg-white/20 backdrop-blur-sm rounded-full"
                                         >
                                             {category}
@@ -217,10 +246,10 @@ export default function UploadArtwork() {
                     )}
                 </div>
             )}
-            
+
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                    {/* Top section: Title, Price, Status */}
+                    {/* Top section: Title, Art Type, Status */}
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
                         {/* Title */}
                         <div className="md:col-span-6">
@@ -233,9 +262,9 @@ export default function UploadArtwork() {
                                             {t('field.title')}
                                         </FormLabel>
                                         <FormControl>
-                                            <Input 
-                                                placeholder={t('placeholder.title')} 
-                                                {...field} 
+                                            <Input
+                                                placeholder={t('placeholder.title')}
+                                                {...field}
                                                 className="h-10"
                                             />
                                         </FormControl>
@@ -244,31 +273,40 @@ export default function UploadArtwork() {
                                 )}
                             />
                         </div>
-                        
-                        {/* Price */}
+
+                        {/* Art Type */}
                         <div className="md:col-span-3">
                             <FormField
                                 control={form.control}
-                                name="price"
+                                name="artType"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel className="text-base font-medium">
-                                            {t('field.price')}
+                                            {t('field.artType')}
                                         </FormLabel>
-                                        <FormControl>
-                                            <Input 
-                                                type="number" 
-                                                placeholder={t('placeholder.price')} 
-                                                {...field} 
-                                                className="h-10"
-                                            />
-                                        </FormControl>
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            value={field.value}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger className="h-10">
+                                                    <SelectValue placeholder={t('placeholder.artType')} />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="digitalart">{t('artType.digitalart')}</SelectItem>
+                                                <SelectItem value="painting">{t('artType.painting')}</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <FormDescription>
+                                            {t('helper.artType')}
+                                        </FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
                         </div>
-                        
+
                         {/* Status */}
                         <div className="md:col-span-3">
                             <FormField
@@ -281,7 +319,7 @@ export default function UploadArtwork() {
                                         </FormLabel>
                                         <Select
                                             onValueChange={field.onChange}
-                                            defaultValue={field.value}
+                                            value={field.value}
                                         >
                                             <FormControl>
                                                 <SelectTrigger className="h-10">
@@ -290,17 +328,25 @@ export default function UploadArtwork() {
                                             </FormControl>
                                             <SelectContent>
                                                 <SelectItem value="available">{t('status.available')}</SelectItem>
-                                                <SelectItem value="selling">{t('status.selling')}</SelectItem>
                                                 <SelectItem value="hidden">{t('status.hidden')}</SelectItem>
+                                                {artType === 'digitalart' && (
+                                                    <SelectItem value="selling">{t('status.selling')}</SelectItem>
+                                                )}
                                             </SelectContent>
                                         </Select>
+                                        <FormDescription>
+                                            {artType === 'painting' ?
+                                                t('helper.painting_status') :
+                                                t('helper.status')
+                                            }
+                                        </FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
                         </div>
                     </div>
-                    
+
                     {/* Middle section: Categories & Dimensions */}
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
                         {/* Categories */}
@@ -313,7 +359,7 @@ export default function UploadArtwork() {
                                         <FormLabel className="text-base font-medium">
                                             {t('field.categories')}
                                         </FormLabel>
-                                        
+
                                         {/* Category input with add button */}
                                         <div className="relative">
                                             <Input
@@ -334,11 +380,11 @@ export default function UploadArtwork() {
                                                 <span className="sr-only">{t('button.add')}</span>
                                             </Button>
                                         </div>
-                                        
+
                                         <FormDescription className="mt-1 text-xs">
                                             {t('helper.categories')}
                                         </FormDescription>
-                                        
+
                                         {/* Selected categories */}
                                         {field.value.length > 0 && (
                                             <div className="mt-2">
@@ -362,7 +408,7 @@ export default function UploadArtwork() {
                                                 </div>
                                             </div>
                                         )}
-                                        
+
                                         {/* Suggested categories */}
                                         {categories.length > 0 && (
                                             <div className="mt-2">
@@ -390,7 +436,7 @@ export default function UploadArtwork() {
                                 )}
                             />
                         </div>
-                        
+
                         {/* Dimensions */}
                         <div className="md:col-span-4 lg:col-span-3">
                             <FormLabel className="text-base font-medium block mb-2">
@@ -402,9 +448,14 @@ export default function UploadArtwork() {
                                     name="width"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <div className="flex items-center h-10 px-3 rounded-md bg-gray-50 dark:bg-gray-800/40 text-sm border border-gray-200 dark:border-gray-700">
-                                                {field.value ? `${field.value} px` : '-'}
-                                            </div>
+                                            <FormControl>
+                                                <Input
+                                                    type="number"
+                                                    placeholder={t('placeholder.width')}
+                                                    {...field}
+                                                    className="h-10"
+                                                />
+                                            </FormControl>
                                             <FormMessage />
                                         </FormItem>
                                     )}
@@ -414,9 +465,14 @@ export default function UploadArtwork() {
                                     name="height"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <div className="flex items-center h-10 px-3 rounded-md bg-gray-50 dark:bg-gray-800/40 text-sm border border-gray-200 dark:border-gray-700">
-                                                {field.value ? `${field.value} px` : '-'}
-                                            </div>
+                                            <FormControl>
+                                                <Input
+                                                    type="number"
+                                                    placeholder={t('placeholder.height')}
+                                                    {...field}
+                                                    className="h-10"
+                                                />
+                                            </FormControl>
                                             <FormMessage />
                                         </FormItem>
                                     )}
@@ -424,7 +480,45 @@ export default function UploadArtwork() {
                             </div>
                         </div>
                     </div>
-                    
+
+                    {/* Price - Chỉ hiển thị cho digitalart */}
+                    {artType === 'digitalart' && (
+                        <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+                            <div className="md:col-span-3">
+                                <FormField
+                                    control={form.control}
+                                    name="price"
+                                    render={({ field: { value, onChange, ...field } }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-base font-medium">
+                                                {t('field.price')}
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="number"
+                                                    placeholder={t('placeholder.price')}
+                                                    {...field}
+                                                    value={value || ''}
+                                                    onChange={(e) => {
+                                                        const val = e.target.value;
+                                                        onChange(val === '' ? '' : Number(val));
+                                                    }}
+                                                    min={0}
+                                                    step="0.01"
+                                                    className="h-10"
+                                                />
+                                            </FormControl>
+                                            <FormDescription>
+                                                {t('helper.price')}
+                                            </FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                        </div>
+                    )}
+
                     {/* Bottom section: Description and Image Upload */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
                         {/* Description - 2/3 of width */}
@@ -452,7 +546,7 @@ export default function UploadArtwork() {
                                 )}
                             />
                         </div>
-                        
+
                         {/* Image Upload - 1/3 of width */}
                         <div className="md:col-span-1 order-1 md:order-2">
                             <FormField
@@ -463,7 +557,7 @@ export default function UploadArtwork() {
                                         <FormLabel className="text-base font-medium">
                                             {t('field.image')}
                                         </FormLabel>
-                                        
+
                                         <div className={`border rounded-lg ${isImageUploaded ? 'border-primary bg-primary/5' : 'border-gray-200 dark:border-gray-700'} overflow-hidden transition-colors duration-300`}>
                                             <FileUploader
                                                 accept={{ 'image/*': [] }}
@@ -475,7 +569,7 @@ export default function UploadArtwork() {
                                                     field.onChange(file.url);
                                                     setIsImageUploaded(true);
                                                     setPreviewUrl(file.url);
-                                                    
+
                                                     if (file.width !== undefined) {
                                                         form.setValue('width', file.width.toString());
                                                     }
@@ -485,7 +579,7 @@ export default function UploadArtwork() {
                                                 }}
                                             />
                                         </div>
-                                        
+
                                         <FormDescription>
                                             {t('helper.image')}
                                         </FormDescription>
@@ -495,7 +589,7 @@ export default function UploadArtwork() {
                             />
                         </div>
                     </div>
-                    
+
                     {/* Submit Button and language info */}
                     <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-200 dark:border-gray-700 mt-8">
                         <div className="text-sm text-gray-500 dark:text-gray-400">
@@ -505,7 +599,7 @@ export default function UploadArtwork() {
                                 <span>Biểu mẫu này cũng có sẵn bằng <span className="text-primary font-medium">Tiếng Anh</span></span>
                             )}
                         </div>
-                        
+
                         <Button
                             type="submit"
                             className="w-full sm:w-auto px-6 py-2 h-11 bg-primary hover:bg-primary/90 text-white relative"
@@ -525,7 +619,7 @@ export default function UploadArtwork() {
 
                             {/* Success indicator */}
                             {mutation.isSuccess && (
-                                <motion.div 
+                                <motion.div
                                     className="absolute inset-0 flex items-center justify-center bg-green-500 text-white"
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}

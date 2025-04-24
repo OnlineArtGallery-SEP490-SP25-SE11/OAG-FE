@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -29,7 +30,8 @@ import {
   Tag,
   X,
   Info,
-  CheckCircle
+  CheckCircle,
+  Palette
 } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -40,8 +42,8 @@ import { artworkService } from "../queries";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { vietnamCurrency } from "@/utils/converters";
-import { ARTWORK_STATUS } from "../constant";
 import { useTranslations } from "next-intl";
+import { ARTWORK_STATUS } from "../constant";
 
 // Define the schema for form validation
 const artworkFormSchema = z.object({
@@ -52,7 +54,7 @@ const artworkFormSchema = z.object({
   price: z.coerce.number().min(0, {
     message: "Giá phải là số không âm",
   }),
-  status: z.enum(["available", "sold", "hidden", "selling"]),
+  status: z.enum(["available", "hidden", "selling"]),
   category: z.array(z.string()).min(1, {
     message: "Vui lòng chọn ít nhất một danh mục",
   }),
@@ -99,7 +101,16 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
 
   // Setup mutation for updating artwork
   const updateArtworkMutation = useMutation({
-    mutationFn: (data: Partial<Artwork>) => artworkService.update(artwork._id, data),
+    mutationFn: (data: Partial<Artwork>) => {
+      // Validate before sending to server
+      if (artwork.artType === 'painting') {
+        if (data.status === 'selling') {
+          data.status = 'available';
+        }
+        data.price = 0;
+      }
+      return artworkService.update(artwork._id, data);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['artworks']
@@ -145,7 +156,7 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
   };
 
   const getStatusColor = (status: string) => {
-    const option = ARTWORK_STATUS(t).find((opt) => opt.value === status);
+    const option = ARTWORK_STATUS(t).find((opt: any) => opt.value === status);
     return option ? option.color : 'bg-gray-500';
   };
 
@@ -247,6 +258,20 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
 
                   {/* Right column - Info */}
                   <div className="md:w-3/5 space-y-4">
+                    {/* Art Type (Read-only) */}
+                    <div className="space-y-2">
+                      <FormLabel className="flex items-center gap-1.5 text-sm">
+                        <Palette className="h-3.5 w-3.5 text-teal-600 dark:text-teal-400" />
+                        {t("field.artType")}
+                      </FormLabel>
+                      <div className="w-full px-3 py-2 rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-sm">
+                        {t(`artType.${artwork.artType}`)}
+                      </div>
+                      <FormDescription className="text-xs">
+                        {t(`helper.${artwork.artType === 'painting' ? 'painting_status' : 'status'}`)}
+                      </FormDescription>
+                    </div>
+
                     {/* Title field */}
                     <FormField
                       control={form.control}
@@ -286,14 +311,11 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                {ARTWORK_STATUS(t).filter(option => option.value !== 'all').map((option) => (
-                                  <SelectItem key={option.value} value={option.value}>
-                                    <div className="flex items-center">
-                                      <span className={`inline-block w-2 h-2 rounded-full ${option.color} mr-2`}></span>
-                                      {option.label}
-                                    </div>
-                                  </SelectItem>
-                                ))}
+                                <SelectItem value="available">{t("status.available")}</SelectItem>
+                                <SelectItem value="hidden">{t("status.hidden")}</SelectItem>
+                                {artwork.artType === 'digitalart' && (
+                                  <SelectItem value="selling">{t("status.selling")}</SelectItem>
+                                )}
                               </SelectContent>
                             </Select>
                             <FormMessage />
@@ -357,7 +379,7 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
                             <div className="border border-gray-200 dark:border-gray-700 rounded-md p-2 h-[80px] overflow-y-auto bg-gray-50 dark:bg-gray-800">
                               {categories.length === 0 ? (
                                 <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-                                  {t("no_categories")}
+                                  {t("helper.categories")}
                                 </p>
                               ) : (
                                 <div className="flex flex-wrap gap-1.5">
@@ -373,7 +395,7 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
                                         onClick={() => handleRemoveCategory(category)}
                                       >
                                         <X className="h-3 w-3" />
-                                        <span className="sr-only">{t("button.remove_category")}</span>
+                                        <span className="sr-only">{t("button.remove")}</span>
                                       </button>
                                     </div>
                                   ))}
@@ -419,9 +441,9 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
         {activeTab === "preview" && (
           <div className="p-3 md:p-5">
             <div className="max-w-3xl mx-auto">
-              {/* Horizontal preview card */}
+              {/* Preview card */}
               <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-800 shadow-md md:flex">
-                {/* Image with status badge - Left side */}
+                {/* Image with status badge */}
                 <div className="md:w-1/2 relative aspect-square md:aspect-auto md:min-h-[300px] bg-gray-100 dark:bg-gray-800">
                   <Image
                     src={artwork.url || "/placeholder.svg"}
@@ -430,10 +452,10 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
                     className="object-contain"
                   />
                   <div className="absolute top-3 right-3 px-2 py-1 rounded-md text-xs font-medium bg-black/50 backdrop-blur-sm text-white">
-                    {artwork.dimensions ? `${artwork.dimensions.width} × ${artwork.dimensions.height}` : t("dimensions_unknown")}
+                    {artwork.dimensions ? `${artwork.dimensions.width} × ${artwork.dimensions.height}` : t("no_dimensions")}
                   </div>
-                  <div className={`absolute top-3 left-3 px-2 py-1 rounded-md text-xs font-medium ${getStatusColor(status)} text-white`}>
-                    {getStatusLabel(status)}
+                  <div className="absolute top-3 left-3 px-2 py-1 rounded-md text-xs font-medium bg-teal-500 text-white">
+                    {t(`status.${status}`)}
                   </div>
                 </div>
 

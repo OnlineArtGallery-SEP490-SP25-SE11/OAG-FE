@@ -187,30 +187,12 @@ interface DetailTabProps {
   router: ReturnType<typeof useRouter>;
 }
 
-function DetailTab({
-  artwork,
-  userHasPurchased,
-  isArtworkCreator,
-  handleBuy,
-  handleDownload,
-  downloadToken,
-  isProcessing,
-  isMobile,
-  t,
-  router,
-}: DetailTabProps) {
-  const getStatusBadge = (status: string) => {
-    switch (status?.toLowerCase()) {
-      case "available":
-        return "bg-green-500/10 text-green-400 border-green-500/30";
-      case "sold":
-        return "bg-amber-500/10 text-amber-400 border-amber-500/30";
-      case "selling":
-        return "bg-blue-500/10 text-blue-400 border-blue-500/30";
-      case "unavailable":
-        return "bg-red-500/10 text-red-400 border-red-500/30";
-      default:
-        return "bg-blue-500/10 text-blue-400 border-blue-500/30";
+function DetailTab({ artwork, userHasPurchased, isArtworkCreator, handleBuy, handleDownload, downloadToken, isProcessing, isMobile, t, router }: DetailTabProps) {
+  const getartTypeBadge = (artType: string) => {
+    switch (artType?.toLowerCase()) {
+      case 'painting': return 'bg-green-500/10 text-green-400 border-green-500/30';
+      case 'digitalart': return 'bg-amber-500/10 text-amber-400 border-amber-500/30';
+      default: return 'bg-blue-500/10 text-blue-400 border-blue-500/30';
     }
   };
 
@@ -244,13 +226,13 @@ function DetailTab({
               {artwork.title}
             </h2>
             <div className="flex items-center gap-2 flex-wrap">
-              {artwork.status && (
+              {artwork.artType && (
                 <span
-                  className={`px-2 py-0.5 rounded-full text-xs font-medium border ${getStatusBadge(
-                    artwork.status
+                  className={`px-2 py-0.5 rounded-full text-xs font-medium border ${getartTypeBadge(
+                    artwork.artType
                   )}`}
                 >
-                  {artwork.status}
+                  {artwork.artType}
                 </span>
               )}
             </div>
@@ -331,6 +313,7 @@ function DetailTab({
                 <ShoppingCart className="mr-1.5 h-3.5 w-3.5" />
                 {t("artwork.buy")}
               </button>
+
             )}
 
           {/* Action Buttons - Optimized consistent styling */}
@@ -752,6 +735,9 @@ function Modal() {
           queryKey: ["userPurchased", selectedId],
         });
         queryClient.invalidateQueries({ queryKey: ["artworks", selectedId] });
+
+        // Reload lại trang
+        router.refresh();
       } else {
         if (response.message?.includes("không đủ")) {
           toast({
@@ -1060,8 +1046,8 @@ function Modal() {
                       <button
                         onClick={() => setActiveTab("details")}
                         className={`px-3 py-2 text-sm relative ${activeTab === "details"
-                            ? "text-white border-b-2 border-white"
-                            : "text-white/60 hover:text-white/80"
+                          ? "text-white border-b-2 border-white"
+                          : "text-white/60 hover:text-white/80"
                           }`}
                       >
                         <span className="flex items-center gap-1.5">
@@ -1073,8 +1059,8 @@ function Modal() {
                       <button
                         onClick={() => setActiveTab("comments")}
                         className={`px-3 py-2 text-sm relative ${activeTab === "comments"
-                            ? "text-white border-b-2 border-white"
-                            : "text-white/60 hover:text-white/80"
+                          ? "text-white border-b-2 border-white"
+                          : "text-white/60 hover:text-white/80"
                           }`}
                       >
                         <span className="flex items-center gap-1.5">

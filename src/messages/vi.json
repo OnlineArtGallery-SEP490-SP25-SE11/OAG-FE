@@ -236,7 +236,8 @@
       "height": "Chiều cao (px)",
       "price": "Giá",
       "status": "Trạng thái",
-      "image": "Hình ảnh"
+      "image": "Hình ảnh",
+      "artType": "Loại tác phẩm"
     },
     "placeholder": {
       "title": "Nhập tiêu đề tác phẩm",
@@ -249,10 +250,10 @@
       "add_category": "Thêm danh mục"
     },
     "helper": {
-      "description": "Mô tả nên bao gồm phong cách, chủ đề và ý nghĩa của tác phẩm",
-      "categories": "Chọn tất cả danh mục áp dụng cho tác phẩm này",
-      "image": "Hình ảnh nên có độ phân giải cao và hiển thị rõ ràng tác phẩm",
-      "suggestedCategories": "Danh mục gợi ý"
+      "artType": "Chọn loại tác phẩm nghệ thuật của bạn",
+      "status": "Chọn trạng thái hiển thị và bán tác phẩm",
+      "painting_status": "Tranh vẽ tay chỉ có thể hiển thị hoặc ẩn",
+      "price": "Nhập giá bán tác phẩm (chỉ áp dụng cho tranh kỹ thuật số)"
     },
     "status": {
       "all": "Tất cả",
@@ -291,7 +292,8 @@
       "widthRequired": "Vui lòng nhập chiều rộng",
       "heightRequired": "Vui lòng nhập chiều cao",
       "priceRequired": "Vui lòng nhập giá",
-      "statusRequired": "Vui lòng chọn trạng thái"
+      "statusRequired": "Vui lòng chọn trạng thái",
+      "painting_cannot_sell": "Tranh vẽ tay không thể được bán trực tuyến"
     },
     "purchase_confirmation": "Xác nhận mua tranh",
     "artist": "Nghệ sĩ",
@@ -335,7 +337,11 @@
     "loading": "Đang tải...",
     "price": "Giá",
     "downloading": "Đang tải...",
-    "download_success": "Tải xuống thành công"
+    "download_success": "Tải xuống thành công",
+    "artType": {
+      "digitalart": "Tranh kỹ thuật số",
+      "painting": "Tranh vẽ tay"
+    }
   },
   "artwork_management": {
     "title": "Quản lý tác phẩm",
@@ -738,7 +744,7 @@
     "loading_more": "Đang tải thêm tác phẩm..."
   },
   "report": {
-    "button": "Báo cáo",
+  
     "buttonAriaLabel": "Nhấn để báo cáo",
     "closeAriaLabel": "Đóng hộp thoại",
     "cancelAriaLabel": "Hủy báo cáo",
