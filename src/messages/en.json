@@ -443,7 +443,8 @@
       "followers": "Followers",
       "following": "Following",
       "email": "Email",
-      "joined": "Joined {date}"
+      "joined": "Joined {date}",
+      "premium_badge":"premium"
     },
     "view": {
       "view_detail": "View Detail",

@@ -81,11 +81,11 @@ const mapApiToTransaction = (transaction: TransactionData): Transaction => {
         type: validType,
         amount: transaction.amount,
         date: transaction.createdAt,
-        description: validType === 'DEPOSIT' 
+        description: validType === 'DEPOSIT'
             ? `Deposit - ${transaction.orderCode}`
-            : transaction.orderCode 
-              ? `Withdrawal - ${transaction.orderCode}` 
-              : 'Withdrawal',
+            : transaction.orderCode
+                ? `Withdrawal - ${transaction.orderCode}`
+                : 'Withdrawal',
         status: validStatus,
         orderCode: transaction.orderCode
     };

@@ -391,7 +391,8 @@
       "followers": "Người theo dõi",
       "following": "Đang theo dõi",
       "email": "Email",
-      "joined": "Tham gia {date}"
+      "joined": "Tham gia {date}",
+      "premium_badge":"premium"
     },
     "view": {
       "view_detail": "Xem chi tiết",
