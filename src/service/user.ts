@@ -16,8 +16,13 @@ interface User {
 export async function getUser(token: string): Promise<User> {
 	try {
 		const res = await createApi(token).get('/user');
-
-		return res.data;
+		const userData = res.data;
+		
+		// Thêm giá trị mặc định cho image nếu không có
+		return {
+			...userData,
+			image: userData.image || '/default-avatar.png'
+		};
 	} catch (error) {
 		console.error('Failed to get user', error);
 		throw error;
