@@ -55,6 +55,7 @@ export const purchaseArtwork = async (
     }
 };
 
+
 // Tải ảnh sau khi mua tranh thành công
 export const downloadArtwork = async (
     accessToken: string,
