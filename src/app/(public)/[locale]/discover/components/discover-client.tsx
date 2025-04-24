@@ -19,7 +19,7 @@ type TabValue = 'featured' | 'trending' | 'recent';
 export function DiscoverClient({ initialData }: DiscoverClientProps) {
   const [searchInput, setSearchInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState<TabValue>('featured');
+  const [activeTab, setActiveTab] = useState<TabValue>('trending');
   const [isTabChanging, setIsTabChanging] = useState(false);
   const t = useTranslations('exhibitions');
   const { ref: loadMoreRef, inView } = useInView();
@@ -82,8 +82,8 @@ export function DiscoverClient({ initialData }: DiscoverClientProps) {
           <p className='text-lg mb-6 max-w-2xl'>
             {t('discover_description')}
           </p>
-          
-          <SearchForm 
+
+          <SearchForm
             searchInput={searchInput}
             onSearchInputChange={setSearchInput}
             onSubmit={handleSearch}
@@ -94,7 +94,7 @@ export function DiscoverClient({ initialData }: DiscoverClientProps) {
 
       {/* Main Content */}
       <div className='max-w-7xl mx-auto px-4 py-8'>
-        <Tabs 
+        <Tabs
           defaultValue={activeTab}
           onValueChange={handleTabChange}
           className='space-y-6'
@@ -104,7 +104,7 @@ export function DiscoverClient({ initialData }: DiscoverClientProps) {
           </div>
 
           {/* Tab content with better loading states */}
-          {['featured', 'trending', 'recent'].map((tab) => (
+          {['trending', 'featured', 'recent'].map((tab) => (
             <TabsContent key={tab} value={tab}>
               <ExhibitionTabContent
                 isLoading={isLoading}
