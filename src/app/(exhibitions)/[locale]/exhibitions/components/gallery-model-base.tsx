@@ -11,7 +11,6 @@ interface GalleryModelBaseProps {
 }
 
 export default function GalleryModelBase({ model, visible = false }: GalleryModelBaseProps) {
-  console.log('GalleryModelBase', model);
   const galleryModelComponentConfig = {
     dimension: model.dimensions,
     wallThickness: model.wallThickness,

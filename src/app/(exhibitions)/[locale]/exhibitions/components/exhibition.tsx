@@ -26,7 +26,7 @@ export default function Exhibition({ exhibition, session }: ExhibitionProps) {
     const [active, setActive] = useState(true);
     const canvasContainerRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
-    
+
     const storeIsLocked = useCameraStore(state => state.isLocked);
     const { setTargetPosition, setIsTransitioningBack } = useCameraStore();
 
@@ -47,15 +47,25 @@ export default function Exhibition({ exhibition, session }: ExhibitionProps) {
     }, [setTargetPosition]);
 
     const handleExit = useCallback(() => {
+        if (document.body.style.cursor === 'none') {
+            document.body.style.cursor = 'default';
+        }
         setActive(false);
         setTargetPosition(null);
         router.push('/discover');
     }, [router, setTargetPosition]);
 
+    // useEffect(() => {
+    //     return () => {
+    //         // Cleanup: ensure cursor is visible when component unmounts
+    //         document.body.style.cursor = 'default';
+    //     };
+    // }, []);
+
     return (
-        <div 
-            ref={canvasContainerRef}  
-            style={{ cursor: (active && !storeIsLocked) ? 'none' : 'default' }} 
+        <div
+            ref={canvasContainerRef}
+            style={{ cursor: (active && !storeIsLocked) ? 'none' : 'default' }}
             className='relative w-full h-screen bg-gray-900'
         >
             <InstructionOverlay

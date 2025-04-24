@@ -4,6 +4,7 @@ import { useCameraStore } from '@/store/cameraStore';
 export const useKeyboardControls = (
     active: boolean, 
     setActive: (value: boolean) => void,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setTargetPosition: (value: any) => void
 ) => {
     useEffect(() => {

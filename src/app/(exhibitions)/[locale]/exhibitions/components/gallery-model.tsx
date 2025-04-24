@@ -31,7 +31,7 @@ export default function GalleryModel({
   config,
   visible = false,
 }: GalleryModelProps) {
-  console.log("'Full config object:", config);
+
   const { scene } = useGLTF(config.modelPath);
   const clonedScene = useMemo(() => scene.clone(), [scene]);
 
@@ -71,7 +71,6 @@ export default function GalleryModel({
   }
   , [walls, config.customColliders]);
 
-  console.log('colliderz', config.customColliders);
 
   return (
     <>

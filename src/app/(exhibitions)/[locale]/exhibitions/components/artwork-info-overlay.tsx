@@ -26,7 +26,7 @@ interface IArtworkInfoOverlayProps {
 	description?: string;
 	user: User | undefined | null;
 	onClose: () => void;
-    // Removed onOverlayHoverChange prop
+	// Removed onOverlayHoverChange prop
 }
 
 export function ArtworkInfoOverlay({
@@ -39,13 +39,13 @@ export function ArtworkInfoOverlay({
 	description,
 	user,
 	onClose
-    // Removed onOverlayHoverChange from destructuring
+	// Removed onOverlayHoverChange from destructuring
 }: IArtworkInfoOverlayProps) {
 	const [isExpanded, setIsExpanded] = useState(false);
 	const { isPlaying, toggle } = useSpeechSynthesis();
 
 	const handleAudioToggle = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
-        event.stopPropagation(); // Add stopPropagation here too
+		event.stopPropagation(); // Add stopPropagation here too
 		toggle(description || "No description available");
 	}, [toggle, description]);
 
@@ -53,10 +53,10 @@ export function ArtworkInfoOverlay({
 		onClose(); // Just call the passed onClose
 	}, [onClose]);
 
-    const handleExpandToggle = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.stopPropagation(); // Add stopPropagation here too
-        setIsExpanded(prev => !prev);
-    };
+	const handleExpandToggle = (event: React.MouseEvent<HTMLButtonElement>) => {
+		event.stopPropagation(); // Add stopPropagation here too
+		setIsExpanded(prev => !prev);
+	};
 
 	const fallbackTitle = 'Artwork Title';
 	const fallbackDescription = 'No description available for this artwork.';
@@ -69,11 +69,11 @@ export function ArtworkInfoOverlay({
 				initial={{ y: '100%' }}
 				animate={{ y: isExpanded ? '0%' : '80%' }}
 				transition={{ type: 'spring', damping: 20 }}
-				onClick={(e) => e.stopPropagation()} 
+				onClick={(e) => e.stopPropagation()}
 			>
 				<header className="flex items-center justify-between p-4 border-b border-gray-200">
 					{/* Close button doesn't need stopPropagation as it calls handleClose which resets state */}
-                    <OverlayButton onClick={handleClose} aria-label='Close'>
+					<OverlayButton onClick={handleClose} aria-label='Close'>
 						<ArrowLeft className="w-6 h-6" />
 					</OverlayButton>
 
@@ -102,7 +102,7 @@ export function ArtworkInfoOverlay({
 
 				<section className="p-6 space-y-4">
 					<h2 className="text-xl font-bold text-gray-900">{title || fallbackTitle}</h2>
-					<p className="text-gray-600 leading-relaxed">{description || fallbackDescription}</p>
+					<p className="text-gray-600 leading-relaxed whitespace-normal break-words">{description || fallbackDescription}</p>
 				</section>
 			</motion.div>
 		</AnimatePresence>
