@@ -1,7 +1,8 @@
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { motion } from 'framer-motion';
 import { DollarSignIcon, Eye, Info, RulerIcon, TagIcon, UserIcon, X, CalendarIcon, BookmarkIcon, Flag, ShoppingCart, Download, Grid, Rows, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
-import Image from 'next/image';
+// import Image from 'next/image';
+import Image from '@/components/ui.custom/optimized-image';
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BiComment } from 'react-icons/bi';
 import { useRouter, usePathname } from 'next/navigation';
