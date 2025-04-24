@@ -15,6 +15,7 @@ import { useServerAction } from "zsa-react";
 import { purchaseTicketAction } from "./actions";
 import { useToast } from "@/hooks/use-toast";
 import { AuthDialog } from "@/components/ui.custom/auth-dialog";
+import { useExhibitionAnalytics } from '@/hooks/use-exhibition-analytics';
 
 
 export default function ExhibitionContent({ exhibitionData }: { exhibitionData: ExhibitionType }) {
@@ -27,6 +28,8 @@ export default function ExhibitionContent({ exhibitionData }: { exhibitionData: 
   const { toast } = useToast();
   const { canAccess, isLoading: accessLoading } = useExhibitionAccess(exhibitionData);
   const localizedContent = getLocalizedContent(exhibitionData, locale);
+
+  useExhibitionAnalytics(exhibitionData._id, isStarted);
 
   // --- Get session data ---
   const { data: session, status: sessionStatus } = useSession();
