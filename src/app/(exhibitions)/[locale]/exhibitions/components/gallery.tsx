@@ -40,7 +40,6 @@ interface GalleryComponentProps { // Renamed to avoid conflict with type name
 
 export default function Gallery({ config, visible = false, children, session }: GalleryComponentProps) { // <-- Use updated props
   const { xAxis, yAxis, zAxis } = config.galleryModel.dimensions;
-
   return (
     <>
       <group>
