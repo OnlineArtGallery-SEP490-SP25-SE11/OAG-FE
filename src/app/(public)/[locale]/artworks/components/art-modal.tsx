@@ -841,8 +841,10 @@ function Modal() {
   if (error) {
     return <ErrorState message={t('common.error')} />;
   }
-
+  console.log(artwork)
   if (!artwork || !artwork.dimensions) {
+    console.log(artwork)
+    console.log(!artwork || !artwork.dimensions)
     return <ErrorState message={t('artwork.no_artwork_info')} />;
   }
 

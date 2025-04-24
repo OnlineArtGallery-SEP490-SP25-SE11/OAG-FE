@@ -55,7 +55,9 @@ export default function UploadArtwork() {
             height: '',
             price: 0,
             status: 'available',
-            imageUrl: ''
+            imageUrl: '',
+            lowResUrl: '',
+            watermarkUrl: ''
         }
     });
 
@@ -470,18 +472,29 @@ export default function UploadArtwork() {
                                                 maxSize={10 * 1024 * 1024}
                                                 icon={<ImageIcon className="h-10 w-10 opacity-70" />}
                                                 onFileUpload={(files) => {
-                                                    const file = files[0];
-                                                    field.onChange(file.url);
-                                                    setIsImageUploaded(true);
-                                                    setPreviewUrl(file.url);
+                                                    const fileRaw = files[0];
+                                                    field.onChange(fileRaw.url);
                                                     
-                                                    if (file.width !== undefined) {
-                                                        form.setValue('width', file.width.toString());
+                                                    setIsImageUploaded(true);
+                                                    setPreviewUrl(fileRaw.url);
+                                                    // console.log('aaa')
+                                                    // console.log('File uploaded demo: ', files[0],files[1],files[2]);
+                                                    if (files[1]!== undefined) {
+                                                        form.setValue('lowResUrl', files[1].url);
                                                     }
-                                                    if (file.height !== undefined) {
-                                                        form.setValue('height', file.height.toString());
+                                                    if (files[2]!== undefined) {
+                                                        form.setValue('watermarkUrl', files[2].url);
                                                     }
+
+                                                    if (fileRaw.width !== undefined) {
+                                                        form.setValue('width', fileRaw.width.toString());
+                                                    }
+                                                    if (fileRaw.height !== undefined) {
+                                                        form.setValue('height', fileRaw.height.toString());
+                                                    }
+                                                    // console.log(form.getValues('lowResUrl'),form.getValues('watermarkUrl'));
                                                 }}
+                                                artwork
                                             />
                                         </div>
                                         
