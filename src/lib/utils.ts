@@ -6,7 +6,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { jwtDecode } from 'jwt-decode';
 import { twMerge } from 'tailwind-merge';
 import slugify from 'slugify';
-import { Exhibition } from '@/types/exhibition';
+import { Exhibition, PublicExhibition } from '@/types/exhibition';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -80,7 +80,7 @@ export function createSlug(title: string): string {
 
 
 
-export function getLocalizedContent(exhibition: Exhibition, locale: string) {
+export function getLocalizedContent(exhibition: Exhibition | PublicExhibition, locale: string) {
 	// Try to find content matching current locale
 	const localContent = exhibition.contents.find(
 	  content => content.languageCode === locale
