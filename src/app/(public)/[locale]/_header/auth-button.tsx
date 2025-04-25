@@ -13,6 +13,7 @@ import {
 	MessageCircle,
 	Palette,
 	SettingsIcon,
+	SquareChartGantt,
 	UserRoundPen,
 	WalletMinimal,
 	Warehouse
@@ -134,6 +135,11 @@ export default function AuthButton() {
 						icon={<MessageCircle className='w-6 h-6' />}
 						text={t('messages')}
 						href='/messages'
+					/>
+					<DropdownItemWithIcon
+						icon={<SquareChartGantt className='w-6 h-6' />}
+						text='My Events'
+						href='/my-events'
 					/>
 
 					<Separator className='mt-6' />
