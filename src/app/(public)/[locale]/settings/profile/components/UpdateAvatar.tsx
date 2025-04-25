@@ -115,12 +115,12 @@ const UpdateAvatar: React.FC<UpdateAvatarProps> = ({ user }) => {
                                     onFileUpload={handleAvatarUpload}
                                     accept={{ 'image/*': ['.png', '.jpg', '.jpeg'] }}
                                     maxFiles={1}
-                                    maxSize={1024 * 1024 * 2}
+                                    maxSize={ 10 * 1024 * 1024 }
                                 />
                             </div>
 
                             <p className='text-sm text-gray-500 dark:text-gray-400 mt-2'>
-                                Maximum file size: 2MB
+                                Maximum file size: 10MB
                             </p>
                         </div>
                     </div>

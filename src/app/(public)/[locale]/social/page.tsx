@@ -26,7 +26,7 @@
 // }
 'use client';
 import { BlogFeed } from './components/blog-feed';
-import { ArtFeed } from './components/art-feed';
+// import { ArtFeed } from './components/art-feed';
 import { UpcomingEvents } from './components/upcoming-event';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import SocialSidebar from './components/social-sidebar';
@@ -48,7 +48,8 @@ export default function SocialPage() {
 					<Tabs defaultValue='all' className='mb-8'>
 						<TabsList>
 							<TabsTrigger value='all'>All</TabsTrigger>
-							<TabsTrigger value='artwork'>Artwork</TabsTrigger>
+							{/* to do: show best artworks */}
+							{/* <TabsTrigger value='artwork'>Artwork</TabsTrigger> */}
 							<TabsTrigger value='blogs'>Blogs</TabsTrigger>
 							<TabsTrigger value='events'>Events</TabsTrigger>
 						</TabsList>
@@ -56,14 +57,14 @@ export default function SocialPage() {
 						<TabsContent value='all'>
 							<div className='space-y-6'>
 								<EventFeed />
-								<ArtFeed />
+								{/* <ArtFeed /> */}
 								<BlogFeed />
 							</div>
 						</TabsContent>
 
-						<TabsContent value='artwork'>
+						{/* <TabsContent value='artwork'>
 							<ArtFeed />
-						</TabsContent>
+						</TabsContent> */}
 
 						<TabsContent value='blogs'>
 							<BlogFeed />

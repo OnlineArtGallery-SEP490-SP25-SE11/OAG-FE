@@ -15,6 +15,7 @@ import { useServerAction } from "zsa-react";
 import { purchaseTicketAction } from "./actions";
 import { useToast } from "@/hooks/use-toast";
 import { AuthDialog } from "@/components/ui.custom/auth-dialog";
+import { useExhibitionAnalytics } from '@/hooks/use-exhibition-analytics';
 
 
 export default function ExhibitionContent({ exhibitionData }: { exhibitionData: ExhibitionType }) {
@@ -23,9 +24,12 @@ export default function ExhibitionContent({ exhibitionData }: { exhibitionData: 
   const locale = useLocale();
   const t = useTranslations('exhibitions');
   const tError = useTranslations('error');
+  const tCommon = useTranslations('common');
   const { toast } = useToast();
   const { canAccess, isLoading: accessLoading } = useExhibitionAccess(exhibitionData);
   const localizedContent = getLocalizedContent(exhibitionData, locale);
+
+  useExhibitionAnalytics(exhibitionData._id, isStarted);
 
   // --- Get session data ---
   const { data: session, status: sessionStatus } = useSession();
@@ -35,7 +39,7 @@ export default function ExhibitionContent({ exhibitionData }: { exhibitionData: 
   const { execute: purchaseTicket, isPending } = useServerAction(purchaseTicketAction, {
     onSuccess: () => {
       toast({
-        title: t('success'),
+        title: tCommon('success'),
         description: t('ticket_purchased_success'),
         variant: 'success',
       });
@@ -88,7 +92,8 @@ export default function ExhibitionContent({ exhibitionData }: { exhibitionData: 
 
     return (
       <PurchaseTicketButton
-        price={exhibitionData.ticket?.price}
+        requiresPayment={exhibitionData.ticket?.requiresPayment}
+        price={exhibitionData.ticket?.price || 0}
         className="w-full bg-black rounded-3xl text-white hover:bg-gray-800 py-6"
         onPurchaseClick={handlePurchase}
         isLoading={isPending}

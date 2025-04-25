@@ -12,7 +12,6 @@ import {
   FileText,
 } from "lucide-react";
 // import EditProfileDialog from './EditProfileDialog';
-import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { subscribeToUserUpdates } from "@/lib/user-updates";
 import UpdateAvatar from "./UpdateAvatar";
@@ -28,6 +27,10 @@ import {
   getFollowingList,
 } from "@/service/user";
 import { createAxiosInstance } from "@/lib/axios";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { checkPremium } from "@/utils/premium";
+import { useSession } from "next-auth/react";
+import { useToast } from "@/hooks/use-toast";
 
 // Định nghĩa kiểu dữ liệu cho người dùng
 interface UserType {
@@ -59,6 +62,7 @@ interface ProfileContentProps {
 }
 
 // Helper function to strip HTML tags
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const stripHtml = (html: string) => {
   return html.replace(/<[^>]*>/g, "");
 };
@@ -67,11 +71,44 @@ const ProfileContent = ({ initialData }: ProfileContentProps) => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const t = useTranslations("profile");
+  const { data: session } = useSession();
+  const { toast } = useToast();
 
   const [activeTab, setActiveTab] = useState("about");
 
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
+  const [premiumStatus, setPremiumStatus] = useState(initialData.isPremium);
+
+  useEffect(() => {
+    const checkPremiumStatus = async () => {
+      if (!session?.user?.accessToken) return;
+
+      try {
+        const status = await checkPremium(session.user.accessToken);
+        setPremiumStatus(status.isPremium);
+
+        
+        if (status.status === 'cancelled') {
+          toast({
+            title: "Thông báo",
+            description: `Gói Premium của bạn đã được hủy và sẽ hết hạn vào ${new Date(status.endDate || '').toLocaleDateString('vi-VN')}`,
+            variant: "warning",
+          });
+        } else if (status.status === 'expired') {
+          toast({
+            title: "Thông báo",
+            description: "Gói Premium của bạn đã hết hạn",
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.error("Lỗi khi kiểm tra trạng thái Premium:", error);
+      }
+    };
+
+    checkPremiumStatus();
+  }, [session?.user?.accessToken, toast]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -106,7 +143,6 @@ const ProfileContent = ({ initialData }: ProfileContentProps) => {
 
   const [followers, setFollowers] = useState<UserType[]>([]);
   const [following, setFollowing] = useState<UserType[]>([]);
-  console.log('followersdcmmmm', followers)
   useEffect(() => {
     async function fetchData() {
       try {
@@ -191,7 +227,7 @@ const ProfileContent = ({ initialData }: ProfileContentProps) => {
                     {t("common.artist_badge")}
                   </Badge>
                 )}
-                {initialData.isPremium && (
+                {premiumStatus && (
                   <Badge className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white border-none">
                     {t("common.premium_badge")}
                   </Badge>
@@ -263,44 +299,40 @@ const ProfileContent = ({ initialData }: ProfileContentProps) => {
             <nav className="flex flex-col">
               <button
                 onClick={() => setActiveTab("about")}
-                className={`px-6 py-3 text-left flex items-center ${
-                  activeTab === "about"
-                    ? "bg-purple-50 border-l-4 border-purple-500 text-purple-700"
-                    : "hover:bg-gray-50"
-                }`}
+                className={`px-6 py-3 text-left flex items-center ${activeTab === "about"
+                  ? "bg-purple-50 border-l-4 border-purple-500 text-purple-700"
+                  : "hover:bg-gray-50"
+                  }`}
               >
                 <Info className="w-4 h-4 mr-3" />
                 <span>{t("view.about")}</span>
               </button>
               <button
                 onClick={() => setActiveTab("collections")}
-                className={`px-6 py-3 text-left flex items-center ${
-                  activeTab === "collections"
-                    ? "bg-purple-50 border-l-4 border-purple-500 text-purple-700"
-                    : "hover:bg-gray-50"
-                }`}
+                className={`px-6 py-3 text-left flex items-center ${activeTab === "collections"
+                  ? "bg-purple-50 border-l-4 border-purple-500 text-purple-700"
+                  : "hover:bg-gray-50"
+                  }`}
               >
                 <FolderOpen className="w-4 h-4 mr-3" />
                 <span>{t("view.collections")}</span>
               </button>
               <button
                 onClick={() => setActiveTab("followers")}
-                className={`px-6 py-3 text-left flex items-center ${
-                  activeTab === "followers"
-                    ? "bg-purple-50 border-l-4 border-purple-500 text-purple-700"
-                    : "hover:bg-gray-50"
-                }`}
+                className={`px-6 py-3 text-left flex items-center ${activeTab === "followers"
+                  ? "bg-purple-50 border-l-4 border-purple-500 text-purple-700"
+                  : "hover:bg-gray-50"
+                  }`}
               >
                 <Users className="w-4 h-4 mr-3" />
                 <span>{t("common.followers")}</span>
               </button>
               <button
                 onClick={() => setActiveTab("following")}
-                className={`px-6 py-3 text-left flex items-center ${
-                  activeTab === "following"
-                    ? "bg-purple-50 border-l-4 border-purple-500 text-purple-700"
-                    : "hover:bg-gray-50"
-                }`}
+                className={`px-6 py-3 text-left flex items-center ${activeTab === "following"
+                  ? "bg-purple-50 border-l-4 border-purple-500 text-purple-700"
+                  : "hover:bg-gray-50"
+                  }`}
               >
                 <UserCheck className="w-4 h-4 mr-3" />
                 <span>{t("common.following")}</span>
@@ -350,7 +382,7 @@ const ProfileContent = ({ initialData }: ProfileContentProps) => {
                       </h3>
                       <div className="prose max-w-none">
                         {initialData.role?.includes("artist") &&
-                        initialData.artistProfile?.bio ? (
+                          initialData.artistProfile?.bio ? (
                           <div
                             className="text-gray-700"
                             dangerouslySetInnerHTML={{
@@ -425,7 +457,7 @@ const ProfileContent = ({ initialData }: ProfileContentProps) => {
                             </p>
                           </div>
                         </div>
-                        <div className="flex items-start">
+                        {/* <div className="flex items-start">
                           <div className="flex-shrink-0 h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -455,7 +487,7 @@ const ProfileContent = ({ initialData }: ProfileContentProps) => {
                               {initialData.address || t("view.no_address")}
                             </p>
                           </div>
-                        </div>
+                        </div> */}
                         <div className="flex items-start">
                           <div className="flex-shrink-0 h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
                             <svg
@@ -542,21 +574,7 @@ const ProfileContent = ({ initialData }: ProfileContentProps) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {followers.length > 0 ? (
                     followers.map((user) => (
-                      <motion.div
-                        key={user._id}
-                        whileHover={{ scale: 1.02 }}
-                        className="flex items-center space-x-4 p-4 bg-white rounded-lg shadow-md"
-                      >
-                        <img
-                          src={user.image}
-                          alt={user.name}
-                          className="w-12 h-12 rounded-full"
-                        />
-                        <div>
-                          <h3 className="font-semibold">{user.name}</h3>
-                          <p className="text-sm text-gray-600">{user.email}</p>
-                        </div>
-                      </motion.div>
+                      <UserCard key={user._id} user={user} />
                     ))
                   ) : (
                     <div className="col-span-full text-center py-8">
@@ -578,21 +596,7 @@ const ProfileContent = ({ initialData }: ProfileContentProps) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {following.length > 0 ? (
                     following.map((user) => (
-                      <motion.div
-                        key={user._id}
-                        whileHover={{ scale: 1.02 }}
-                        className="flex items-center space-x-4 p-4 bg-white rounded-lg shadow-md"
-                      >
-                        <img
-                          src={user.image}
-                          alt={user.name}
-                          className="w-12 h-12 rounded-full"
-                        />
-                        <div>
-                          <h3 className="font-semibold">{user.name}</h3>
-                          <p className="text-sm text-gray-600">{user.email}</p>
-                        </div>
-                      </motion.div>
+                      <UserCard key={user._id} user={user} />
                     ))
                   ) : (
                     <div className="col-span-full text-center py-8">
@@ -627,5 +631,43 @@ export function ProfileSkeleton() {
     </div>
   );
 }
+
+
+interface UserType {
+  _id?: string;
+  name?: string;
+  email?: string;
+  image?: string;
+}
+
+interface UserCardProps {
+  user: UserType;
+}
+
+export const UserCard: React.FC<UserCardProps> = ({ user }) => {
+  const t = useTranslations('profile');
+
+  return (
+    <div className="flex items-center justify-between p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+      <div className="flex items-center space-x-4">
+        <Avatar className="h-12 w-12">
+          <AvatarImage src={user.image || '/default-avatar.png'} alt={user.name} />
+          <AvatarFallback>{user.name!.substring(0, 2).toUpperCase()}</AvatarFallback>
+        </Avatar>
+        <div>
+          <h3 className="font-semibold">{user.name}</h3>
+          <p className="text-sm text-gray-600">{user.email}</p>
+        </div>
+      </div>
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() => window.location.href = `/profile/${user._id}`}
+      >
+        {t('view.view_profile')}
+      </Button>
+    </div>
+  );
+};
 
 export default ProfileContent;

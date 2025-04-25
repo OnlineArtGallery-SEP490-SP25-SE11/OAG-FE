@@ -1,35 +1,37 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
-import { 
-  Form, 
-  FormControl, 
-  FormField, 
-  FormItem, 
-  FormLabel, 
-  FormMessage 
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { 
-  DollarSign, 
-  FileText, 
-  ImageIcon, 
-  Loader2, 
-  Plus, 
-  Save, 
-  Tag, 
+import {
+  DollarSign,
+  FileText,
+  ImageIcon,
+  Loader2,
+  Plus,
+  Save,
+  Tag,
   X,
   Info,
-  CheckCircle
+  CheckCircle,
+  Palette
 } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -40,8 +42,8 @@ import { artworkService } from "../queries";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { vietnamCurrency } from "@/utils/converters";
-import { ARTWORK_STATUS } from "../constant";
 import { useTranslations } from "next-intl";
+import { ARTWORK_STATUS } from "../constant";
 
 // Define the schema for form validation
 const artworkFormSchema = z.object({
@@ -52,10 +54,11 @@ const artworkFormSchema = z.object({
   price: z.coerce.number().min(0, {
     message: "Giá phải là số không âm",
   }),
-  status: z.enum(["available", "sold", "hidden", "selling"]),
+  status: z.enum(["available", "hidden", "selling"]),
   category: z.array(z.string()).min(1, {
     message: "Vui lòng chọn ít nhất một danh mục",
   }),
+  artType: z.enum(["painting", "digitalart"])
 });
 
 type ArtworkFormValues = z.infer<typeof artworkFormSchema>;
@@ -73,7 +76,7 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
   const [newCategory, setNewCategory] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  
+
   // Detect mobile viewport
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -81,7 +84,7 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
-  
+
   // Initialize form with artwork data
   const form = useForm<ArtworkFormValues>({
     resolver: zodResolver(artworkFormSchema),
@@ -91,17 +94,27 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
       price: artwork.price || 0,
       status: artwork.status || "available",
       category: artwork.category || [],
+      artType: artwork.artType || ""
     },
   });
-  
+
   const categories = form.watch("category");
   const status = form.watch("status");
-  
+
   // Setup mutation for updating artwork
   const updateArtworkMutation = useMutation({
-    mutationFn: (data: Partial<Artwork>) => artworkService.update(artwork._id, data),
+    mutationFn: (data: Partial<Artwork>) => {
+      // Validate before sending to server
+      if (artwork.artType === 'painting') {
+        if (data.status === 'selling') {
+          data.status = 'available';
+        }
+        data.price = 0;
+      }
+      return artworkService.update(artwork._id, data);
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ 
+      queryClient.invalidateQueries({
         queryKey: ['artworks']
       });
       setIsSubmitting(false);
@@ -112,38 +125,43 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
       setIsSubmitting(false);
     },
   });
-  
+
   const onSubmit = (data: ArtworkFormValues) => {
     setIsSubmitting(true);
     updateArtworkMutation.mutate(data);
   };
-  
+
   const handleAddCategory = () => {
     if (newCategory.trim() !== "" && !categories.includes(newCategory.trim())) {
-      form.setValue("category", [...categories, newCategory.trim()]);
+      form.setValue("category", [...categories, newCategory.trim()], {
+        shouldDirty: true  // Add this option
+      });
       setNewCategory("");
     }
   };
-  
+
   const handleRemoveCategory = (category: string) => {
     form.setValue(
-      "category", 
-      categories.filter((cat) => cat !== category)
+      "category",
+      categories.filter((cat) => cat !== category),
+      {
+        shouldDirty: true  // Add this option
+      }
     );
   };
-  
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       handleAddCategory();
     }
   };
-  
+
   const getStatusColor = (status: string) => {
-    const option = ARTWORK_STATUS(t).find((opt) => opt.value === status);
+    const option = ARTWORK_STATUS(t).find((opt: any) => opt.value === status);
     return option ? option.color : 'bg-gray-500';
   };
-  
+
   const getStatusLabel = (status: string) => {
     const option = ARTWORK_STATUS(t).find((opt) => opt.value === status);
     return option ? option.label : status;
@@ -154,53 +172,52 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
     { id: "info", label: t("tabs.info"), icon: <Info className="h-4 w-4" /> },
     { id: "preview", label: t("tabs.preview"), icon: <ImageIcon className="h-4 w-4" /> },
   ];
-  
+
   return (
     <div className={`w-[60vw] h-[80vh] bg-white dark:bg-gray-900 rounded-lg overflow-hidden ${isMobile ? 'flex flex-col' : 'flex'} 
-      shadow-xl border-2 border-gray-200 dark:border-gray-700 ring-1 ring-gray-950/5 dark:ring-white/10`}>
+      shadow-xl border-2 border-gray-200 dark:border-gray-700 ring-1 ring-gray-950/5 dark:ring-white/10 transition-all duration-200 ease-in-out`}>
       {/* Sidebar with vertical tabs */}
       <div className={`${isMobile ? 'w-full border-b' : 'w-44 border-r'} border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 ${isMobile ? 'p-2' : 'p-3'} flex ${isMobile ? 'flex-row items-center justify-between' : 'flex-col'}`}>
-        <div className={`text-sm font-medium text-gray-500 dark:text-gray-400 ${isMobile ? 'mr-2' : 'mb-3 px-2'}`}>
+        <div className={`text-sm font-medium text-gray-500 dark:text-gray-400 ${isMobile ? 'mr-2' : 'mb-3 px-2'} transition-colors duration-200`}>
           {!isMobile && t("edit_artwork")}
         </div>
-        
+
         {/* Tab navigation */}
         <div className={`${isMobile ? 'flex space-x-1' : 'space-y-1 flex-1'}`}>
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              className={`${isMobile ? 'flex-1' : 'w-full'} flex items-center ${isMobile ? 'justify-center' : ''} gap-2 px-3 py-2 text-sm rounded-md transition-colors ${
-                activeTab === tab.id
-                  ? "bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 font-medium"
-                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50"
-              }`}
+              className={`${isMobile ? 'flex-1' : 'w-full'} flex items-center ${isMobile ? 'justify-center' : ''} gap-2 px-3 py-2 text-sm rounded-md transition-all duration-200 ease-in-out transform hover:scale-[1.02] ${activeTab === tab.id
+                ? "bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 font-medium shadow-sm"
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50"
+                }`}
               onClick={() => setActiveTab(tab.id)}
             >
-              <span className={activeTab === tab.id ? "text-teal-600 dark:text-teal-400" : "text-gray-500 dark:text-gray-400"}>
+              <span className={`transition-colors duration-200 ${activeTab === tab.id ? "text-teal-600 dark:text-teal-400" : "text-gray-500 dark:text-gray-400"}`}>
                 {tab.icon}
               </span>
               <span className={isMobile ? 'hidden sm:inline' : ''}>{tab.label}</span>
             </button>
           ))}
         </div>
-        
+
         {/* Bottom actions */}
         <div className={`${isMobile ? 'flex space-x-2' : 'pt-3 mt-auto border-t border-gray-200 dark:border-gray-700'}`}>
-          <Button 
-            type="button" 
-            variant="outline" 
+          <Button
+            type="button"
+            variant="outline"
             onClick={onClose}
-            className={`${isMobile ? 'flex-1 justify-center h-8' : 'w-full justify-start text-sm h-9 px-3 border-gray-200 dark:border-gray-700 mb-2'}`}
+            className={`${isMobile ? 'flex-1 justify-center h-8' : 'w-full justify-start text-sm h-9 px-3 border-gray-200 dark:border-gray-700 mb-2'} transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:border-gray-300 dark:hover:border-gray-600`}
             disabled={isSubmitting}
           >
             <X className="h-4 w-4 mr-2" />
             <span className={isMobile ? 'hidden sm:inline' : ''}>{tCommon("cancel")}</span>
           </Button>
-          <Button 
+          <Button
             form="artwork-form"
-            type="submit" 
+            type="submit"
             disabled={isSubmitting || !form.formState.isDirty}
-            className={`${isMobile ? 'flex-1 justify-center h-8' : 'w-full bg-teal-600 hover:bg-teal-700 text-white text-sm h-9 justify-start'}`}
+            className={`${isMobile ? 'flex-1 justify-center h-8' : 'w-full bg-teal-600 hover:bg-teal-700 text-white text-sm h-9 justify-start'} transition-all duration-200 transform hover:scale-[1.02] disabled:hover:scale-100`}
           >
             {isSubmitting ? (
               <>
@@ -221,7 +238,7 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
       <div className="flex-1 overflow-y-auto relative">
         {/* Info tab content */}
         {activeTab === "info" && (
-          <div className="p-3 md:p-5">
+          <div className="p-3 md:p-5 animate-fadeIn">
             <Form {...form}>
               <form id="artwork-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
                 <div className="flex flex-col md:flex-row gap-4">
@@ -235,14 +252,28 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
                         className="object-contain"
                       />
                     </div>
-                    
+
                     <div className="text-xs text-gray-600 dark:text-gray-400 text-center mt-2">
                       {artwork.dimensions ? `${artwork.dimensions.width} × ${artwork.dimensions.height} px` : t("no_dimensions")}
                     </div>
                   </div>
-                  
+
                   {/* Right column - Info */}
                   <div className="md:w-3/5 space-y-4">
+                    {/* Art Type (Read-only) */}
+                    <div className="space-y-2">
+                      <FormLabel className="flex items-center gap-1.5 text-sm">
+                        <Palette className="h-3.5 w-3.5 text-teal-600 dark:text-teal-400" />
+                        {t("field.artType")}
+                      </FormLabel>
+                      <div className="w-full px-3 py-2 rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-sm transition-colors duration-200 hover:border-teal-300 dark:hover:border-teal-600">
+                        {t(`artType.${artwork.artType}`)}
+                      </div>
+                      <FormDescription className="text-xs">
+                        {t(`helper.${artwork.artType === 'painting' ? 'painting_status' : 'status'}`)}
+                      </FormDescription>
+                    </div>
+
                     {/* Title field */}
                     <FormField
                       control={form.control}
@@ -260,7 +291,7 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
                         </FormItem>
                       )}
                     />
-                    
+
                     <div className="grid grid-cols-2 gap-4">
                       {/* Status selector */}
                       <FormField
@@ -272,7 +303,7 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
                               <CheckCircle className="h-3.5 w-3.5 text-teal-600 dark:text-teal-400" />
                               {t("field.status")}
                             </FormLabel>
-                            <Select 
+                            <Select
                               onValueChange={field.onChange}
                               defaultValue={field.value}
                             >
@@ -282,21 +313,18 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                {ARTWORK_STATUS(t).filter(option => option.value !== 'all').map((option) => (
-                                  <SelectItem key={option.value} value={option.value}>
-                                    <div className="flex items-center">
-                                      <span className={`inline-block w-2 h-2 rounded-full ${option.color} mr-2`}></span>
-                                      {option.label}
-                                    </div>
-                                  </SelectItem>
-                                ))}
+                                <SelectItem value="available">{t("status.available")}</SelectItem>
+                                <SelectItem value="hidden">{t("status.hidden")}</SelectItem>
+                                {artwork.artType === 'digitalart' && (
+                                  <SelectItem value="selling">{t("status.selling")}</SelectItem>
+                                )}
                               </SelectContent>
                             </Select>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-                      
+
                       {/* Price field */}
                       <FormField
                         control={form.control}
@@ -315,7 +343,7 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
                         )}
                       />
                     </div>
-                    
+
                     {/* Categories */}
                     <FormField
                       control={form.control}
@@ -326,7 +354,7 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
                             <Tag className="h-3.5 w-3.5 text-teal-600 dark:text-teal-400" />
                             {t("field.categories")}
                           </FormLabel>
-                          
+
                           <div className="space-y-2">
                             {/* Add new category */}
                             <div className="flex gap-2">
@@ -343,17 +371,17 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
                                 variant="outline"
                                 onClick={handleAddCategory}
                                 disabled={!newCategory.trim()}
-                                className="border-teal-200 dark:border-teal-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 whitespace-nowrap h-8"
+                                className="border-teal-200 dark:border-teal-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 whitespace-nowrap h-8 transition-all duration-200 transform hover:scale-[1.02] disabled:hover:scale-100"
                               >
                                 <Plus className="h-3.5 w-3.5 mr-1" /> {t("button.add")}
                               </Button>
                             </div>
-                            
+
                             {/* Selected categories */}
                             <div className="border border-gray-200 dark:border-gray-700 rounded-md p-2 h-[80px] overflow-y-auto bg-gray-50 dark:bg-gray-800">
                               {categories.length === 0 ? (
                                 <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-                                  {t("no_categories")}
+                                  {t("helper.categories")}
                                 </p>
                               ) : (
                                 <div className="flex flex-wrap gap-1.5">
@@ -365,11 +393,11 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
                                       <span className="text-xs">{category}</span>
                                       <button
                                         type="button"
-                                        className="text-teal-600 dark:text-teal-400 hover:text-teal-800 dark:hover:text-teal-200 focus:outline-none"
+                                        className="text-teal-600 dark:text-teal-400 hover:text-teal-800 dark:hover:text-teal-200 focus:outline-none transition-colors duration-200"
                                         onClick={() => handleRemoveCategory(category)}
                                       >
                                         <X className="h-3 w-3" />
-                                        <span className="sr-only">{t("button.remove_category")}</span>
+                                        <span className="sr-only">{t("button.remove")}</span>
                                       </button>
                                     </div>
                                   ))}
@@ -377,14 +405,14 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
                               )}
                             </div>
                           </div>
-                          
+
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                   </div>
                 </div>
-                
+
                 {/* Description field */}
                 <FormField
                   control={form.control}
@@ -396,10 +424,10 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
                         {t("field.description")}
                       </FormLabel>
                       <FormControl>
-                        <Textarea 
+                        <Textarea
                           placeholder={t("placeholder.description")}
                           className="h-[120px] min-h-0 resize-none text-sm"
-                          {...field} 
+                          {...field}
                         />
                       </FormControl>
                       <FormMessage />
@@ -410,14 +438,14 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
             </Form>
           </div>
         )}
-        
+
         {/* Preview tab content - Horizontal display */}
         {activeTab === "preview" && (
-          <div className="p-3 md:p-5">
+          <div className="p-3 md:p-5 animate-fadeIn">
             <div className="max-w-3xl mx-auto">
-              {/* Horizontal preview card */}
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-800 shadow-md md:flex">
-                {/* Image with status badge - Left side */}
+              {/* Preview card */}
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-800 shadow-md md:flex transition-all duration-300 hover:shadow-lg transform hover:scale-[1.01]">
+                {/* Image with status badge */}
                 <div className="md:w-1/2 relative aspect-square md:aspect-auto md:min-h-[300px] bg-gray-100 dark:bg-gray-800">
                   <Image
                     src={artwork.url || "/placeholder.svg"}
@@ -426,13 +454,13 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
                     className="object-contain"
                   />
                   <div className="absolute top-3 right-3 px-2 py-1 rounded-md text-xs font-medium bg-black/50 backdrop-blur-sm text-white">
-                    {artwork.dimensions ? `${artwork.dimensions.width} × ${artwork.dimensions.height}` : t("dimensions_unknown")}
+                    {artwork.dimensions ? `${artwork.dimensions.width} × ${artwork.dimensions.height}` : t("no_dimensions")}
                   </div>
-                  <div className={`absolute top-3 left-3 px-2 py-1 rounded-md text-xs font-medium ${getStatusColor(status)} text-white`}>
-                    {getStatusLabel(status)}
+                  <div className="absolute top-3 left-3 px-2 py-1 rounded-md text-xs font-medium bg-teal-500 text-white">
+                    {t(`status.${status}`)}
                   </div>
                 </div>
-                
+
                 {/* Content - Right side */}
                 <div className="md:w-1/2 p-4 md:p-6 flex flex-col h-full">
                   {/* Title and price */}
@@ -444,20 +472,20 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
                       {vietnamCurrency(form.getValues('price'))}
                     </p>
                   </div>
-                  
+
                   {/* Categories */}
                   <div className="flex flex-wrap gap-1.5 mb-4">
                     {categories.map((category, index) => (
-                      <Badge 
-                        key={index} 
-                        variant="outline" 
+                      <Badge
+                        key={index}
+                        variant="outline"
                         className="bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 border-teal-200 dark:border-teal-800"
                       >
                         {category}
                       </Badge>
                     ))}
                   </div>
-                  
+
                   {/* Description */}
                   <div className="pt-3 border-t border-gray-200 dark:border-gray-700 flex-grow">
                     <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t("artwork_description")}</h4>
@@ -465,7 +493,7 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
                       {form.getValues('description') || t("no_description")}
                     </p>
                   </div>
-                  
+
                   {/* Preview note */}
                   <div className="mt-auto pt-4 text-xs text-gray-500 dark:text-gray-400 flex items-center">
                     <Info className="h-3.5 w-3.5 mr-1.5 text-teal-500 dark:text-teal-400" />

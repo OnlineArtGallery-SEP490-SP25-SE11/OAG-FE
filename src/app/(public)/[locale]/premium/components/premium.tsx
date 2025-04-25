@@ -27,20 +27,29 @@ export default function SubscriptionOptions() {
     enabled: !!session?.user.accessToken
   });
 
-  // Kiểm tra xem người dùng đã là Premium chưa
-  const { data: premiumStatus } = useQuery({
-    queryKey: ['isPremium'],
+  // Kiểm tra trạng thái Premium của người dùng (active/cancelled/none)
+  const { data: premiumData } = useQuery({
+    queryKey: ['premiumStatus'],
     queryFn: () => checkPremium(session?.user.accessToken as string),
     enabled: !!session?.user.accessToken
   });
 
+  console.log('Premium Data:', premiumData);
+
   const userBalance = balanceData?.data?.balance || 0;
-  const isPremium = premiumStatus?.data?.isPremium || false;
+  const premiumStatus = premiumData?.data?.premiumStatus;
+
+  // Thêm log để debug
+  console.log('Premium Status:', {
+    status: premiumStatus,
+    endDate: premiumData?.data?.endDate,
+    currentDate: new Date()
+  });
 
   // Mutation để mua gói Premium
   const purchaseMutation = useMutation({
     mutationFn: () => buyPremium(session?.user.accessToken as string),
-    onSuccess: () => {
+    onSuccess: async () => {
       setShowBuyConfirm(false);
       setShowSuccess(true);
 
@@ -51,13 +60,27 @@ export default function SubscriptionOptions() {
       });
 
       // Cập nhật lại thông tin số dư và trạng thái Premium
-      queryClient.invalidateQueries({ queryKey: ['userBalance'] });
-      queryClient.invalidateQueries({ queryKey: ['isPremium'] });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['userBalance'] }),
+        queryClient.invalidateQueries({ queryKey: ['premiumStatus'] })
+      ]);
 
-      // Tự động reload lại trang sau 1 giây
-      setTimeout(() => {
+      // Đợi một chút để đảm bảo dữ liệu đã được cập nhật
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Kiểm tra lại trạng thái Premium sau khi cập nhật
+      const newPremiumStatus = await checkPremium(session?.user.accessToken as string);
+      console.log('New Premium Status:', newPremiumStatus);
+
+      if (newPremiumStatus?.data?.premiumStatus === 'active') {
+        // Nếu trạng thái đã là active thì reload trang
         window.location.reload();
-      }, 1500);
+      } else {
+        // Nếu chưa active thì đợi thêm và thử lại
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      }
     },
     onError: (error: Error) => {
       setError(error.message);
@@ -72,17 +95,21 @@ export default function SubscriptionOptions() {
   // Mutation để hủy gói Premium
   const cancelMutation = useMutation({
     mutationFn: () => cancelPremium(session?.user.accessToken as string),
-    onSuccess: () => {
+    onSuccess: async () => {
       setShowCancelConfirm(false);
       toast({
         variant: 'success',
         title: t('common.success'),
         description: t('premium.subscription.confirm_cancel_button')
       });
-      queryClient.invalidateQueries({ queryKey: ['isPremium'] });
-      setTimeout(() => {
-        router.push('/premium');
-      }, 1500);
+
+      // Cập nhật lại trạng thái Premium
+      await queryClient.invalidateQueries({ queryKey: ['premiumStatus'] });
+
+      // Đợi một chút để đảm bảo dữ liệu đã được cập nhật
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      router.push('/premium');
     },
     onError: (error: Error) => {
       setError(error.message);
@@ -105,8 +132,7 @@ export default function SubscriptionOptions() {
       return;
     }
 
-    if (isPremium) {
-      // Hiển thị dialog xác nhận hủy Premium thay vì thông báo
+    if (premiumStatus === 'active') {
       setShowCancelConfirm(true);
       return;
     }
@@ -166,7 +192,7 @@ export default function SubscriptionOptions() {
                 <span className="text-sm text-gray-500 font-normal">{t('premium.subscription.plan.period')}</span>
               </div>
 
-              {userBalance !== null && !isPremium && (
+              {userBalance !== null && premiumStatus !== 'active' && (
                 <div className="mb-4 text-sm">
                   {userBalance < 45000 && (
                     <p className="text-red-500 text-xs mt-1">{t('wallet.insufficient_balance')}</p>
@@ -184,15 +210,19 @@ export default function SubscriptionOptions() {
 
               <button
                 onClick={handleSubscribe}
-                disabled={purchaseMutation.isPending || cancelMutation.isPending || (!isPremium && userBalance !== null && userBalance < 45000)}
+                disabled={
+                  purchaseMutation.isPending ||
+                  cancelMutation.isPending ||
+                  (premiumStatus !== 'active' && userBalance !== null && userBalance < 45000)
+                }
                 className={`w-full py-4 px-6 rounded-xl font-semibold transform hover:-translate-y-1 transition-all duration-300 shadow-lg 
-                ${isPremium
+                ${premiumStatus === 'active'
                     ? 'bg-red-500 hover:bg-red-600 text-white hover:shadow-red-200'
                     : 'bg-gradient-to-r from-violet-500 to-purple-600 text-white hover:from-violet-600 hover:to-purple-700 hover:shadow-purple-200'
                   }
                 disabled:opacity-70 disabled:cursor-not-allowed`}
               >
-                {isPremium
+                {premiumStatus === 'active'
                   ? (cancelMutation.isPending ? t('common.processing') : t('premium.subscription.cancel_subscription'))
                   : (purchaseMutation.isPending ? t('common.processing') : t('premium.subscription.plan.cta'))
                 }
@@ -254,7 +284,12 @@ export default function SubscriptionOptions() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex gap-2">
-            <AlertDialogCancel className="bg-gray-100 hover:bg-gray-200 text-gray-800 border-0">{t('common.cancel')}</AlertDialogCancel>
+            <AlertDialogCancel
+              className="bg-gray-100 hover:bg-gray-200 text-gray-800 border-0"
+              onClick={() => setShowBuyConfirm(false)}
+            >
+              {t('common.cancel')}
+            </AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmBuy}
               className="bg-violet-600 hover:bg-violet-700 text-white"
@@ -293,7 +328,12 @@ export default function SubscriptionOptions() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex gap-2">
-            <AlertDialogCancel className="bg-gray-100 hover:bg-gray-200 text-gray-800 border-0">{t('common.cancel')}</AlertDialogCancel>
+            <AlertDialogCancel
+              className="bg-gray-100 hover:bg-gray-200 text-gray-800 border-0"
+              onClick={() => setShowCancelConfirm(false)}
+            >
+              {t('common.cancel')}
+            </AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmCancel}
               className="bg-red-500 hover:bg-red-600 text-white"

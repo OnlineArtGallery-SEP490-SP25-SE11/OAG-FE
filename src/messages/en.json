@@ -67,6 +67,7 @@
     "become_artist": "Become an Artist"
   },
   "header": {
+    "become_artist": "Become an Artist",
     "home": "Home",
     "about": "About",
     "contact": "Contact",
@@ -104,7 +105,8 @@
     "image_size_limit": "Image must be under {size}MB",
     "invalid_file_type": "Invalid file type. Allowed formats: {allowed}",
     "invalid_format": "{field} has invalid format: {requirements}",
-    "alphanumeric_only": "only letters, numbers, and spaces are allowed"
+    "alphanumeric_only": "only letters, numbers, and spaces are allowed",
+    "painting_cannot_sell": "Traditional paintings cannot be sold online"
   },
   "signup": {
     "otpSent": "OTP sent",
@@ -246,6 +248,7 @@
     }
   },
   "artwork": {
+    "view_artist_profile": "View Artist Profile",
     "title": "Upload Artwork",
     "subtitle": "Enter details about your artwork piece",
     "field": {
@@ -256,7 +259,8 @@
       "height": "Height (px)",
       "price": "Price",
       "status": "Status",
-      "image": "Image"
+      "image": "Image",
+      "artType": "Art Type"
     },
     "placeholder": {
       "title": "Enter artwork title",
@@ -269,9 +273,13 @@
       "add_category": "Add category"
     },
     "helper": {
+      "artType": "Choose your artwork type",
+      "status": "Choose display and selling status",
+      "painting_status": "Traditional paintings can only be displayed or hidden",
+      "price": "Enter selling price (only applies to digital art)",
       "description": "Description should include style, theme and meaning of the artwork",
       "categories": "Select all categories that apply to this artwork",
-      "image": "Image should be high resolution and clearly display the artwork",
+      "image": "Image should be high resolution and clearly show the artwork",
       "suggestedCategories": "Suggested categories"
     },
     "status": {
@@ -295,7 +303,8 @@
       "upload": "Upload Artwork",
       "uploading": "Uploading...",
       "add": "Add",
-      "remove": "Remove"
+      "remove": "Remove",
+      "saving": "Saving..."
     },
     "toast": {
       "successTitle": "Upload Successful!",
@@ -310,7 +319,8 @@
       "widthRequired": "Width is required",
       "heightRequired": "Height is required",
       "priceRequired": "Price is required",
-      "statusRequired": "Status is required"
+      "statusRequired": "Status is required",
+      "painting_cannot_sell": "Traditional paintings cannot be sold online"
     },
     "purchase_confirmation": "Confirm Purchase",
     "artist": "Artist",
@@ -328,24 +338,38 @@
     },
     "artwork_description": "Artwork Description",
     "preview_note": "Preview Note",
+    "zoom_in": "Zoom in",
+    "zoom_out": "Zoom out",
+    "swipe_to_change_tabs": "Swipe to change tabs",
+    "comments": "Comments",
+    "info": "Information",
+    "view_profile": "View profile",
+    "add_to_collection": "Add to collection",
+    "buy_now": "Buy now",
+    "your_work": "Your artwork",
+    "no_comments": "No comments yet",
+    "add_comment": "Add a comment",
+    "no_artwork_info": "No artwork information available",
+    "price": "Price",
+    "downloading": "Downloading...",
+    "loading": "Loading...",
+
     "toggle_details": "Toggle details",
     "drag_to_pan": "Drag to pan",
     "remove_from_favorites": "Remove from favorites",
     "add_to_favorites": "Add to favorites",
     "comments_standard_view": "Switch to standard view for comments",
-    "zoom_in": "Zoom in",
-    "zoom_out": "Zoom out",
+    
     "reset_zoom": "Reset zoom",
     "loading_image": "Loading image...",
     "download_not_available": "Download not available",
     "please_use_standard_view": "Please use standard view for this action",
     "purchase_not_available": "Purchase not available",
     "collection_not_available": "Collection not available",
-    "swipe_to_change_tabs": "Swipe to change tabs",
+ 
     "no_description": "No description provided",
-    "no_comments": "No comments yet",
-    "info": "Info",
-    "comments": "Comments",
+   
+ 
     "report_artwork": "Report artwork",
     "yours": "Yours",
     "purchased": "Purchased",
@@ -354,18 +378,22 @@
     "download": "Download",
     "description": "Description",
     "be_first_comment": "Be the first to comment",
-    "add_comment": "Add a comment",
+   
     "user": "User",
     "days_ago": "{days} days ago",
     "comment_example": "Great artwork! I love the composition and colors.",
-    "downloading": "Downloading...",
+
     "download_success": "Downloaded successfully",
     "download_error": "Download error",
-    "no_artwork_info": "No artwork information available",
+    
     "standard_view": "Standard view",
     "immersive_view": "Immersive view",
     "close_details": "Close details",
-    "categories": "Categories"
+    "categories": "Categories",
+    "artType": {
+      "digitalart": "Digital Art",
+      "painting": "Traditional Painting"
+    }
   },
   "artwork_management": {
     "title": "Artwork Management",
@@ -409,31 +437,37 @@
     }
   },
   "profile": {
-    "common": {
-      "joined": "Joined {date}",
+     "common": {
+      "artist_badge": "Artist",
       "artworks": "Artworks",
       "followers": "Followers",
       "following": "Following",
-      "artist_badge": "Artist",
-      "premium_badge": "Premium",
-      "become_artist": "Become Artist",
-      "email": "Email"
+      "email": "Email",
+      "joined": "Joined {date}",
+      "premium_badge":"premium"
     },
     "view": {
+      "view_detail": "View Detail",
       "edit_profile": "Edit Profile",
-      "favorites": "Favorites",
       "collections": "Collections",
-      "professional_artist": "Professional Artist",
-      "view_profile": "View Profile",
-      "collection_title": "Collection {number}",
       "about": "About",
+      "followers_title": "Followers",
+      "following_title": "Following",
+      "artist_info": "Artist Information", 
       "biography": "Biography",
       "contact_info": "Contact Information",
-      "joined_date": "Joined Date",
-      "no_address": "No address provided",
-      "default_bio": "is a talented artist with a passion for art. Add your biography in the edit profile section.",
+      "joined_date": "Join Date",
+      "follow": "Follow",
+      "following": "Following",
+      "view_profile": "View Profile",
       "no_followers": "No followers yet",
-      "no_following": "You are not following anyone yet"
+      "no_following": "Not following anyone",
+      "no_artist_info": "No artist information available",
+      "experience": "Experience",
+      "social_links": "Social Links",
+      "artworks_section": "Artworks",
+      "view_all_artworks": "View all {count} artworks",
+      "no_artworks": "No artworks yet"
     },
     "edit": {
       "title": "Edit Profile",
@@ -528,6 +562,14 @@
     }
   },
   "exhibitions": {
+    "free" : "Free",
+    "premium" : "Premium",
+    "instruction": "Instruction",
+    "controls": "Controls",
+    "look": "Mouse - Look around",
+    "menu": "Show this menu / Exit controls",
+    "resume": "Resume",
+    "exit": "Exit",
     "no_templates_available": "No templates available",
     "insufficient_balance": "Insufficient balance to purchase ticket",
     "remove_artwork_confirmation" : "Remove artwork confirmation",
@@ -760,7 +802,7 @@
     "loading_more": "Loading more artworks..."
   },
   "report": {
-    "button": "Report",
+    
     "buttonAriaLabel": "Click to report",
     "closeAriaLabel": "Close dialog",
     "cancelAriaLabel": "Cancel report",

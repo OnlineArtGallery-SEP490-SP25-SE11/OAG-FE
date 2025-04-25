@@ -72,7 +72,8 @@ const mockArtPieces: Artwork[] = Array.from({ length: 1000 }, (_, i) => {
 		status: 'available',
 		views: 0,
 		createdAt: new Date().toISOString(),
-		updatedAt: new Date().toISOString()
+		updatedAt: new Date().toISOString(),
+		artType: 'painting'
 	};
 });
 
@@ -211,6 +212,17 @@ export async function fetchArtworkById(id: string): Promise<BaseResponse<Artwork
 		const response = await axios.get(`/artwork/${id}`);
 		return response.data;
 	} catch {
+		throw new Error('Error fetching artwork');
+	}
+}
+
+export async function incrementView(artworkId: string): Promise<BaseResponse<Artwork>> {
+	try {
+		const axios = await createAxiosInstance({useToken: false});
+		if (!axios) throw new Error('Failed to create Axios instance');
+		const response = await axios.post(`/artwork/${artworkId}/view`);
+		return response.data;
+	} catch  {
 		throw new Error('Error fetching artwork');
 	}
 }
