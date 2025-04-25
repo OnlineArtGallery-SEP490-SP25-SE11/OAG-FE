@@ -88,6 +88,7 @@ const ProfileContent = ({ initialData }: ProfileContentProps) => {
         const status = await checkPremium(session.user.accessToken);
         setPremiumStatus(status.isPremium);
 
+        
         if (status.status === 'cancelled') {
           toast({
             title: "Thông báo",

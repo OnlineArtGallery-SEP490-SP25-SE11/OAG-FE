@@ -39,6 +39,7 @@ export const InstructionOverlay: React.FC<InstructionOverlayProps> = ({
                 </ul>
                 <div className="flex gap-4 justify-center">
                     <Button
+                    
                         onClick={onResume}
                         className="flex items-center gap-2"
                         variant="default"
