@@ -28,6 +28,9 @@ import {
 } from "@/service/user";
 import { createAxiosInstance } from "@/lib/axios";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { checkPremium } from "@/utils/premium";
+import { useSession } from "next-auth/react";
+import { useToast } from "@/hooks/use-toast";
 
 // Định nghĩa kiểu dữ liệu cho người dùng
 interface UserType {
@@ -68,11 +71,43 @@ const ProfileContent = ({ initialData }: ProfileContentProps) => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const t = useTranslations("profile");
+  const { data: session } = useSession();
+  const { toast } = useToast();
 
   const [activeTab, setActiveTab] = useState("about");
 
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
+  const [premiumStatus, setPremiumStatus] = useState(initialData.isPremium);
+
+  useEffect(() => {
+    const checkPremiumStatus = async () => {
+      if (!session?.user?.accessToken) return;
+
+      try {
+        const status = await checkPremium(session.user.accessToken);
+        setPremiumStatus(status.isPremium);
+
+        if (status.status === 'cancelled') {
+          toast({
+            title: "Thông báo",
+            description: `Gói Premium của bạn đã được hủy và sẽ hết hạn vào ${new Date(status.endDate || '').toLocaleDateString('vi-VN')}`,
+            variant: "warning",
+          });
+        } else if (status.status === 'expired') {
+          toast({
+            title: "Thông báo",
+            description: "Gói Premium của bạn đã hết hạn",
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.error("Lỗi khi kiểm tra trạng thái Premium:", error);
+      }
+    };
+
+    checkPremiumStatus();
+  }, [session?.user?.accessToken, toast]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -191,7 +226,7 @@ const ProfileContent = ({ initialData }: ProfileContentProps) => {
                     {t("common.artist_badge")}
                   </Badge>
                 )}
-                {initialData.isPremium && (
+                {premiumStatus && (
                   <Badge className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white border-none">
                     {t("common.premium_badge")}
                   </Badge>
