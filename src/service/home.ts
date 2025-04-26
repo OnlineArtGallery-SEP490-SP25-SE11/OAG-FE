@@ -7,7 +7,6 @@ import { Artwork } from "@/types/marketplace";
 import { Blog } from "@/types/blog";
 import { Artist } from "@/app/(public)/[locale]/home/@spotlight/components/artist-spotlight";
 import { fetchArtPiecesByRange } from "@/app/(public)/[locale]/artworks/api";
-import { getCurrentUser } from "@/lib/session";
 import { TrendingArtist } from "@/app/(public)/[locale]/home/@trending/page";
 
 interface User {
@@ -28,7 +27,7 @@ export async function getTrendingExhibitions(): Promise<ApiResponse<GetPublicExh
 export async function getNewExhibitions(): Promise<ApiResponse<GetPublicExhibitionsResponse>> {
     const response = await getPublicExhibitions({
         sort: { createdAt: -1 },
-        limit: 5
+        limit: 10
     });
     return response;
 }
@@ -36,7 +35,7 @@ export async function getNewExhibitions(): Promise<ApiResponse<GetPublicExhibiti
 export async function getFeaturedExhibitions(): Promise<ApiResponse<GetPublicExhibitionsResponse>> {
     const response = await getPublicExhibitions({
         filter: { isFeatured: true },
-        limit: 5
+        limit: 10
     });
     return response;
 }
@@ -57,7 +56,7 @@ export async function getFeaturedArtist(): Promise<ApiResponse<{
 
 export async function getNewRecommendedArtworks() {
     try {
-        const res = await fetchArtPiecesByRange(0, 10, {
+        const res = await fetchArtPiecesByRange(0, 9, {
             status: ['published', 'selling'],
             sortBy: 'createdAt',
             sortOrder: 'desc'

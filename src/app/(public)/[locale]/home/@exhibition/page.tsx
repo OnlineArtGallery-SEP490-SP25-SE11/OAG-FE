@@ -20,11 +20,11 @@ export default async function ExhibitionsPage() {
   return (
     <div className="w-full bg-white py-24">
       <ExhibitionSection
-        title="Trending art exhibitions"
+        title="title_trending"
         exhibitions={trending}
       />
       <ExhibitionSection 
-        title="New art exhibitions"
+        title="title_new"
         exhibitions={newExhibitions}
       />
     </div>

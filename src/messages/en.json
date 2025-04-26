@@ -91,6 +91,38 @@
     "signupTitle": "Create new account",
     "googleLogin": "Login with Google"
   },
+  "home": {
+    "trending": {
+      "title": "Trending Artists",
+      "view_all": "View All",
+      "followers": "{count} followers"
+    },
+    "exhibition": {
+      "title_trending": "Trending Exhibitions",
+      "title_new": "New Exhibitions",
+      "view_all": "View All",
+      "free": "Free",
+      "paid": "Paid"
+    },
+    "recommendations": {
+      "title": "Recommended for You",
+      "following": "From Artists You Follow",
+      "view_all": "View All",
+      "sign_in": "Sign in to see personalized recommendations"
+    },
+    "spotlight": {
+      "title": "Artist Spotlight",
+      "view_all": "View All Artists",
+      "view_profile": "View Profile"
+    },
+    "articles": {
+      "title": "Latest Articles",
+      "view_all": "View All Articles",
+      "read_more": "Read More",
+      "most_popular" : "Most popular",
+      "min_read": "min read"
+    }
+  },
   "validation": {
     "name": "Name",
     "phone": "Phone Number",
@@ -353,23 +385,18 @@
     "price": "Price",
     "downloading": "Downloading...",
     "loading": "Loading...",
-
     "toggle_details": "Toggle details",
     "drag_to_pan": "Drag to pan",
     "remove_from_favorites": "Remove from favorites",
     "add_to_favorites": "Add to favorites",
     "comments_standard_view": "Switch to standard view for comments",
-    
     "reset_zoom": "Reset zoom",
     "loading_image": "Loading image...",
     "download_not_available": "Download not available",
     "please_use_standard_view": "Please use standard view for this action",
     "purchase_not_available": "Purchase not available",
     "collection_not_available": "Collection not available",
- 
     "no_description": "No description provided",
-   
- 
     "report_artwork": "Report artwork",
     "yours": "Yours",
     "purchased": "Purchased",
@@ -378,14 +405,11 @@
     "download": "Download",
     "description": "Description",
     "be_first_comment": "Be the first to comment",
-   
     "user": "User",
     "days_ago": "{days} days ago",
     "comment_example": "Great artwork! I love the composition and colors.",
-
     "download_success": "Downloaded successfully",
     "download_error": "Download error",
-    
     "standard_view": "Standard view",
     "immersive_view": "Immersive view",
     "close_details": "Close details",
@@ -437,14 +461,14 @@
     }
   },
   "profile": {
-     "common": {
+    "common": {
       "artist_badge": "Artist",
       "artworks": "Artworks",
       "followers": "Followers",
       "following": "Following",
       "email": "Email",
       "joined": "Joined {date}",
-      "premium_badge":"premium"
+      "premium_badge": "premium"
     },
     "view": {
       "view_detail": "View Detail",
@@ -453,7 +477,7 @@
       "about": "About",
       "followers_title": "Followers",
       "following_title": "Following",
-      "artist_info": "Artist Information", 
+      "artist_info": "Artist Information",
       "biography": "Biography",
       "contact_info": "Contact Information",
       "joined_date": "Join Date",
@@ -562,8 +586,8 @@
     }
   },
   "exhibitions": {
-    "free" : "Free",
-    "premium" : "Premium",
+    "free": "Free",
+    "premium": "Premium",
     "instruction": "Instruction",
     "controls": "Controls",
     "look": "Mouse - Look around",
@@ -572,8 +596,8 @@
     "exit": "Exit",
     "no_templates_available": "No templates available",
     "insufficient_balance": "Insufficient balance to purchase ticket",
-    "remove_artwork_confirmation" : "Remove artwork confirmation",
-    "remove_artwork_description" : "Are you sure you want to remove this artwork from this position?",
+    "remove_artwork_confirmation": "Remove artwork confirmation",
+    "remove_artwork_description": "Are you sure you want to remove this artwork from this position?",
     "remove_artwork": "Remove Artwork",
     "replace_artwork": "Replace Artwork",
     "replace_artwork_at_position": "Replace artwork at position",
@@ -743,7 +767,6 @@
       "recent": "Recently Purchased",
       "downloaded": "Downloaded",
       "not_downloaded": "Not Downloaded"
-
     },
     "empty": {
       "title": "No artworks in warehouse",
@@ -802,7 +825,6 @@
     "loading_more": "Loading more artworks..."
   },
   "report": {
-    
     "buttonAriaLabel": "Click to report",
     "closeAriaLabel": "Close dialog",
     "cancelAriaLabel": "Cancel report",

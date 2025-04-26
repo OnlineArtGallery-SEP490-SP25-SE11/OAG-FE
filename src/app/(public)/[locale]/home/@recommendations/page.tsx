@@ -4,10 +4,7 @@ import { getCurrentUser } from '@/lib/session';
 
 export default async function RecommendationsPage() {
     const user = await getCurrentUser();
-    if (!user) {
-        throw new Error('User not authenticated');
-    }
-    // Only fetch following artworks if user is signed in
+
     const [recommended, following] = await Promise.all([
         getNewRecommendedArtworks(),
         user ? getFollowingArtworks(user.accessToken) : Promise.resolve({ data: { artworks: [] } })
@@ -17,7 +14,7 @@ export default async function RecommendationsPage() {
     const followingArtworks = following.data?.artworks || [];
 
     return (
-        <section className="py-24 bg-gray-50">
+        <section className="py-14 bg-gray-50">
             <RecommendationSection
                 recommendedArtworks={recommendedArtworks}
                 followingArtworks={followingArtworks}

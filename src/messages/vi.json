@@ -72,6 +72,38 @@
     "signupTitle": "Tạo tài khoản mới",
     "googleLogin": "Đăng nhập với Google"
   },
+  "home" : {
+    "trending": {
+      "title": "Nghệ sĩ Thịnh hành",
+      "view_all": "Xem tất cả",
+      "followers": "{count} người theo dõi"
+    },
+      "exhibition": {
+      "title_trending": "Triển lãm Nổi bật",
+      "title_new":"Triển lãm mới",
+      "view_all": "Xem tất cả",
+      "free": "Miễn phí",
+      "paid": "Có phí"
+    },
+    "recommendations": {
+      "title": "Gợi ý cho Bạn",
+      "following": "Từ Nghệ sĩ Bạn Theo dõi",
+      "view_all": "Xem tất cả",
+      "sign_in": "Đăng nhập để xem gợi ý cá nhân"
+    },
+    "spotlight": {
+      "title": "Nghệ sĩ Tiêu điểm",
+      "view_all": "Xem tất cả Nghệ sĩ",
+      "view_profile": "Xem Hồ sơ"
+    },
+    "articles": {
+      "title": "Bài viết Mới nhất",
+      "view_all": "Xem tất cả Bài viết",
+      "read_more": "Đọc thêm",
+      "most_popular": "Phổ biến nhất",
+      "min_read": "phút đọc"
+    }
+  },
   "validation": {
     "name": "Tên",
     "phone": "Số điện thoại",
