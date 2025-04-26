@@ -105,21 +105,24 @@
       "paid": "Paid"
     },
     "recommendations": {
-      "title": "Recommended for You",
-      "following": "From Artists You Follow",
+      "for_you": "New Works for You",
+      "following": "New Works by Artists You Follow",
       "view_all": "View All",
-      "sign_in": "Sign in to see personalized recommendations"
+      "no_artworks_default": "No artworks to display.",
+      "no_artworks_following": "No new works from artists you follow yet.",
+      "no_image_placeholder": "No Image",
+      "untitled_artwork": "Untitled"
     },
     "spotlight": {
       "title": "Artist Spotlight",
-      "view_all": "View All Artists",
+      "view_all": "View All",
       "view_profile": "View Profile"
     },
     "articles": {
       "title": "Latest Articles",
-      "view_all": "View All Articles",
+      "view_all": "View All",
       "read_more": "Read More",
-      "most_popular" : "Most popular",
+      "most_popular": "Most popular",
       "min_read": "min read"
     }
   },

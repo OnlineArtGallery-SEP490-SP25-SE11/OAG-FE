@@ -1,13 +1,11 @@
 // --- Ensure this file is a Client Component ---
-'use client'; // Required for hooks used by Carousel (useState, useRef, useEffect)
+'use client'; // Required for hooks
 
-import React from 'react'; // Import React for useRef (implicitly used by Carousel)
+import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import Image from 'next/image';
-import { Artwork } from '@/types/marketplace'; // Assuming Artwork type definition exists
-
-// --- Import ShadCN Carousel Components ---
+import { Artwork } from '@/types/marketplace';
 import {
     Carousel,
     CarouselContent,
@@ -16,17 +14,13 @@ import {
     CarouselPrevious,
 } from "@/components/ui/carousel";
 import Link from 'next/link';
-import { vietnamCurrency } from '@/utils/converters';
+import { vietnamCurrency } from '@/utils/converters'; // Assuming this handles formatting
 
-// Define a basic Artwork type if not already defined elsewhere
-// interface Artwork {
-//     _id: string;
-//     title: string;
-//     url: string;
-//     artistId?: { name: string }; // Optional artist details
-//     price: number;
-//     dimensions?: { width: number; height: number }; // Optional dimensions
-// }
+// --- Import useTranslations ---
+import { useTranslations, TranslationValues } from 'next-intl';
+
+// --- Define Translator Type ---
+type Translator = (key: string, values?: TranslationValues) => string;
 
 interface RecommendationSectionProps {
     recommendedArtworks: Artwork[];
@@ -34,39 +28,56 @@ interface RecommendationSectionProps {
     isAuthenticated: boolean;
 }
 
-
 export function RecommendationSection({
     recommendedArtworks,
     followingArtworks,
     isAuthenticated
 }: RecommendationSectionProps) {
-    // No changes needed here, it correctly passes props down
+    // --- Use the translation hook ---
+    const t = useTranslations('home.recommendations');
+
     return (
         <div className="w-full mx-auto px-4">
             <Tabs defaultValue="forYou" className="space-y-8">
                 <div className="flex items-center justify-between">
                     <TabsList className="bg-transparent border">
                         <TabsTrigger value="forYou" className="data-[state=active]:bg-white">
-                            New Works for You
+                            {t('for_you')} {/* Use translation key */}
                         </TabsTrigger>
                         {isAuthenticated && (
                             <TabsTrigger value="following" className="data-[state=active]:bg-white">
-                                New Works by Artists You Follow
+                                {t('following')} {/* Use translation key */}
                             </TabsTrigger>
                         )}
                     </TabsList>
-                    <Button variant="ghost" className="text-blue-600 hover:text-blue-700">
-                        View All
+                    {/* Optional: Make the 'View All' button a Link */}
+                    <Button variant="ghost" asChild>
+                        <Link
+                            href="/artworks"
+                            className="text-blue-600 hover:text-blue-700 font-medium"
+                        >
+                            {t('view_all')}
+                        </Link>
                     </Button>
                 </div>
 
                 <TabsContent value="forYou" className="mt-0">
-                    <ArtworkGrid artworks={recommendedArtworks} />
+                    {/* Pass translator and empty message key */}
+                    <ArtworkGrid
+                        artworks={recommendedArtworks}
+                        t={t}
+                        emptyMessageKey="no_artworks_default"
+                    />
                 </TabsContent>
 
                 {isAuthenticated && (
                     <TabsContent value="following" className="mt-0">
-                        <ArtworkGrid artworks={followingArtworks} emptyMessage="No new works from artists you follow yet." />
+                        {/* Pass translator and specific empty message key */}
+                        <ArtworkGrid
+                            artworks={followingArtworks}
+                            t={t}
+                            emptyMessageKey="no_artworks_following"
+                        />
                     </TabsContent>
                 )}
             </Tabs>
@@ -74,18 +85,20 @@ export function RecommendationSection({
     );
 }
 
-// --- ArtworkGrid Refactored with ShadCN Carousel ---
+// --- Update ArtworkGridProps ---
 interface ArtworkGridProps {
     artworks: Artwork[];
-    emptyMessage?: string; // Optional custom message for empty state
+    emptyMessageKey: string; // Pass the key instead of the string
+    t: Translator; // Pass the translator function
 }
 
-function ArtworkGrid({ artworks, emptyMessage = "No artworks to display." }: ArtworkGridProps) {
-    // Handle Empty State - remains the same
+// --- Update ArtworkGrid to use passed props ---
+function ArtworkGrid({ artworks, t, emptyMessageKey }: ArtworkGridProps) {
+    // Handle Empty State using the translated key
     if (!artworks || artworks.length === 0) {
         return (
             <div className="flex items-center justify-center py-12 text-center">
-                <p className="text-gray-500">{emptyMessage}</p>
+                <p className="text-gray-500">{t(emptyMessageKey)}</p> {/* Translate the key */}
             </div>
         );
     }
@@ -123,74 +136,84 @@ function ArtworkGrid({ artworks, emptyMessage = "No artworks to display." }: Art
     };
 
     return (
-        // Use ShadCN Carousel components
-        // Adjust max-w-* as needed for your layout. Carousel needs a constrained width.
         <Carousel
             opts={{
-                align: "start", // Align items to the start of the container
-                loop: false,      // Don't loop back to the beginning
-                // containScroll: "trimSnaps" // Optional: prevent scrolling past the first/last item fully
+                align: "start",
+                loop: false,
             }}
-            className="w-full relative" // Added relative positioning context if needed, though buttons are siblings now
+            className="w-full relative"
         >
-            <CarouselContent className="-ml-6"> {/* Negative margin to offset padding on items */}
+            <CarouselContent className="-ml-6">
                 {artworks.map((artwork, index) => {
                     const originalWidth = artwork.dimensions?.width || 280;
                     const originalHeight = artwork.dimensions?.height || 180;
                     const size = calculateSize(originalWidth, originalHeight);
+                    const artworkTitle = artwork.title || t('untitled_artwork'); // Use translated fallback
 
                     return (
-                        // Each artwork is now a CarouselItem
                         <CarouselItem
                             key={artwork._id}
                             className="pl-6 basis-auto"
-                            style={{
-                                flexGrow: 0,
-                                flexShrink: 0,
-                            }}
+                            style={{ flexGrow: 0, flexShrink: 0 }}
                         >
                             <Link
-                                href={`/artworks/${artwork._id}`}
+                                href={`/artworks/${artwork._id}`} // Updated link structure example
                                 className="block group"
+                            // Remove target="_blank" unless explicitly needed, often bad UX
+                            // rel="noopener noreferrer" // Only needed with target="_blank"
                             >
                                 <div
                                     className="flex flex-col"
-                                    style={{
-                                        width: `${size.width}px`,
-                                        height: 'fit-content'
-                                    } as React.CSSProperties}
+                                    style={{ width: `${size.width}px`, height: 'fit-content' } as React.CSSProperties}
                                 >
                                     <div
                                         className="relative rounded-lg overflow-hidden bg-gray-200"
                                         style={{ height: `${size.height}px` }}
                                     >
                                         {artwork.url ? (
-                                            <Image
-                                                src={artwork.url}
-                                                alt={artwork.title || 'Artwork'}
-                                                fill
-                                                className="object-cover transition-transform duration-300 group-hover:scale-105"
-                                                sizes={`${size.width}px`}
-                                                priority={index < 3}
-                                            />
+                                            <div className="relative w-full h-full"> {/* Ensure container fills */}
+                                                <Image
+                                                    src={artwork.url}
+                                                    alt={artworkTitle} // Use title with fallback
+                                                    fill // Use fill instead of width/height for responsiveness within container
+                                                    className="object-cover transition-transform duration-300 group-hover:scale-105 pointer-events-none select-none"
+                                                    sizes={`${size.width}px`} // Keep sizes for optimization hint
+                                                    priority={index < 3}
+                                                    onContextMenu={(e) => e.preventDefault()}
+                                                    draggable={false}
+                                                    quality={75}
+                                                />
+                                                {/* Optional: Overlay to prevent context menu/drag */}
+                                                {/* <div
+                                                    className="absolute inset-0"
+                                                    onContextMenu={(e) => e.preventDefault()}
+                                                    style={{ userSelect: 'none' }}
+                                                /> */}
+                                            </div>
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center text-gray-400">
-                                                No Image
+                                                {t('no_image_placeholder')} {/* Translate */}
                                             </div>
                                         )}
                                     </div>
                                     <div className="mt-3 min-h-[4.5rem] flex flex-col justify-between">
                                         <div>
                                             <h3 className="font-medium text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2">
-                                                {artwork.title || 'Untitled'}
+                                                {artworkTitle} {/* Use title with fallback */}
                                             </h3>
+                                            {/* Artist name is dynamic data, usually not translated via keys */}
                                             {artwork.artistId?.name && (
                                                 <p className="text-sm text-gray-500 mt-0.5">{artwork.artistId.name}</p>
                                             )}
                                         </div>
+                                        {/* Price Formatting: Ensure vietnamCurrency handles locale or use next-intl's formatter */}
                                         {typeof artwork.price === 'number' && (
                                             <p className="text-sm font-medium text-gray-900 mt-1">
                                                 {vietnamCurrency(artwork.price)}
+                                                {/* Example using next-intl formatter (if needed):
+                                                const format = useFormatter();
+                                                format.number(artwork.price, { style: 'currency', currency: 'VND' })
+                                                */}
                                             </p>
                                         )}
                                     </div>
@@ -200,13 +223,8 @@ function ArtworkGrid({ artworks, emptyMessage = "No artworks to display." }: Art
                     );
                 })}
             </CarouselContent>
-            {/* Use built-in Carousel navigation buttons */}
-            {/* These are automatically positioned and only show when needed */}
             <CarouselPrevious className="absolute left-0 md:-left-4 top-1/2 -translate-y-1/2 z-10" />
             <CarouselNext className="absolute right-0 md:-right-4 top-1/2 -translate-y-1/2 z-10" />
         </Carousel>
     );
 }
-
-// --- Remove the old NavigationButtons component ---
-// function NavigationButtons() { ... } // This is no longer needed

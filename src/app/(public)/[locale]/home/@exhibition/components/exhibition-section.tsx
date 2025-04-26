@@ -115,6 +115,8 @@ function ExhibitionCard({ exhibition }: ExhibitionCardProps) {
     return (
         // Link remains the container
         <Link
+            target="_blank"
+            rel="noopener noreferrer"
             href={`/exhibitions/${exhibition.linkName}`}
             className="block h-full" // Ensure link fills the CarouselItem height if needed
         >
