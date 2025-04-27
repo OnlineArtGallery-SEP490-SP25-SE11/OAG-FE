@@ -23,7 +23,9 @@ export const artworkFormSchema = (t: (key: string) => string) => {
 		status: z.enum(['available', 'sold', 'hidden', 'selling'], {
 			required_error: t('validation.statusRequired')
 		}),
-		imageUrl: z.string().optional()
+		imageUrl: z.string().optional(),
+		lowResUrl: z.string().optional(),
+		watermarkUrl: z.string().optional(),
 	});
 };
 export const artworkFormUpdateSchema = z.object({

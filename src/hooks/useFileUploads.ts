@@ -18,9 +18,11 @@ export interface FileUpload {
 export interface FileUploadProgress {
 	file: File;
 	progress: number;
+	publicId?: string;
 }
 
-function useFileUpload(options: FileUploadOptions = {}) {
+function useFileUpload(options: FileUploadOptions = {
+},artwork:boolean = false) {
 	const [completedUploads, setCompletedUploads] = useState<FileUpload[]>([]);
 	const [pendingUploads, setPendingUploads] = useState<FileUploadProgress[]>(
 		[]
@@ -53,7 +55,7 @@ function useFileUpload(options: FileUploadOptions = {}) {
 	const onUpload = useMutation<any[], Error, FileUploadProgress[]>({
 		mutationFn: async (pendingUploads: FileUploadProgress[]) => {
 			const uploadPromises = pendingUploads.map(
-				async ({ file }): Promise<FileUpload | null> => {
+				async ({ file }): Promise<FileUpload |FileUpload[]| null> => {
 					//if file in completedUploads, skip
 					if (
 						completedUploads.some(
@@ -108,7 +110,8 @@ function useFileUpload(options: FileUploadOptions = {}) {
 					});
 					if (!axios) throw new Error('Axios instance not created');
 
-					const res = await axios.post('/upload', formData, {
+					if (artwork) {
+						const res = await axios.post('/upload/artwork', formData, {
 						headers: {
 							'Content-Type': 'multipart/form-data'
 						},
@@ -126,26 +129,87 @@ function useFileUpload(options: FileUploadOptions = {}) {
 							);
 						}
 					});
-
+					console.log(res.data);
+					// res.data.file = file;
+					//map file to res.data
+					if (Array.isArray(res.data)) {
+						res.data = res.data.map((item: any) => {
+							item.file = file;
+							return item;
+						});
+					} else {
+						res.data.file = file;
+					}
+					return res.data as FileUpload[];
+					} else {
+						const res = await axios.post('/upload', formData, {
+						headers: {
+							'Content-Type': 'multipart/form-data'
+						},
+						onUploadProgress(progressEvent) {
+							const progress = Math.round(
+								(progressEvent.loaded * 100) /
+									(progressEvent.total || 1)
+							);
+							setPendingUploads((prev) =>
+								prev.map((item) =>
+									item.file === file
+										? { file, progress }
+										: item
+								)
+							);
+						}
+					});
 					console.log(res.data);
 					res.data.file = file;
-					return res.data;
+					return res.data as FileUpload;
+					}
+					
 				}
 			);
 
 			const results = await Promise.all(uploadPromises);
-			setCompletedUploads((prev) => [
-				...prev,
-				...results
-					.filter((res) => res !== null && res !== undefined)
-					.map((res) => ({
-						id: res.id, //TODO: check if id is always available
+			const processedResults = results.filter(
+				(res) => res !== null && res !== undefined
+			).map((res) => {
+				if (Array.isArray(res)) {
+					return res.map((item) => ({
+						id: item.id,
+						url: item.url,
+						publicId: item.publicId,
+						file: item.file,
+						width: item.width,
+						height: item.height
+					}));
+				} else {
+					return {
+						id: res.id,
 						url: res.url,
 						publicId: res.publicId,
 						file: res.file,
 						width: res.width,
 						height: res.height
-					}))
+					};
+				}
+			}
+			);
+			// setCompletedUploads((prev) => [
+			// 	...prev,
+			// 	...results
+			// 		.filter((res) => res !== null && res !== undefined)
+			// 		.map((res) => ({
+			// 			id: res.id, //TODO: check if id is always available
+			// 			url: res.url,
+			// 			publicId: res.publicId,
+			// 			file: res.file,
+			// 			width: res.width,
+			// 			height: res.height
+			// 		}))
+			// ]);
+			console.log('completedUploads', processedResults);
+			setCompletedUploads((prev) => [
+				...prev,
+				...processedResults.flat()
 			]);
 			return results;
 		}
