@@ -64,7 +64,7 @@ export const getUserExhibitions = async (accessToken: string, params?: {
 
         const url = `/exhibition/user-exhibitions${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
         const res = await createApi(accessToken).get(url);
-        console.log('User exhibitions response:', res.data);
+
         return res.data;
 
     } catch (error) {
@@ -212,10 +212,8 @@ export const getPublicExhibitions = async ({
       }
     }
 
-    console.log('Query Params:', queryParams.toString());
     // Change the endpoint to match your example
     const response = await createApi().get(`/exhibition/public?${queryParams}`);
-    console.log('Response:', response.data);
     return response.data;
   } catch (error) {
     throw handleApiError<GetExhibitionsResponse>(
@@ -225,3 +223,20 @@ export const getPublicExhibitions = async ({
   }
 };
 
+
+export const updateExhibitionAnalytics = async (
+  id: string, 
+  totalTime: number
+): Promise<ApiResponse<ExhibitionRequestResponse>> => {
+  try {
+    console.log('Updating exhibition analytics:', { id, totalTime });
+    const res = await createApi().patch(`/exhibition/${id}/analytics`, { totalTime });
+    return res.data;
+  } catch (error) {
+    console.error('Error updating exhibition analytics:', error);
+    throw handleApiError<ExhibitionRequestResponse>(
+      error,
+      'Failed to update exhibition analytics'
+    );
+  }
+}

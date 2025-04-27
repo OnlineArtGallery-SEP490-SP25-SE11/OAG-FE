@@ -4,7 +4,7 @@ import ExhibitionGrid from './components/exhibition-grid';
 import CreateExhibitionButton from './components/create-exhibition-button';
 import LoadingExhibitions from './components/exhibition-loading';
 import { getCurrentUser } from '@/lib/session';
-import {redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import NotArtistDisplay from './components/not-artist-display';
 import { checkIsArtistPremium } from '@/service/user';
 
@@ -28,7 +28,7 @@ export default async function CreatorPage({ params }: { params: { locale: string
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">{t('my_exhibitions')}</h1>
-        <CreateExhibitionButton isPremium={isPremium}  />
+        <CreateExhibitionButton isPremium={isPremium} />
       </div>
 
       <Suspense fallback={<LoadingExhibitions />}>

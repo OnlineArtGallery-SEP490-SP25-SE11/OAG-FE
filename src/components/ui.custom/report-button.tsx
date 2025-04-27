@@ -123,6 +123,7 @@ export default function CreateReport({
 
   // Select reason - using useCallback
   const selectReason = useCallback((value: ReasonReport) => {
+    console.log('Selected reason:', value);
     form.setValue("reason", value);
     setReasonsOpen(false);
   }, [form]);
@@ -154,7 +155,6 @@ export default function CreateReport({
         title: tCommon('success'),
         description: t('toast.success'),
         variant: 'success',
-        className: "bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800",
         duration: 3000
       });
       handleOpenModal(false);
@@ -165,7 +165,6 @@ export default function CreateReport({
         title: tCommon('error'),
         description: error?.message || t('toast.error'),
         variant: 'destructive',
-        className: "bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800",
         duration: 3000
       });
       setIsSubmitting(false);
@@ -188,9 +187,11 @@ export default function CreateReport({
   // Get current reason text
   const getCurrentReasonText = useCallback(() => {
     const currentReason = form.watch("reason");
+    console.log('Current reason:', currentReason);
     try {
       return t(`reasons.${currentReason.toLowerCase()}`);
     } catch (error) {
+      console.error('Error getting reason text:', error); // Log any errors
       return t("reasons.spam");
     }
   }, [form, t]);

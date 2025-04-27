@@ -79,7 +79,7 @@ export const ArtworkMesh: React.FC<ArtworkMeshProps> = React.memo(
         const [shouldShowModal, setShouldShowModal] = useState(false);
         const meshRef = useRef<Mesh>(null);
         const interactionTimerRef = useRef<NodeJS.Timeout | null>(null); // Timer for modal delay
-        const { setTargetPosition } = useCameraStore();
+        const { setTargetPosition, setIsTransitioningBack  } = useCameraStore();
 
         // Hooks
         useCameraTransition(); // Listens to targetPosition changes
@@ -136,11 +136,12 @@ export const ArtworkMesh: React.FC<ArtworkMeshProps> = React.memo(
             // Reset all states
             setShouldShowModal(false);
             setShowDetails(false); // Unlock for next interaction
-
+            // --- SET FLAG BEFORE RESETTING POSITION ---
+            setIsTransitioningBack(true);
             // Reset camera target (triggers useCameraTransition to move back)
             setTargetPosition(null);
 
-        }, [setTargetPosition]); // Dependency
+        }, [setTargetPosition, setIsTransitioningBack]); // Dependency
 
         const handleMiss = useCallback(() => {
             // Only trigger close if the interaction sequence HAD started.

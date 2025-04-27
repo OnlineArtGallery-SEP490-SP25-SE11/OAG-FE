@@ -11,6 +11,11 @@ export const artworkFormSchema = (t: (key: string) => string) => {
 			.min(1, { message: t('validation.categoryRequired') }),
 		width: z.string().min(1, { message: t('validation.widthRequired') }),
 		height: z.string().min(1, { message: t('validation.heightRequired') }),
+		artType: z.enum(['painting', 'digitalart'], {
+			required_error: t('validation.artTypeRequired')
+		}),
+		isSelling: z.boolean().default(false),
+
 		price: z.union([
 			z.string().min(1),
 			z.number().min(0)
@@ -31,6 +36,7 @@ export const artworkFormUpdateSchema = z.object({
 		z.string().min(1),
 		z.number().min(0)
 	]).optional().transform(val => typeof val === 'string' && val ? Number(val) : val),
+	artType: z.enum(['painting', 'digitalart']).optional(),
 });
 export type ArtworkFormData = z.infer<ReturnType<typeof artworkFormSchema>>;
 

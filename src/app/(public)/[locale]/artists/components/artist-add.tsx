@@ -16,7 +16,6 @@ import {
     FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import {
     Select,
     SelectContent,
@@ -31,11 +30,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { ArrowUp, Check, Eye, ImageIcon, Loader2, Plus, X } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-
 export default function UploadArtwork() {
     const [file, setFile] = useState<File | null>(null);
     const [isImageUploaded, setIsImageUploaded] = useState(false);
@@ -43,8 +42,8 @@ export default function UploadArtwork() {
     const [showPreview, setShowPreview] = useState(false);
     const categoryInputRef = useRef<HTMLInputElement>(null);
     const t = useTranslations('artwork');
+    const tError = useTranslations('error');
     const locale = useLocale();
-
     const form = useForm<ArtworkFormData>({
         resolver: zodResolver(artworkFormSchema(t)),
         defaultValues: {
@@ -56,6 +55,8 @@ export default function UploadArtwork() {
             price: 0,
             status: 'available',
             imageUrl: '',
+            artType: 'digitalart',
+            isSelling: false,
             lowResUrl: '',
             watermarkUrl: ''
         }
@@ -83,17 +84,46 @@ export default function UploadArtwork() {
             setIsImageUploaded(false);
             setPreviewUrl(null);
         },
-        onError: (error) => {
+        onError: (error: any) => {
+            const errorResponse = error.response.data
             toast({
                 variant: 'destructive',
                 title: t('toast.errorTitle'),
-                description: t('toast.errorDescription')
+                description: errorResponse.statusCode === 403 ? tError('isBanned') : t('toast.errorDescription')
             });
             console.error('Error uploading artwork:', error);
         }
     });
 
+    const artType = form.watch('artType');
+    const status = form.watch('status');
+
+    useEffect(() => {
+        if (status === 'selling') {
+            form.setValue('isSelling', true);
+        } else {
+            form.setValue('isSelling', false);
+        }
+    }, [status, form]);
+
+    useEffect(() => {
+        if (artType === 'painting' && status === 'selling') {
+            form.setValue('status', 'available');
+        }
+    }, [artType, status, form]);
+
     const onSubmit = (data: ArtworkFormData) => {
+        if (data.artType === 'painting' && data.status === 'selling') {
+            toast({
+                variant: 'destructive',
+                title: t('toast.error'),
+                description: t('validation.painting_cannot_sell')
+            });
+            return;
+        }
+
+        data.isSelling = data.status === 'selling';
+
         mutation.mutate(data);
     };
 
@@ -116,7 +146,7 @@ export default function UploadArtwork() {
     // Handle adding a category with button
     const handleAddCategory = useCallback(() => {
         if (!categoryInputRef.current) return;
-        
+
         const value = categoryInputRef.current.value.trim();
         if (value && !form.getValues('categories').includes(value)) {
             const currentCategories = form.getValues('categories');
@@ -224,7 +254,7 @@ export default function UploadArtwork() {
                     {/* Top section: Title, Price, Status */}
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
                         {/* Title */}
-                        <div className="md:col-span-6">
+                        <div className="md:col-span-4">
                             <FormField
                                 control={form.control}
                                 name="title"
@@ -245,31 +275,76 @@ export default function UploadArtwork() {
                                 )}
                             />
                         </div>
-                        
-                        {/* Price */}
+
+                        {/* Art Type */}
                         <div className="md:col-span-3">
                             <FormField
                                 control={form.control}
-                                name="price"
+                                name="artType"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel className="text-base font-medium">
-                                            {t('field.price')}
+                                            {t('field.artType')}
                                         </FormLabel>
-                                        <FormControl>
-                                            <Input 
-                                                type="number" 
-                                                placeholder={t('placeholder.price')} 
-                                                {...field} 
-                                                className="h-10"
-                                            />
-                                        </FormControl>
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            value={field.value}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger className="h-10">
+                                                    <SelectValue placeholder={t('placeholder.artType')} />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="digitalart">{t('artType.digitalart')}</SelectItem>
+                                                <SelectItem value="painting">{t('artType.painting')}</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <FormDescription>
+                                            {t('helper.artType')}
+                                        </FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
                         </div>
-                        
+
+                        {/* Price - Chỉ hiển thị cho digitalart */}
+                        {artType === 'digitalart' && (
+                            <div className="md:col-span-2">
+                                <FormField
+                                    control={form.control}
+                                    name="price"
+                                    render={({ field: { value, onChange, ...field } }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-base font-medium">
+                                                {t('field.price')}
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="number"
+                                                    placeholder={t('placeholder.price')}
+                                                    {...field}
+                                                    value={value || ''}
+                                                    onChange={(e) => {
+                                                        const val = e.target.value;
+                                                        onChange(val === '' ? '' : Number(val));
+                                                    }}
+                                                    min={0}
+                                                    step="0.01"
+                                                    className="h-10"
+                                                />
+                                            </FormControl>
+                                            <FormDescription>
+                                                {t('helper.price')}
+                                            </FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                        )}
+
                         {/* Status */}
                         <div className="md:col-span-3">
                             <FormField
@@ -282,7 +357,7 @@ export default function UploadArtwork() {
                                         </FormLabel>
                                         <Select
                                             onValueChange={field.onChange}
-                                            defaultValue={field.value}
+                                            value={field.value}
                                         >
                                             <FormControl>
                                                 <SelectTrigger className="h-10">
@@ -291,10 +366,18 @@ export default function UploadArtwork() {
                                             </FormControl>
                                             <SelectContent>
                                                 <SelectItem value="available">{t('status.available')}</SelectItem>
-                                                <SelectItem value="selling">{t('status.selling')}</SelectItem>
                                                 <SelectItem value="hidden">{t('status.hidden')}</SelectItem>
+                                                {artType === 'digitalart' && (
+                                                    <SelectItem value="selling">{t('status.selling')}</SelectItem>
+                                                )}
                                             </SelectContent>
                                         </Select>
+                                        <FormDescription>
+                                            {artType === 'painting' ?
+                                                t('helper.painting_status') :
+                                                t('helper.status')
+                                            }
+                                        </FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -474,7 +557,7 @@ export default function UploadArtwork() {
                                                 onFileUpload={(files) => {
                                                     const fileRaw = files[0];
                                                     field.onChange(fileRaw.url);
-                                                    
+
                                                     setIsImageUploaded(true);
                                                     setPreviewUrl(fileRaw.url);
                                                     // console.log('aaa')
@@ -492,7 +575,6 @@ export default function UploadArtwork() {
                                                     if (fileRaw.height !== undefined) {
                                                         form.setValue('height', fileRaw.height.toString());
                                                     }
-                                                    // console.log(form.getValues('lowResUrl'),form.getValues('watermarkUrl'));
                                                 }}
                                                 artwork
                                             />

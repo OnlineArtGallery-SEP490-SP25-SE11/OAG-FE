@@ -48,6 +48,7 @@
     "loading": "Đang tải..."
   },
   "header": {
+    "become_artist": "Trở thành nghệ sĩ",
     "settings": "Cài đặt",
     "home": "Trang chủ",
     "about": "Giới thiệu",
@@ -70,6 +71,41 @@
     "loginTitle": "Đăng nhập vào tài khoản",
     "signupTitle": "Tạo tài khoản mới",
     "googleLogin": "Đăng nhập với Google"
+  },
+  "home": {
+    "trending": {
+      "title": "Nghệ sĩ Thịnh hành",
+      "view_all": "Xem tất cả",
+      "followers": "{count} người theo dõi"
+    },
+    "exhibition": {
+      "title_trending": "Triển lãm Nổi bật",
+      "title_new": "Triển lãm mới",
+      "view_all": "Xem tất cả",
+      "free": "Miễn phí",
+      "paid": "Có phí"
+    },
+     "recommendations": {
+      "for_you": "Tác phẩm Mới cho Bạn",
+      "following": "Từ Nghệ sĩ Bạn Theo dõi",
+      "view_all": "Xem tất cả",
+      "no_artworks_default": "Không có tác phẩm nào để hiển thị.",
+      "no_artworks_following": "Chưa có tác phẩm mới từ nghệ sĩ bạn theo dõi.",
+      "no_image_placeholder": "Không có hình ảnh",
+      "untitled_artwork": "Chưa có tiêu đề"
+    },
+    "spotlight": {
+      "title": "Nghệ sĩ Tiêu điểm",
+      "view_all": "Xem tất cả Nghệ sĩ",
+      "view_profile": "Xem Hồ sơ"
+    },
+    "articles": {
+      "title": "Bài viết Mới nhất",
+      "view_all": "Xem tất cả",
+      "read_more": "Đọc thêm",
+      "most_popular": "Phổ biến nhất",
+      "min_read": "phút đọc"
+    }
   },
   "validation": {
     "name": "Tên",
@@ -224,6 +260,7 @@
     }
   },
   "artwork": {
+    "view_artist_profile": "Xem hồ sơ nghệ sĩ",
     "title": "Tải lên tranh",
     "subtitle": "Nhập thông tin chi tiết về tác phẩm nghệ thuật của bạn",
     "field": {
@@ -234,7 +271,8 @@
       "height": "Chiều cao (px)",
       "price": "Giá",
       "status": "Trạng thái",
-      "image": "Hình ảnh"
+      "image": "Hình ảnh",
+      "artType": "Loại tác phẩm"
     },
     "placeholder": {
       "title": "Nhập tiêu đề tác phẩm",
@@ -247,10 +285,10 @@
       "add_category": "Thêm danh mục"
     },
     "helper": {
-      "description": "Mô tả nên bao gồm phong cách, chủ đề và ý nghĩa của tác phẩm",
-      "categories": "Chọn tất cả danh mục áp dụng cho tác phẩm này",
-      "image": "Hình ảnh nên có độ phân giải cao và hiển thị rõ ràng tác phẩm",
-      "suggestedCategories": "Danh mục gợi ý"
+      "artType": "Chọn loại tác phẩm nghệ thuật của bạn",
+      "status": "Chọn trạng thái hiển thị và bán tác phẩm",
+      "painting_status": "Tranh vẽ tay chỉ có thể hiển thị hoặc ẩn",
+      "price": "Nhập giá bán tác phẩm (chỉ áp dụng cho tranh kỹ thuật số)"
     },
     "status": {
       "all": "Tất cả",
@@ -273,7 +311,8 @@
       "upload": "Tải lên Tác phẩm",
       "uploading": "Đang tải lên...",
       "add": "Thêm",
-      "remove": "Xóa"
+      "remove": "Xóa",
+      "saving": "Đang lưu..."
     },
     "toast": {
       "successTitle": "Tải lên Thành công!",
@@ -288,7 +327,8 @@
       "widthRequired": "Vui lòng nhập chiều rộng",
       "heightRequired": "Vui lòng nhập chiều cao",
       "priceRequired": "Vui lòng nhập giá",
-      "statusRequired": "Vui lòng chọn trạng thái"
+      "statusRequired": "Vui lòng chọn trạng thái",
+      "painting_cannot_sell": "Tranh vẽ tay không thể được bán trực tuyến"
     },
     "purchase_confirmation": "Xác nhận mua tranh",
     "artist": "Nghệ sĩ",
@@ -305,7 +345,7 @@
       "preview": "Xem trước"
     },
     "artwork_description": "Mô tả Tác phẩm",
-    "preview_note": "Ghi chú Xem trước", 
+    "preview_note": "Ghi chú Xem trước",
     "toggle_details": "Hiển thị/ẩn chi tiết",
     "drag_to_pan": "Kéo để di chuyển",
     "remove_from_favorites": "Xóa khỏi yêu thích",
@@ -332,7 +372,11 @@
     "loading": "Đang tải...",
     "price": "Giá",
     "downloading": "Đang tải...",
-    "download_success": "Tải xuống thành công"
+    "download_success": "Tải xuống thành công",
+    "artType": {
+      "digitalart": "Tranh kỹ thuật số",
+      "painting": "Tranh vẽ tay"
+    }
   },
   "artwork_management": {
     "title": "Quản lý tác phẩm",
@@ -377,30 +421,36 @@
   },
   "profile": {
     "common": {
-      "joined": "Tham gia {date}",
+      "artist_badge": "Nghệ sĩ",
       "artworks": "Tác phẩm",
       "followers": "Người theo dõi",
       "following": "Đang theo dõi",
-      "artist_badge": "Nghệ sĩ",
-      "premium_badge": "Premium",
-      "become_artist": "Trở thành nghệ sĩ",
-      "email": "Email"
+      "email": "Email",
+      "joined": "Tham gia {date}",
+      "premium_badge": "premium"
     },
     "view": {
+      "view_detail": "Xem chi tiết",
       "edit_profile": "Chỉnh sửa hồ sơ",
-      "favorites": "Yêu thích",
       "collections": "Bộ sưu tập",
-      "professional_artist": "Nghệ sĩ chuyên nghiệp",
-      "view_profile": "Xem hồ sơ",
-      "collection_title": "Bộ sưu tập {number}",
-      "about": "Thông tin cá nhân",
+      "about": "Thông tin",
+      "followers_title": "Người theo dõi",
+      "following_title": "Đang theo dõi",
+      "artist_info": "Thông tin nghệ sĩ",
       "biography": "Tiểu sử",
       "contact_info": "Thông tin liên hệ",
       "joined_date": "Ngày tham gia",
-      "no_address": "Chưa cập nhật địa chỉ",
-      "default_bio": "là một nghệ sĩ tài năng với niềm đam mê về nghệ thuật. Hãy thêm tiểu sử của bạn trong phần chỉnh sửa hồ sơ.",
+      "follow": "Theo dõi",
+      "following": "Đang theo dõi",
+      "view_profile": "Xem hồ sơ",
       "no_followers": "Chưa có người theo dõi",
-      "no_following": "Bạn chưa theo dõi ai"
+      "no_following": "Chưa theo dõi ai",
+      "no_artist_info": "Không có thông tin nghệ sĩ",
+      "experience": "Kinh nghiệm",
+      "social_links": "Liên kết mạng xã hội",
+      "artworks_section": "Tác phẩm nghệ thuật",
+      "view_all_artworks": "Xem tất cả {count} tác phẩm",
+      "no_artworks": "Chưa có tác phẩm nào"
     },
     "edit": {
       "title": "Chỉnh sửa hồ sơ",
@@ -495,10 +545,18 @@
     }
   },
   "exhibitions": {
+    "premium": "Premium",
+    "instruction": "Hướng dẫn",
+    "controls": "Điều khiển",
+    "look": "Chuột - Nhìn xung quanh",
+    "menu": "Hiển thị menu này / Thoát điều khiển",
+    "resume": "Tiếp tục",
+    "exit": "Thoát",
+    "free": "Miễn phí",
     "no_templates_available": "Không có mẫu nào khả dụng",
     "insufficient_balance": "Số dư không đủ",
-    "remove_artwork_confirmation" : "Xác nhận gỡ tác phẩm",
-    "remove_artwork_description" : "Bạn có chắc chắn muốn gỡ tác phẩm này khỏi vị trí này không?",
+    "remove_artwork_confirmation": "Xác nhận gỡ tác phẩm",
+    "remove_artwork_description": "Bạn có chắc chắn muốn gỡ tác phẩm này khỏi vị trí này không?",
     "remove_artwork": "Xóa tác phẩm",
     "replace_artwork": "Thay thế tác phẩm",
     "replace_artwork_at_position": "Thay thế tác phẩm tại vị trí",
@@ -722,7 +780,6 @@
     "loading_more": "Đang tải thêm tác phẩm..."
   },
   "report": {
-    "button": "Báo cáo",
     "buttonAriaLabel": "Nhấn để báo cáo",
     "closeAriaLabel": "Đóng hộp thoại",
     "cancelAriaLabel": "Hủy báo cáo",
