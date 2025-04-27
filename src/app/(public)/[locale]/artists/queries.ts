@@ -16,6 +16,8 @@ export const artworkService = {
 				height: Number(formData.height)
 			},
 			url: formData.imageUrl || '', // In real app, this would be from file upload
+			lowResUrl: formData.lowResUrl || '', // In real app, this would be from file upload
+			watermarkUrl: formData.watermarkUrl || '', // In real app, this would be from file upload
 			status: formData.status.toLowerCase(),
 			price: Number(formData.price),
 			artType: formData.artType,

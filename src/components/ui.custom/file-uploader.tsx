@@ -39,6 +39,7 @@ interface FileUploaderProps {
 			_id?: string;
 		}[]
 	) => void;
+	artwork?: boolean;
 }
 
 const DropZone = memo(
@@ -361,15 +362,16 @@ const FileUploader: React.FC<FileUploaderProps> = ({
 	previewLayout = 'horizontal',
 	onFilesChange,
 	options,
-	onFileUpload
+	onFileUpload,
+	artwork = false
 }) => {
 	const {
 		pendingUploads,
 		completedUploads,
 		addFiles,
 		removeFiles,
-		onUpload
-	} = useFileUpload(options);
+		onUpload,
+	} = useFileUpload(options,artwork);
 
 	const onDrop = useCallback(
 		(acceptedFiles: File[]) => {
@@ -452,37 +454,59 @@ const FileUploader: React.FC<FileUploaderProps> = ({
 
 	useEffect(() => {
 		if (!onFileUpload || completedUploads.length === 0) return;
+		console.log(artwork)
+		if (artwork) {
+  
+  onFileUpload(completedUploads)
 
-		const newCompletedFiles = completedUploads.filter((completedFile) => {
-			const isPending = pendingUploads.some(
-				(pendingFile) =>
-					pendingFile.file.name === completedFile.file.name &&
-					pendingFile.file.size === completedFile.file.size &&
-					pendingFile.file.type === completedFile.file.type
-			);
+//   if (newCompletedFiles.length > 0) {
+//     const newFiles = newCompletedFiles.map((file) => ({
+//       url: file.url,
+//       width: file.width,
+//       height: file.height,
+//       id: file.id,
+//     }));
 
-			const fileKey = `${completedFile.file.name}-${completedFile.file.size}`;
-			const isNewFile = !uploadedFilesRef.current.has(fileKey);
+//     console.log('🎉 Final newFiles to upload:', newFiles);
+//     onFileUpload(newFiles);
+//   }
+}
+ else {
 
-			if (isPending && isNewFile) {
-				uploadedFilesRef.current.add(fileKey);
-				return true;
+			const newCompletedFiles = completedUploads.filter((completedFile) => {
+				const isPending = pendingUploads.some(
+					(pendingFile) =>
+						pendingFile.file.name === completedFile.file.name &&
+						pendingFile.file.size === completedFile.file.size &&
+						pendingFile.file.type === completedFile.file.type
+				);
+	
+				const fileKey = `${completedFile.file.name}-${completedFile.file.size}`;
+				const isNewFile = !uploadedFilesRef.current.has(fileKey);
+	
+				if (isPending && isNewFile) {
+					uploadedFilesRef.current.add(fileKey);
+					return true;
+				}
+				return false;
+			});
+	
+	
+			if (newCompletedFiles.length > 0) {
+				// const newUrls = newCompletedFiles.map((file) => file.url);
+				// onFileUpload(newUrls);
+				const newFiles = newCompletedFiles.map((file) => ({
+					url: file.url,
+					width: file.width,
+					height: file.height,
+					id: file.id
+				}));
+				console.log('New files:', newFiles);
+				onFileUpload(newFiles);
 			}
-			return false;
-		});
-
-		if (newCompletedFiles.length > 0) {
-			// const newUrls = newCompletedFiles.map((file) => file.url);
-			// onFileUpload(newUrls);
-			const newFiles = newCompletedFiles.map((file) => ({
-				url: file.url,
-				width: file.width,
-				height: file.height,
-				id: file.id
-			}));
-			// console.log('New files:', newFiles);
-			onFileUpload(newFiles);
 		}
+
+
 	}, [completedUploads, onFileUpload, pendingUploads]);
 	return (
 		<>

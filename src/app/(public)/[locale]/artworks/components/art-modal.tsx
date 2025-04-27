@@ -1,8 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { motion } from 'framer-motion';
+// import { DollarSignIcon, Eye, Info, RulerIcon, TagIcon, UserIcon, X, CalendarIcon, BookmarkIcon, Flag, ShoppingCart, Download, Grid, Rows, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
+// import Image from 'next/image';
+import Image from '@/components/ui.custom/optimized-image';
 import { Eye, Info, RulerIcon, TagIcon, UserIcon, X, CalendarIcon, BookmarkIcon, Flag, ShoppingCart, Download, Grid, Rows, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
-import Image from 'next/image';
+// import Image from 'next/image';
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BiComment } from 'react-icons/bi';
 import { useRouter, usePathname } from 'next/navigation';
@@ -184,7 +186,7 @@ interface DetailTabProps {
   isProcessing: boolean;
   isMobile: boolean;
   t: any;
-  router: ReturnType<typeof useRouter>;
+  router: ReturnType<typeof useRouter>; // Add missing router parameter
 }
 
 function DetailTab({ artwork, userHasPurchased, isArtworkCreator, handleBuy, handleDownload, downloadToken, isProcessing, isMobile, t, router }: DetailTabProps) {
@@ -325,7 +327,7 @@ function DetailTab({ artwork, userHasPurchased, isArtworkCreator, handleBuy, han
                 className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:opacity-50 text-white text-xs h-9 col-span-2 rounded-md flex items-center justify-center transition-colors"
               >
                 <Download className="mr-1.5 h-3.5 w-3.5" />
-                {t("artwork.download")}
+                {t('artwork.download')}
               </button>
             )}
 
@@ -407,7 +409,6 @@ function DetailTab({ artwork, userHasPurchased, isArtworkCreator, handleBuy, han
   );
 }
 
-
 interface Comment {
   _id: string;
   content: string;
@@ -419,70 +420,6 @@ interface Comment {
   parentId?: string;
   replies?: Comment[];
 }
-
-function CommentItem({
-  comment,
-  onReply,
-}: {
-  comment: Comment;
-  onReply: (parentId: string, content: string) => void;
-}) {
-  const [replying, setReplying] = useState(false);
-  const [replyContent, setReplyContent] = useState("");
-
-  const handleReply = () => {
-    onReply(comment._id, replyContent);
-    setReplyContent("");
-    setReplying(false);
-  };
-
-  return (
-    <div className="pl-4 border-l border-gray-700 mt-2">
-      <div className="flex items-start gap-2">
-        <Avatar className="h-8 w-8">
-          <AvatarFallback>{comment.author.name.charAt(0)}</AvatarFallback>
-        </Avatar>
-        <div>
-          <p className="text-sm font-semibold text-white">
-            {comment.author.name}
-          </p>
-          <p className="text-xs text-gray-400">
-            {new Date(comment.createdAt).toLocaleString()}
-          </p>
-          <p className="text-sm text-white mt-1">{comment.content}</p>
-          <button
-            onClick={() => setReplying(!replying)}
-            className="text-xs text-blue-400 mt-1"
-          >
-            Reply
-          </button>
-          {replying && (
-            <div className="mt-2">
-              <input
-                type="text"
-                value={replyContent}
-                onChange={(e) => setReplyContent(e.target.value)}
-                placeholder="Write a reply..."
-                className="w-full bg-gray-800 text-white text-sm rounded px-3 py-1.5 border border-gray-600 focus:outline-none"
-              />
-              <button
-                onClick={handleReply}
-                className="mt-1 text-xs text-blue-400"
-              >
-                Post Reply
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-      {comment.replies &&
-        comment.replies.map((reply) => (
-          <CommentItem key={reply._id} comment={reply} onReply={onReply} />
-        ))}
-    </div>
-  );
-}
-
 
 interface PurchaseConfirmationProps {
   artwork: Artwork;
@@ -1177,3 +1114,4 @@ function Modal() {
 }
 
 export default Modal;
+
