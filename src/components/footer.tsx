@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function Footer() {
+const Footer = () => {
     return (
         <footer className='w-full bg-slate-800 py-16'>
             <div className='max-w-6xl mx-auto px-4'>
@@ -8,27 +8,27 @@ export default function Footer() {
                 <div className='grid grid-cols-1 md:grid-cols-4 gap-8 mb-12'>
                     {/* Navigation Links Column 1 */}
                     <div className='space-y-4'>
-                        <Link href="/" className='block text-gray-300 hover:text-white'>Home</Link>
-                        <Link href="/for-artists" className='block text-gray-300 hover:text-white'>For Artists</Link>
-                        <Link href="/for-art-lovers" className='block text-gray-300 hover:text-white'>For Art Lovers</Link>
-                        <Link href="/pricing" className='block text-gray-300 hover:text-white'>Pricing</Link>
+                        <Link href="/" className='block text-gray-600 hover:text-gray-900'>Home</Link>
+                        <Link href="/for-artists" className='block text-gray-600 hover:text-gray-900'>For Artists</Link>
+                        <Link href="/for-art-lovers" className='block text-gray-600 hover:text-gray-900'>For Art Lovers</Link>
+                        <Link href="/pricing" className='block text-gray-600 hover:text-gray-900'>Pricing</Link>
                     </div>
 
                     {/* Navigation Links Column 2 */}
                     <div className='space-y-4'>
-                        <Link href="/faq" className='block text-gray-300 hover:text-white'>FAQ</Link>
-                        <Link href="/learn-more" className='block text-gray-300 hover:text-white'>Learn More</Link>
-                        <Link href="/login" className='block text-gray-300 hover:text-white'>Login to the app</Link>
+                        <Link href="/faq" className='block text-gray-600 hover:text-gray-900'>FAQ</Link>
+                        <Link href="/learn-more" className='block text-gray-600 hover:text-gray-900'>Learn More</Link>
+                        <Link href="/login" className='block text-gray-600 hover:text-gray-900'>Login to the app</Link>
                     </div>
 
                     {/* Contact Information */}
                     <div className='space-y-4'>
-                        <address className='not-italic text-gray-300'>
+                        <address className='not-italic text-gray-600'>
                             FPT University
                         </address>
                         <div className='space-y-2'>
-                            <Link href="/contact" className='block text-gray-300 hover:text-white'>Email</Link>
-                            <Link href="https://linkedin.com/company/yourcompany" className='block text-gray-300 hover:text-white'>
+                            <Link href="/contact" className='block text-gray-600 hover:text-gray-900'>Email</Link>
+                            <Link href="https://linkedin.com/company/yourcompany" className='block text-gray-600 hover:text-gray-900'>
                                 People at LinkedIn
                             </Link>
                         </div>
@@ -47,7 +47,7 @@ export default function Footer() {
                         <div className='flex justify-center gap-4'>
                             <Link
                                 href="https://instagram.com/yourcompany"
-                                className='text-gray-300 hover:text-white'
+                                className='text-gray-600 hover:text-gray-900'
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
@@ -57,7 +57,7 @@ export default function Footer() {
                             </Link>
                             <Link
                                 href="https://linkedin.com/company/yourcompany"
-                                className='text-gray-300 hover:text-white'
+                                className='text-gray-600 hover:text-gray-900'
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
@@ -67,7 +67,7 @@ export default function Footer() {
                             </Link>
                             <Link
                                 href="https://facebook.com/yourcompany"
-                                className='text-gray-300 hover:text-white'
+                                className='text-gray-600 hover:text-gray-900'
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
@@ -90,4 +90,7 @@ export default function Footer() {
             </div>
         </footer>
     );
-}
+};
+
+
+export default Footer;

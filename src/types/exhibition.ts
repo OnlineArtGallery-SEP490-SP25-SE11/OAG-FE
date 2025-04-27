@@ -71,7 +71,7 @@ export interface Exhibition {
   status: ExhibitionStatus;
   result: ExhibitionResult;
   linkName: string;
-  discovery: boolean;  
+  discovery: boolean;
   artworkPositions: ArtworkPosition[];
   ticket: Ticket;
 }
@@ -227,7 +227,7 @@ export interface PublicExhibition {
     email: string;
     image: string;
   };
-  isFeatured: boolean;  
+  isFeatured: boolean;
   status: string;
   linkName: string;
   discovery: boolean;
@@ -241,6 +241,7 @@ export interface PublicExhibition {
     visits: number;
     likes: { artworkId: string; count: number }[] | string[];
   };
+  languageOptions: LanguageOption[];
 }
 
 export interface GetPublicExhibitionsResponse {
