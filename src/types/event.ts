@@ -11,6 +11,7 @@ export const eventSchema = z.object({
   startDate: z.date(),
   endDate: z.date(),
   image: z.string(),
+  link: z.string().optional(),
 });
 
 export type Event = z.infer<typeof eventSchema>;

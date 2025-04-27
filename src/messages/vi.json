@@ -72,6 +72,41 @@
     "signupTitle": "Tạo tài khoản mới",
     "googleLogin": "Đăng nhập với Google"
   },
+  "home": {
+    "trending": {
+      "title": "Nghệ sĩ Thịnh hành",
+      "view_all": "Xem tất cả",
+      "followers": "{count} người theo dõi"
+    },
+    "exhibition": {
+      "title_trending": "Triển lãm Nổi bật",
+      "title_new": "Triển lãm mới",
+      "view_all": "Xem tất cả",
+      "free": "Miễn phí",
+      "paid": "Có phí"
+    },
+     "recommendations": {
+      "for_you": "Tác phẩm Mới cho Bạn",
+      "following": "Từ Nghệ sĩ Bạn Theo dõi",
+      "view_all": "Xem tất cả",
+      "no_artworks_default": "Không có tác phẩm nào để hiển thị.",
+      "no_artworks_following": "Chưa có tác phẩm mới từ nghệ sĩ bạn theo dõi.",
+      "no_image_placeholder": "Không có hình ảnh",
+      "untitled_artwork": "Chưa có tiêu đề"
+    },
+    "spotlight": {
+      "title": "Nghệ sĩ Tiêu điểm",
+      "view_all": "Xem tất cả Nghệ sĩ",
+      "view_profile": "Xem Hồ sơ"
+    },
+    "articles": {
+      "title": "Bài viết Mới nhất",
+      "view_all": "Xem tất cả",
+      "read_more": "Đọc thêm",
+      "most_popular": "Phổ biến nhất",
+      "min_read": "phút đọc"
+    }
+  },
   "validation": {
     "name": "Tên",
     "phone": "Số điện thoại",
@@ -310,7 +345,7 @@
       "preview": "Xem trước"
     },
     "artwork_description": "Mô tả Tác phẩm",
-    "preview_note": "Ghi chú Xem trước", 
+    "preview_note": "Ghi chú Xem trước",
     "toggle_details": "Hiển thị/ẩn chi tiết",
     "drag_to_pan": "Kéo để di chuyển",
     "remove_from_favorites": "Xóa khỏi yêu thích",
@@ -386,21 +421,21 @@
   },
   "profile": {
     "common": {
-      "artist_badge": "Nghệ sĩ",  
+      "artist_badge": "Nghệ sĩ",
       "artworks": "Tác phẩm",
       "followers": "Người theo dõi",
       "following": "Đang theo dõi",
       "email": "Email",
       "joined": "Tham gia {date}",
-      "premium_badge":"premium"
+      "premium_badge": "premium"
     },
     "view": {
       "view_detail": "Xem chi tiết",
       "edit_profile": "Chỉnh sửa hồ sơ",
-      "collections":"Bộ sưu tập",
+      "collections": "Bộ sưu tập",
       "about": "Thông tin",
       "followers_title": "Người theo dõi",
-      "following_title": "Đang theo dõi", 
+      "following_title": "Đang theo dõi",
       "artist_info": "Thông tin nghệ sĩ",
       "biography": "Tiểu sử",
       "contact_info": "Thông tin liên hệ",
@@ -510,7 +545,7 @@
     }
   },
   "exhibitions": {
-    "premium" : "Premium",
+    "premium": "Premium",
     "instruction": "Hướng dẫn",
     "controls": "Điều khiển",
     "look": "Chuột - Nhìn xung quanh",
@@ -520,8 +555,8 @@
     "free": "Miễn phí",
     "no_templates_available": "Không có mẫu nào khả dụng",
     "insufficient_balance": "Số dư không đủ",
-    "remove_artwork_confirmation" : "Xác nhận gỡ tác phẩm",
-    "remove_artwork_description" : "Bạn có chắc chắn muốn gỡ tác phẩm này khỏi vị trí này không?",
+    "remove_artwork_confirmation": "Xác nhận gỡ tác phẩm",
+    "remove_artwork_description": "Bạn có chắc chắn muốn gỡ tác phẩm này khỏi vị trí này không?",
     "remove_artwork": "Xóa tác phẩm",
     "replace_artwork": "Thay thế tác phẩm",
     "replace_artwork_at_position": "Thay thế tác phẩm tại vị trí",
@@ -745,7 +780,6 @@
     "loading_more": "Đang tải thêm tác phẩm..."
   },
   "report": {
-  
     "buttonAriaLabel": "Nhấn để báo cáo",
     "closeAriaLabel": "Đóng hộp thoại",
     "cancelAriaLabel": "Hủy báo cáo",

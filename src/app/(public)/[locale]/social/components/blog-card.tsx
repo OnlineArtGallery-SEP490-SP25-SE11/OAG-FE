@@ -3,9 +3,7 @@
 import {
   // BookmarkPlusIcon,
   Flag,
-  Heart,
-  MessagesSquare,
-  MoreHorizontal,
+  Heart
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -18,27 +16,8 @@ import { ToggleHeartButton } from "@/components/ui.custom/toggle-heart-button";
 import { useParams } from "next/navigation";
 import ReportButton from "@/components/ui.custom/report-button";
 import { RefType } from "@/utils/enums";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import { Input } from "@/components/ui/input";
-import axios from "@/lib/axios";
 import { useEffect, useState } from "react";
-import { createComment, deleteComment, updateComment } from "@/service/comment";
 import { getCurrentUser } from "@/lib/session";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@radix-ui/react-dropdown-menu";
 import FollowButton from "@/components/follow-button";
 import CommentDrawer from "./comment-drawer";
 
@@ -60,19 +39,6 @@ interface BlogCardProps {
   heartCount: number;
   isHearted: boolean;
 }
-
-interface Comment {
-  _id: string;
-  content: string;
-  createdAt: string;
-  author: {
-    _id: string;
-    name: string;
-    avatar: string;
-  };
-  replies?: string[];
-}
-
 export function BlogCard({
   id,
   title,
@@ -93,15 +59,9 @@ export function BlogCard({
 
   const sanitizedContent = sanitizeBlogContent(content);
   const excerpt = createExcerpt(sanitizedContent);
-
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [newComment, setNewComment] = useState("");
-  const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
-  const [editContent, setEditContent] = useState("");
-  const [loading, setLoading] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [currentUser, setCurrentUser] = useState<any>(null);
-  const [replyTo, setReplyTo] = useState("");
-  const [replyContent, setReplyContent] = useState("");
+
   const [token, setToken] = useState("");
   const [userId, setUserId] = useState("");
 

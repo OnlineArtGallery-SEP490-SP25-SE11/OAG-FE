@@ -11,6 +11,7 @@ export const blogSchema = z.object({
 	createdAt: z.date(),
 	updatedAt: z.date(),
 	heartCount: z.number(),
+	isBookmarked: z.boolean(),
 	author: z.object({
 		_id: z.string(),
 		name: z.string(),
