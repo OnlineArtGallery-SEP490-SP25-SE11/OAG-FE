@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, Suspense, useCallback } from 'react';
+import React, { useState, useRef, Suspense, useCallback, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
@@ -55,12 +55,12 @@ export default function Exhibition({ exhibition, session }: ExhibitionProps) {
         router.push('/discover');
     }, [router, setTargetPosition]);
 
-    // useEffect(() => {
-    //     return () => {
-    //         // Cleanup: ensure cursor is visible when component unmounts
-    //         document.body.style.cursor = 'default';
-    //     };
-    // }, []);
+    useEffect(() => {
+        return () => {
+            // Cleanup: ensure cursor is visible when component unmounts
+            document.body.style.cursor = 'default';
+        };
+    }, []);
 
     return (
         <div
@@ -68,6 +68,14 @@ export default function Exhibition({ exhibition, session }: ExhibitionProps) {
             style={{ cursor: (active && !storeIsLocked) ? 'none' : 'default' }}
             className='relative w-full h-screen bg-gray-900'
         >
+             {exhibition.backgroundAudio && (
+            <audio
+              src={exhibition.backgroundAudio}
+              loop
+              autoPlay
+              className="hidden"
+            />
+          )}
             <InstructionOverlay
                 active={active}
                 onResume={handleResume}

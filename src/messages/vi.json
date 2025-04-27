@@ -29,6 +29,7 @@
     "success": "Thành công",
     "error": "Lỗi",
     "save_changes": "Lưu thay đổi",
+    "saving" : "Đang lưu",
     "cancel": "Hủy",
     "delete": "Xóa",
     "processing": "Đang xử lý...",

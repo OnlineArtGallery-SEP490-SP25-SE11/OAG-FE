@@ -29,6 +29,7 @@
     "success": "Success",
     "error": "Error",
     "save_changes": "Save Changes",
+    "saving": "Saving",
     "cancel": "Cancel",
     "delete": "Delete",
     "processing": "Processing...",

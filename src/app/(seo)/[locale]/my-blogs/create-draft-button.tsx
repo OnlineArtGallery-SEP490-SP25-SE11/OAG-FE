@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useServerAction } from 'zsa-react';
 import { useToast } from '@/hooks/use-toast';
-import { FilePlus, Terminal, Upload } from 'lucide-react';
+import { FilePlus, Upload } from 'lucide-react';
 import { createBlogAction } from './action';
 import { useRouter } from 'next/navigation';
 
@@ -20,7 +20,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
 	Dialog,
 	DialogContent,
@@ -51,16 +50,7 @@ export default function CreateDraftButton() {
 			.trim() // Add this line to trim whitespace before validation
 			.min(5, {
 				message: tValidation('minLength', { field: tBlog('title'), length: 5 })
-			})
-			.refine(
-				(title) => /^[\p{L}\p{N}\s]+$/u.test(title),
-				{
-					message: tValidation('invalid_format', {
-						field: tBlog('title'),
-						requirements: tValidation('alphanumeric_only')
-					})
-				}
-			),
+			}),
 		image: z
 			// First check if it's a File or nullish value
 			.custom((val) => val instanceof File || val === null || val === undefined)
