@@ -29,6 +29,7 @@
     "success": "Thành công",
     "error": "Lỗi",
     "save_changes": "Lưu thay đổi",
+    "saving": "Đang lưu",
     "cancel": "Hủy",
     "delete": "Xóa",
     "processing": "Đang xử lý...",
@@ -81,11 +82,12 @@
     "exhibition": {
       "title_trending": "Triển lãm Nổi bật",
       "title_new": "Triển lãm mới",
+      "title_featured": "Triễn lãm nổi bật",
       "view_all": "Xem tất cả",
       "free": "Miễn phí",
       "paid": "Có phí"
     },
-     "recommendations": {
+    "recommendations": {
       "for_you": "Tác phẩm Mới cho Bạn",
       "following": "Từ Nghệ sĩ Bạn Theo dõi",
       "view_all": "Xem tất cả",
@@ -105,6 +107,54 @@
       "read_more": "Đọc thêm",
       "most_popular": "Phổ biến nhất",
       "min_read": "phút đọc"
+    }
+  },
+  "about": {
+    "hero": {
+      "title": {
+        "line1": "Triển lãm",
+        "line2": "Nghệ thuật Trực tuyến."
+      },
+      "subtitle": "Không giới hạn bởi thực tế. Dễ dàng tiếp cận cho mọi người.",
+      "artists": {
+        "title": "Nghệ sĩ & Phòng trưng bày",
+        "description": "Trưng bày tác phẩm của bạn trong không gian 3D đẹp mắt. Chia sẻ tự do, thu hút khách tham quan và bán tác phẩm."
+      },
+      "artLovers": {
+        "title": "Người yêu nghệ thuật & Sưu tầm",
+        "description": "Tham quan các triển lãm nghệ thuật 3D ngay trên trình duyệt. Mua tác phẩm trực tiếp từ nghệ sĩ."
+      },
+      "buttons": {
+        "openExhibition": "Mở triển lãm nghệ thuật của riêng bạn",
+        "discoverExhibitions": "Khám phá triển lãm nghệ thuật"
+      }
+    },
+    "discover": {
+      "title": {
+        "line1": "Khám phá triển lãm",
+        "line2": "nghệ thuật từ",
+        "line3": "khắp nơi trên thế giới."
+      },
+      "button": "Khám phá triển lãm nghệ thuật",
+      "image": {
+        "alt": "Nền phòng trưng bày nghệ thuật"
+      }
+    },
+    "featured": {
+      "title": {
+        "line1": "Triển lãm",
+        "line2": "nổi bật."
+      },
+      "description": "Trải nghiệm nghệ thuật trong không gian 3D sống động. Tham quan các phòng trưng bày ảo và khám phá những tác phẩm nghệ thuật tuyệt vời."
+    },
+    "vision": {
+      "statement": "Tầm nhìn của chúng tôi là một thị trường nghệ thuật toàn cầu dân chủ, bình đẳng và bền vững.",
+      "image": {
+        "alt": "Nền tầm nhìn"
+      }
+    },
+    "mission": {
+      "statement": "Sứ mệnh của chúng tôi là mang đến cơ hội bình đẳng cho mọi nghệ sĩ và đem nhiều nghệ thuật đến với công chúng."
     }
   },
   "validation": {

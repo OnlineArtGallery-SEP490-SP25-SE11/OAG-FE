@@ -57,10 +57,11 @@ export async function getFeaturedArtist(): Promise<ApiResponse<{
 export async function getNewRecommendedArtworks() {
     try {
         const res = await fetchArtPiecesByRange(0, 9, {
-            status: ['published', 'selling'],
+            status: ['available', 'selling'],
             sortBy: 'createdAt',
             sortOrder: 'desc'
         });
+        console.log(res, 'new recommended artworks');
         return res.data;
     } catch (error) {
         console.error('Failed to fetch new recommended artworks:', error);
