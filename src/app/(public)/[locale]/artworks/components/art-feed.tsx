@@ -3,7 +3,8 @@
 import { Artwork } from '@/types/marketplace.d';
 import React, { useCallback, useRef, useState, useEffect, useMemo } from 'react';
 import * as ReactDOM from 'react-dom';
-import Image from 'next/image';
+// import Image from 'next/image';
+import Image from '@/components/ui.custom/optimized-image';
 import { useWindowSize } from '@react-hook/window-size';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useCustomDoubleTap } from '@/hooks/useDoubleTab';
