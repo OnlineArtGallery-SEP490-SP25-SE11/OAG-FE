@@ -12,6 +12,8 @@ export default async function RecommendationsPage() {
 
     const recommendedArtworks = recommended.artworks || [];
     const followingArtworks = following.data?.artworks || [];
+    console.log(recommendedArtworks, 'recommended artworks');
+    console.log(followingArtworks, 'following artworks');
 
     return (
         <section className="py-14 bg-gray-50">
