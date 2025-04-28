@@ -395,13 +395,13 @@ export default function CozyGallery() {
                     ))}
 
                     {/* Right wall artworks */}
-                    {exhibitionRoom.rightWallArtworks.map((galleryArtwork) => (
+                    {/* {exhibitionRoom.rightWallArtworks.map((galleryArtwork) => (
                         <ArtworkMesh
                             key={galleryArtwork.id}
                             galleryArtwork={galleryArtwork}
                             session={null}
                         />
-                    ))}
+                    ))} */}
 
                     {/* Center wall artworks */}
                     {exhibitionRoom.centerWallArtworks.map((galleryArtwork) => (

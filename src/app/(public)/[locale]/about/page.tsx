@@ -6,12 +6,23 @@ import Footer from '@/components/footer';
 import { getFeaturedExhibitions } from '@/service/home';
 import { ExhibitionSection } from '../home/@exhibition/components/exhibition-section';
 import { getTranslations } from 'next-intl/server';
+import { PublicExhibition } from '@/types/exhibition';
 
 export default async function AboutPage({ params }: { params: { locale: string } }) {
     const t = await getTranslations({ locale: params.locale, namespace: 'about' });
     
-    const featuredExhibitionsResponse = await getFeaturedExhibitions();
-    const featuredExhibitions = featuredExhibitionsResponse.data?.exhibitions;
+    let featuredExhibitions : PublicExhibition[] = [];
+    
+    try {
+        // Fetch featured exhibitions
+        const featuredExhibitionsResponse = await getFeaturedExhibitions();
+        featuredExhibitions = featuredExhibitionsResponse.data?.exhibitions || [];
+    } catch (error) {
+        // Log server-side error without exposing to client
+        console.error('Error fetching featured exhibitions:', error);
+        // Return empty array for exhibitions to avoid rendering errors
+        featuredExhibitions = [];
+    }
     
     return (
         <div className='min-h-screen flex flex-col font-[family-name:var(--font-geist-sans)]'>
@@ -145,7 +156,7 @@ export default async function AboutPage({ params }: { params: { locale: string }
                     {/* Featured Exhibitions */}
                     <ExhibitionSection
                         title={'title_featured'}
-                        exhibitions={featuredExhibitions || []}
+                        exhibitions={featuredExhibitions}
                     />
                 </div>
                 
