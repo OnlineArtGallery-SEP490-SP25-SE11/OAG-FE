@@ -101,6 +101,7 @@
     "exhibition": {
       "title_trending": "Trending Exhibitions",
       "title_new": "New Exhibitions",
+      "title_featured": "Featured Exhibitions",
       "view_all": "View All",
       "free": "Free",
       "paid": "Paid"
@@ -125,6 +126,54 @@
       "read_more": "Read More",
       "most_popular": "Most popular",
       "min_read": "min read"
+    }
+  },
+  "about": {
+    "hero": {
+      "title": {
+        "line1": "Online Art",
+        "line2": "Exhibitions."
+      },
+      "subtitle": "Unlimited by reality. Accessible for everyone.",
+      "artists": {
+        "title": "Artists & Art Galleries",
+        "description": "Exhibit your art in beautiful 3D art galleries. Share freely, get instant visitors and sell your art."
+      },
+      "artLovers": {
+        "title": "Art Lovers & Art Collectors",
+        "description": "Visit 3D art exhibitions from the comfort of your browser. Acquire art directly from the artist."
+      },
+      "buttons": {
+        "openExhibition": "Open your own art exhibition",
+        "discoverExhibitions": "Discover art exhibitions"
+      }
+    },
+    "discover": {
+      "title": {
+        "line1": "Discover art",
+        "line2": "exhibitions from",
+        "line3": "around the world."
+      },
+      "button": "Discover art exhibitions",
+      "image": {
+        "alt": "Art gallery background"
+      }
+    },
+    "featured": {
+      "title": {
+        "line1": "Featured",
+        "line2": "exhibition."
+      },
+      "description": "Experience art in immersive 3D spaces. Walk through virtual galleries and discover amazing artworks."
+    },
+    "vision": {
+      "statement": "Our vision is a democratic, equal & sustainable global art market.",
+      "image": {
+        "alt": "Vision background"
+      }
+    },
+    "mission": {
+      "statement": "Our mission is to offer every artist an equal opportunity & give more art to experience."
     }
   },
   "validation": {

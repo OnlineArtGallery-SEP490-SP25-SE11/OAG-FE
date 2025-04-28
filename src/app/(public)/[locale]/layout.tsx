@@ -4,7 +4,7 @@ import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 // import SignOutItem from "./_header/sign-out-item";
 import Header from './_header';
-import Footer from '@/components/footer';
+// import Footer from '@/components/footer';
 
 export default async function PublicLayout({
 	children,
@@ -24,7 +24,7 @@ export default async function PublicLayout({
 		<NextIntlClientProvider messages={messages} locale={locale}>
 			<Header />
 			<div className='mt-20'>{children}</div>
-			<Footer />
+			{/* <Footer /> */}
 		</NextIntlClientProvider>
 	);
 }
