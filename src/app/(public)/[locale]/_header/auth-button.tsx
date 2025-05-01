@@ -11,7 +11,6 @@ import {
 	BookOpen,
 	CircleUserRoundIcon,
 	Key,
-	MessageCircle,
 	Palette,
 	SettingsIcon,
 	SquareChartGantt,
@@ -133,11 +132,11 @@ export default function AuthButton() {
 						text={t('wallet')}
 						href='/wallet'
 					/>
-					<DropdownItemWithIcon
+					{/* <DropdownItemWithIcon
 						icon={<MessageCircle className='w-6 h-6' />}
 						text={t('messages')}
 						href='/messages'
-					/>
+					/> */}
 					<DropdownItemWithIcon
 						icon={<SquareChartGantt className='w-6 h-6' />}
 						text='My Events'

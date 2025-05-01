@@ -23,20 +23,23 @@ interface ExhibitionDateManagerProps {
   exhibition: Exhibition;
   onSaveDates: (dates: DateFormValues) => Promise<void>;
   isLoading: boolean;
+  disabled?: boolean;
+
 }
 
 export default function ExhibitionDateManager({
   form,
   exhibition,
   onSaveDates,
-  isLoading
+  isLoading,
+  disabled = false
 }: ExhibitionDateManagerProps) {
   const t = useTranslations('exhibitions');
   const [isDirty, setIsDirty] = useState(false);
-  
+
   const startDate = form.watch('startDate');
   const endDate = form.watch('endDate');
-  
+
   const handleDateChange = (field: 'startDate' | 'endDate', date: Date | undefined) => {
     form.setValue(field, date, {
       shouldValidate: true,
@@ -44,7 +47,7 @@ export default function ExhibitionDateManager({
     });
     setIsDirty(true);
   };
-  
+
   const handleReset = () => {
     form.setValue('startDate', exhibition.startDate ? new Date(exhibition.startDate) : undefined, {
       shouldDirty: false
@@ -54,7 +57,7 @@ export default function ExhibitionDateManager({
     });
     setIsDirty(false);
   };
-  
+
   const handleSave = async () => {
     await onSaveDates({
       startDate,
@@ -62,13 +65,13 @@ export default function ExhibitionDateManager({
     });
     setIsDirty(false);
   };
-  
+
   const startDateError = form.formState.errors.startDate?.message;
   const endDateError = form.formState.errors.endDate?.message;
-  
+
   // Validate that end date is after start date
   const isEndDateValid = !startDate || !endDate || (startDate && endDate && endDate > startDate);
-  
+
   return (
     <Card className="p-6">
       <div className="mb-4">
@@ -79,7 +82,7 @@ export default function ExhibitionDateManager({
           {t('exhibition_dates_description')}
         </p>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <Label htmlFor="startDate">{t('start_date')}</Label>
@@ -113,7 +116,7 @@ export default function ExhibitionDateManager({
             <p className="text-sm text-destructive">{startDateError}</p>
           )}
         </div>
-        
+
         <div className="space-y-2">
           <Label htmlFor="endDate">{t('end_date')}</Label>
           <Popover>
@@ -150,7 +153,7 @@ export default function ExhibitionDateManager({
           )}
         </div>
       </div>
-      
+
       <div className="flex justify-end gap-2 mt-4">
         <Button
           type="button"
@@ -167,7 +170,7 @@ export default function ExhibitionDateManager({
           type="button"
           size="sm"
           onClick={handleSave}
-          disabled={isLoading || !isDirty || !isEndDateValid}
+          disabled={disabled || isLoading || !isDirty || !isEndDateValid}
           className="gap-1"
         >
           <Save className="w-4 h-4" />

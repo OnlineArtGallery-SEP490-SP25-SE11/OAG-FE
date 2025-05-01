@@ -20,6 +20,7 @@ interface LinkNameManagerProps {
   onSave: (linkName: string) => Promise<void>;
   isLoading: boolean;
   originalLinkName: string;
+  disabled?: boolean;
 }
 
 export default function LinkNameManager({
@@ -28,18 +29,19 @@ export default function LinkNameManager({
   isPublished,
   onSave,
   isLoading,
-  originalLinkName
+  originalLinkName,
+  disabled = false
 }: LinkNameManagerProps) {
   const t = useTranslations('exhibitions');
   const [isDirty, setIsDirty] = useState(false);
-  
+
   const linkName = form.watch('linkName');
   const linkError = form.formState.errors.linkName?.message;
 
   useEffect(() => {
     setIsDirty(form.formState.isDirty);
   }, [form.formState.isDirty]);
-  
+
   const handleLinkNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formattedValue = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-');
 
@@ -83,7 +85,7 @@ export default function LinkNameManager({
           onChange={handleLinkNameChange}
           placeholder={t('enter_link_name')}
           className={linkError ? 'border-destructive' : ''}
-          disabled={isLoading}
+          disabled={disabled || isLoading}
         />
       </div>
 
@@ -109,7 +111,7 @@ export default function LinkNameManager({
             type="button"
             size="sm"
             onClick={handleSave}
-            disabled={isLoading || !isDirty || !!linkError || !linkName}
+            disabled={disabled || isLoading || !isDirty || !!linkError || !linkName}
             className="gap-1"
           >
             <Save className="w-4 h-4" />

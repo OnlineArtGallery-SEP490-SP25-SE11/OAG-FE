@@ -5,7 +5,6 @@ export default async function ArticlesPage() {
   const data = await getMostHeartedBlogs();
   const articles = data.data?.blogs || [];
   
-  console.log(articles, 'cac');
   return (
     <section className="py-24 bg-white">
       <ArticleSection articles={articles} />

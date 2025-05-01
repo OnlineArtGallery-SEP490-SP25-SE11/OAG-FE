@@ -668,7 +668,8 @@ function Modal() {
       const artworksBasePath = `${langPrefix}/artworks`;
       router.replace(artworksBasePath, { scroll: false });
     }, 150); // Match this to CSS transition duration
-  }, [startClosing, resetArtModal, router, pathname, viewMutation]);
+  // }, [startClosing, resetArtModal, router, pathname, viewMutation]);
+  }, [startClosing, resetArtModal, router, pathname]);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);

@@ -41,6 +41,9 @@ const dateFormSchema = z.object({
 // Form values for link name
 type LinkFormValues = z.infer<typeof linkNameSchema>;
 
+const canUpdateExhibition = (status: ExhibitionStatus) => {
+  return status !== ExhibitionStatus.PUBLISHED;
+};
 export default function PublishContent({ exhibition }: { exhibition: Exhibition }) {
   const t = useTranslations('exhibitions');
   const tCommon = useTranslations('common');
@@ -78,30 +81,38 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
   // Validate exhibition before publishing
   const validateExhibition = (): string[] => {
     const errors: string[] = [];
-    
+
     // Check for artwork positions
     if (exhibition.artworkPositions.length === 0) {
       errors.push(t('validation_no_artworks'));
     }
-    
+
     // Check for link name
     if (!linkNameForm.watch('linkName')) {
       errors.push(t('validation_no_linkname'));
     }
-    
+
     // Check dates (if end date is before start date)
     const startDate = dateForm.watch('startDate');
     const endDate = dateForm.watch('endDate');
-    
+
     if (startDate && endDate && endDate < startDate) {
       errors.push(t('validation_invalid_dates'));
     }
-    
+
     return errors;
   };
 
   // Handle link name update
   const handleLinkNameSave = async (linkName: string) => {
+    if (!canUpdateExhibition(exhibition.status)) {
+      toast({
+        title: tCommon('error'),
+        description: t('cannot_update_published_exhibition'),
+        variant: 'destructive',
+      });
+      return;
+    }
     setCurrentOperation('linkName');
     await updateExhibition(
       { linkName },
@@ -131,6 +142,14 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
 
   // Handle date updates
   const handleSaveDates = async (dates: DateFormValues) => {
+    if (!canUpdateExhibition(exhibition.status)) {
+      toast({
+        title: tCommon('error'),
+        description: t('cannot_update_published_exhibition'),
+        variant: 'destructive',
+      });
+      return;
+    }
     setCurrentOperation('dates');
     await updateExhibition(
       {
@@ -369,6 +388,7 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
           onSave={handleLinkNameSave}
           isLoading={isOperationLoading('linkName')}
           originalLinkName={exhibition.linkName || ''}
+          disabled={!canUpdateExhibition(exhibition.status)}
         />
 
         {/* Exhibition Dates Section */}
@@ -377,6 +397,7 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
           exhibition={exhibition}
           onSaveDates={handleSaveDates}
           isLoading={isOperationLoading('dates')}
+          disabled={!canUpdateExhibition(exhibition.status)}
         />
 
         {/* Ticket Section */}
@@ -418,7 +439,7 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
               {isOperationLoading('cancelPending') ? t('cancelling_request') : t('cancel_pending_request')}
             </Button>
           )}
-          
+
           {/* Unpublish button - only show if already published */}
           {isPublished && (
             <Button

@@ -641,6 +641,11 @@
     }
   },
   "exhibitions": {
+        "no_engagement_data": "No engagement data yet",
+    "no_engagement_hint": "Data will appear once visitors interact with your exhibition",
+    "unlock_analytics_title": "Unlock Exhibition Analytics",
+    "unlock_analytics_desc": "Upgrade to Premium to access detailed analytics including visitor statistics, artwork engagement, and performance metrics.",
+    "upgrade_now_button": "Upgrade Now",
     "artwork_placed_success": "Artwork placed successfully",
     "placing": "Placing",
     "cancel_pending_request": "Cancel Request",

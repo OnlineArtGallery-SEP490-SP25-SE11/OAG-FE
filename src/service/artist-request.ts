@@ -9,7 +9,6 @@ export async function getArtistRequest() {
       throw new Error("User not found");
     }
     const res = await createApi(user.accessToken).get(`/artist-request/my-request`);
-    console.log("rezz", res);
     return res.data;
   } catch (err) {
     console.error(`Error when fetching Artist Request by User ID: ${err}`);

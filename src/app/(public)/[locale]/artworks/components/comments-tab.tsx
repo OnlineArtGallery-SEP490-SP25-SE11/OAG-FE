@@ -287,10 +287,10 @@ export default function CommentArtworkDrawer({
     <div className="space-y-4 text-white">
       {/* Comment input section */}
       <div className="flex items-start space-x-3 mt-2">
-        <Avatar className="h-8 w-8 rounded-full">
+        {/* <Avatar className="h-8 w-8 rounded-full">
           <AvatarImage src={user?.image || ""} />
           <AvatarFallback className="bg-white/20 text-xs" />
-        </Avatar>
+        </Avatar> */}
         <Input
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}

@@ -597,6 +597,11 @@
     }
   },
   "exhibitions": {
+    "no_engagement_data": "Chưa có dữ liệu tương tác",
+    "no_engagement_hint": "Dữ liệu sẽ xuất hiện khi khách tham quan tương tác với triển lãm của bạn",
+    "unlock_analytics_title": "Mở khóa Phân tích Triển lãm",
+    "unlock_analytics_desc": "Nâng cấp lên Premium để truy cập phân tích chi tiết bao gồm thống kê người xem, tương tác tác phẩm và các chỉ số hiệu suất.",
+    "upgrade_now_button": "Nâng cấp Ngay",
     "artwork_placed_success": "Tác phẩm đã được thêm thành công",
     "placing": "Đang thêm",
     "cancel_pending_request": "Huỷ yêu cầu",

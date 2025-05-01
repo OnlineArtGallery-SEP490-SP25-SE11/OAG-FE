@@ -53,7 +53,6 @@ export default function SettingsPage() {
       setCurrentUser(user);
 
       const data = await getArtistRequest();
-      console.log("dataz", data.data.artistRequest);
       if (data.data.artistRequest) {
         const artistRequest = data.data.artistRequest;
         setCccdData(artistRequest.cccd); // Cập nhật thông tin CCCD
