@@ -199,6 +199,8 @@
     "credentialsSignin": "Thông tin đăng nhập không hợp lệ"
   },
   "blog": {
+    "update_status_error" : "Đã xảy ra lỗi khi cập nhật trạng thái bài viết",
+    "set_private_success": "Đã ẩn bài viết thành công",
     "change_image": "Thay đổi hình ảnh",
     "delete_blog_title": "Xóa bài viết",
     "delete_blog_confirmation": "Bạn có chắc chắn muốn xóa bài viết này? Tất cả dữ liệu sẽ bị xóa vĩnh viễn khỏi hệ thống.",
@@ -595,6 +597,18 @@
     }
   },
   "exhibitions": {
+    "artwork_placed_success": "Tác phẩm đã được thêm thành công",
+    "placing": "Đang thêm",
+    "cancel_pending_request": "Huỷ yêu cầu",
+    "cancelling_request": "Đang hủy...",
+    "exhibition_pending_cancelled": "Yêu cầu xuất bản đã bị hủy",
+    "validation_errors": "Vui lòng sửa các lỗi sau trước khi xuất bản",
+    "validation_no_artworks": "Triển lãm của bạn cần ít nhất một tác phẩm",
+    "validation_no_linkname": "Bạn phải đặt một tên liên kết hợp lệ",
+    "validation_invalid_dates": "Ngày kết thúc không thể trước ngày bắt đầu",
+    "private": "Riêng tư",
+    "exhibition_status_pending": "Đang chờ duyệt",
+    "exhibition_pending_review": "Triển lãm của bạn đang được xem xét. Chúng tôi sẽ thông báo khi được duyệt.",
     "premium": "Premium",
     "instruction": "Hướng dẫn",
     "controls": "Điều khiển",
