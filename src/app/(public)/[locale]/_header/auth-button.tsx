@@ -12,7 +12,6 @@ import {
 	CircleUserRoundIcon,
 	Key,
 	Palette,
-	SettingsIcon,
 	SquareChartGantt,
 	UserRoundPen,
 	WalletMinimal,

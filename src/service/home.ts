@@ -63,7 +63,7 @@ export async function getNewRecommendedArtworks() {
         });
         console.log(res, 'new recommended artworks');
         return res.data;
-    } catch (error) {
+    } catch (error) {   
         console.error('Failed to fetch new recommended artworks:', error);
         throw handleApiError<{ artworks: Artwork[] }>(error, 'Failed to fetch new recommended artworks');
     }
