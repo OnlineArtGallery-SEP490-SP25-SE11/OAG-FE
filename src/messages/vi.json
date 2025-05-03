@@ -456,7 +456,12 @@
     "artType": {
       "digitalart": "Tranh kỹ thuật số",
       "painting": "Tranh vẽ tay"
-    }
+    },
+     "save": "Lưu tranh",
+    "description": "Mô tả",
+    "download":"Tải xuống",
+          "dimensions": "Kích thước",
+          "view_details": "Xem chi tiết"
   },
   "artwork_management": {
     "title": "Quản lý tác phẩm",
