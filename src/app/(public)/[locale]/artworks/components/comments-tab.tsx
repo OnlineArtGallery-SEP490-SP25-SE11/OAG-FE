@@ -224,6 +224,7 @@ export default function CommentArtworkDrawer({
         {editingCommentId === comment._id && (
           <div className="flex items-center space-x-2 mt-2">
             <Input
+              key={comment._id}
               value={editContent}
               onChange={(e) => setEditContent(e.target.value)}
             />
@@ -239,6 +240,7 @@ export default function CommentArtworkDrawer({
         {!isReply && replyTo === comment._id && (
           <div className="flex items-center space-x-2 mt-2">
             <Input
+              key={`${comment._id}-reply`}
               placeholder="Write a reply..."
               value={replyContent}
               onChange={(e) => setReplyContent(e.target.value)}

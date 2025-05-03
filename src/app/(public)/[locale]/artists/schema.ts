@@ -15,17 +15,22 @@ export const artworkFormSchema = (t: (key: string) => string) => {
 			required_error: t('validation.artTypeRequired')
 		}),
 		isSelling: z.boolean().default(false),
-
 		price: z.union([
 			z.string().min(1),
 			z.number().min(0)
 		]).optional().transform(val => typeof val === 'string' && val ? Number(val) : val),
-		status: z.enum(['available', 'sold', 'hidden', 'selling'], {
+		status: z.enum(['available', 'hidden', 'selling'], {
 			required_error: t('validation.statusRequired')
 		}),
-		imageUrl: z.string().optional(),
-		lowResUrl: z.string().optional(),
-		watermarkUrl: z.string().optional(),
+		imageUrl: z.string().url(
+			{ message: t('validation.imageUrlInvalid') }
+		).optional(),
+		lowResUrl: z.string().url(
+			{ message: t('validation.imageUrlInvalid') }
+		).optional(),
+		watermarkUrl: z.string().url(
+			{ message: t('validation.imageUrlInvalid') }
+		).optional(),
 	});
 };
 export const artworkFormUpdateSchema = z.object({
