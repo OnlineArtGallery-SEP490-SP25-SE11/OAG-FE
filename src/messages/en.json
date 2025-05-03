@@ -485,7 +485,8 @@
       "painting": "Traditional Painting"
     },
     "save": "Artwork save",
-    "description": "Description"
+    "description": "Description",
+    "download":"Download"
   },
   "artwork_management": {
     "title": "Artwork Management",
@@ -864,7 +865,9 @@
       "add_comment": "Add a comment",
       "no_artwork_info": "No artwork information available",
       "price": "Price",
-      "loading": "Loading..."
+      "loading": "Loading...",
+      "dimensions": "Dimensions",
+      "view_details": "View Details"
     }
   },
   "artist_layout": {
