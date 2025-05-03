@@ -4,6 +4,7 @@
       "english": "English",
       "vietnamese": "Vietnamese"
     },
+    "upgrade_to_premium" : "Upgrade to Premium",
     "login": "Login",
     "signup": "Sign up",
     "signin": "Sign in",
@@ -641,7 +642,10 @@
     }
   },
   "exhibitions": {
-        "no_engagement_data": "No engagement data yet",
+    "upgrade_to_premium": "Upgrade to Premium",
+    "limit_reached_title": "View Limit Reached",
+    "limit_reached_description": "You've reached the daily limit of 5 exhibition views. Upgrade to Premium for unlimited access.",
+    "no_engagement_data": "No engagement data yet",
     "no_engagement_hint": "Data will appear once visitors interact with your exhibition",
     "unlock_analytics_title": "Unlock Exhibition Analytics",
     "unlock_analytics_desc": "Upgrade to Premium to access detailed analytics including visitor statistics, artwork engagement, and performance metrics.",

@@ -4,6 +4,7 @@
       "english": "Tiếng Anh",
       "vietnamese": "Tiếng Việt"
     },
+    "upgrade_to_premium": "Nâng cấp lên Premium",
     "login": "Đăng nhập",
     "signup": "Đăng ký",
     "signin": "Đăng nhập",
@@ -597,6 +598,9 @@
     }
   },
   "exhibitions": {
+    "upgrade_to_premium": "Nâng cấp Premium",
+    "limit_reached_title": "Đã đạt giới hạn lượt xem",
+    "limit_reached_description": "Bạn đã đạt giới hạn 5 lượt xem phòng tranh mỗi ngày. Nâng cấp lên Premium để xem không giới hạn.",
     "no_engagement_data": "Chưa có dữ liệu tương tác",
     "no_engagement_hint": "Dữ liệu sẽ xuất hiện khi khách tham quan tương tác với triển lãm của bạn",
     "unlock_analytics_title": "Mở khóa Phân tích Triển lãm",
