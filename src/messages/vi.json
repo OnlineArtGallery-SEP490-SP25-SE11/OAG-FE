@@ -121,7 +121,19 @@
     "image_size_limit": "Hình ảnh phải nhỏ hơn {size}MB",
     "invalid_file_type": "Loại tệp không hợp lệ. Định dạng được phép: {allowed}",
     "invalid_format": "{field} có định dạng không hợp lệ: {requirements}",
-    "alphanumeric_only": "chỉ cho phép chữ cái, số và dấu cách"
+    "alphanumeric_only": "chỉ cho phép chữ cái, số và dấu cách",
+    "titleMaxLength": "Tiêu đề không được vượt quá 100 ký tự",
+    "descriptionMaxLength": "Mô tả không được vượt quá 2000 ký tự",
+    "tooManyCategories": "Tối đa 10 danh mục được phép",
+    "widthNumber": "Chiều rộng phải là số hợp lệ",
+    "heightNumber": "Chiều cao phải là số hợp lệ",
+    "priceGreaterThanOne": "Giá phải lớn hơn 1 khi bán",
+    "sellingDigitalOnly": "Chỉ tranh kỹ thuật số mới có thể được bán",
+    "imageRequired": "Hình ảnh là bắt buộc",
+    "invalidUrl": "Định dạng URL không hợp lệ",
+    "imageUrlInvalid": "Định dạng URL hình ảnh không hợp lệ",
+    "duplicateCategories": "Không được phép có danh mục trùng lặp",
+    "painting_cannot_sell": "Tranh vẽ tay không thể được bán trực tuyến"
   },
   "signup": {
     "otpSent": "OTP đã gửi",
@@ -146,7 +158,8 @@
     "somethingWentWrong": "Đã xảy ra lỗi không xác định",
     "registerError": "Đăng ký không thành công",
     "accessDenied": "Truy cập bị từ chối",
-    "credentialsSignin": "Thông tin đăng nhập không hợp lệ"
+    "credentialsSignin": "Thông tin đăng nhập không hợp lệ",
+    "isBanned": "Tài khoản này hiện đang bị cấm và không thể thực hiện chức năng này."
   },
   "blog": {
     "change_image": "Thay đổi hình ảnh",
@@ -282,13 +295,18 @@
       "price": "Nhập giá",
       "status": "Chọn trạng thái",
       "categories": "Nhập tên danh mục",
-      "add_category": "Thêm danh mục"
+      "add_category": "Thêm danh mục",
+      "artType": "Chọn loại tác phẩm"
     },
     "helper": {
       "artType": "Chọn loại tác phẩm nghệ thuật của bạn",
       "status": "Chọn trạng thái hiển thị và bán tác phẩm",
       "painting_status": "Tranh vẽ tay chỉ có thể hiển thị hoặc ẩn",
-      "price": "Nhập giá bán tác phẩm (chỉ áp dụng cho tranh kỹ thuật số)"
+      "price": "Nhập giá bán tác phẩm (chỉ áp dụng cho tranh kỹ thuật số)",
+      "description": "Mô tả nên bao gồm phong cách, chủ đề và ý nghĩa của tác phẩm",
+      "categories": "Chọn tất cả danh mục phù hợp với tác phẩm này",
+      "image": "Hình ảnh nên có độ phân giải cao và hiển thị rõ ràng tác phẩm",
+      "suggestedCategories": "Danh mục gợi ý"
     },
     "status": {
       "all": "Tất cả",
@@ -328,6 +346,18 @@
       "heightRequired": "Vui lòng nhập chiều cao",
       "priceRequired": "Vui lòng nhập giá",
       "statusRequired": "Vui lòng chọn trạng thái",
+      "artTypeRequired": "Vui lòng chọn loại tác phẩm",
+      "titleMaxLength": "Tiêu đề không được vượt quá 100 ký tự",
+      "descriptionMaxLength": "Mô tả không được vượt quá 2000 ký tự",
+      "tooManyCategories": "Tối đa 10 danh mục được phép",
+      "widthNumber": "Chiều rộng phải là số hợp lệ",
+      "heightNumber": "Chiều cao phải là số hợp lệ",
+      "priceGreaterThanOne": "Giá phải lớn hơn 1 khi bán",
+      "sellingDigitalOnly": "Chỉ tranh kỹ thuật số mới có thể được bán",
+      "imageRequired": "Hình ảnh là bắt buộc",
+      "invalidUrl": "Định dạng URL không hợp lệ",
+      "imageUrlInvalid": "Định dạng URL hình ảnh không hợp lệ",
+      "duplicateCategories": "Không được phép có danh mục trùng lặp",
       "painting_cannot_sell": "Tranh vẽ tay không thể được bán trực tuyến"
     },
     "purchase_confirmation": "Xác nhận mua tranh",
@@ -360,7 +390,7 @@
     "purchase_not_available": "Mua tranh không khả dụng",
     "collection_not_available": "Bộ sưu tập không khả dụng",
     "swipe_to_change_tabs": "Vuốt để chuyển tab",
-    "no_description": "Không có mô tả",
+    "no_description": "Chưa có mô tả",
     "no_comments": "Chưa có bình luận nào",
     "info": "Thông tin",
     "view_profile": "Xem hồ sơ",

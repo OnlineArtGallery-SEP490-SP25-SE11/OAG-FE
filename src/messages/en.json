@@ -141,6 +141,17 @@
     "invalid_file_type": "Invalid file type. Allowed formats: {allowed}",
     "invalid_format": "{field} has invalid format: {requirements}",
     "alphanumeric_only": "only letters, numbers, and spaces are allowed",
+    "titleMaxLength": "Title cannot exceed 100 characters",
+    "descriptionMaxLength": "Description cannot exceed 2000 characters",
+    "tooManyCategories": "Maximum 10 categories allowed",
+    "widthNumber": "Width must be a valid number",
+    "heightNumber": "Height must be a valid number",
+    "priceGreaterThanOne": "Price must be greater than 1 when selling",
+    "sellingDigitalOnly": "Only digital art can be sold",
+    "imageRequired": "Image is required",
+    "invalidUrl": "Invalid URL format",
+    "imageUrlInvalid": "Invalid image URL format",
+    "duplicateCategories": "Duplicate categories are not allowed",
     "painting_cannot_sell": "Traditional paintings cannot be sold online"
   },
   "signup": {
@@ -305,7 +316,8 @@
       "price": "Enter price",
       "status": "Select status",
       "categories": "Enter category name",
-      "add_category": "Add category"
+      "add_category": "Add category",
+      "artType": "Select art type"
     },
     "helper": {
       "artType": "Choose your artwork type",
@@ -355,6 +367,18 @@
       "heightRequired": "Height is required",
       "priceRequired": "Price is required",
       "statusRequired": "Status is required",
+      "artTypeRequired": "Art type is required",
+      "titleMaxLength": "Title cannot exceed 100 characters",
+      "descriptionMaxLength": "Description cannot exceed 2000 characters",
+      "tooManyCategories": "Maximum 10 categories allowed",
+      "widthNumber": "Width must be a valid number",
+      "heightNumber": "Height must be a valid number",
+      "priceGreaterThanOne": "Price must be greater than 1 when selling",
+      "sellingDigitalOnly": "Only digital art can be sold",
+      "imageRequired": "Image is required",
+      "invalidUrl": "Invalid URL format",
+      "imageUrlInvalid": "Invalid image URL format",
+      "duplicateCategories": "Duplicate categories are not allowed",
       "painting_cannot_sell": "Traditional paintings cannot be sold online"
     },
     "purchase_confirmation": "Confirm Purchase",
@@ -403,24 +427,15 @@
     "report_artwork": "Report artwork",
     "yours": "Yours",
     "purchased": "Purchased",
-    "buy": "Buy",
-    "save": "Save",
-    "download": "Download",
-    "description": "Description",
-    "be_first_comment": "Be the first to comment",
-    "user": "User",
-    "days_ago": "{days} days ago",
-    "comment_example": "Great artwork! I love the composition and colors.",
     "download_success": "Downloaded successfully",
     "download_error": "Download error",
-    "standard_view": "Standard view",
-    "immersive_view": "Immersive view",
-    "close_details": "Close details",
     "categories": "Categories",
     "artType": {
       "digitalart": "Digital Art",
       "painting": "Traditional Painting"
-    }
+    },
+    "save": "Artwork save",
+    "description": "Description"
   },
   "artwork_management": {
     "title": "Artwork Management",

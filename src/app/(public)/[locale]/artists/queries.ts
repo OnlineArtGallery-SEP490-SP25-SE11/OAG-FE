@@ -1,9 +1,9 @@
 import { ArtworkFormData } from '@/app/(public)/[locale]/artists/schema';
 import { createAxiosInstance } from '@/lib/axios';
-
+import BaseResponse from '@/types/response';
 const ITEMS_PER_PAGE = 12;
 export const artworkService = {
-	upload: async (formData: ArtworkFormData): Promise<any> => {
+	upload: async (formData: ArtworkFormData): Promise<BaseResponse<any>> => {
 		const axios = await createAxiosInstance({ useToken: true });
 		if (!axios) throw new Error('Failed to create Axios instance');
 
@@ -23,8 +23,6 @@ export const artworkService = {
 			artType: formData.artType,
 			isSelling: formData.isSelling
 		});
-
-
 
 		if (response.status === 201) {
 			console.log(response.data);

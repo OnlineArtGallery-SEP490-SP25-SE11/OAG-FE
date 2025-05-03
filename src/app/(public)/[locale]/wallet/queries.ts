@@ -7,6 +7,7 @@ export const walletService = {
         const axios = await createAxiosInstance({ useToken: true });
         if (!axios) throw new Error('Failed to create Axios instance');
         const response = await axios.get('/wallet');
+        // console.log(response.data);
         return response.data;
     },
     getTransaction: async (skip?: number, take: number = ITEMS_PER_PAGE): Promise<BaseResponse<Transaction>> => {
