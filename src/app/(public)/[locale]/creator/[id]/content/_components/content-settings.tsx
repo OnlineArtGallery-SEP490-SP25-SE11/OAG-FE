@@ -266,7 +266,7 @@ return (
                                     'video/*': ['.mp4', '.webm']
                                 }}
                                 maxFiles={1}
-                                maxSize={50 * 1024 * 1024}
+                                maxSize={10 * 1024 * 1024}
                                 onFileUpload={(files) => {
                                     field.onChange(files[0]?.url || '');
                                     setShowUploaders(prev => ({ ...prev, backgroundMedia: false }));
@@ -308,7 +308,7 @@ return (
                                 multiple={false}
                                 accept={{ 'audio/*': ['.mp3', '.wav'] }}
                                 maxFiles={1}
-                                maxSize={10 * 1024 * 1024}
+                                maxSize={5 * 1024 * 1024}
                                 onFileUpload={(files) => {
                                     field.onChange(files[0]?.url || '');
                                     setShowUploaders(prev => ({ ...prev, backgroundAudio: false }));

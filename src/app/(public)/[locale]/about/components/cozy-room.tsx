@@ -170,7 +170,7 @@ export default function CozyGallery() {
                 )
             },
             // Artwork configuration for main wall
-            mainWallArtworks: [
+      mainWallArtworks: [
                 {
                     id: '1',
                     artwork: {
@@ -179,7 +179,7 @@ export default function CozyGallery() {
                         description: 'A vibrant abstract representation of a natural landscape.',
                         category: ['abstract', 'landscape'],
                         dimensions: { width: 600, height: 400 },
-                        url: ARTWORK_URL.ARTWORK_1,
+                        url: "https://images.unsplash.com/photo-1515405295579-ba7b45403062?w=400&q=80",
                         status: 'active',
                         views: 120,
                         price: 2500,
@@ -198,7 +198,7 @@ export default function CozyGallery() {
                         description: 'A study in geometric shapes inspired by urban architecture.',
                         category: ['modern', 'geometry'],
                         dimensions: { width: 500, height: 500 },
-                        url: ARTWORK_URL.ARTWORK_2,
+                        url: "https://images.unsplash.com/photo-1460411794035-42aac080490a?w=400&q=80",
                         status: 'active',
                         views: 87,
                         price: 1800,
@@ -217,7 +217,7 @@ export default function CozyGallery() {
                         description: 'A calming piece representing inner peace and tranquility.',
                         category: ['abstract', 'minimal'],
                         dimensions: { width: 700, height: 500 },
-                        url: ARTWORK_URL.ARTWORK_3,
+                        url: "https://images.unsplash.com/photo-1552083974-186346191183?w=400&q=80",
                         status: 'active',
                         views: 215,
                         price: 3000,
@@ -239,7 +239,7 @@ export default function CozyGallery() {
                         description: 'An exploration of blue tones and their emotional resonance.',
                         category: ['color study', 'abstract'],
                         dimensions: { width: 600, height: 450 },
-                        url: ARTWORK_URL.ARTWORK_2,
+                        url: "https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=400&q=80",
                         status: 'active',
                         views: 75,
                         price: 1900,
@@ -258,7 +258,7 @@ export default function CozyGallery() {
                         description: 'An impressionist view of a mystical forest scene.',
                         category: ['landscape', 'impressionist'],
                         dimensions: { width: 550, height: 700 },
-                        url: ARTWORK_URL.ARTWORK_3,
+                        url: "https://images.unsplash.com/photo-1448375240586-882707db888b?w=400&q=80",
                         status: 'active',
                         views: 142,
                         price: 2200,
@@ -272,44 +272,8 @@ export default function CozyGallery() {
             ],
             // Artwork configuration for right wall
             rightWallArtworks: [
-                {
-                    id: '6',
-                    artwork: {
-                        _id: '6',
-                        title: 'Digital Landscape',
-                        description: 'A futuristic representation of landscape merged with technology.',
-                        category: ['digital', 'futuristic'],
-                        dimensions: { width: 800, height: 400 },
-                        url: ARTWORK_URL.ARTWORK_4,
-                        status: 'active',
-                        views: 203,
-                        price: 2700,
-                        artistId: 'artist4'
-                    },
-                    placement: {
-                        position: rightWallResult.positions[0],
-                        rotation: rightWallResult.rotations[0]
-                    }
-                },
-                {
-                    id: '7',
-                    artwork: {
-                        _id: '7',
-                        title: 'Harmony in Chaos',
-                        description: 'Finding order and beauty within chaotic elements.',
-                        category: ['abstract', 'conceptual'],
-                        dimensions: { width: 650, height: 500 },
-                        url: ARTWORK_URL.ARTWORK_3,
-                        status: 'active',
-                        views: 118,
-                        price: 2400,
-                        artistId: 'artist1'
-                    },
-                    placement: {
-                        position: rightWallResult.positions[1],
-                        rotation: rightWallResult.rotations[1]
-                    }
-                }
+               
+             
             ],
             // Center wall artworks
             centerWallArtworks: [
@@ -321,7 +285,7 @@ export default function CozyGallery() {
                         description: 'A study of movement and circular patterns in nature.',
                         category: ['kinetic', 'natural'],
                         dimensions: { width: 500, height: 500 },
-                        url: ARTWORK_URL.ARTWORK_4,
+                        url: "https://images.unsplash.com/photo-1501446529957-6226bd447c46?w=400&q=80",
                         status: 'active',
                         views: 97,
                         price: 2100,
@@ -340,7 +304,7 @@ export default function CozyGallery() {
                         description: 'Pure geometric abstraction exploring form and color.',
                         category: ['geometric', 'abstract'],
                         dimensions: { width: 600, height: 600 },
-                        url: ARTWORK_URL.ARTWORK_2,
+                        url: "https://images.unsplash.com/photo-1605106702734-205df224ecce?w=400&q=80",
                         status: 'active',
                         views: 136,
                         price: 2300,
@@ -431,13 +395,13 @@ export default function CozyGallery() {
                     ))}
 
                     {/* Right wall artworks */}
-                    {exhibitionRoom.rightWallArtworks.map((galleryArtwork) => (
+                    {/* {exhibitionRoom.rightWallArtworks.map((galleryArtwork) => (
                         <ArtworkMesh
                             key={galleryArtwork.id}
                             galleryArtwork={galleryArtwork}
                             session={null}
                         />
-                    ))}
+                    ))} */}
 
                     {/* Center wall artworks */}
                     {exhibitionRoom.centerWallArtworks.map((galleryArtwork) => (

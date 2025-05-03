@@ -1,3 +1,5 @@
+import Footer from "@/components/footer";
+
 export default async function HomeLayout({
   children,
   exhibition,
@@ -23,6 +25,7 @@ export default async function HomeLayout({
         {spotlight}
         {articles}
       </main>
+      <Footer />
     </div>
   );
 }
