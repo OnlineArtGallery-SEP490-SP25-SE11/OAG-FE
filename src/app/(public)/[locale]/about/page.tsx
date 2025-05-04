@@ -15,7 +15,7 @@ export default async function AboutPage({ params }: { params: { locale: string }
     
     try {
         // Fetch featured exhibitions
-        const featuredExhibitionsResponse = await getFeaturedExhibitions();
+        const featuredExhibitionsResponse = await getFeaturedExhibitions(10);
         featuredExhibitions = featuredExhibitionsResponse.data?.exhibitions || [];
     } catch (error) {
         // Log server-side error without exposing to client
