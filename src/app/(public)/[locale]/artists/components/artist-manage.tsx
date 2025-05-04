@@ -18,7 +18,7 @@ import { Badge } from '@/components/ui/badge';
 import { vietnamCurrency } from '@/utils/converters';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
-import { BookmarkIcon, CheckCircle2, Clock, Edit2, Eye, FilterX, Loader2, Search, ShieldAlert, Trash2, X } from 'lucide-react';
+import { BookmarkIcon, CheckCircle2, Clock, Edit2, Eye, FilterX, Search, ShieldAlert, Trash2, X } from 'lucide-react';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';

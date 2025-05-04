@@ -668,7 +668,8 @@ function Modal() {
       const artworksBasePath = `${langPrefix}/artworks`;
       router.replace(artworksBasePath, { scroll: false });
     }, 150); // Match this to CSS transition duration
-  }, [startClosing, resetArtModal, router, pathname, viewMutation]);
+  // }, [startClosing, resetArtModal, router, pathname, viewMutation]);
+  }, [startClosing, resetArtModal, router, pathname]);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -942,16 +943,16 @@ function Modal() {
             className="absolute top-3 left-3 z-50 p-2 h-8 w-8 rounded-full bg-black/50 hover:bg-black/60 active:bg-black/80 text-white focus:outline-none transition-colors"
             onClick={toggleLayout}
             disabled={isLayoutTransitioning}
-            aria-label={
-              alternativeLayout
-                ? t("artwork.standard_view")
-                : t("artwork.immersive_view")
-            }
-            title={
-              alternativeLayout
-                ? t("artwork.standard_view")
-                : t("artwork.immersive_view")
-            }
+            // aria-label={
+            //   alternativeLayout
+            //     ? t("artwork.standard_view")
+            //     : t("artwork.immersive_view")
+            // }
+            // title={
+            //   alternativeLayout
+            //     ? t("artwork.standard_view")
+            //     : t("artwork.immersive_view")
+            // }
           >
             {alternativeLayout ? (
               <Rows className="h-4 w-4" />
@@ -1057,7 +1058,7 @@ function Modal() {
                   </div>
 
                   {/* Tab content */}
-                  <div className="flex-1 px-3 sm:px-4 pb-3 sm:pb-4 overflow-hidden">
+                  <div className="flex-1 px-3 sm:px-4 pb-3 sm:pb-4 overflow-hidden"          >
                     {activeTab === "details" ? (
                       <DetailTab
                         artwork={artwork}

@@ -32,10 +32,11 @@ export async function getNewExhibitions(): Promise<ApiResponse<GetPublicExhibiti
     return response;
 }
 
-export async function getFeaturedExhibitions(): Promise<ApiResponse<GetPublicExhibitionsResponse>> {
+export async function getFeaturedExhibitions(limit: number): Promise<ApiResponse<GetPublicExhibitionsResponse>> {
     const response = await getPublicExhibitions({
         filter: { isFeatured: true },
-        limit: 10
+        sort: { createdAt: -1 },
+        limit
     });
     return response;
 }
@@ -63,7 +64,7 @@ export async function getNewRecommendedArtworks() {
         });
         console.log(res, 'new recommended artworks');
         return res.data;
-    } catch (error) {
+    } catch (error) {   
         console.error('Failed to fetch new recommended artworks:', error);
         throw handleApiError<{ artworks: Artwork[] }>(error, 'Failed to fetch new recommended artworks');
     }

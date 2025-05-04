@@ -2,14 +2,30 @@ import { createApi } from "@/lib/axios";
 import axiosInstance from "axios";
 import { getCurrentUser } from "@/lib/session";
 
-export async function getArtistRequest() {
+export type CccdDataType = {
+  id: "",
+  name: "",
+  dob: "",
+  sex: "",
+  nationality: "",
+  home: "",
+  address: "",
+  doe: "",
+  issue_date: "",
+  issue_loc: "",
+  features: "",
+  mrz: "",
+  imageFront: "",
+  imageBack: "",
+}
+
+export async function getArtistRequest(accessToken: string) {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
-      throw new Error("User not found");
-    }
-    const res = await createApi(user.accessToken).get(`/artist-request/my-request`);
-    console.log("rezz", res);
+    // const user = await getCurrentUser();
+    // if (!user) {
+    //   throw new Error("User not found");
+    // }
+    const res = await createApi(accessToken).get(`/artist-request/my-request`);
     return res.data;
   } catch (err) {
     console.error(`Error when fetching Artist Request by User ID: ${err}`);

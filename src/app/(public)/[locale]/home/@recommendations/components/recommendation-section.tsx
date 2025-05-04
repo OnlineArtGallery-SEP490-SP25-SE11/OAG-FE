@@ -157,7 +157,7 @@ function ArtworkGrid({ artworks, t, emptyMessageKey }: ArtworkGridProps) {
                             style={{ flexGrow: 0, flexShrink: 0 }}
                         >
                             <Link
-                                href={`/artworks/${artwork._id}`} // Updated link structure example
+                                href={`/artworks?id=${artwork._id}`} // Updated link structure example
                                 className="block group"
                             // Remove target="_blank" unless explicitly needed, often bad UX
                             // rel="noopener noreferrer" // Only needed with target="_blank"
@@ -207,7 +207,7 @@ function ArtworkGrid({ artworks, t, emptyMessageKey }: ArtworkGridProps) {
                                             )}
                                         </div>
                                         {/* Price Formatting: Ensure vietnamCurrency handles locale or use next-intl's formatter */}
-                                        {typeof artwork.price === 'number' && (
+                                        { artwork.status === 'selling' && (
                                             <p className="text-sm font-medium text-gray-900 mt-1">
                                                 {vietnamCurrency(artwork.price)}
                                                 {/* Example using next-intl formatter (if needed):
