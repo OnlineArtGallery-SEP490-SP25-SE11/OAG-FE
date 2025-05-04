@@ -351,6 +351,7 @@
     }
   },
   "artwork": {
+    "buy":"Buy",
     "view_artist_profile": "View Artist Profile",
     "title": "Upload Artwork",
     "subtitle": "Enter details about your artwork piece",
@@ -522,7 +523,8 @@
       "all": "All",
       "pending": "Pending",
       "rejected": "Rejected",
-      "approved": "Approved"
+      "approved": "Approved",
+      "suspended": "Suspended"
     },
     "info": {
       "dimensions": "Dimensions",
@@ -870,6 +872,7 @@
       "explore": "Explore Artworks"
     },
     "artwork": {
+      "buy": "Buy",
       "artist": "Artist",
       "unknown_artist": "Unknown",
       "purchased_on": "Purchased on",
