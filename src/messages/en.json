@@ -4,7 +4,7 @@
       "english": "English",
       "vietnamese": "Vietnamese"
     },
-    "upgrade_to_premium" : "Upgrade to Premium",
+    "upgrade_to_premium": "Upgrade to Premium",
     "login": "Login",
     "signup": "Sign up",
     "signin": "Sign in",
@@ -100,6 +100,10 @@
       "followers": "{count} followers"
     },
     "exhibition": {
+      "featured_artist": "Featured Artist",
+      "view_exhibition": "View Exhibition",
+      "exhibition": "Exhibition",
+      "featured": "Featured",
       "title_trending": "Trending Exhibitions",
       "title_new": "New Exhibitions",
       "title_featured": "Featured Exhibitions",

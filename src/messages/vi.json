@@ -81,6 +81,10 @@
       "followers": "{count} người theo dõi"
     },
     "exhibition": {
+      "featured_artist": "Nghệ sĩ tiêu biểu",
+      "view_exhibition": "Xem triển lãm",
+      "exhibition": "Triển lãm",
+      "featured": "Nổi bật",
       "title_trending": "Triển lãm Nổi bật",
       "title_new": "Triển lãm mới",
       "title_featured": "Triễn lãm nổi bật",
@@ -200,7 +204,7 @@
     "credentialsSignin": "Thông tin đăng nhập không hợp lệ"
   },
   "blog": {
-    "update_status_error" : "Đã xảy ra lỗi khi cập nhật trạng thái bài viết",
+    "update_status_error": "Đã xảy ra lỗi khi cập nhật trạng thái bài viết",
     "set_private_success": "Đã ẩn bài viết thành công",
     "change_image": "Thay đổi hình ảnh",
     "delete_blog_title": "Xóa bài viết",
