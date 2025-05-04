@@ -91,26 +91,11 @@ export default function SettingsPage() {
 
   const handleSaveCCCD = async () => {
     try {
-      const data = {
-        id: '044203005010',
-        name: 'NGUYỄN DANH LƯU',
-        dob: '02/02/2003',
-        sex: 'NAM',
-        nationality: 'VIỆT NAM',
-        home: 'TÂN THỦY, LỆ THỦY, QUẢNG BÌNH',
-        address: 'THÔN TÂN LỰC, TÂN THỦY, LỆ THỦY, QUẢNG BÌNH',
-        doe: '02/02/2028',
-        issue_date: '12/06/2021',
-        issue_loc: 'CỤC CẢNH SÁT QUẢN LÝ HÀNH CHÍNH VỀ TRẬT TỰ XÃ HỘI',
-        features: 'NỐT RUỒI C: 2CM TRƯỚC TRÊN ĐẦU LÔNG MÀY TRÁI',
-        mrz: 'IDVNM2030050105044203005010<<1 0302025M2802024VNM<<<<<<<<<<<0 NGUYEN<<DANH<LUU<<<<<<<<<<<<<<',
-        imageFront: 'https://res.cloudinary.com/dbh0wjh24/image/upload/v1746116185/oag_api/9e64e0b1_a550_4153_abb4_83209b9eec4c_1746116182209.jpg',
-        imageBack: 'https://res.cloudinary.com/dbh0wjh24/image/upload/v1746116186/oag_api/dc198717_cf97_455b_b779_8d224f301990_1746116185252.jpg'
-      }
+      
 
       const result = await createArtistRequest({
         accessToken: session!.user.accessToken,
-        cccdData: { ...data },
+        cccdData: { ...cccdData},
       });
 
       if (result.statusCode === 201) {
@@ -140,7 +125,7 @@ export default function SettingsPage() {
         formData,
         {
           headers: {
-            "api-key": "2RTwag6kRKPlqRMkENa0e60Q9RpvmT30",
+            "api-key": process.env.NEXT_PUBLIC_FPT_AI_API_KEY,
             "Content-Type": "multipart/form-data",
           },
         }
