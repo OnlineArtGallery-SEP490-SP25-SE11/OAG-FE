@@ -14,7 +14,6 @@ const BlogSidebar: React.FC = async () => {
 
 	const response = await getUserBlogs(user.accessToken);
 	const blogs = response.data?.blogs || [];
-console.log('bloz', blogs);
 	const header = (
 		<Link href='/' className='mx-auto '>
 			<Image

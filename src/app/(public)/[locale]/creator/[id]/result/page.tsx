@@ -1,8 +1,8 @@
 import { getExhibitionById } from "@/service/exhibition";
 import ResultContent from "./_components/result-content";
 import { getCurrentUser } from "@/lib/session";
-import { checkIsArtistPremium } from "@/service/user";
 import { notFound } from "next/navigation";
+import { checkPremium } from '@/utils/premium';
 
 
 export default async function ResultPage({
@@ -21,8 +21,8 @@ export default async function ResultPage({
 	if (!user) {
 		return notFound();
 	}
-	const resPremium = await checkIsArtistPremium(user!.accessToken);
-	const isPremium = resPremium.data?.isPremium;
+	const premiumStatus = await checkPremium(user.accessToken);
+	const { isPremium } = premiumStatus;
 	return (
 		<ResultContent exhibition={exhibition!} isPremium={isPremium!} />
 	)

@@ -198,13 +198,9 @@ interface BlogSectionProps {
 export function SidebarBlogSection({ blogs }: BlogSectionProps) {
 	let publishedBlogs: Blog[] = [];
 	let draftBlogs: Blog[] = [];
-	console.log('blogz1', blogs);
 	if (blogs.length > 0) {
 		publishedBlogs = blogs.filter((blog) => blog.status === BlogStatus.PUBLISHED) ?? [];
 		draftBlogs = blogs.filter((blog) => blog.status !== BlogStatus.PUBLISHED) ?? [];
-		
-		console.log('Published Blogs:', publishedBlogs);
-		console.log('Draft Blogs:', draftBlogs);
 	}
 	return (
 		<div>

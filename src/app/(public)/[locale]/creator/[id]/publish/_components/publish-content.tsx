@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { Rocket, EyeOff } from "lucide-react";
+import { Rocket, EyeOff, AlertTriangle, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ExhibitionInfoHeader } from "../../components/exhibition-info-header";
 import ExhibitionPublishStatus from "./exhibition-publish-status";
@@ -17,9 +17,10 @@ import ExhibitionDateManager, { DateFormValues } from "./exhibition-date-manager
 import LinkNameManager from "./exhibition-linkname-manager";
 import DiscoveryManager from "./exhibition-discovery-manager";
 import TicketManager, { TicketData } from "./ticket-manager";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 // Define operation types for tracking specific loading states
-type UpdateOperation = 'linkName' | 'publish' | 'unpublish' | 'discovery' | 'dates' | 'ticket';
+type UpdateOperation = 'linkName' | 'publish' | 'unpublish' | 'discovery' | 'dates' | 'ticket' | 'cancelPending';
 
 // Link name form schema
 const linkNameSchema = z.object({
@@ -40,16 +41,21 @@ const dateFormSchema = z.object({
 // Form values for link name
 type LinkFormValues = z.infer<typeof linkNameSchema>;
 
+const canUpdateExhibition = (status: ExhibitionStatus) => {
+  return status !== ExhibitionStatus.PUBLISHED;
+};
 export default function PublishContent({ exhibition }: { exhibition: Exhibition }) {
   const t = useTranslations('exhibitions');
   const tCommon = useTranslations('common');
   const { toast } = useToast();
   const { updateExhibition, isUpdating } = useExhibition();
   const [isPublished, setIsPublished] = useState(exhibition.status === ExhibitionStatus.PUBLISHED);
+  const [isPending, setIsPending] = useState(exhibition.status === ExhibitionStatus.PENDING);
   // Track operation-specific loading states
   const [currentOperation, setCurrentOperation] = useState<UpdateOperation | null>(null);
   const [isDiscoverable, setIsDiscoverable] = useState(exhibition.discovery || false);
-  
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+
   const baseUrl = 'oag-vault.vercel.app/exhibition/';
 
   // Initialize the forms with exhibition data
@@ -71,9 +77,42 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
 
   // Helper to check if a specific operation is in progress
   const isOperationLoading = (operation: UpdateOperation) => isUpdating && currentOperation === operation;
-  
+
+  // Validate exhibition before publishing
+  const validateExhibition = (): string[] => {
+    const errors: string[] = [];
+
+    // Check for artwork positions
+    if (exhibition.artworkPositions.length === 0) {
+      errors.push(t('validation_no_artworks'));
+    }
+
+    // Check for link name
+    if (!linkNameForm.watch('linkName')) {
+      errors.push(t('validation_no_linkname'));
+    }
+
+    // Check dates (if end date is before start date)
+    const startDate = dateForm.watch('startDate');
+    const endDate = dateForm.watch('endDate');
+
+    if (startDate && endDate && endDate < startDate) {
+      errors.push(t('validation_invalid_dates'));
+    }
+
+    return errors;
+  };
+
   // Handle link name update
   const handleLinkNameSave = async (linkName: string) => {
+    if (!canUpdateExhibition(exhibition.status)) {
+      toast({
+        title: tCommon('error'),
+        description: t('cannot_update_published_exhibition'),
+        variant: 'destructive',
+      });
+      return;
+    }
     setCurrentOperation('linkName');
     await updateExhibition(
       { linkName },
@@ -103,6 +142,14 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
 
   // Handle date updates
   const handleSaveDates = async (dates: DateFormValues) => {
+    if (!canUpdateExhibition(exhibition.status)) {
+      toast({
+        title: tCommon('error'),
+        description: t('cannot_update_published_exhibition'),
+        variant: 'destructive',
+      });
+      return;
+    }
     setCurrentOperation('dates');
     await updateExhibition(
       {
@@ -133,10 +180,10 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
   // Handle discovery toggle with immediate update
   const handleDiscoveryToggle = async (checked: boolean) => {
     if (!isPublished) return;
-    
+
     setCurrentOperation('discovery');
     setIsDiscoverable(checked); // Update local state optimistically
-    
+
     await updateExhibition(
       { discovery: checked },
       {
@@ -162,6 +209,36 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
     );
   };
 
+  // Handle cancelling a pending publication request
+  const handleCancelPending = async () => {
+    if (isUpdating && currentOperation) return;
+
+    setCurrentOperation('cancelPending');
+    await updateExhibition(
+      { status: ExhibitionStatus.DRAFT },
+      {
+        onSuccess: () => {
+          setIsPublished(false);
+          setIsPending(false);
+          toast({
+            title: tCommon('success'),
+            description: t('exhibition_pending_cancelled'),
+            variant: 'success',
+          });
+          setCurrentOperation(null);
+        },
+        onError: (error) => {
+          toast({
+            title: tCommon('error'),
+            description: t(error.err?.message || 'cancel_pending_failed'),
+            variant: 'destructive',
+          });
+          setCurrentOperation(null);
+        }
+      }
+    );
+  };
+
   // Handle unpublish
   const handleUnpublish = async () => {
     if (isUpdating && currentOperation) return;
@@ -175,14 +252,13 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
       return;
     }
 
-    //
-
     setCurrentOperation('unpublish');
     await updateExhibition(
       { status: ExhibitionStatus.DRAFT },
       {
         onSuccess: () => {
           setIsPublished(false);
+          setIsPending(false);
           toast({
             title: tCommon('success'),
             description: t('exhibition_unpublished'),
@@ -207,16 +283,20 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
     const linkName = linkNameForm.getValues('linkName');
     const startDate = dateForm.getValues('startDate');
     const endDate = dateForm.getValues('endDate');
-    
-    if (!linkName || linkNameForm.formState.errors.linkName) {
+
+    // Validate before submitting
+    const errors = validateExhibition();
+    if (errors.length > 0) {
+      setValidationErrors(errors);
       toast({
         title: tCommon('error'),
-        description: t('invalid_link_name'),
+        description: t('validation_errors'),
         variant: 'destructive',
       });
       return;
     }
-    
+
+    setValidationErrors([]);
     setCurrentOperation('publish');
     await updateExhibition(
       {
@@ -227,7 +307,7 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
       },
       {
         onSuccess: () => {
-          setIsPublished(true);
+          setIsPending(true);
           toast({
             title: tCommon('success'),
             description: t('exhibition_pending'),
@@ -285,16 +365,30 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
         description={t('exhibition_publish_description')}
         title={t('exhibition_publish_title')}
       />
-      
+
+      {validationErrors.length > 0 && (
+        <Alert variant="destructive" className="bg-red-50 text-red-800 border border-red-200">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertDescription>
+            <ul className="list-disc pl-4 mt-2">
+              {validationErrors.map((error, index) => (
+                <li key={index}>{error}</li>
+              ))}
+            </ul>
+          </AlertDescription>
+        </Alert>
+      )}
+
       <div className="space-y-8">
         {/* Link Name Section */}
         <LinkNameManager
           form={linkNameForm}
           baseUrl={baseUrl}
-          isPublished={isPublished}
+          isPublished={isPublished || isPending}
           onSave={handleLinkNameSave}
           isLoading={isOperationLoading('linkName')}
           originalLinkName={exhibition.linkName || ''}
+          disabled={!canUpdateExhibition(exhibition.status)}
         />
 
         {/* Exhibition Dates Section */}
@@ -303,6 +397,7 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
           exhibition={exhibition}
           onSaveDates={handleSaveDates}
           isLoading={isOperationLoading('dates')}
+          disabled={!canUpdateExhibition(exhibition.status)}
         />
 
         {/* Ticket Section */}
@@ -322,14 +417,29 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
 
         {/* Publication Status */}
         <ExhibitionPublishStatus
-          isPublished={isPublished}
+          status={exhibition.status}
           linkName={linkNameForm.watch('linkName')}
           baseUrl={baseUrl}
           ticket={ticket}
         />
 
         {/* Action Buttons */}
-        <div className="flex justify-end pt-4">
+        <div className="flex justify-end pt-4 gap-4">
+          {/* Cancel Pending button - only show if status is pending */}
+          {isPending && (
+            <Button
+              type="button"
+              size="lg"
+              variant="outline"
+              onClick={handleCancelPending}
+              disabled={isOperationLoading('cancelPending')}
+              className="gap-2 border-amber-500 text-amber-500 hover:bg-amber-50"
+            >
+              <Clock className="w-5 h-5" />
+              {isOperationLoading('cancelPending') ? t('cancelling_request') : t('cancel_pending_request')}
+            </Button>
+          )}
+
           {/* Unpublish button - only show if already published */}
           {isPublished && (
             <Button
@@ -345,24 +455,22 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
             </Button>
           )}
 
-          {/* Only show publish button if not published */}
-          {!isPublished && (
-            <div>
-              <LoaderButton
-                isLoading={isOperationLoading('publish')}
-                onClick={handlePublish}
-                size="lg"
-                disabled={
-                  !linkNameForm.watch('linkName') ||
-                  !!linkNameForm.formState.errors.linkName ||
-                  isOperationLoading('publish')
-                }
-                className="gap-2"
-              >
-                <Rocket className="w-5 h-5" />
-                {t('publish_exhibition')}
-              </LoaderButton>
-            </div>
+          {/* Only show publish button if not published or pending */}
+          {!isPublished && !isPending && (
+            <LoaderButton
+              isLoading={isOperationLoading('publish')}
+              onClick={handlePublish}
+              size="lg"
+              disabled={
+                !linkNameForm.watch('linkName') ||
+                !!linkNameForm.formState.errors.linkName ||
+                isOperationLoading('publish')
+              }
+              className="gap-2"
+            >
+              <Rocket className="w-5 h-5" />
+              {t('publish_exhibition')}
+            </LoaderButton>
           )}
         </div>
       </div>

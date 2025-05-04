@@ -26,7 +26,6 @@ export function useBlogs(searchTerm = '') {
 		(key) => getPublishedBlogs(key),
 		{ revalidateFirstPage: false }
 	);
-	console.log(data);
 
 	const blogs = data
 		? data.flatMap((page) => page?.edges.map((edge) => edge.node))

@@ -15,7 +15,6 @@ export default async function ExhibitionGrid({ locale }: { locale: string }) {
   let exhibitions: Exhibition[] = [];
     const exhibitionsResponse = await getUserExhibitions(user.accessToken);
     exhibitions = exhibitionsResponse.data?.exhibitions ?? [];
-    console.log('caz', exhibitionsResponse)
 
   if (exhibitions.length === 0) {
     return <div>{t('no_exhibitions_found')}</div>;

@@ -3,7 +3,7 @@ import { getIp } from './get-ip';
 
 const PRUNE_INTERVAL = 60 * 1000; // 1 minute
 
-const trackers = new Map<
+export const trackers = new Map<
 	string,
 	{
 		count: number;
@@ -68,4 +68,39 @@ export async function rateLimitByKey({
 	}
 
 	trackers.set(key, tracker);
+}
+
+
+export function checkLimitStatus({
+    key = 'global',
+    limit = 1
+}: {
+    key: string;
+    limit: number;
+}) {
+    const tracker = trackers.get(key);
+    
+    // Nếu không có tracker hoặc đã hết hạn
+    if (!tracker || tracker.expiresAt < Date.now()) {
+        return {
+            count: 0,
+            remaining: limit,
+            resetAt: tracker?.expiresAt || null,
+            isLimited: false
+        };
+    }
+    
+    // Nếu còn tracker và chưa hết hạn
+    const remaining = Math.max(0, limit - tracker.count);
+    return {
+        count: tracker.count,
+        remaining,
+        resetAt: tracker.expiresAt,
+        isLimited: remaining <= 0
+    };
+}
+
+// Hàm reset giới hạn cho một key cụ thể
+export function resetLimit(key: string) {
+    trackers.delete(key);
 }
