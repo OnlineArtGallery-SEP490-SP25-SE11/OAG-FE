@@ -6,6 +6,8 @@ interface CameraStore {
   targetPosition: Vector3 | null;
   setIsLocked: (value: boolean) => void;
   setTargetPosition: (value: Vector3 | null) => void;
+  isTransitioningBack: boolean;
+  setIsTransitioningBack: (value: boolean) => void;
 }
 
 export const useCameraStore = create<CameraStore>((set) => ({
@@ -13,4 +15,6 @@ export const useCameraStore = create<CameraStore>((set) => ({
   targetPosition: null,
   setIsLocked: (value) => set({ isLocked: value }),
   setTargetPosition: (value) => set({ targetPosition: value }),
+  isTransitioningBack: false,
+  setIsTransitioningBack: (value) => set({ isTransitioningBack: value })
 }));

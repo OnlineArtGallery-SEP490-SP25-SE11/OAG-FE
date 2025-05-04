@@ -16,8 +16,13 @@ interface User {
 export async function getUser(token: string): Promise<User> {
 	try {
 		const res = await createApi(token).get('/user');
-
-		return res.data;
+		const userData = res.data;
+		
+		// Thêm giá trị mặc định cho image nếu không có
+		return {
+			...userData,
+			image: userData.image || '/default-avatar.png'
+		};
 	} catch (error) {
 		console.error('Failed to get user', error);
 		throw error;
@@ -64,16 +69,8 @@ type CheckIsArtistPremiumResponse = {
 export async function checkIsArtistPremium(token: string): Promise<ApiResponse<CheckIsArtistPremiumResponse>> {
 	try {
 		console.log('Checking if artist is premium with token:', token);
-		// const res = await createApi(token).get('/artist/premium-check');
-		return {
-			data: {
-				isPremium: true
-			},
-			details: null,
-			message: 'Success',
-			errorCode: '',
-			status: 200
-		};
+		const res = await createApi(token).get('/premium/status');
+		return res.data;
 	} catch (error) {
 		console.error('Error checking if artist is premium:', error);
 		throw handleApiError<CheckIsArtistPremiumResponse>(
@@ -189,6 +186,8 @@ export async function getUserProfile(userId: string): Promise<{user: User, isFol
 		throw error;
 	}
 }
+
+
 
 
 

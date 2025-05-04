@@ -1,43 +1,94 @@
 'use client';
+
+import React, { useState, useRef, Suspense, useCallback, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-// import { Loader } from './gallery-loader';
 import dynamic from 'next/dynamic';
-// import { Stats } from '@react-three/drei';
-import { Exhibition as ExhibitionType } from '@/types/exhibition';
+import { useRouter } from 'next/navigation';
+import { useCameraStore } from '@/store/cameraStore';
 import { GalleryPreviewLoader } from '@/app/(public)/[locale]/about/components/gallery-preview-loader';
+import { InstructionOverlay } from './instructions-overlay';
+import { usePointerLock } from '@/hooks/use-pointer-lock';
+import { useKeyboardControls } from '@/hooks/use-keyboard-controls';
+import { Exhibition as ExhibitionType } from '@/types/exhibition';
 import { Session } from 'next-auth';
 
-
-interface ExhibitionProps {
+export interface ExhibitionProps {
     exhibition: ExhibitionType;
     session: Session | null;
 }
 
+const Scene = dynamic(() => import('./scene').then((mod) => mod.default), {
+    ssr: false,
+    loading: () => <GalleryPreviewLoader />,
+});
+
 export default function Exhibition({ exhibition, session }: ExhibitionProps) {
-    const Scene = dynamic(() => import('./scene').then((mod) => mod.default), {
-        ssr: false,
-        loading: () => <GalleryPreviewLoader />
+    const [active, setActive] = useState(true);
+    const canvasContainerRef = useRef<HTMLDivElement>(null);
+    const router = useRouter();
+
+    const storeIsLocked = useCameraStore(state => state.isLocked);
+    const { setTargetPosition, setIsTransitioningBack } = useCameraStore();
+
+    usePointerLock({
+        active,
+        canvasContainerRef,
+        setActive,
+        setIsTransitioningBack
     });
+
+    useKeyboardControls(active, setActive, setTargetPosition);
+
+    const handleResume = useCallback(() => {
+        if (useCameraStore.getState().isLocked) {
+            setTargetPosition(null);
+        }
+        setActive(true);
+    }, [setTargetPosition]);
+
+    const handleExit = useCallback(() => {
+        if (document.body.style.cursor === 'none') {
+            document.body.style.cursor = 'default';
+        }
+        setActive(false);
+        setTargetPosition(null);
+        router.push('/discover');
+    }, [router, setTargetPosition]);
+
+    useEffect(() => {
+        return () => {
+            // Cleanup: ensure cursor is visible when component unmounts
+            document.body.style.cursor = 'default';
+        };
+    }, []);
+
     return (
-        <div className='w-full h-screen'>
+        <div
+            ref={canvasContainerRef}
+            style={{ cursor: (active && !storeIsLocked) ? 'none' : 'default' }}
+            className='relative w-full h-screen bg-gray-900'
+        >
+             {exhibition.backgroundAudio && (
+            <audio
+              src={exhibition.backgroundAudio}
+              loop
+              autoPlay
+              className="hidden"
+            />
+          )}
+            <InstructionOverlay
+                active={active}
+                onResume={handleResume}
+                onExit={handleExit}
+            />
             <Canvas
-                 shadows
-                //  dpr={[0.5, 1]} // Limit max DPR to 2
-                 performance={{
-                //    min: 0.5, // Render at minimum 50% resolution
-                //    max: 1,   // Maximum 100% resolution
-                //    debounce: 200 // Wait 200ms before adjusting quality
-                 }}
-                // gl={{
-                //     antialias: false,
-                //     powerPreference: 'high-performance',
-                //     alpha: false,
-                //     stencil: false,
-                //     depth: true
-                // }}
+                shadows
+                performance={{ min: 0.5, max: 1, debounce: 200 }}
+                className="w-full h-screen block"
             >
-                {/* <Stats /> */}
-                <Scene exhibition={exhibition} session={session} />
+                <Suspense fallback={null}>
+                    <Scene exhibition={exhibition} session={session} />
+                </Suspense>
             </Canvas>
         </div>
     );

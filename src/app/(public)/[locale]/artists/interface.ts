@@ -5,7 +5,8 @@ export type Artwork = {
     category: string[];
     dimensions: { width: number; height: number; _id: string };
     url: string;
-    status: 'available' | 'sold' | 'hidden' | 'selling';
+    status: 'available'  | 'hidden' | 'selling';
+    artType: 'digitalart' | 'painting';
     buyers: string[];
     views: number;
     price: number;

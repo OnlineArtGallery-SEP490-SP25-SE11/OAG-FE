@@ -14,6 +14,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import useAuthClient from '@/hooks/useAuth-client';
 import { useQueryClient } from '@tanstack/react-query';
 import { AuthDialog } from '@/components/ui.custom/auth-dialog';
+import { useRouter } from 'next/navigation';
 
 export interface Event {
   _id: string;
@@ -32,6 +33,7 @@ export interface Event {
 }
 
 export function EventFeed() {
+  const router = useRouter(); // Add router
   const { user } = useAuthClient();
   const queryClient = useQueryClient();
   const { toast } = useToast();
@@ -80,67 +82,122 @@ export function EventFeed() {
   };
 
   const mutationRegister = useMutation({
-    mutationFn: (eventId: string) => eventService.participate(eventId),
+    mutationFn: async (eventId: string) => {
+      try {
+        const result = await eventService.participate(eventId);
+        return result;
+      } catch (error: any) {
+        // Explicitly throw the error with the response data
+        console.log("Error in mutation:", error);
+        throw error;
+      }
+    },
     onSuccess: () => {
       toast({
         title: "Registration successful",
         description: "You have successfully registered for the event",
         className: 'bg-green-500 text-white border-green-600'
-      })
+      });
       queryClient.invalidateQueries({ queryKey: ['events'] });
     },
-    onError: () => {
-      toast({
-        title: "Registration failed",
-        description: "Failed to register for the event",
-        className: 'bg-red-500 text-white border-red-600'
-      })
+    onError: (error: any) => {
+      console.log("onError received:", error);
+      
+      // Get error message from API response or use default message
+      const errorMessage = error?.response?.data?.message || "Failed to register for the event";
+      const errorCode = error?.response?.data?.errorCode;
+      
+      if (errorCode === 'user_banned') {
+        toast({
+          title: "Account Restricted",
+          description: "Your account has been banned. You cannot participate in events.",
+          className: 'bg-red-500 text-white border-red-600'
+        });
+      } else {
+        toast({
+          title: "Registration failed",
+          description: errorMessage,
+          className: 'bg-red-500 text-white border-red-600'
+        });
+      }
     }
-  })
+  });
 
   const mutationCancel = useMutation({
-    mutationFn: (eventId: string) => eventService.participate(eventId),
+    mutationFn: async (eventId: string) => {
+      try {
+        const result = await eventService.cancelParticipation(eventId);
+        return result;
+      } catch (error: any) {
+        // Explicitly throw the error with the response data
+        console.log("Error in cancel mutation:", error);
+        throw error;
+      }
+    },
     onSuccess: () => {
+      console.log("Cancellation successful");
       toast({
         title: "Cancellation successful",
         description: "You have successfully cancelled your registration",
-        className: 'bg-red-500 text-white border-red-600'
+        className: 'bg-green-500 text-white border-green-600'
+
       })
       queryClient.invalidateQueries({ queryKey: ['events'] });
     },
-    onError: () => {
-      toast({
-        title: "Cancellation failed",
-        description: "Failed to cancel your registration",
-        className: 'bg-red-500 text-white border-red-600'
-      })
+    onError: (error: any) => {
+      console.log("onError received in cancel:", error);
+      
+      // Get error message from API response or use default message
+      const errorMessage = error?.response?.data?.message || "Failed to cancel your registration";
+      const errorCode = error?.response?.data?.errorCode;
+      
+      if (errorCode === 'user_banned') {
+        toast({
+          title: "Account Restricted",
+          description: "Your account has been banned. You cannot perform this action.",
+          className: 'bg-red-500 text-white border-red-600'
+        });
+      } else {
+        toast({
+          title: "Cancellation failed",
+          description: errorMessage,
+          className: 'bg-red-500 text-white border-red-600'
+        });
+      }
     }
   })
 
   const handleParticipate = (eventId: string) => {
+    // If user is not logged in, show auth dialog
     if (!user) {
       setIsOpen(true);
       return;
-    };
-    const event = data?.find((event: Event) => event._id === eventId)
+    }
+    
+    const event = data?.find((event: Event) => event._id === eventId);
+    
+    // Don't proceed if event is completed or not found
     if (!event || isEventCompleted(event)) {
-      return; // Don't proceed if event is completed
+      return;
     }
+    
+    // If user is already participating, cancel their registration
+    // Otherwise, register them for the event
     if (isParticipated(event)) {
-      cancelParticipate(eventId)
+      cancelParticipate(eventId);
     } else {
-      onParticipate(eventId)
+      onParticipate(eventId);
     }
-  }
+  };
 
   // Function to register for an event
   const onParticipate = (eventId: string) => {
-    mutationRegister.mutate(eventId)
+    mutationRegister.mutate(eventId);
   }
-  
+
   // Function to cancel event registration
   const cancelParticipate = (eventId: string) => {
-    mutationCancel.mutate(eventId)
+    mutationCancel.mutate(eventId);
   }
 
   // Format date and time functions
@@ -165,6 +222,11 @@ export function EventFeed() {
     return text.substring(0, maxLength) + '...';
   };
 
+  // Add navigation handler
+  const navigateToEventDetail = (eventId: string) => {
+    router.push(`/social/event-detail/${eventId}`);
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -179,7 +241,8 @@ export function EventFeed() {
       {data?.map((event: Event) => (
         <Card
           key={event._id}
-          className="overflow-hidden w-full max-w-[700px] transition-all duration-300 hover:shadow-lg"
+          className="overflow-hidden w-full max-w-[700px] transition-all duration-300 hover:shadow-lg cursor-pointer"
+          onClick={() => navigateToEventDetail(event._id)} // Add onClick handler
         >
           <div className="relative aspect-[16/9]">
             <Image
@@ -296,19 +359,23 @@ export function EventFeed() {
                     </div>
                   </div>
                   
-                  {isParticipated(event) && event.link && (
+                  {isParticipated(event) && (
                     <div className="flex items-center text-sm mt-2">
                       <ExternalLink className="mr-2 h-4 w-4 text-primary" />
                       <div>
                         <span className="font-medium">Event Link: </span> 
-                        <a 
-                          href={event.link} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:underline"
-                        >
-                          Join Event
-                        </a>
+                        {event.link ? (
+                          <a 
+                            href={event.link} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:underline"
+                          >
+                            Join Event
+                          </a>
+                        ) : (
+                          <span className="text-gray-500 italic">Updating...</span>
+                        )}
                       </div>
                     </div>
                   )}
@@ -330,7 +397,15 @@ export function EventFeed() {
                 </p>
               </div>
               <div className="flex space-x-2 w-full sm:w-auto">
-                <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="flex-1 sm:flex-none"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent card click event
+                    // Share logic here
+                  }}
+                >
                   <Share2 className="h-4 w-4 mr-2" />
                   Share
                 </Button>
@@ -341,7 +416,10 @@ export function EventFeed() {
                     isParticipated(event) ? 'bg-red-500 hover:bg-red-600' : 
                     'bg-primary'
                   }`}
-                  onClick={() => handleParticipate(event._id)}
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent card click event
+                    handleParticipate(event._id);
+                  }}
                   disabled={isEventCompleted(event)}
                 >
                   {event.status === EventStatus.COMPLETED 

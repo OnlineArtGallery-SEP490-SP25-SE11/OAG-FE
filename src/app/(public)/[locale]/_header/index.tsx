@@ -13,9 +13,9 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const listMenu = [
-	{ href: '/', label: 'home' },
+	{ href: '/home', label: 'home' },
 	{ href: '/about', label: 'about' },
-	{ href: '/contact', label: 'contact' },
+	// { href: '/contact', label: 'contact' },
 	{ href: '/artworks', label: 'artworks' },
 	{ href: '/discover', label: 'discover' },
 	{ href: '/social', label: 'community' },

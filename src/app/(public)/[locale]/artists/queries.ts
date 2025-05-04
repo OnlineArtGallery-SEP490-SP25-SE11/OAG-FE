@@ -1,9 +1,9 @@
 import { ArtworkFormData } from '@/app/(public)/[locale]/artists/schema';
 import { createAxiosInstance } from '@/lib/axios';
-
+import BaseResponse from '@/types/response';
 const ITEMS_PER_PAGE = 12;
 export const artworkService = {
-	upload: async (formData: ArtworkFormData): Promise<any> => {
+	upload: async (formData: ArtworkFormData): Promise<BaseResponse<any>> => {
 		const axios = await createAxiosInstance({ useToken: true });
 		if (!axios) throw new Error('Failed to create Axios instance');
 
@@ -16,11 +16,13 @@ export const artworkService = {
 				height: Number(formData.height)
 			},
 			url: formData.imageUrl || '', // In real app, this would be from file upload
+			lowResUrl: formData.lowResUrl || '', // In real app, this would be from file upload
+			watermarkUrl: formData.watermarkUrl || '', // In real app, this would be from file upload
 			status: formData.status.toLowerCase(),
-			price: Number(formData.price)
+			price: Number(formData.price),
+			artType: formData.artType,
+			isSelling: formData.isSelling
 		});
-
-
 
 		if (response.status === 201) {
 			console.log(response.data);
@@ -96,7 +98,8 @@ export const artworkService = {
 			description: updatedData.description,
 			category: updatedData.categories,
 			status: updatedData.status?.toLowerCase(),
-			price: updatedData.price ? Number(updatedData.price) : undefined
+			price: updatedData.price ? Number(updatedData.price) : undefined,
+			artType: updatedData.artType,
 		});
 
 		if (response.status === 200) {

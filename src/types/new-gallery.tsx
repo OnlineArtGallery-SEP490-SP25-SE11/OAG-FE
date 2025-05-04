@@ -46,7 +46,7 @@ export interface Gallery {
     modelRotation: Vec3;
     modelPosition: Vec3;
     previewImage?: string;
-    planImage?: string;
+    // planImage?: string;
     isPremium?: boolean;
     isActive?: boolean;
     customColliders: CustomCollider[];

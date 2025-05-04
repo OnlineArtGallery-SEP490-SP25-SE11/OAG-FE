@@ -29,6 +29,7 @@
     "success": "Thành công",
     "error": "Lỗi",
     "save_changes": "Lưu thay đổi",
+    "saving": "Đang lưu",
     "cancel": "Hủy",
     "delete": "Xóa",
     "processing": "Đang xử lý...",
@@ -48,6 +49,7 @@
     "loading": "Đang tải..."
   },
   "header": {
+    "become_artist": "Trở thành nghệ sĩ",
     "settings": "Cài đặt",
     "home": "Trang chủ",
     "about": "Giới thiệu",
@@ -71,6 +73,90 @@
     "signupTitle": "Tạo tài khoản mới",
     "googleLogin": "Đăng nhập với Google"
   },
+  "home": {
+    "trending": {
+      "title": "Nghệ sĩ Thịnh hành",
+      "view_all": "Xem tất cả",
+      "followers": "{count} người theo dõi"
+    },
+    "exhibition": {
+      "title_trending": "Triển lãm Nổi bật",
+      "title_new": "Triển lãm mới",
+      "title_featured": "Triễn lãm nổi bật",
+      "view_all": "Xem tất cả",
+      "free": "Miễn phí",
+      "paid": "Có phí"
+    },
+    "recommendations": {
+      "for_you": "Tác phẩm Mới cho Bạn",
+      "following": "Từ Nghệ sĩ Bạn Theo dõi",
+      "view_all": "Xem tất cả",
+      "no_artworks_default": "Không có tác phẩm nào để hiển thị.",
+      "no_artworks_following": "Chưa có tác phẩm mới từ nghệ sĩ bạn theo dõi.",
+      "no_image_placeholder": "Không có hình ảnh",
+      "untitled_artwork": "Chưa có tiêu đề"
+    },
+    "spotlight": {
+      "title": "Nghệ sĩ Tiêu điểm",
+      "view_all": "Xem tất cả Nghệ sĩ",
+      "view_profile": "Xem Hồ sơ"
+    },
+    "articles": {
+      "title": "Bài viết Mới nhất",
+      "view_all": "Xem tất cả",
+      "read_more": "Đọc thêm",
+      "most_popular": "Phổ biến nhất",
+      "min_read": "phút đọc"
+    }
+  },
+  "about": {
+    "hero": {
+      "title": {
+        "line1": "Triển lãm",
+        "line2": "Nghệ thuật Trực tuyến."
+      },
+      "subtitle": "Không giới hạn bởi thực tế. Dễ dàng tiếp cận cho mọi người.",
+      "artists": {
+        "title": "Nghệ sĩ & Phòng trưng bày",
+        "description": "Trưng bày tác phẩm của bạn trong không gian 3D đẹp mắt. Chia sẻ tự do, thu hút khách tham quan và bán tác phẩm."
+      },
+      "artLovers": {
+        "title": "Người yêu nghệ thuật & Sưu tầm",
+        "description": "Tham quan các triển lãm nghệ thuật 3D ngay trên trình duyệt. Mua tác phẩm trực tiếp từ nghệ sĩ."
+      },
+      "buttons": {
+        "openExhibition": "Mở triển lãm nghệ thuật của riêng bạn",
+        "discoverExhibitions": "Khám phá triển lãm nghệ thuật"
+      }
+    },
+    "discover": {
+      "title": {
+        "line1": "Khám phá triển lãm",
+        "line2": "nghệ thuật từ",
+        "line3": "khắp nơi trên thế giới."
+      },
+      "button": "Khám phá triển lãm nghệ thuật",
+      "image": {
+        "alt": "Nền phòng trưng bày nghệ thuật"
+      }
+    },
+    "featured": {
+      "title": {
+        "line1": "Triển lãm",
+        "line2": "nổi bật."
+      },
+      "description": "Trải nghiệm nghệ thuật trong không gian 3D sống động. Tham quan các phòng trưng bày ảo và khám phá những tác phẩm nghệ thuật tuyệt vời."
+    },
+    "vision": {
+      "statement": "Tầm nhìn của chúng tôi là một thị trường nghệ thuật toàn cầu dân chủ, bình đẳng và bền vững.",
+      "image": {
+        "alt": "Nền tầm nhìn"
+      }
+    },
+    "mission": {
+      "statement": "Sứ mệnh của chúng tôi là mang đến cơ hội bình đẳng cho mọi nghệ sĩ và đem nhiều nghệ thuật đến với công chúng."
+    }
+  },
   "validation": {
     "name": "Tên",
     "phone": "Số điện thoại",
@@ -85,7 +171,19 @@
     "image_size_limit": "Hình ảnh phải nhỏ hơn {size}MB",
     "invalid_file_type": "Loại tệp không hợp lệ. Định dạng được phép: {allowed}",
     "invalid_format": "{field} có định dạng không hợp lệ: {requirements}",
-    "alphanumeric_only": "chỉ cho phép chữ cái, số và dấu cách"
+    "alphanumeric_only": "chỉ cho phép chữ cái, số và dấu cách",
+    "titleMaxLength": "Tiêu đề không được vượt quá 100 ký tự",
+    "descriptionMaxLength": "Mô tả không được vượt quá 2000 ký tự",
+    "tooManyCategories": "Tối đa 10 danh mục được phép",
+    "widthNumber": "Chiều rộng phải là số hợp lệ",
+    "heightNumber": "Chiều cao phải là số hợp lệ",
+    "priceGreaterThanOne": "Giá phải lớn hơn 1 khi bán",
+    "sellingDigitalOnly": "Chỉ tranh kỹ thuật số mới có thể được bán",
+    "imageRequired": "Hình ảnh là bắt buộc",
+    "invalidUrl": "Định dạng URL không hợp lệ",
+    "imageUrlInvalid": "Định dạng URL hình ảnh không hợp lệ",
+    "duplicateCategories": "Không được phép có danh mục trùng lặp",
+    "painting_cannot_sell": "Tranh vẽ tay không thể được bán trực tuyến"
   },
   "signup": {
     "otpSent": "OTP đã gửi",
@@ -110,7 +208,8 @@
     "somethingWentWrong": "Đã xảy ra lỗi không xác định",
     "registerError": "Đăng ký không thành công",
     "accessDenied": "Truy cập bị từ chối",
-    "credentialsSignin": "Thông tin đăng nhập không hợp lệ"
+    "credentialsSignin": "Thông tin đăng nhập không hợp lệ",
+    "isBanned": "Tài khoản này hiện đang bị cấm và không thể thực hiện chức năng này."
   },
   "blog": {
     "change_image": "Thay đổi hình ảnh",
@@ -235,7 +334,8 @@
       "height": "Chiều cao (px)",
       "price": "Giá",
       "status": "Trạng thái",
-      "image": "Hình ảnh"
+      "image": "Hình ảnh",
+      "artType": "Loại tác phẩm"
     },
     "placeholder": {
       "title": "Nhập tiêu đề tác phẩm",
@@ -245,11 +345,16 @@
       "price": "Nhập giá",
       "status": "Chọn trạng thái",
       "categories": "Nhập tên danh mục",
-      "add_category": "Thêm danh mục"
+      "add_category": "Thêm danh mục",
+      "artType": "Chọn loại tác phẩm"
     },
     "helper": {
+      "artType": "Chọn loại tác phẩm nghệ thuật của bạn",
+      "status": "Chọn trạng thái hiển thị và bán tác phẩm",
+      "painting_status": "Tranh vẽ tay chỉ có thể hiển thị hoặc ẩn",
+      "price": "Nhập giá bán tác phẩm (chỉ áp dụng cho tranh kỹ thuật số)",
       "description": "Mô tả nên bao gồm phong cách, chủ đề và ý nghĩa của tác phẩm",
-      "categories": "Chọn tất cả danh mục áp dụng cho tác phẩm này",
+      "categories": "Chọn tất cả danh mục phù hợp với tác phẩm này",
       "image": "Hình ảnh nên có độ phân giải cao và hiển thị rõ ràng tác phẩm",
       "suggestedCategories": "Danh mục gợi ý"
     },
@@ -290,7 +395,20 @@
       "widthRequired": "Vui lòng nhập chiều rộng",
       "heightRequired": "Vui lòng nhập chiều cao",
       "priceRequired": "Vui lòng nhập giá",
-      "statusRequired": "Vui lòng chọn trạng thái"
+      "statusRequired": "Vui lòng chọn trạng thái",
+      "artTypeRequired": "Vui lòng chọn loại tác phẩm",
+      "titleMaxLength": "Tiêu đề không được vượt quá 100 ký tự",
+      "descriptionMaxLength": "Mô tả không được vượt quá 2000 ký tự",
+      "tooManyCategories": "Tối đa 10 danh mục được phép",
+      "widthNumber": "Chiều rộng phải là số hợp lệ",
+      "heightNumber": "Chiều cao phải là số hợp lệ",
+      "priceGreaterThanOne": "Giá phải lớn hơn 1 khi bán",
+      "sellingDigitalOnly": "Chỉ tranh kỹ thuật số mới có thể được bán",
+      "imageRequired": "Hình ảnh là bắt buộc",
+      "invalidUrl": "Định dạng URL không hợp lệ",
+      "imageUrlInvalid": "Định dạng URL hình ảnh không hợp lệ",
+      "duplicateCategories": "Không được phép có danh mục trùng lặp",
+      "painting_cannot_sell": "Tranh vẽ tay không thể được bán trực tuyến"
     },
     "purchase_confirmation": "Xác nhận mua tranh",
     "artist": "Nghệ sĩ",
@@ -307,7 +425,7 @@
       "preview": "Xem trước"
     },
     "artwork_description": "Mô tả Tác phẩm",
-    "preview_note": "Ghi chú Xem trước", 
+    "preview_note": "Ghi chú Xem trước",
     "toggle_details": "Hiển thị/ẩn chi tiết",
     "drag_to_pan": "Kéo để di chuyển",
     "remove_from_favorites": "Xóa khỏi yêu thích",
@@ -322,7 +440,7 @@
     "purchase_not_available": "Mua tranh không khả dụng",
     "collection_not_available": "Bộ sưu tập không khả dụng",
     "swipe_to_change_tabs": "Vuốt để chuyển tab",
-    "no_description": "Không có mô tả",
+    "no_description": "Chưa có mô tả",
     "no_comments": "Chưa có bình luận nào",
     "info": "Thông tin",
     "view_profile": "Xem hồ sơ",
@@ -334,7 +452,16 @@
     "loading": "Đang tải...",
     "price": "Giá",
     "downloading": "Đang tải...",
-    "download_success": "Tải xuống thành công"
+    "download_success": "Tải xuống thành công",
+    "artType": {
+      "digitalart": "Tranh kỹ thuật số",
+      "painting": "Tranh vẽ tay"
+    },
+     "save": "Lưu tranh",
+    "description": "Mô tả",
+    "download":"Tải xuống",
+          "dimensions": "Kích thước",
+          "view_details": "Xem chi tiết"
   },
   "artwork_management": {
     "title": "Quản lý tác phẩm",
@@ -379,20 +506,21 @@
   },
   "profile": {
     "common": {
-      "artist_badge": "Nghệ sĩ",  
+      "artist_badge": "Nghệ sĩ",
       "artworks": "Tác phẩm",
       "followers": "Người theo dõi",
       "following": "Đang theo dõi",
       "email": "Email",
-      "joined": "Tham gia {date}"
+      "joined": "Tham gia {date}",
+      "premium_badge": "premium"
     },
     "view": {
       "view_detail": "Xem chi tiết",
       "edit_profile": "Chỉnh sửa hồ sơ",
-      "collections":"Bộ sưu tập",
+      "collections": "Bộ sưu tập",
       "about": "Thông tin",
       "followers_title": "Người theo dõi",
-      "following_title": "Đang theo dõi", 
+      "following_title": "Đang theo dõi",
       "artist_info": "Thông tin nghệ sĩ",
       "biography": "Tiểu sử",
       "contact_info": "Thông tin liên hệ",
@@ -502,10 +630,18 @@
     }
   },
   "exhibitions": {
+    "premium": "Premium",
+    "instruction": "Hướng dẫn",
+    "controls": "Điều khiển",
+    "look": "Chuột - Nhìn xung quanh",
+    "menu": "Hiển thị menu này / Thoát điều khiển",
+    "resume": "Tiếp tục",
+    "exit": "Thoát",
+    "free": "Miễn phí",
     "no_templates_available": "Không có mẫu nào khả dụng",
     "insufficient_balance": "Số dư không đủ",
-    "remove_artwork_confirmation" : "Xác nhận gỡ tác phẩm",
-    "remove_artwork_description" : "Bạn có chắc chắn muốn gỡ tác phẩm này khỏi vị trí này không?",
+    "remove_artwork_confirmation": "Xác nhận gỡ tác phẩm",
+    "remove_artwork_description": "Bạn có chắc chắn muốn gỡ tác phẩm này khỏi vị trí này không?",
     "remove_artwork": "Xóa tác phẩm",
     "replace_artwork": "Thay thế tác phẩm",
     "replace_artwork_at_position": "Thay thế tác phẩm tại vị trí",
@@ -729,7 +865,6 @@
     "loading_more": "Đang tải thêm tác phẩm..."
   },
   "report": {
-    "button": "Báo cáo",
     "buttonAriaLabel": "Nhấn để báo cáo",
     "closeAriaLabel": "Đóng hộp thoại",
     "cancelAriaLabel": "Hủy báo cáo",

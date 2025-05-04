@@ -10,8 +10,8 @@ export default async function DiscoverPage() {
   const initialData = await getPublicExhibitions({
     page: 1,
     limit: 12,
-    filter: { isFeatured: true }, // Use a filter parameter instead of sort
-    sort: { createdAt: -1 }, // Sort by creation date as a fallback
+    filter: {}, // Use a filter parameter instead of sort
+    sort: { 'result.visits': -1 },
   });
 
   if (!initialData.data) {

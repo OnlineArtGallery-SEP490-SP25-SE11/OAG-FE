@@ -31,6 +31,7 @@ export default function GalleryModel({
   config,
   visible = false,
 }: GalleryModelProps) {
+
   const { scene } = useGLTF(config.modelPath);
   const clonedScene = useMemo(() => scene.clone(), [scene]);
 

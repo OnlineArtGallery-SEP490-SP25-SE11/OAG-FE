@@ -29,6 +29,7 @@
     "success": "Success",
     "error": "Error",
     "save_changes": "Save Changes",
+    "saving": "Saving",
     "cancel": "Cancel",
     "delete": "Delete",
     "processing": "Processing...",
@@ -67,6 +68,7 @@
     "become_artist": "Become an Artist"
   },
   "header": {
+    "become_artist": "Become an Artist",
     "home": "Home",
     "about": "About",
     "contact": "Contact",
@@ -90,6 +92,90 @@
     "signupTitle": "Create new account",
     "googleLogin": "Login with Google"
   },
+  "home": {
+    "trending": {
+      "title": "Trending Artists",
+      "view_all": "View All",
+      "followers": "{count} followers"
+    },
+    "exhibition": {
+      "title_trending": "Trending Exhibitions",
+      "title_new": "New Exhibitions",
+      "title_featured": "Featured Exhibitions",
+      "view_all": "View All",
+      "free": "Free",
+      "paid": "Paid"
+    },
+    "recommendations": {
+      "for_you": "New Works for You",
+      "following": "New Works by Artists You Follow",
+      "view_all": "View All",
+      "no_artworks_default": "No artworks to display.",
+      "no_artworks_following": "No new works from artists you follow yet.",
+      "no_image_placeholder": "No Image",
+      "untitled_artwork": "Untitled"
+    },
+    "spotlight": {
+      "title": "Artist Spotlight",
+      "view_all": "View All",
+      "view_profile": "View Profile"
+    },
+    "articles": {
+      "title": "Latest Articles",
+      "view_all": "View All",
+      "read_more": "Read More",
+      "most_popular": "Most popular",
+      "min_read": "min read"
+    }
+  },
+  "about": {
+    "hero": {
+      "title": {
+        "line1": "Online Art",
+        "line2": "Exhibitions."
+      },
+      "subtitle": "Unlimited by reality. Accessible for everyone.",
+      "artists": {
+        "title": "Artists & Art Galleries",
+        "description": "Exhibit your art in beautiful 3D art galleries. Share freely, get instant visitors and sell your art."
+      },
+      "artLovers": {
+        "title": "Art Lovers & Art Collectors",
+        "description": "Visit 3D art exhibitions from the comfort of your browser. Acquire art directly from the artist."
+      },
+      "buttons": {
+        "openExhibition": "Open your own art exhibition",
+        "discoverExhibitions": "Discover art exhibitions"
+      }
+    },
+    "discover": {
+      "title": {
+        "line1": "Discover art",
+        "line2": "exhibitions from",
+        "line3": "around the world."
+      },
+      "button": "Discover art exhibitions",
+      "image": {
+        "alt": "Art gallery background"
+      }
+    },
+    "featured": {
+      "title": {
+        "line1": "Featured",
+        "line2": "exhibition."
+      },
+      "description": "Experience art in immersive 3D spaces. Walk through virtual galleries and discover amazing artworks."
+    },
+    "vision": {
+      "statement": "Our vision is a democratic, equal & sustainable global art market.",
+      "image": {
+        "alt": "Vision background"
+      }
+    },
+    "mission": {
+      "statement": "Our mission is to offer every artist an equal opportunity & give more art to experience."
+    }
+  },
   "validation": {
     "name": "Name",
     "phone": "Phone Number",
@@ -104,7 +190,19 @@
     "image_size_limit": "Image must be under {size}MB",
     "invalid_file_type": "Invalid file type. Allowed formats: {allowed}",
     "invalid_format": "{field} has invalid format: {requirements}",
-    "alphanumeric_only": "only letters, numbers, and spaces are allowed"
+    "alphanumeric_only": "only letters, numbers, and spaces are allowed",
+    "titleMaxLength": "Title cannot exceed 100 characters",
+    "descriptionMaxLength": "Description cannot exceed 2000 characters",
+    "tooManyCategories": "Maximum 10 categories allowed",
+    "widthNumber": "Width must be a valid number",
+    "heightNumber": "Height must be a valid number",
+    "priceGreaterThanOne": "Price must be greater than 1 when selling",
+    "sellingDigitalOnly": "Only digital art can be sold",
+    "imageRequired": "Image is required",
+    "invalidUrl": "Invalid URL format",
+    "imageUrlInvalid": "Invalid image URL format",
+    "duplicateCategories": "Duplicate categories are not allowed",
+    "painting_cannot_sell": "Traditional paintings cannot be sold online"
   },
   "signup": {
     "otpSent": "OTP sent",
@@ -257,7 +355,8 @@
       "height": "Height (px)",
       "price": "Price",
       "status": "Status",
-      "image": "Image"
+      "image": "Image",
+      "artType": "Art Type"
     },
     "placeholder": {
       "title": "Enter artwork title",
@@ -267,12 +366,17 @@
       "price": "Enter price",
       "status": "Select status",
       "categories": "Enter category name",
-      "add_category": "Add category"
+      "add_category": "Add category",
+      "artType": "Select art type"
     },
     "helper": {
+      "artType": "Choose your artwork type",
+      "status": "Choose display and selling status",
+      "painting_status": "Traditional paintings can only be displayed or hidden",
+      "price": "Enter selling price (only applies to digital art)",
       "description": "Description should include style, theme and meaning of the artwork",
       "categories": "Select all categories that apply to this artwork",
-      "image": "Image should be high resolution and clearly display the artwork",
+      "image": "Image should be high resolution and clearly show the artwork",
       "suggestedCategories": "Suggested categories"
     },
     "status": {
@@ -312,7 +416,20 @@
       "widthRequired": "Width is required",
       "heightRequired": "Height is required",
       "priceRequired": "Price is required",
-      "statusRequired": "Status is required"
+      "statusRequired": "Status is required",
+      "artTypeRequired": "Art type is required",
+      "titleMaxLength": "Title cannot exceed 100 characters",
+      "descriptionMaxLength": "Description cannot exceed 2000 characters",
+      "tooManyCategories": "Maximum 10 categories allowed",
+      "widthNumber": "Width must be a valid number",
+      "heightNumber": "Height must be a valid number",
+      "priceGreaterThanOne": "Price must be greater than 1 when selling",
+      "sellingDigitalOnly": "Only digital art can be sold",
+      "imageRequired": "Image is required",
+      "invalidUrl": "Invalid URL format",
+      "imageUrlInvalid": "Invalid image URL format",
+      "duplicateCategories": "Duplicate categories are not allowed",
+      "painting_cannot_sell": "Traditional paintings cannot be sold online"
     },
     "purchase_confirmation": "Confirm Purchase",
     "artist": "Artist",
@@ -330,44 +447,46 @@
     },
     "artwork_description": "Artwork Description",
     "preview_note": "Preview Note",
+    "zoom_in": "Zoom in",
+    "zoom_out": "Zoom out",
+    "swipe_to_change_tabs": "Swipe to change tabs",
+    "comments": "Comments",
+    "info": "Information",
+    "view_profile": "View profile",
+    "add_to_collection": "Add to collection",
+    "buy_now": "Buy now",
+    "your_work": "Your artwork",
+    "no_comments": "No comments yet",
+    "add_comment": "Add a comment",
+    "no_artwork_info": "No artwork information available",
+    "price": "Price",
+    "downloading": "Downloading...",
+    "loading": "Loading...",
     "toggle_details": "Toggle details",
     "drag_to_pan": "Drag to pan",
     "remove_from_favorites": "Remove from favorites",
     "add_to_favorites": "Add to favorites",
     "comments_standard_view": "Switch to standard view for comments",
-    "zoom_in": "Zoom in",
-    "zoom_out": "Zoom out",
     "reset_zoom": "Reset zoom",
     "loading_image": "Loading image...",
     "download_not_available": "Download not available",
     "please_use_standard_view": "Please use standard view for this action",
     "purchase_not_available": "Purchase not available",
     "collection_not_available": "Collection not available",
-    "swipe_to_change_tabs": "Swipe to change tabs",
     "no_description": "No description provided",
-    "no_comments": "No comments yet",
-    "info": "Info",
-    "comments": "Comments",
     "report_artwork": "Report artwork",
     "yours": "Yours",
     "purchased": "Purchased",
-    "buy": "Buy",
-    "save": "Save",
-    "download": "Download",
-    "description": "Description",
-    "be_first_comment": "Be the first to comment",
-    "add_comment": "Add a comment",
-    "user": "User",
-    "days_ago": "{days} days ago",
-    "comment_example": "Great artwork! I love the composition and colors.",
-    "downloading": "Downloading...",
     "download_success": "Downloaded successfully",
     "download_error": "Download error",
-    "no_artwork_info": "No artwork information available",
-    "standard_view": "Standard view",
-    "immersive_view": "Immersive view",
-    "close_details": "Close details",
-    "categories": "Categories"
+    "categories": "Categories",
+    "artType": {
+      "digitalart": "Digital Art",
+      "painting": "Traditional Painting"
+    },
+    "save": "Artwork save",
+    "description": "Description",
+    "download":"Download"
   },
   "artwork_management": {
     "title": "Artwork Management",
@@ -411,13 +530,14 @@
     }
   },
   "profile": {
-     "common": {
+    "common": {
       "artist_badge": "Artist",
       "artworks": "Artworks",
       "followers": "Followers",
       "following": "Following",
       "email": "Email",
-      "joined": "Joined {date}"
+      "joined": "Joined {date}",
+      "premium_badge": "premium"
     },
     "view": {
       "view_detail": "View Detail",
@@ -426,7 +546,7 @@
       "about": "About",
       "followers_title": "Followers",
       "following_title": "Following",
-      "artist_info": "Artist Information", 
+      "artist_info": "Artist Information",
       "biography": "Biography",
       "contact_info": "Contact Information",
       "joined_date": "Join Date",
@@ -535,10 +655,18 @@
     }
   },
   "exhibitions": {
+    "free": "Free",
+    "premium": "Premium",
+    "instruction": "Instruction",
+    "controls": "Controls",
+    "look": "Mouse - Look around",
+    "menu": "Show this menu / Exit controls",
+    "resume": "Resume",
+    "exit": "Exit",
     "no_templates_available": "No templates available",
     "insufficient_balance": "Insufficient balance to purchase ticket",
-    "remove_artwork_confirmation" : "Remove artwork confirmation",
-    "remove_artwork_description" : "Are you sure you want to remove this artwork from this position?",
+    "remove_artwork_confirmation": "Remove artwork confirmation",
+    "remove_artwork_description": "Are you sure you want to remove this artwork from this position?",
     "remove_artwork": "Remove Artwork",
     "replace_artwork": "Replace Artwork",
     "replace_artwork_at_position": "Replace artwork at position",
@@ -708,7 +836,6 @@
       "recent": "Recently Purchased",
       "downloaded": "Downloaded",
       "not_downloaded": "Not Downloaded"
-
     },
     "empty": {
       "title": "No artworks in warehouse",
@@ -738,7 +865,9 @@
       "add_comment": "Add a comment",
       "no_artwork_info": "No artwork information available",
       "price": "Price",
-      "loading": "Loading..."
+      "loading": "Loading...",
+      "dimensions": "Dimensions",
+      "view_details": "View Details"
     }
   },
   "artist_layout": {
@@ -767,7 +896,6 @@
     "loading_more": "Loading more artworks..."
   },
   "report": {
-    "button": "Report",
     "buttonAriaLabel": "Click to report",
     "closeAriaLabel": "Close dialog",
     "cancelAriaLabel": "Cancel report",

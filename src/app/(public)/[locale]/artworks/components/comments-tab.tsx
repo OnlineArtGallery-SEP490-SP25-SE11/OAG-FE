@@ -15,6 +15,7 @@ import {
 import { MoreHorizontal, Flag } from "lucide-react";
 import ReportButton from "@/components/ui.custom/report-button";
 import { RefType } from "@/utils/enums";
+import { AuthDialog } from "@/components/ui.custom/auth-dialog";
 
 interface CommentDrawerProps {
   contentId: string;
@@ -38,6 +39,7 @@ export default function CommentArtworkDrawer({
   const [replyTo, setReplyTo] = useState<string | null>(null);
   const [replyContent, setReplyContent] = useState("");
   const [user, setUser] = useState<any>(null);
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
 
   const fetchComments = async () => {
     setLoading(true);
@@ -64,11 +66,19 @@ export default function CommentArtworkDrawer({
   }, []);
 
   useEffect(() => {
-    if (currentUser) fetchComments();
-  }, [currentUser]);
+    fetchComments();
+  }, [contentId]);
 
   const handleSubmitComment = async () => {
-    if (!newComment.trim() || !currentUser) return;
+    // Check if user is not authenticated
+    if (!currentUser) {
+      setShowAuthDialog(true);
+      return;
+    }
+
+    // Proceed with comment submission if authenticated
+    if (!newComment.trim()) return;
+    
     try {
       const comment = await createComment({
         accessToken: currentUser.accessToken,
@@ -126,7 +136,11 @@ export default function CommentArtworkDrawer({
   };
 
   const handleSubmitReply = async (parentId: string, replyContent: string) => {
-    if (!replyContent.trim() || !currentUser) return;
+    if (!currentUser) {
+      setShowAuthDialog(true);
+      return;
+    }
+    if (!replyContent.trim()) return;
     try {
       const newReply = await createComment({
         accessToken: currentUser.accessToken,
@@ -210,6 +224,7 @@ export default function CommentArtworkDrawer({
         {editingCommentId === comment._id && (
           <div className="flex items-center space-x-2 mt-2">
             <Input
+              key={comment._id}
               value={editContent}
               onChange={(e) => setEditContent(e.target.value)}
             />
@@ -225,6 +240,7 @@ export default function CommentArtworkDrawer({
         {!isReply && replyTo === comment._id && (
           <div className="flex items-center space-x-2 mt-2">
             <Input
+              key={`${comment._id}-reply`}
               placeholder="Write a reply..."
               value={replyContent}
               onChange={(e) => setReplyContent(e.target.value)}
@@ -243,7 +259,7 @@ export default function CommentArtworkDrawer({
           </div>
         )}
 
-        {!isReply && (
+        {!isReply && isSignedIn && (
           <Button
             variant="link"
             onClick={() => setReplyTo(comment._id)}
@@ -271,7 +287,7 @@ export default function CommentArtworkDrawer({
 
   return (
     <div className="space-y-4 text-white">
-      {/* Input để thêm bình luận */}
+      {/* Comment input section */}
       <div className="flex items-start space-x-3 mt-2">
         <Avatar className="h-8 w-8 rounded-full">
           <AvatarImage src={user?.image || ""} />
@@ -280,12 +296,11 @@ export default function CommentArtworkDrawer({
         <Input
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
-          placeholder="Add a comment"
+          placeholder={isSignedIn ? "Add a comment" : "Sign in to comment"}
           className="flex-1 text-sm text-white bg-white/10 rounded-full px-3 py-1.5 border-transparent focus:border-white/30 focus:outline-none"
         />
         <Button
           onClick={handleSubmitComment}
-          disabled={loading}
           className="h-9"
         >
           {loading ? "Posting..." : "Post"}
@@ -298,6 +313,8 @@ export default function CommentArtworkDrawer({
       >
         {topLevelComments.map((comment) => renderComment(comment))}
       </div>
+
+      <AuthDialog isOpen={showAuthDialog} setIsOpen={setShowAuthDialog} />
     </div>
   );
 }

@@ -78,6 +78,9 @@ export function ArtworkPositionsGrid({
             // Check if this position is currently being hovered
             const isHovered = hoveredPosition === position;
             
+            // Hiển thị position+1 trong UI, nhưng sử dụng position thật trong logic
+            const displayPosition = position + 1;
+            
             return (
               <div
                 key={position}
@@ -92,8 +95,8 @@ export function ArtworkPositionsGrid({
                 role="button" // Always a button
                 tabIndex={0} // Always focusable
                 aria-label={isOccupied 
-                  ? `Replace artwork at position ${position}, currently ${artwork?.title}` 
-                  : `Add artwork to position ${position}`}
+                  ? `Replace artwork at position ${displayPosition}, currently ${artwork?.title}` 
+                  : `Add artwork to position ${displayPosition}`}
               >
                 {isOccupied && artwork ? (
                   <>
@@ -122,14 +125,14 @@ export function ArtworkPositionsGrid({
                       )}
                     </div>
                     <span className='sr-only'>{isHovered 
-                      ? `Replace artwork at position ${position}, currently ${artwork.title}` 
-                      : `Position ${position} occupied by ${artwork.title}`}</span>
+                      ? `Replace artwork at position ${displayPosition}, currently ${artwork.title}` 
+                      : `Position ${displayPosition} occupied by ${artwork.title}`}</span>
                   </>
                 ) : (
                   <Grid className='w-6 h-6 text-gray-400' aria-hidden="true"/>
                 )}
                 <span className='absolute bottom-2 left-2 text-sm font-semibold text-gray-700 bg-white/80 px-1 rounded'>
-                  {position}
+                  {displayPosition}
                 </span>
               </div>
             );

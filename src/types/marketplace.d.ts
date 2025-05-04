@@ -21,4 +21,5 @@ export type Artwork = {
 	createdAt: string;
 	updatedAt: string;
 	__v?: number;
+	artType: string;
 };
