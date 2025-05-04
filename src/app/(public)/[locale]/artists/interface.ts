@@ -7,6 +7,7 @@ export type Artwork = {
     url: string;
     status: 'available'  | 'hidden' | 'selling';
     artType: 'digitalart' | 'painting';
+    buyers: string[];
     views: number;
     price: number;
     createdAt: string;
