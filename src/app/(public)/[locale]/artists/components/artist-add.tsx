@@ -32,7 +32,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { ArrowUp, Check, ChevronDown, ChevronUp, Eye, ImageIcon, Info, Loader2, Plus, X, 
-    FileText, Tag, DollarSign, Layout, PenLine, ListFilter, FileImage, Settings, Clock 
+    FileText, Tag, Layout, PenLine, ListFilter, FileImage, Settings, Clock 
 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
@@ -449,12 +449,11 @@ export default function UploadArtwork() {
                                             render={({ field: { value, onChange, ...field } }) => (
                                                 <FormItem>
                                                     <FormLabel className="flex items-center gap-2">
-                                                        <DollarSign className="h-3.5 w-3.5 text-gray-500 dark:text-gray-400" />
                                                         {t('field.price')}
                                                     </FormLabel>
                                                     <div className="relative">
                                                         <div className="absolute left-0 inset-y-0 flex items-center pl-3 pointer-events-none">
-                                                            <span className="text-gray-500 dark:text-gray-400 sm:text-sm">$</span>
+                                                            <span className="text-gray-500 dark:text-gray-400 sm:text-sm"></span>
                                                         </div>
                                                         <FormControl>
                                                             <Input
