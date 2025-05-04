@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, Fragment, useEffect } from 'react';
-import useAuthClient from '@/hooks/useAuth-client';
+// import useAuthClient from '@/hooks/useAuth-client';
 import reportService from '@/service/report-service';
 import { useMutation } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
@@ -21,7 +21,7 @@ import { Textarea } from '@/components/ui/textarea';
 import FileUploader from './file-uploader';
 import { useTranslations } from 'next-intl';
 import { X, AlertTriangle, ChevronDown, Shield, Info, Flag, AlertOctagon, BadgeAlert } from 'lucide-react';
-import { cn } from '@/lib/utils';
+// import { cn } from '@/lib/utils';
 
 interface CreateReportProps {
   refId?: string;
@@ -77,13 +77,14 @@ export default function CreateReport({
       description: '',
       url: url || window.location.href,
       image: []
-    }
-  });
-
+    } });
+  // console.log(`type`, refType, refId, url)
   // Reset form when modal opens
   const handleOpenModal = useCallback((open: boolean) => {
     if (open) {
       // Reset form fields
+      //  console.log("Trước khi reset - refType:", refType);
+    
       form.reset({
         refId: refId,
         refType: refType,
@@ -92,7 +93,9 @@ export default function CreateReport({
         url: url || window.location.href,
         image: []
       });
-      
+    //   console.log("Form values sau khi reset:", form.getValues());
+    // console.log("refType sau khi reset:", form.getValues().refType);
+ 
       setReasonsOpen(false);
       
       // Focus on textarea after a small delay
@@ -123,7 +126,7 @@ export default function CreateReport({
 
   // Select reason - using useCallback
   const selectReason = useCallback((value: ReasonReport) => {
-    console.log('Selected reason:', value);
+    // console.log('Selected reason:', value);
     form.setValue("reason", value);
     setReasonsOpen(false);
   }, [form]);
@@ -173,6 +176,7 @@ export default function CreateReport({
 
   // Handle form submission - using useCallback
   const onSubmit = useCallback((data: ReportForm) => {
+    // console.log(data)
     setIsSubmitting(true);
     mutation.mutate(data);
   }, [mutation]);
@@ -187,7 +191,7 @@ export default function CreateReport({
   // Get current reason text
   const getCurrentReasonText = useCallback(() => {
     const currentReason = form.watch("reason");
-    console.log('Current reason:', currentReason);
+    // console.log('Current reason:', currentReason);
     try {
       return t(`reasons.${currentReason.toLowerCase()}`);
     } catch (error) {
@@ -208,12 +212,16 @@ export default function CreateReport({
           <Button
             variant="outline"
             size="sm"
-            className="flex items-center gap-1.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800/70 border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600 transition-all focus:ring-2 focus:ring-primary/20 dark:focus:ring-primary/30"
+            className="flex items-center gap-1.5 text-gray-700 dark:text-gray-100 
+              hover:bg-gray-100 dark:hover:bg-gray-800 
+              border-gray-200 hover:border-gray-300 dark:border-gray-600 dark:hover:border-gray-500 
+              shadow-sm hover:shadow transition-all 
+              focus:ring-2 focus:ring-primary/20 dark:focus:ring-primary/40"
             aria-label={t('buttonAriaLabel')}
             type="button"
           >
-            <Flag className="w-4 h-4 text-amber-500 dark:text-amber-400" />
-            <span>{t('button')}</span>
+            <Flag className="w-4 h-4 text-primary/80 dark:text-primary-400/90" />
+            <span className="font-medium">{t('button')}</span>
           </Button>
         )}
       </div>
@@ -221,7 +229,7 @@ export default function CreateReport({
       {/* ShadCN UI Dialog Implementation */}
       <Dialog open={isModalOpen} onOpenChange={handleOpenModal}>
         <DialogContent 
-          className="max-w-5xl p-0 gap-0 overflow-hidden" 
+          className="max-w-5xl p-0 gap-0 overflow-hidden rounded-lg shadow-lg border dark:border-gray-700" 
           onKeyDown={handleEscapeKey}
           onInteractOutside={(e) => {
             if (reasonsOpen) {
@@ -229,44 +237,45 @@ export default function CreateReport({
             }
           }}
         >
-          <DialogHeader className="px-6 py-5 border-b dark:border-gray-800 bg-gray-50 dark:bg-gray-950/50">
-            <DialogTitle className="flex items-center gap-2 text-lg font-medium text-gray-900 dark:text-gray-100">
-              <Flag className="w-5 h-5 text-amber-500" />
+          <DialogHeader className="px-6 py-5 border-b dark:border-gray-700 bg-gradient-to-r from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
+            <DialogTitle className="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-gray-50">
+              <Flag className="w-5 h-5 text-primary/80 dark:text-primary-400/90" />
               {t('title')}
             </DialogTitle>
-            <DialogDescription className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+            <DialogDescription className="text-sm text-gray-600 dark:text-gray-400 mt-1.5">
               {t('description')}
             </DialogDescription>
           </DialogHeader>
 
           {/* Form body with optimized layout */}
-          <div className="p-6">                
+          <div className="p-6 bg-white dark:bg-gray-900">                
             <Form {...form}>
               <form id="reportForm" onSubmit={form.handleSubmit(onSubmit)}>
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-2 gap-8">
                   {/* Left column - Form fields */}
                   <Fragment>
-                    <div className="space-y-4">
+                    <div className="space-y-5">
                       {/* Reason and Type in same row */}
-                      <div className="grid grid-cols-2 gap-3">
+                      <div className="grid grid-cols-2 gap-4">
                         {/* Reasons selection */}
                         <FormField
                           control={form.control}
                           name="reason"
                           render={({ field }) => (
-                            <FormItem className="space-y-1.5">
-                              <FormLabel className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                {t('fields.reason')} <span className="text-red-500">*</span>
+                            <FormItem className="space-y-2">
+                              <FormLabel className="text-sm font-medium text-gray-800 dark:text-gray-200 flex items-center">
+                                <AlertTriangle className="w-3.5 h-3.5 text-amber-500 mr-1.5" />
+                                {t('fields.reason')} <span className="text-primary-500/70 ml-0.5">*</span>
                               </FormLabel>
                               <div ref={reasonsRef} className="relative">
                                 <button
                                   type="button"
                                   onClick={toggleReasons}
-                                  className="w-full px-3 py-2 bg-white dark:bg-gray-800 border rounded-md
-                                    text-left flex items-center justify-between gap-2 text-sm
-                                    border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-600
+                                  className="w-full px-3.5 py-2.5 bg-white dark:bg-gray-800 border rounded-md
+                                    text-left flex items-center justify-between gap-2 text-sm shadow-sm
+                                    border-gray-300 dark:border-gray-600 hover:border-primary/50 dark:hover:border-primary-400/50
                                     focus:outline-none focus:ring-2 focus:ring-primary/20 dark:focus:ring-primary/30
-                                    transition-colors"
+                                    transition-all"
                                   aria-haspopup="listbox"
                                   aria-expanded={reasonsOpen}
                                 >
@@ -276,23 +285,25 @@ export default function CreateReport({
                                       {getCurrentReasonText()}
                                     </span>
                                   </span>
-                                  <ChevronDown className="h-4 w-4 text-gray-500" />
+                                  <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform duration-150 ${reasonsOpen ? 'rotate-180' : ''}`} />
                                 </button>
 
                                 {/* Dropdown */}
                                 {reasonsOpen && (
                                   <div 
                                     className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 
-                                    border border-gray-200 dark:border-gray-700 rounded-md shadow-lg 
-                                    max-h-64 overflow-auto"
+                                      border border-gray-200 dark:border-gray-700 rounded-md shadow-lg 
+                                      max-h-64 overflow-auto animate-in fade-in zoom-in-95"
                                     tabIndex={-1}
                                     role="listbox"
                                   >
                                     {Object.entries(ReasonReport).map(([key, value]) => (
                                       <div
                                         key={key}
-                                        className={`px-3 py-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700
-                                        ${form.getValues("reason") === value ? "bg-primary/5 text-primary font-medium" : ""}`}
+                                        className={`px-3.5 py-2.5 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700
+                                          ${form.getValues("reason") === value 
+                                            ? "bg-primary/5 text-primary/90 dark:bg-primary-400/10 dark:text-primary-300 font-medium" 
+                                            : ""}`}
                                         onClick={() => selectReason(value)}
                                       >
                                         <div className="flex items-center gap-2">
@@ -312,18 +323,19 @@ export default function CreateReport({
                         {/* Content type */}
                         <FormField
                           control={form.control}
-                          disabled
                           name="refType"
                           render={({ field }) => (
-                            <FormItem className="space-y-1.5">
-                              <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            <FormItem className="space-y-2">
+                              <FormLabel className="text-sm font-medium text-gray-800 dark:text-gray-200 flex items-center">
+                                <Shield className="w-3.5 h-3.5 text-blue-500 mr-1.5" />
                                 {t('fields.type')}
                               </FormLabel>
                               <FormControl>
-                                <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 dark:bg-gray-800/50 
-                                  border border-gray-200 dark:border-gray-700 rounded-md text-sm text-gray-500">
-                                  <Shield className="h-4 w-4 text-gray-400" />
-                                  {t(`types.${field.value.toLowerCase()}`)}
+                                <div className="flex items-center gap-2 px-3.5 py-2.5 bg-gray-50 dark:bg-gray-800/60 
+                                  border border-gray-200 dark:border-gray-700 rounded-md text-sm text-gray-600 dark:text-gray-400
+                                  shadow-sm">
+                                  <Shield className="h-4 w-4 text-blue-500/80 dark:text-blue-400/90" />
+                                  <span className="font-medium">{t(`types.${field.value.toLowerCase()}`)}</span>
                                 </div>
                               </FormControl>
                             </FormItem>
@@ -336,13 +348,15 @@ export default function CreateReport({
                         control={form.control}
                         name="description"
                         render={({ field }) => (
-                          <FormItem className="space-y-1.5">
-                            <FormLabel className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                              {t('fields.description')} <span className="text-red-500">*</span>
+                          <FormItem className="space-y-2">
+                            <FormLabel className="text-sm font-medium text-gray-800 dark:text-gray-200 flex items-center">
+                              <BadgeAlert className="w-3.5 h-3.5 text-orange-500 mr-1.5" />
+                              {t('fields.description')} <span className="text-primary-500/70 ml-0.5">*</span>
                             </FormLabel>
                             <FormControl>
                               <div 
-                                className="w-full border border-gray-300 dark:border-gray-700 rounded-md"
+                                className="w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm
+                                hover:border-primary/40 dark:hover:border-primary-400/40 transition-colors"
                                 onClick={focusTextarea}
                               >
                                 <Textarea
@@ -351,7 +365,7 @@ export default function CreateReport({
                                   ref={textareaRef}
                                   placeholder={t('placeholders.description')}
                                   className="h-[317px] w-full resize-none bg-white dark:bg-gray-800 
-                                    border-0 focus:ring-0 focus:outline-none text-sm p-3"
+                                    border-0 focus:ring-1 focus:ring-primary/20 dark:focus:ring-primary-400/20 focus:outline-none text-sm p-3.5"
                                   autoComplete="off"
                                 />
                               </div>
@@ -371,19 +385,30 @@ export default function CreateReport({
                       name="image"
                       render={({ field }) => (
                         <FormItem className="h-full">
-                          <div className="flex justify-between items-center mb-1.5">
-                            <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                              {t('fields.evidence')} <span className="text-red-500">*</span>
+                          <div className="flex justify-between items-center mb-2">
+                            <FormLabel className="text-sm font-medium text-gray-800 dark:text-gray-200 flex items-center">
+                              <Info className="w-3.5 h-3.5 text-gray-500 mr-1.5" />
+                              {t('fields.evidence')} <span className="text-primary-500/70 ml-0.5">*</span>
                             </FormLabel>
-                            <div className="text-xs text-gray-500">
-                              {field.value?.length > 0 
-                                ? `${field.value.length} ${field.value.length === 1 ? 'file' : 'files'} selected` 
-                                : t('placeholders.noFiles')}
+                            <div className="text-xs text-gray-600 dark:text-gray-400 bg-gray-100/80 dark:bg-gray-800/80 px-2.5 py-1 rounded-full flex items-center">
+                              {field.value?.length > 0 ? (
+                                <>
+                                  <span className="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5"></span>
+                                  {`${field.value.length} ${field.value.length === 1 ? 'file' : 'files'}`}
+                                </>
+                              ) : (
+                                <>
+                                  <span className="w-1.5 h-1.5 bg-gray-400 rounded-full mr-1.5"></span>
+                                  {t('placeholders.noFiles')}
+                                </>
+                              )}
                             </div>
                           </div>
                           <FormControl>
-                            <div className="border border-gray-300 dark:border-gray-700 rounded-md p-5 
-                              bg-gray-50 dark:bg-gray-800/50 h-[457px] flex items-center justify-center">
+                            <div className="border border-gray-300 dark:border-gray-600 rounded-md p-5 
+                              bg-gray-50/50 dark:bg-gray-800/30 h-[457px] flex items-center justify-center
+                              hover:border-primary/40 dark:hover:border-primary-400/40 transition-colors
+                              shadow-sm">
                               <FileUploader
                                 multiple
                                 onFileUpload={(files) => {
@@ -403,34 +428,39 @@ export default function CreateReport({
                 </div>
 
                 {/* Footer Actions */}
-                <DialogFooter className="flex justify-end gap-4 pt-5 border-t dark:border-gray-800 mt-5 px-0">
+                <DialogFooter className="flex justify-end gap-4 pt-5 border-t dark:border-gray-700 mt-6 px-0">
                   <Button
                     type="button"
                     variant="outline"
                     onClick={() => handleOpenModal(false)}
                     disabled={isSubmitting}
-                    className="px-4 py-2 text-sm bg-white hover:bg-gray-50 active:bg-gray-100
-                      dark:bg-gray-800 dark:hover:bg-gray-750 dark:active:bg-gray-700 
-                      border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600
-                      text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-gray-100
-                      focus:outline-none focus:ring-2 focus:ring-gray-200/50 dark:focus:ring-gray-700/50
+                    className="px-4 py-2 text-sm bg-white dark:bg-gray-900 
+                      hover:bg-red-50 active:bg-red-100
+                      dark:hover:bg-red-900/10 dark:active:bg-red-900/20 
+                      border-gray-200 hover:border-red-200 dark:border-gray-700 dark:hover:border-red-900/30
+                      text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300
+                      flex items-center gap-1.5
+                      focus:outline-none focus:ring-1 focus:ring-red-200 dark:focus:ring-red-900/30
                       disabled:opacity-60 disabled:pointer-events-none transition-all"
                   >
+                    <X className="w-3.5 h-3.5" />
                     {tCommon('cancel')}
                   </Button>
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-4 py-2 text-sm text-white 
-                      bg-primary hover:bg-primary-600 active:bg-primary-700
-                      dark:bg-primary-600 dark:hover:bg-primary-500 dark:active:bg-primary-400
-                      flex items-center gap-2 shadow-sm 
-                      focus:outline-none focus:ring-2 focus:ring-primary/30 dark:focus:ring-primary/50
-                      disabled:opacity-60 disabled:pointer-events-none transition-all"
+                    className="px-4 py-2.5 text-sm font-medium
+                      bg-green-600/90 hover:bg-green-600 active:bg-green-700
+                      dark:bg-green-600/90 dark:hover:bg-green-600 dark:active:bg-green-700
+                      text-white/95 dark:text-white/90
+                      flex items-center gap-2 shadow 
+                      focus:outline-none focus:ring-1 focus:ring-green-600/30 dark:focus:ring-green-500/40
+                      disabled:opacity-60 disabled:pointer-events-none transition-all
+                      rounded-md"
                   >
                     {isSubmitting ? (
                       <Fragment>
-                        <svg className="animate-spin h-4 w-4 text-white/90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <svg className="animate-spin h-4 w-4 text-white/80" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>

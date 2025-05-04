@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/lib/session";
 import { ExhibitionRequestResponse, GetExhibitionsResponse, GetPublicExhibitionsResponse, LikeArtworkResponse, TicketPurchaseResponse, UpdateExhibitionDto } from "@/types/exhibition";
 import { ApiResponse } from "@/types/response";
 import { handleApiError } from "@/utils/error-handler";
+import { createAxiosInstance } from '@/lib/axios';
 
 export const getExhibitions = async (accessToken: string, params?: {
     page?: number;
@@ -237,6 +238,24 @@ export const updateExhibitionAnalytics = async (
     throw handleApiError<ExhibitionRequestResponse>(
       error,
       'Failed to update exhibition analytics'
+    );
+  }
+}
+
+export const deleteExhibition = async (id: string) => {
+  try {
+    const axios = await createAxiosInstance({ useToken: true });
+    if (!axios) {
+      throw new Error('Failed to create axios instance');
+    }
+    const res = await axios.delete(`/exhibition/${id}`);
+    return res.data;
+  }
+  catch (error) {
+    console.error('Error deleting exhibition:', error);
+    throw handleApiError(
+      error,
+      'Failed to delete exhibition'
     );
   }
 }
