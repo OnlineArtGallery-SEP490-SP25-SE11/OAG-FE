@@ -47,16 +47,17 @@ export interface Transaction {
     }
   };
 
-  export const getExhibitions = async (accessToken: string): Promise<ApiResponse<Exhibition[]>> => {
+  export const getExhibitions = async (accessToken: string): Promise<ApiResponse<any>> => {
     try {
       const res = await createApi(accessToken).get('/exhibition/user-exhibitions');
       return res.data;
     } catch (error) {
       console.error("Error getting exhibitions:", error);
-      return handleApiError<Exhibition[]>(
+      return handleApiError<any>(
         error,
         "Failed to fetch exhibition history"
       );
     }
   };
+  
   

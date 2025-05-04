@@ -1,31 +1,18 @@
 "use client";
+
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { vietnamCurrency } from "@/utils/converters";
 import { Eye, Heart, DollarSign, ImageDown } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Legend,
-  Line,
-  LineChart,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
-
 import { getArtistArtworks, getExhibitions } from "@/service/dashboard";
 import { ArtworksResponse } from "@/types/artwork";
 import { getCurrentUser } from "@/lib/session";
-import { Exhibition } from "@/types/exhibition";
 
 export default function TabChart() {
   const [isMobile, setIsMobile] = useState(false);
-  const [exhibitionData, setExhibitionData] = useState<Exhibition[]>([]);
-
+  const [exhibitionData, setExhibitionData] = useState<any>();
   const [token, setToken] = useState("");
   const [artworkData, setArtworkData] = useState<ArtworksResponse | null>(null);
   const [sortMetric, setSortMetric] = useState<"views" | "buyers" | "revenue">(
@@ -34,23 +21,6 @@ export default function TabChart() {
   const [sortExMetric, setExSortMetric] = useState<
     "visitors" | "totalTime" | "likes"
   >("visitors");
-
-  useEffect(() => {
-    const fetchExhibitions = async () => {
-      if (!token) return;
-      try {
-        const res = await getExhibitions(token);
-        if (res?.data) {
-          setExhibitionData(res.data);
-          console.log("Fetched exhibitions:", res.data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch exhibitions:", error);
-      }
-    };
-
-    fetchExhibitions();
-  }, [token]);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -85,6 +55,23 @@ export default function TabChart() {
     fetchArtworks();
   }, [token]);
 
+  useEffect(() => {
+    const fetchExhibitions = async () => {
+      if (!token) return;
+      try {
+        const res = await getExhibitions(token);
+        if (res?.data) {
+          setExhibitionData(res.data);
+        }
+        console.log("object", res.data);
+      } catch (error) {
+        console.error("Failed to fetch exhibitions:", error);
+      }
+    };
+
+    fetchExhibitions();
+  }, [token]);
+
   const getSortedArtworks = () => {
     const artworks = artworkData?.artworks || [];
     return [...artworks]
@@ -103,7 +90,25 @@ export default function TabChart() {
       .slice(0, 5);
   };
 
+  const getSortedExhibitions = () => {
+    const exhibitions = exhibitionData?.exhibitions || [];
+    return [...exhibitions]
+      .sort((a, b) => {
+        const resultA = a.result || {};
+        const resultB = b.result || {};
+        if (sortExMetric === "visitors")
+          return (resultB.visits || 0) - (resultA.visits || 0);
+        if (sortExMetric === "totalTime")
+          return (resultB.totalTime || 0) - (resultA.totalTime || 0);
+        if (sortExMetric === "likes")
+          return (resultB.likes?.length || 0) - (resultA.likes?.length || 0);
+        return 0;
+      })
+      .slice(0, 5);
+  };
+
   const topArtworks = getSortedArtworks();
+  const sortedExhibitions = getSortedExhibitions();
 
   return (
     <Tabs defaultValue="artworks" className="space-y-4 md:space-y-6">
@@ -118,17 +123,15 @@ export default function TabChart() {
 
       <TabsContent value="artworks">
         <div className="grid gap-4 md:gap-6 md:grid-cols-2">
-          {/* Artwork Engagement Chart */}
           <Card className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
             <CardHeader className="border-b border-gray-200 dark:border-gray-700 py-2 md:py-3 bg-gradient-to-r from-emerald-50 to-teal-100 dark:from-emerald-900 dark:to-teal-800">
               <div className="flex items-center justify-between w-full">
                 <h2 className="text-base md:text-lg font-semibold text-emerald-700 dark:text-emerald-200">
                   Exhibition Details
                 </h2>
-
                 <div className="ml-auto">
                   <select
-                    value={sortMetric}
+                    value={sortExMetric}
                     onChange={(e) =>
                       setExSortMetric(
                         e.target.value as "visitors" | "totalTime" | "likes"
@@ -144,8 +147,8 @@ export default function TabChart() {
               </div>
             </CardHeader>
             <CardContent className="p-3 md:p-6 space-y-4 md:space-y-6">
-              {exhibitionData.length > 0 ? (
-                exhibitionData.map((exh) => {
+              {getSortedExhibitions().length > 0 ? (
+                getSortedExhibitions().map((exh) => {
                   const exhibitionName =
                     exh.contents?.[0]?.name || "Untitled Exhibition";
                   const visitors = exh.result?.visits ?? 0;
@@ -194,7 +197,7 @@ export default function TabChart() {
             </CardContent>
           </Card>
 
-          {/* Top Artworks Card */}
+          {/* Top Artworks */}
           <Card className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
             <CardHeader className="flex border-b border-gray-200 dark:border-gray-700 py-2 md:py-3 bg-gradient-to-r from-emerald-50 to-teal-100 dark:from-emerald-900 dark:to-teal-800 items-center">
               <div className="flex items-center justify-between w-full">
@@ -218,7 +221,6 @@ export default function TabChart() {
                 </div>
               </div>
             </CardHeader>
-
             <CardContent className="p-3 md:p-6 space-y-3 md:space-y-4">
               {topArtworks.map((artwork) => (
                 <div

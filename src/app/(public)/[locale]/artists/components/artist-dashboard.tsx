@@ -53,15 +53,14 @@ export default function Dashboard() {
     labels: [],
     datasets: [],
   });
-  const [exhibitionData, setExhibitionData] = useState<Exhibition[]>([]);
+  const [totalExhibition, setTotalExhibition] = useState<any>();
   useEffect(() => {
     const fetchExhibitions = async () => {
       if (!token) return;
       try {
         const res = await getExhibitions(token);
         if (res?.data) {
-          setExhibitionData(res.data);
-          console.log("Fetched exhibitions:", res.data);
+          setTotalExhibition(res.data.exhibitions.length);
         }
       } catch (error) {
         console.error("Failed to fetch exhibitions:", error);
@@ -323,7 +322,7 @@ export default function Dashboard() {
         />
         <StatCard
           title="Total Exhibition"
-          value={exhibitionData.length}
+          value={totalExhibition}
           color="text-emerald-600"
         />
         <StatCard
