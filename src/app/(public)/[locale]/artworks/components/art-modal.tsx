@@ -1,10 +1,7 @@
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { motion } from 'framer-motion';
-// import { DollarSignIcon, Eye, Info, RulerIcon, TagIcon, UserIcon, X, CalendarIcon, BookmarkIcon, Flag, ShoppingCart, Download, Grid, Rows, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
-// import Image from 'next/image';
 import Image from '@/components/ui.custom/optimized-image';
 import { Eye, Info, RulerIcon, TagIcon, UserIcon, X, CalendarIcon, BookmarkIcon, Flag, ShoppingCart, Download, Grid, Rows, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
-// import Image from 'next/image';
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BiComment } from 'react-icons/bi';
 import { useRouter, usePathname } from 'next/navigation';
@@ -678,7 +675,7 @@ function Modal() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch: refetchArtworkById } = useQuery({
     queryKey: ["artworks", selectedId],
     queryFn: () =>
       selectedId ? fetchArtworkById(selectedId) : Promise.reject("Invalid ID"),
@@ -731,7 +728,7 @@ function Modal() {
         queryClient.invalidateQueries({ queryKey: ["artworks", selectedId] });
 
         // Reload lại trang
-        router.refresh();
+        refetchArtworkById();
       } else {
         if (response.message?.includes("không đủ")) {
           toast({
