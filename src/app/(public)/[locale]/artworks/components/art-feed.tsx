@@ -8,7 +8,7 @@ import Image from '@/components/ui.custom/optimized-image';
 import { useWindowSize } from '@react-hook/window-size';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useCustomDoubleTap } from '@/hooks/useDoubleTab';
-import { DollarSign, Calendar, Info, Ruler, ShoppingCart, X, Eye, Download, BookmarkIcon, MessageSquare, Heart } from 'lucide-react';
+import { Calendar, Info, Ruler, ShoppingCart, X, Eye, Download, BookmarkIcon, MessageSquare, Heart } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -527,7 +527,6 @@ const ArtFeed: React.FC<ArtFeedProps> = ({ data, isActive = false, isInModal = f
 
           {data.price > 0 && (
             <Badge variant="outline" className="px-2 py-0.5 text-xs bg-green-500/10 text-green-400 border-green-500/30">
-              <DollarSign className="w-3 h-3 mr-1" />
               {data.price.toLocaleString()}
             </Badge>
           )}

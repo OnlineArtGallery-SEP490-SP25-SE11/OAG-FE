@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import {
-  DollarSign,
   FileText,
   ImageIcon,
   Loader2,
@@ -332,7 +331,6 @@ export default function EditArtworkForm({ artwork, onClose }: EditArtworkFormPro
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel className="flex items-center gap-1.5 text-sm">
-                              <DollarSign className="h-3.5 w-3.5 text-teal-600 dark:text-teal-400" />
                               {t("field.price")} (VND)
                             </FormLabel>
                             <FormControl>

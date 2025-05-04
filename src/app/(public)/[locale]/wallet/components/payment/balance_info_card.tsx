@@ -6,7 +6,7 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { Building2, DollarSign } from 'lucide-react';
+import { Building2 } from 'lucide-react';
 
 interface BalanceInfoCardProps {
     currentBalance: number;
@@ -27,7 +27,6 @@ export function BalanceInfoCard({
             <Card className='border-primary/20'>
                 <CardHeader>
                     <CardTitle className='flex items-center gap-2'>
-                        <DollarSign className='h-6 w-6 text-green-500' />
                         Available Balance
                     </CardTitle>
                 </CardHeader>
