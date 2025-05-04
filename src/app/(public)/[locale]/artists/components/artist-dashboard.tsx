@@ -1,305 +1,412 @@
-'use client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { vietnamCurrency } from '@/utils/converters';
+"use client";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { vietnamCurrency } from "@/utils/converters";
 import {
-	ArcElement,
-	BarElement,
-	CategoryScale,
-	Chart as ChartJS,
-	Legend,
-	LinearScale,
-	LineElement,
-	PointElement,
-	Title,
-	Tooltip
-} from 'chart.js';
-import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
-import { Bar, Doughnut, Line } from 'react-chartjs-2';
-import TabChart from './tab-chart';
+  ArcElement,
+  BarElement,
+  CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LinearScale,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+} from "chart.js";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { Bar, Doughnut, Line } from "react-chartjs-2";
+import TabChart from "./tab-chart";
+import {
+  getArtistArtworks,
+  getExhibitions,
+  getTransactions,
+} from "@/service/dashboard";
+import { ArtworksResponse } from "@/types/artwork";
+import { getCurrentUser } from "@/lib/session";
+import { Exhibition } from "@/types/exhibition";
 
 ChartJS.register(
-	ArcElement,
-	Tooltip,
-	Legend,
-	CategoryScale,
-	LinearScale,
-	PointElement,
-	LineElement,
-	Title,
-	BarElement
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  BarElement
 );
 
-const getChartOptions = (isMobile: boolean) => ({
-	responsive: true,
-	maintainAspectRatio: false,
-	plugins: {
-		legend: {
-			position: isMobile ? ('bottom' as const) : ('top' as const),
-			labels: {
-				font: { size: isMobile ? 12 : 16, family: 'Inter, sans-serif' },
-				padding: isMobile ? 10 : 20,
-				color: '#6b7280' // Gray-600 for contrast
-			}
-		},
-		tooltip: {
-			backgroundColor: 'rgba(0, 128, 128, 0.85)', // Teal with transparency
-			padding: isMobile ? 10 : 12,
-			cornerRadius: 6,
-			bodyFont: { size: isMobile ? 12 : 14, family: 'Inter, sans-serif' },
-			titleFont: { size: isMobile ? 14 : 16, family: 'Inter, sans-serif' }
-		}
-	},
-	scales: {
-		x: {
-			ticks: {
-				font: { size: isMobile ? 12 : 14, family: 'Inter, sans-serif' },
-				maxRotation: isMobile ? 45 : 0,
-				minRotation: isMobile ? 45 : 0,
-				color: '#6b7280'
-			},
-			grid: { display: false }
-		},
-		y: {
-			ticks: {
-				font: { size: isMobile ? 12 : 14, family: 'Inter, sans-serif' },
-				color: '#6b7280'
-			},
-			grid: { color: 'rgba(0, 128, 128, 0.1)', borderDash: [5, 5] } // Teal grid
-		}
-	},
-	animation: {
-		duration: 1000,
-		easing: 'easeOutQuart'
-	}
-});
-
 export default function Dashboard() {
-	const [timeFilter, setTimeFilter] = useState('week');
-	const [isMobile, setIsMobile] = useState(false);
+  const [timeFilter, setTimeFilter] = useState("week");
+  const [salesFilter, setSalesFilter] = useState("week");
+  const [isMobile, setIsMobile] = useState(false);
+  const [token, setToken] = useState("");
+  const [artworkData, setArtworkData] = useState<ArtworksResponse | null>(null);
+  const [salesData, setSalesData] = useState<ArtworksResponse | null>(null);
+  const [salesNumber, setSalesNumber] = useState<number>(0);
+  const [ticketSalesNumber, setTicketSalesNumber] = useState<number>(0);
+  const [salesAmount, setSalesAmount] = useState<number>(0);
+  const [salesDataByStatus, setSalesDataByStatus] = useState<any>({
+    labels: [],
+    datasets: [],
+  });
+  const [exhibitionData, setExhibitionData] = useState<Exhibition[]>([]);
+  useEffect(() => {
+    const fetchExhibitions = async () => {
+      if (!token) return;
+      try {
+        const res = await getExhibitions(token);
+        if (res?.data) {
+          setExhibitionData(res.data);
+          console.log("Fetched exhibitions:", res.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch exhibitions:", error);
+      }
+    };
 
-	useEffect(() => {
-		const handleResize = () => setIsMobile(window.innerWidth < 768);
-		handleResize();
-		window.addEventListener('resize', handleResize);
-		return () => window.removeEventListener('resize', handleResize);
-	}, []);
+    fetchExhibitions();
+  }, [token]);
 
-	const statusData = {
-		labels: ['Total', 'Sold', 'Selling'],
-		datasets: [
-			{
-				data: [15, 19, 5],
-				backgroundColor: ['#10B981', '#3B82F6', '#F59E0B'], // Emerald, Blue, Amber
-				hoverBackgroundColor: ['#059669', '#2563EB', '#D97706'],
-				borderWidth: 2,
-				borderColor: '#ffffff'
-			}
-		]
-	};
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-	const salesData = {
-		labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-		datasets: [
-			{
-				label: 'Sales',
-				data: [65, 59, 80, 81, 56, 55, 40],
-				fill: true,
-				backgroundColor: 'rgba(20, 184, 166, 0.15)', // Teal-500 with opacity
-				borderColor: '#14B8A6', // Teal-500
-				tension: 0.4,
-				pointBackgroundColor: '#14B8A6',
-				pointBorderColor: '#ffffff',
-				pointHoverRadius: isMobile ? 6 : 8,
-				pointRadius: isMobile ? 3 : 4,
-				borderWidth: 2
-			}
-		]
-	};
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      const user = await getCurrentUser();
+      if (user) setToken(user.accessToken);
+    };
+    fetchCurrentUser();
+  }, []);
 
-	const revenueData = {
-		labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-		datasets: [
-			{
-				label: 'Revenue',
-				data: [1200, 1900, 800, 1500, 2000, 1700, 1300],
-				backgroundColor: 'rgba(16, 185, 129, 0.8)', // Emerald-500
-				borderColor: '#10B981', // Emerald-500
-				borderWidth: 1,
-				hoverBackgroundColor: '#10B981',
-				barThickness: isMobile ? 20 : 40
-			}
-		]
-	};
+  useEffect(() => {
+    const fetchArtworks = async () => {
+      if (!token) return;
+      try {
+        const res = await getArtistArtworks(token);
+        if (res?.data) setArtworkData(res.data);
+      } catch (error) {
+        console.error("Failed to fetch artwork data:", error);
+      }
+    };
+    fetchArtworks();
+  }, [token]);
 
-	const handleTimeFilterChange = (
-		event: React.ChangeEvent<HTMLSelectElement>
-	) => {
-		setTimeFilter(event.target.value);
-	};
+  const totalArtworks = artworkData?.artworks.length ?? 0;
+  const statusCounts =
+    artworkData?.artworks.reduce((acc, art) => {
+      acc[art.status] = (acc[art.status] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>) || {};
 
-	const TimeFilter = () => (
-		<select
-			value={timeFilter}
-			onChange={handleTimeFilterChange}
-			className='border rounded-lg px-2 py-1.5 text-sm md:text-base bg-emerald-50 dark:bg-teal-900/30 shadow-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-300 w-full max-w-[160px] font-medium text-emerald-700 dark:text-emerald-200'
-		>
-			<option value='day'>Ngày</option>
-			<option value='week'>Tuần</option>
-			<option value='month'>Tháng</option>
-		</select>
-	);
+  const statusData = {
+    labels: Object.keys(statusCounts),
+    datasets: [
+      {
+        data: Object.values(statusCounts),
+        backgroundColor: [
+          "#10B981",
+          "#3B82F6",
+          "#F59E0B",
+          "#F43F5E",
+          "#6366F1",
+        ],
+        hoverBackgroundColor: [
+          "#059669",
+          "#2563EB",
+          "#D97706",
+          "#E11D48",
+          "#4F46E5",
+        ],
+        borderWidth: 2,
+        borderColor: "#ffffff",
+      },
+    ],
+  };
 
-	const StatCard = ({
-		title,
-		value,
-		color
-	}: {
-		title: string;
-		value: string | number;
-		color: string;
-	}) => (
-		<motion.div
-			initial={{ opacity: 0, y: 20 }}
-			animate={{ opacity: 1, y: 0 }}
-			transition={{ duration: 0.5 }}
-		>
-			<Card className='hover:shadow-lg transition-all duration-300 bg-white dark:bg-gray-800 shadow-md rounded-lg border border-gray-200 dark:border-gray-700'>
-				<CardHeader className='pb-1 md:pb-2'>
-					<CardTitle className='text-xs md:text-sm font-medium text-teal-600 dark:text-teal-400 line-clamp-1'>
-						{title}
-					</CardTitle>
-				</CardHeader>
-				<CardContent>
-					<p
-						className={`text-xl md:text-3xl font-bold ${color} truncate`}
-					>
-						{value}
-					</p>
-				</CardContent>
-			</Card>
-		</motion.div>
-	);
+  useEffect(() => {
+    const fetchSalesData = async () => {
+      if (!token) return;
+      try {
+        const res = await getTransactions(token);
+        if (res?.data?.transactions) {
+          const relevantTransactions = res.data.transactions.filter(
+            (tx) =>
+              tx.status === "PAID" &&
+              (tx.type === "SALE" || tx.type === "TICKET_SALE")
+          );
 
-	return (
-		<motion.div
-			initial={{ opacity: 0 }}
-			animate={{ opacity: 1 }}
-			transition={{ duration: 0.6, ease: 'easeOut' }}
-			className='p-3 md:p-6 space-y-4 md:space-y-6 max-w-6xl mx-auto'
-		>
-			{/* Header */}
-			<motion.div
-				initial={{ opacity: 0, y: -15 }}
-				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
-				className={
-					isMobile
-						? 'space-y-3'
-						: 'flex justify-between items-center gap-4'
-				}
-			>
-				<h1 className='text-lg md:text-2xl font-bold bg-gradient-to-r from-teal-600 to-cyan-500 bg-clip-text text-transparent'>
-					Dashboard
-				</h1>
-				<TimeFilter />
-			</motion.div>
+          setSalesNumber(
+            relevantTransactions.filter((tx) => tx.type === "SALE").length
+          );
+          setTicketSalesNumber(
+            relevantTransactions.filter((tx) => tx.type === "TICKET_SALE")
+              .length
+          );
+          setSalesAmount(
+            relevantTransactions.reduce((sum, tx) => sum + tx.amount, 0)
+          );
 
-			{/* Stats */}
-			<div
-				className={
-					isMobile
-						? 'space-y-3'
-						: 'grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6'
-				}
-			>
-				<StatCard
-					title='Total Artworks'
-					value='39'
-					color='text-emerald-600'
-				/>
-				<StatCard
-					title='Total Collections'
-					value='5'
-					color='text-teal-600'
-				/>
-				<StatCard
-					title='Total Sales'
-					value='7'
-					color='text-amber-600'
-				/>
-				<StatCard
-					title='Total Revenue'
-					value={vietnamCurrency(12000000)}
-					color='text-cyan-600'
-				/>
-			</div>
+          const labelsMap: { [key: string]: string[] } = {
+            week: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+            month: Array.from({ length: 31 }, (_, i) => (i + 1).toString()),
+            year: [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "May",
+              "Jun",
+              "Jul",
+              "Aug",
+              "Sep",
+              "Oct",
+              "Nov",
+              "Dec",
+            ],
+          };
 
-			{/* Charts */}
-			<div
-				className={
-					isMobile
-						? 'space-y-4'
-						: 'grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6'
-				}
-			>
-				<Card className='border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden'>
-					<CardHeader className='border-b border-gray-200 dark:border-gray-700 py-2 md:py-3 bg-gradient-to-r from-emerald-50 to-teal-100 dark:from-emerald-900 dark:to-teal-800'>
-						<CardTitle className='text-sm md:text-lg font-semibold text-emerald-700 dark:text-emerald-200 line-clamp-1'>
-							Phân bố trạng thái tác phẩm
-						</CardTitle>
-					</CardHeader>
-					<CardContent className='p-3 md:p-6 h-[200px] md:h-[300px]'>
-						<Doughnut
-							data={statusData}
-						// options={{
-						// 	...getChartOptions(isMobile),
-						// 	cutout: isMobile ? '40%' : '60%'
-						// }}
-						/>
-					</CardContent>
-				</Card>
+          const initData = new Array(labelsMap[salesFilter].length).fill(0);
+          const salesAmounts = [...initData];
+          const ticketAmounts = [...initData];
 
-				<Card className='border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden'>
-					<CardHeader className='border-b border-gray-200 dark:border-gray-700 py-2 md:py-3 bg-gradient-to-r from-emerald-50 to-teal-100 dark:from-emerald-900 dark:to-teal-800'>
-						<CardTitle className='text-sm md:text-lg font-semibold text-emerald-700 dark:text-emerald-200 line-clamp-1'>
-							Xu hướng doanh số
-						</CardTitle>
-					</CardHeader>
-					<CardContent className='p-3 md:p-6 h-[200px] md:h-[300px]'>
-						<Line
-							data={salesData}
-						// options={getChartOptions(isMobile)}
-						/>
-					</CardContent>
-				</Card>
+          relevantTransactions.forEach((tx) => {
+            const date = new Date(tx.createdAt);
+            let index = 0;
+            if (salesFilter === "week") index = date.getDay();
+            else if (salesFilter === "month") index = date.getDate() - 1;
+            else if (salesFilter === "year") index = date.getMonth();
 
-				{isMobile && (
-					<div className='shadow-lg rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700'>
-						<TabChart />
-					</div>
-				)}
-			</div>
+            if (tx.type === "SALE") salesAmounts[index] += tx.amount;
+            if (tx.type === "TICKET_SALE") ticketAmounts[index] += tx.amount;
+          });
 
-			{!isMobile && (
-				<div className='shadow-lg rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700'>
-					<TabChart />
-				</div>
-			)}
+          setSalesDataByStatus({
+            labels: labelsMap[salesFilter],
+            datasets: [
+              {
+                label: "Artwork Sales",
+                data: salesAmounts,
+                fill: true,
+                backgroundColor: "rgba(20, 184, 166, 0.15)",
+                borderColor: "#14B8A6",
+                tension: 0.4,
+                pointBackgroundColor: "#14B8A6",
+                pointBorderColor: "#ffffff",
+                pointHoverRadius: isMobile ? 6 : 8,
+                pointRadius: isMobile ? 3 : 4,
+                borderWidth: 2,
+              },
+              {
+                label: "Ticket Sales",
+                data: ticketAmounts,
+                fill: true,
+                backgroundColor: "rgba(234, 179, 8, 0.15)",
+                borderColor: "#EAB308",
+                tension: 0.4,
+                pointBackgroundColor: "#EAB308",
+                pointBorderColor: "#ffffff",
+                pointHoverRadius: isMobile ? 6 : 8,
+                pointRadius: isMobile ? 3 : 4,
+                borderWidth: 2,
+              },
+            ],
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching sales data:", error);
+      }
+    };
+    fetchSalesData();
+  }, [token, salesFilter]);
 
-			<Card className='border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden'>
-				<CardHeader className='border-b border-gray-200 dark:border-gray-700 py-2 md:py-3 bg-gradient-to-r from-emerald-50 to-teal-100 dark:from-emerald-900 dark:to-teal-800'>
-					<CardTitle className='text-sm md:text-lg font-semibold text-emerald-700 dark:text-emerald-200 line-clamp-1'>
-						Tổng quan doanh thu
-					</CardTitle>
-				</CardHeader>
-				<CardContent className='p-3 md:p-6 h-[250px] md:h-[350px]'>
-					<Bar
-						data={revenueData}
-					// options={getChartOptions(isMobile)}
-					/>
-				</CardContent>
-			</Card>
-		</motion.div>
-	);
+  const revenueData = {
+    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    datasets: [
+      {
+        label: "Revenue",
+        data: [1200, 1900, 800, 1500, 2000, 1700, 1300],
+        backgroundColor: "rgba(16, 185, 129, 0.8)",
+        borderColor: "#10B981",
+        borderWidth: 1,
+        hoverBackgroundColor: "#10B981",
+        barThickness: isMobile ? 20 : 40,
+      },
+    ],
+  };
+
+  const TimeFilter = ({
+    value,
+    onChange,
+  }: {
+    value: string;
+    onChange: (e: any) => void;
+  }) => (
+    <select
+      value={value}
+      onChange={onChange}
+      className="text-sm md:text-base text-emerald-700 dark:text-emerald-200 bg-transparent border border-emerald-300 dark:border-emerald-600 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-emerald-400 dark:focus:ring-emerald-600"
+    >
+      <option value="week">Tuần</option>
+      <option value="month">Tháng</option>
+      <option value="year">Năm</option>
+    </select>
+  );
+
+  const StatCard = ({
+    title,
+    value,
+    color,
+  }: {
+    title: string;
+    value: string | number;
+    color: string;
+  }) => (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <Card className="hover:shadow-lg transition-all duration-300 bg-white dark:bg-gray-800 shadow-md rounded-lg border border-gray-200 dark:border-gray-700">
+        <CardHeader className="pb-1 md:pb-2">
+          <CardTitle className="text-xs md:text-sm font-medium text-teal-600 dark:text-teal-400 line-clamp-1">
+            {title}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className={`text-xl md:text-3xl font-bold ${color} truncate`}>
+            {value}
+          </p>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="p-3 md:p-6 space-y-4 md:space-y-6 max-w-6xl mx-auto"
+    >
+      <motion.div
+        initial={{ opacity: 0, y: -15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+        className={
+          isMobile ? "space-y-3" : "flex justify-between items-center gap-4"
+        }
+      >
+        <h1 className="text-lg md:text-2xl font-bold bg-gradient-to-r from-teal-600 to-cyan-500 bg-clip-text text-transparent">
+          Dashboard
+        </h1>
+      </motion.div>
+
+      <div
+        className={
+          isMobile
+            ? "space-y-3"
+            : "grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6"
+        }
+      >
+        <StatCard
+          title="Total Artworks"
+          value={totalArtworks}
+          color="text-emerald-600"
+        />
+        <StatCard
+          title="Total Exhibition"
+          value={exhibitionData.length}
+          color="text-emerald-600"
+        />
+        <StatCard
+          title="Total Ticket Sale"
+          value={ticketSalesNumber}
+          color="text-teal-600"
+        />
+        <StatCard
+          title="Total Artwork Sales"
+          value={salesNumber}
+          color="text-amber-600"
+        />
+        <StatCard
+          title="Total Revenue"
+          value={vietnamCurrency(salesAmount + salesAmount * (3 / 100))}
+          color="text-cyan-600"
+        />
+        <StatCard
+          title="Total profit"
+          value={vietnamCurrency(salesAmount)}
+          color="text-cyan-600"
+        />
+      </div>
+
+      <div
+        className={
+          isMobile
+            ? "space-y-4"
+            : "grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6"
+        }
+      >
+        <Card className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+          <CardHeader className="border-b border-gray-200 dark:border-gray-700 py-2 md:py-3 bg-gradient-to-r from-emerald-50 to-teal-100 dark:from-emerald-900 dark:to-teal-800">
+            <CardTitle className="text-sm md:text-lg font-semibold text-emerald-700 dark:text-emerald-200 line-clamp-1">
+              Phân bố trạng thái tác phẩm
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-3 md:p-6 h-[200px] md:h-[300px]">
+            <Doughnut data={statusData} />
+          </CardContent>
+        </Card>
+
+        <Card className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+          <CardHeader className="border-b border-gray-200 dark:border-gray-700 py-2 md:py-3 bg-gradient-to-r from-emerald-50 to-teal-100 dark:from-emerald-900 dark:to-teal-800">
+            <div className="flex items-center justify-between w-full">
+              <h2 className="text-base md:text-lg font-semibold text-emerald-700 dark:text-emerald-200">
+                Xu hướng doanh số
+              </h2>
+              <TimeFilter
+                value={salesFilter}
+                onChange={(e) => setSalesFilter(e.target.value)}
+              />
+            </div>
+          </CardHeader>
+
+          <CardContent className="p-3 md:p-6 h-[200px] md:h-[300px]">
+            <Line data={salesDataByStatus} />
+          </CardContent>
+        </Card>
+
+        {isMobile && (
+          <div className="shadow-lg rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+            <TabChart />
+          </div>
+        )}
+      </div>
+
+      {!isMobile && (
+        <div className="shadow-lg rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+          <TabChart />
+        </div>
+      )}
+
+      {/* <Card className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+        <CardHeader className="border-b border-gray-200 dark:border-gray-700 py-2 md:py-3 bg-gradient-to-r from-emerald-50 to-teal-100 dark:from-emerald-900 dark:to-teal-800">
+          <CardTitle className="text-sm md:text-lg font-semibold text-emerald-700 dark:text-emerald-200 line-clamp-1">
+            Doanh thu bán vé từng phòng tranh
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-3 md:p-6 h-[250px] md:h-[350px]">
+          <Bar data={revenueData} />
+        </CardContent>
+      </Card> */}
+    </motion.div>
+  );
 }
