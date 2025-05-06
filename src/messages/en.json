@@ -123,7 +123,10 @@
     "spotlight": {
       "title": "Artist Spotlight",
       "view_all": "View All",
-      "view_profile": "View Profile"
+      "view_profile": "View Profile",
+      "no_featured_works": "No featured artworks yet",
+      "exhibitions": "Exhibitions",
+      "artworks": "Artworks"
     },
     "articles": {
       "title": "Latest Articles",
@@ -664,6 +667,8 @@
     }
   },
   "exhibitions": {
+    "no_artworks_found": "No artworks found",
+    "create_artwork": "Create Artwork",
     "upgrade_to_premium": "Upgrade to Premium",
     "limit_reached_title": "View Limit Reached",
     "limit_reached_description": "You've reached the daily limit of 5 exhibition views. Upgrade to Premium for unlimited access.",

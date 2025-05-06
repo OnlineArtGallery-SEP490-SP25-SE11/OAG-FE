@@ -37,7 +37,7 @@ interface ArtworkPosition {
   artwork: {
     _id: string;
     title: string;
-    url: string;
+    lowResUrl: string;
   };
   positionIndex: number;
 }
@@ -153,7 +153,7 @@ export function ArtworkSelectionModal({
           <div className="flex justify-center my-6">
             <div className="relative w-36 h-36 rounded-md overflow-hidden border border-muted">
               <Image
-                src={existingArtworkPosition.artwork.url}
+                src={existingArtworkPosition.artwork.lowResUrl}
                 alt={existingArtworkPosition.artwork.title}
                 fill
                 className="object-cover"
@@ -199,7 +199,7 @@ export function ArtworkSelectionModal({
           <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-md flex items-center gap-3">
             <div className="relative h-16 w-16 rounded overflow-hidden flex-shrink-0">
               <Image
-                src={existingArtworkPosition.artwork.url}
+                src={existingArtworkPosition.artwork.lowResUrl}
                 alt={existingArtworkPosition.artwork.title}
                 fill
                 className="object-cover"

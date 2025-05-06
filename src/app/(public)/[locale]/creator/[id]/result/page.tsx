@@ -23,6 +23,7 @@ export default async function ResultPage({
 	}
 	const premiumStatus = await checkPremium(user.accessToken);
 	const { isPremium } = premiumStatus;
+	
 	return (
 		<ResultContent exhibition={exhibition!} isPremium={isPremium!} />
 	)

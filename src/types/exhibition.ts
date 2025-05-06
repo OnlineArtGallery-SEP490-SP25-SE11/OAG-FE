@@ -11,7 +11,7 @@ export interface ExhibitionArtwork {
     width: number;
     height: number;
   };
-  url: string;
+  lowResUrl: string;
   status: string;
   views: number;
   price: number;

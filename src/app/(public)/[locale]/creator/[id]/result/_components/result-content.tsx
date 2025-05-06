@@ -88,7 +88,7 @@ function AnalyticsContent({ exhibition }: { exhibition: Exhibition }) {
                                     title={artwork?.title || t('untitled_artwork')}
                                     likes={like.count}
                                     // Optional: Add artwork image thumbnail if available
-                                    imageUrl={artwork?.url}
+                                    imageUrl={artwork?.lowResUrl}
                                     totalLikes={totalLikes} // Pass total likes for potential percentage calculation
                                 />
                             );
@@ -169,10 +169,12 @@ function PremiumUpsell() {
                 <p className='text-muted-foreground mb-6 max-w-md mx-auto text-sm leading-relaxed'> {/* Adjusted text size/leading */}
                     {t('unlock_analytics_desc')}
                 </p>
-                <Button asChild size="lg" className='bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-md hover:shadow-lg hover:brightness-110 transition-all duration-300 group'> {/* Larger button, enhanced hover */}
-                    <Link href="/premium" className='w-full'>
-                        <Lock className='w-4 h-4 mr-2 group-hover:scale-110 transition-transform' /> {/* Added Lock icon */}
-                        {t('upgrade_now_button')}
+                <Button asChild size="lg" className='bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-md hover:shadow-lg hover:brightness-110 transition-all duration-300 group'>
+                    <Link href="/premium">
+                        <div className="flex items-center justify-center">
+                            <Lock className='w-4 h-4 mr-2 group-hover:scale-110 transition-transform' />
+                            <span>{t('upgrade_now_button')}</span>
+                        </div>
                     </Link>
                 </Button>
             </div>

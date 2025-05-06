@@ -159,7 +159,6 @@ export default function Notification() {
   
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
-      console.log('Loading more notifications due to inView trigger');
       fetchNextPage();
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
@@ -312,7 +311,6 @@ function NotificationList({
   
   const handleLoadMore = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
-      console.log('Manually loading more notifications');
       onLoadMore();
     }
   }, [hasNextPage, isFetchingNextPage, onLoadMore]);

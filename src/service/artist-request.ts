@@ -59,7 +59,6 @@ export async function createArtistRequest({
   try {
     // const res = await createApi(accessToken).post('/cccd', cccdData);
     //refacter to create  become artist request
-    console.log('cccdData', cccdData);
     const res = await createApi(accessToken).post('/artist-request', {
       cccd: cccdData
     });

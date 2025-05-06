@@ -195,8 +195,6 @@ export async function fetchArtPiecesByRange(
     }
 
     const response = await axios.get(`/artwork?${queryParams}`);
-    console.log('API request:', `/artwork?${queryParams}`);
-    console.log('API response:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching artworks:', error);

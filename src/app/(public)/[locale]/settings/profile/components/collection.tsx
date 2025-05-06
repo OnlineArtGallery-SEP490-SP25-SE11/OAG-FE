@@ -65,7 +65,6 @@ export default function Collection() {
 		queryFn: async () => {
 			try {
 				const res = await collectionService.getByUserId();
-				console.log('API response:', res);
 				return res; // Return the whole response object
 			} catch (error) {
 				console.error('Error fetching collections:', error);

@@ -179,8 +179,6 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
 
   // Handle discovery toggle with immediate update
   const handleDiscoveryToggle = async (checked: boolean) => {
-    if (!isPublished) return;
-
     setCurrentOperation('discovery');
     setIsDiscoverable(checked); // Update local state optimistically
 

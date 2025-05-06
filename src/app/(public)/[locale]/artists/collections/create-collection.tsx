@@ -47,11 +47,9 @@ export default function CreateCollection({ onSuccess, triggerButton }: CreateCol
 
     const mutation = useMutation({
         mutationFn: (data: CreateCollectionForm) => {
-            console.log('Sending data to server:', data);
             return collectionService.createArtist(data);
         },
         onSuccess: () => {
-            console.log('Mutation successful');
             toast({
                 title: 'Success',
                 description: 'Collection created successfully!',
@@ -63,7 +61,6 @@ export default function CreateCollection({ onSuccess, triggerButton }: CreateCol
             if (onSuccess) onSuccess();
         },
         onError: (error: any) => {
-            console.log('Mutation error:', error);
             toast({
                 title: 'Error',
                 description: error?.message || 'Failed to create collection',
@@ -79,7 +76,6 @@ export default function CreateCollection({ onSuccess, triggerButton }: CreateCol
 
     const onSubmit = (data: CreateCollectionForm) => {
         setIsSubmitting(true);
-        console.log("Form submission started with data:", data);
         mutation.mutate(data);
     }
 
