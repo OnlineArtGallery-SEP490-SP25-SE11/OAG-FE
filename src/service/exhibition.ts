@@ -230,7 +230,6 @@ export const updateExhibitionAnalytics = async (
   totalTime: number
 ): Promise<ApiResponse<ExhibitionRequestResponse>> => {
   try {
-    console.log('Updating exhibition analytics:', { id, totalTime });
     const res = await createApi().patch(`/exhibition/${id}/analytics`, { totalTime });
     return res.data;
   } catch (error) {

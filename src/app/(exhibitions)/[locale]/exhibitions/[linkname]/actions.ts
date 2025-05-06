@@ -4,7 +4,7 @@ import { authenticatedAction, unauthenticatedAction } from "@/lib/safe-action";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { purchaseExhibitionTicket, toggleArtworkLike, updateExhibitionAnalytics } from "@/service/exhibition";
-import { checkLimitStatus, rateLimitByKey, resetLimit, trackers } from "@/lib/limiter";
+import { checkLimitStatus, rateLimitByKey} from "@/lib/limiter";
 import { RateLimitError } from "@/lib/errors";
 import { headers } from "next/headers";
 import { checkPremium } from "@/utils/premium";
@@ -97,7 +97,6 @@ export const checkExhibitionAccessAction = unauthenticatedAction
 
       // Kiểm tra status trước để hiển thị thông tin số lượt xem còn lại
       const status = checkLimitStatus({ key: limitKey, limit: MAX_DAILY_VIEWS });
-      console.log(`User ${session?.user?.id || 'anonymous'} - Exhibition ${exhibitionId} - Views: ${status.count}/${MAX_DAILY_VIEWS}`);
 
       // Áp dụng rate limit
       try {

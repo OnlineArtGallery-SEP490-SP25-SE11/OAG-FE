@@ -47,7 +47,6 @@ export default function FollowButton({
         return;
       }
 
-      console.log(`Gửi request: /user/${action}/${targetUserId}`);
       const response = await axiosInstance.post(
         `/user/${action}/${targetUserId}`
       );

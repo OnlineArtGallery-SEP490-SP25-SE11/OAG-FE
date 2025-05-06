@@ -5,14 +5,12 @@ export const updateAvatar = async (imageUrl: string, token: string) => {
 		throw new Error('No authentication token available');
 	}
 
-	console.log('Sending avatar update request');
 	const response = await createApi(token).put('user/avatar', { avatar: imageUrl }, {
 		headers: {
 			'Content-Type': 'application/json'
 		}
 	});
 
-	console.log('Avatar update response:', response);
 	return response.data;
 };
 

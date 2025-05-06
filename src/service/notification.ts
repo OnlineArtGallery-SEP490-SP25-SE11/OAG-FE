@@ -41,7 +41,6 @@ const notificationService = {
         
         const res = await axiosInstance.get('/notification/unread');
         // Ensure we return 0 if data is undefined or null
-        console.log(res.data)
         return res.data?.data || 0;
       } catch (error) {
         console.error("Error fetching unread count:", error);
@@ -52,10 +51,8 @@ const notificationService = {
     async  markAsRead(id?: string) {
       const axiosInstance = await createAxiosInstance({ useToken: true });
       if (!axiosInstance) return null;
-      console.log(`markAsRead: ${id}`)
       const url = id ? `/notification/read/${id}` : '/notification/read';
       const res = await axiosInstance.put(url);
-      console.log('read: ',res.data)
       return res.data;
     },
     

@@ -198,7 +198,6 @@ const OptimizedImage = forwardRef<HTMLImageElement, OptimizedImageProps>(
       ? (e: React.MouseEvent) => e.preventDefault() 
       : undefined;
     
-    console.log(props)
     return (
       <div 
       // style={containerStyle}

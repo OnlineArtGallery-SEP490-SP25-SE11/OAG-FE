@@ -15,7 +15,6 @@ export default async function ProfilePage() {
 
 	// Fetch data on the server
 	const userData = await (isArtist ? getArtistProfile(currentUser.accessToken) : getUser(currentUser.accessToken));
-	console.log('userData', userData);
 	return (
 		<Suspense fallback={<ProfileSkeleton />}>
 			<ProfileContent initialData={userData.user} />

@@ -81,7 +81,6 @@ export const checkUserPurchased = async (
 ): Promise<ApiResponse<{ hasPurchased: boolean }>> => {
     try {
         const res = await createApi(accessToken).get(`/artwork/${artworkId}/check-purchased`);
-        console.log('rescac', res.data);
         return res.data;
     } catch (error) {
         console.error('Lỗi khi kiểm tra trạng thái mua tranh:', error);
