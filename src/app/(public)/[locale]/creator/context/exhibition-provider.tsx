@@ -89,7 +89,6 @@ export default function ExhibitionContextProvider({
       onError?: (error: any) => void
     }
   ) => {
-    console.log('Updating exhibition with data:', data);
 
     // Store callback options for this operation
     if (options) {

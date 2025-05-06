@@ -168,7 +168,6 @@ const exhibitions = [
 ];
 
 export async function getExhibitions(id: string) {
-    console.log('Fetching exhibitions:', id);
     await new Promise(resolve => setTimeout(resolve, 2000));
     try {
         const data = exhibitions.find(exhibition => exhibition.id === id);
@@ -227,7 +226,6 @@ export async function saveGalleryTemplate(templateData: GalleryTemplateData): Pr
             // });
 
             // For this example, we'll simulate an API response
-            console.log('Creating new template:', templateData);
 
             // Simulate API delay
             await new Promise(resolve => setTimeout(resolve, 1000));
@@ -246,7 +244,6 @@ export async function saveGalleryTemplate(templateData: GalleryTemplateData): Pr
             //   body: JSON.stringify(templateData),
             // });
 
-            console.log('Updating template:', templateData);
 
             // Simulate API delay
             await new Promise(resolve => setTimeout(resolve, 1000));

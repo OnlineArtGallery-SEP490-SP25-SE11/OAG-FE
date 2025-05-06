@@ -12,18 +12,18 @@ export const NOTIFICATION_EVENTS = {
 // Create a custom event emitter for notifications
 export const notificationEmitter = {
   listeners: new Map(),
-  
+
   emit(event: string, data: any) {
     const eventListeners = this.listeners.get(event) || [];
     eventListeners.forEach((listener: Function) => listener(data));
   },
-  
+
   on(event: string, callback: Function) {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, []);
     }
     this.listeners.get(event)?.push(callback);
-    
+
     // Return unsubscribe function
     return () => {
       const eventListeners = this.listeners.get(event) || [];
@@ -74,14 +74,14 @@ interface NotificationState {
   toasts: NotificationToast[];
   unreadCount: number;
   lastNotificationId: string | null;
-  
+
   // UI state
   isNotificationPanelOpen: boolean;
 
   // Socket management
   initializeSocket: (userId: string) => void;
   disconnectSocket: () => void;
-  
+
   // Notification actions
   addNotification: (notification: Notification) => void;
   addToast: (toast: NotificationToast) => void;
@@ -121,25 +121,25 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
   toasts: [],
   unreadCount: 0,
   lastNotificationId: null,
-  
+
   // UI state
   isNotificationPanelOpen: false,
 
   // Socket management
   initializeSocket: (userId: string) => {
     const { socket, socketInitializing, registeredUsers } = get();
-    
+
     // If socket exists and user already registered, do nothing
     if (socket?.connected && registeredUsers.has(userId)) {
       set({ socketStatus: 'connect' });
       return;
     }
-    
+
     // If already initializing, wait
     if (socketInitializing) return;
-    
+
     set({ socketInitializing: true });
-    
+
     try {
       const newSocket = createSocket(process.env.NEXT_PUBLIC_SOCKET_URL as string, {
         reconnectionAttempts: 5,
@@ -148,36 +148,35 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
         transports: ['websocket', 'polling'],
         autoConnect: true
       });
-      
+
       // Register user
       newSocket.emit('register', userId);
       const newRegisteredUsers = new Set(registeredUsers);
       newRegisteredUsers.add(userId);
-      
+
       // Set up event listeners
       newSocket.on('connect', () => {
         set({ socketStatus: 'connect' });
         // Re-register on reconnect
         newSocket.emit('register', userId);
       });
-      
+
       newSocket.on('disconnect', () => set({ socketStatus: 'disconnect' }));
-      
+
       newSocket.on('connect_error', (error) => {
         console.error('Socket connection error:', error);
         set({ socketStatus: 'disconnect' });
       });
-      
+
       newSocket.on('notifications', (newNotification: Notification) => {
         const { lastNotificationId } = get();
-        
+
         // Skip if already processed
         if (lastNotificationId === newNotification._id) {
           return;
         }
-        
-        console.log('Socket received new notification:', newNotification);
-        
+
+
         // Format notification
         const formattedNotification = {
           ...newNotification,
@@ -185,7 +184,7 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
           updatedAt: new Date(newNotification.updatedAt),
           isRead: false,
         };
-        
+
         // Create toast
         const variant = getVariantFromType(newNotification.refType);
         const toast: NotificationToast = {
@@ -194,7 +193,7 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
           isNew: true,
           variant,
         };
-        
+
         // Update state
         set(state => ({
           notifications: [formattedNotification, ...state.notifications],
@@ -202,14 +201,14 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
           unreadCount: state.unreadCount + 1,
           lastNotificationId: newNotification._id
         }));
-        
+
         // Emit event for React Query to update
         notificationEmitter.emit(
-          NOTIFICATION_EVENTS.NEW_NOTIFICATION, 
+          NOTIFICATION_EVENTS.NEW_NOTIFICATION,
           formattedNotification
         );
       });
-      
+
       // Update state
       set({
         socket: newSocket,
@@ -217,7 +216,7 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
         socketInitializing: false,
         registeredUsers: newRegisteredUsers
       });
-      
+
     } catch (error) {
       console.error('Socket initialization error:', error);
       set({
@@ -226,24 +225,24 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
       });
     }
   },
-  
+
   disconnectSocket: () => {
     const { socket, registeredUsers } = get();
     if (!socket) return;
-    
+
     // Clean up event listeners
     socket.off('connect');
     socket.off('disconnect');
     socket.off('connect_error');
     socket.off('notifications');
-    
+
     // Disconnect if no users registered
     if (registeredUsers.size === 0) {
       socket.disconnect();
       set({ socket: null });
     }
   },
-  
+
   // Notification actions
   addNotification: (notification: Notification) => {
     set(state => ({
@@ -251,45 +250,45 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
       unreadCount: state.unreadCount + (notification.isRead ? 0 : 1)
     }));
   },
-  
+
   addToast: (toast: NotificationToast) => {
     set(state => ({
       toasts: [...state.toasts, toast]
     }));
   },
-  
+
   removeToast: (id: string) => {
     set(state => ({
       toasts: state.toasts.filter(toast => toast._id !== id)
     }));
   },
-  
+
   markAsRead: (id: string) => {
     set(state => {
       // Check if notification is unread
       const isUnread = state.notifications.some(n => n._id === id && !n.isRead);
-      
+
       return {
-        notifications: state.notifications.map(notification => 
+        notifications: state.notifications.map(notification =>
           notification._id === id ? { ...notification, isRead: true } : notification
         ),
         unreadCount: isUnread ? Math.max(0, state.unreadCount - 1) : state.unreadCount
       };
     });
   },
-  
+
   markAllAsRead: () => {
     set(state => ({
       notifications: state.notifications.map(notification => ({ ...notification, isRead: true })),
       unreadCount: 0
     }));
   },
-  
+
   deleteNotification: (id: string) => {
     set(state => {
       const notification = state.notifications.find(n => n._id === id);
       const wasUnread = notification && !notification.isRead;
-      
+
       return {
         notifications: state.notifications.filter(n => n._id !== id),
         toasts: state.toasts.filter(t => t._id !== id),
@@ -297,26 +296,26 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
       };
     });
   },
-  
+
   setNotifications: (notifications: Notification[]) => {
     set({ notifications });
   },
-  
+
   setUnreadCount: (count: number) => {
     set({ unreadCount: count });
   },
-  
+
   setNotificationPanelOpen: (isOpen: boolean) => {
     set({ isNotificationPanelOpen: isOpen });
   },
-  
+
   updateQueryData: (queryData: NotificationQueryData) => {
     // Extract all notifications from pages
     const allNotifications = queryData.pages.flatMap(page => page.notifications || []);
-    
+
     // Count unread notifications
     const unreadCount = allNotifications.filter(n => !n.isRead).length;
-    
+
     set({
       notifications: allNotifications,
       unreadCount

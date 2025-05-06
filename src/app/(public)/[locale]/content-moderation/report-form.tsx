@@ -54,7 +54,6 @@ export function ReportForm({ onClose }: { onClose: () => void }) {
 		}
 
 		// Here you would typically send the report data to your backend
-		console.log('Report submitted:', { reason, comment });
 		onClose();
 	};
 

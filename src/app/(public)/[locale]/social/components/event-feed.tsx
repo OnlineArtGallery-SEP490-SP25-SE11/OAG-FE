@@ -135,7 +135,6 @@ export function EventFeed() {
       }
     },
     onSuccess: () => {
-      console.log("Cancellation successful");
       toast({
         title: "Cancellation successful",
         description: "You have successfully cancelled your registration",

@@ -35,7 +35,7 @@ export default function DiscoveryManager({
           checked={isDiscoverable}
           onCheckedChange={onToggle}
           id="isDiscoverable"
-          disabled={isLoading || !isPublished}
+          disabled={isLoading}
         />
       </div>
       {!isPublished && (

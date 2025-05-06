@@ -62,7 +62,6 @@ export async function getNewRecommendedArtworks() {
             sortBy: 'createdAt',
             sortOrder: 'desc'
         });
-        console.log(res, 'new recommended artworks');
         return res.data;
     } catch (error) {   
         console.error('Failed to fetch new recommended artworks:', error);
@@ -89,7 +88,6 @@ export async function getMostHeartedBlogs(): Promise<ApiResponse<{
 }>> {
     try {
         const res = await createApi().get('/blog/most-hearted');
-        console.log(res.data, 'most hearted blogs');
         return res.data;
     } catch (error) {
         console.error('Failed to fetch most hearted blogs:', error);
