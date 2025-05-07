@@ -88,7 +88,7 @@ const ProfileContent = ({ initialData }: ProfileContentProps) => {
         const status = await checkPremium(session.user.accessToken);
         setPremiumStatus(status.isPremium);
 
-        
+
         if (status.status === 'cancelled') {
           toast({
             title: "Thông báo",
@@ -102,6 +102,7 @@ const ProfileContent = ({ initialData }: ProfileContentProps) => {
             variant: "destructive",
           });
         }
+        // Trạng thái 'none' không hiển thị thông báo gì
       } catch (error) {
         console.error("Lỗi khi kiểm tra trạng thái Premium:", error);
       }
