@@ -22,7 +22,7 @@ export const cancelPremium = async (accessToken: string): Promise<ApiResponse<{ 
 }
 
 export const checkPremium = async (accessToken: string): Promise<ApiResponse<{
-    premiumStatus: 'active' | 'cancelled' | 'expired';
+    premiumStatus: 'active' | 'cancelled' | 'expired' | 'none';
     message: string;
     endDate?: string;
 }>> => {
@@ -31,7 +31,7 @@ export const checkPremium = async (accessToken: string): Promise<ApiResponse<{
         return res.data;
     } catch (error) {
         return handleApiError<{
-            premiumStatus: 'active' | 'cancelled' | 'expired';
+            premiumStatus: 'active' | 'cancelled' | 'expired' | 'none';
             message: string;
             endDate?: string;
         }>(error, 'Lỗi khi kiểm tra trạng thái Premium');
