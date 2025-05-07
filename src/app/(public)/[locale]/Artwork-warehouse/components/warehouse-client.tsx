@@ -34,7 +34,8 @@ import {
     CheckCircle2,
     Info,
     Star,
-    Eye
+    Eye,
+    DollarSign
 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -325,6 +326,7 @@ export default function WarehouseClient() {
                                         
                                         {item.artworkId?.price && (
                                             <div className="flex items-center text-sm text-gray-700 dark:text-gray-200">
+                                                <DollarSign className="h-4 w-4 mr-1.5 flex-shrink-0 text-green-600 dark:text-green-400" />
                                                 <span className="leading-tight">
                                                     {t('artwork.price')}: <span className="font-medium">{
                                                         typeof item.artworkId.price === 'object' 

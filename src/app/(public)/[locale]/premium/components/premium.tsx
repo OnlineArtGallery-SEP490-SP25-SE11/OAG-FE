@@ -259,7 +259,7 @@ export default function SubscriptionOptions() {
                   {userBalance < 45000 && (
                     <div className="mt-2 flex items-start gap-2 text-red-600 bg-red-50 p-2 rounded">
                       <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                      <p className="text-sm">{t('wallet.insufficient_balance')}</p>
+                      {/* <p className="text-sm">{t('wallet.insufficient_balance')}</p> */}
                     </div>
                   )}
                 </div>

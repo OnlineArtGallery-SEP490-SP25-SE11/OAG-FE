@@ -6,9 +6,10 @@ import { vietnamCurrency } from "@/utils/converters";
 import { Eye, ImageDown } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { getArtistArtworks, getExhibitions } from "@/service/dashboard";
+import { getExhibitions } from "@/service/dashboard";
 import { ArtworksResponse } from "@/types/artwork";
 import { getCurrentUser } from "@/lib/session";
+import { getArtistArtworks } from "@/service/artwork";
 
 export default function TabChart() {
   const [isMobile, setIsMobile] = useState(false);
@@ -43,7 +44,10 @@ export default function TabChart() {
     const fetchArtworks = async () => {
       if (!token) return;
       try {
-        const res = await getArtistArtworks(token);
+        const res = await getArtistArtworks(token, {
+          skip: 0,
+          take: 0
+        });
         if (res?.data) {
           setArtworkData(res.data);
         }
@@ -172,7 +176,7 @@ export default function TabChart() {
                             Total Time
                           </div>
                           <div className="font-medium text-gray-700 dark:text-gray-200">
-                            {totalTime} mins
+                            {totalTime / 60} mins
                           </div>
                         </div>
                         <div>

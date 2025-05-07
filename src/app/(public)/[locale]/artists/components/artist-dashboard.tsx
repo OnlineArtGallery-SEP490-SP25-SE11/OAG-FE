@@ -19,13 +19,12 @@ import { useEffect, useState } from "react";
 import { Bar, Doughnut, Line } from "react-chartjs-2";
 import TabChart from "./tab-chart";
 import {
-  getArtistArtworks,
   getExhibitions,
   getTransactions,
 } from "@/service/dashboard";
 import { ArtworksResponse } from "@/types/artwork";
 import { getCurrentUser } from "@/lib/session";
-import { Exhibition } from "@/types/exhibition";
+import { getArtistArtworks } from "@/service/artwork";
 
 ChartJS.register(
   ArcElement,
@@ -58,7 +57,7 @@ export default function Dashboard() {
     const fetchExhibitions = async () => {
       if (!token) return;
       try {
-        const res = await getExhibitions(token);
+        const res = await getExhibitions(token, 1000);
         if (res?.data) {
           setTotalExhibition(res.data.exhibitions.length);
         }
@@ -89,7 +88,10 @@ export default function Dashboard() {
     const fetchArtworks = async () => {
       if (!token) return;
       try {
-        const res = await getArtistArtworks(token);
+        const res = await getArtistArtworks(token, {
+          skip: 0,
+          take: 0
+        });
         if (res?.data) setArtworkData(res.data);
       } catch (error) {
         console.error("Failed to fetch artwork data:", error);
@@ -253,9 +255,9 @@ export default function Dashboard() {
       onChange={onChange}
       className="text-sm md:text-base text-emerald-700 dark:text-emerald-200 bg-transparent border border-emerald-300 dark:border-emerald-600 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-emerald-400 dark:focus:ring-emerald-600"
     >
-      <option value="week">Tuần</option>
-      <option value="month">Tháng</option>
-      <option value="year">Năm</option>
+      <option value="week">Week</option>
+      <option value="month">Month</option>
+      <option value="year">Year</option>
     </select>
   );
 
@@ -357,7 +359,7 @@ export default function Dashboard() {
         <Card className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
           <CardHeader className="border-b border-gray-200 dark:border-gray-700 py-2 md:py-3 bg-gradient-to-r from-emerald-50 to-teal-100 dark:from-emerald-900 dark:to-teal-800">
             <CardTitle className="text-sm md:text-lg font-semibold text-emerald-700 dark:text-emerald-200 line-clamp-1">
-              Phân bố trạng thái tác phẩm
+              Status of artwork
             </CardTitle>
           </CardHeader>
           <CardContent className="p-3 md:p-6 h-[200px] md:h-[300px]">
@@ -369,7 +371,7 @@ export default function Dashboard() {
           <CardHeader className="border-b border-gray-200 dark:border-gray-700 py-2 md:py-3 bg-gradient-to-r from-emerald-50 to-teal-100 dark:from-emerald-900 dark:to-teal-800">
             <div className="flex items-center justify-between w-full">
               <h2 className="text-base md:text-lg font-semibold text-emerald-700 dark:text-emerald-200">
-                Xu hướng doanh số
+                Sales trends
               </h2>
               <TimeFilter
                 value={salesFilter}
@@ -395,17 +397,6 @@ export default function Dashboard() {
           <TabChart />
         </div>
       )}
-
-      {/* <Card className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
-        <CardHeader className="border-b border-gray-200 dark:border-gray-700 py-2 md:py-3 bg-gradient-to-r from-emerald-50 to-teal-100 dark:from-emerald-900 dark:to-teal-800">
-          <CardTitle className="text-sm md:text-lg font-semibold text-emerald-700 dark:text-emerald-200 line-clamp-1">
-            Doanh thu bán vé từng phòng tranh
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-3 md:p-6 h-[250px] md:h-[350px]">
-          <Bar data={revenueData} />
-        </CardContent>
-      </Card> */}
     </motion.div>
   );
 }
