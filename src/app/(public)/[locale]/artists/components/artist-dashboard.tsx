@@ -19,13 +19,12 @@ import { useEffect, useState } from "react";
 import { Bar, Doughnut, Line } from "react-chartjs-2";
 import TabChart from "./tab-chart";
 import {
-  getArtistArtworks,
   getExhibitions,
   getTransactions,
 } from "@/service/dashboard";
 import { ArtworksResponse } from "@/types/artwork";
 import { getCurrentUser } from "@/lib/session";
-import { Exhibition } from "@/types/exhibition";
+import { getArtistArtworks } from "@/service/artwork";
 
 ChartJS.register(
   ArcElement,
@@ -89,7 +88,10 @@ export default function Dashboard() {
     const fetchArtworks = async () => {
       if (!token) return;
       try {
-        const res = await getArtistArtworks(token);
+        const res = await getArtistArtworks(token, {
+          skip: 0,
+          take: 0
+        });
         if (res?.data) setArtworkData(res.data);
       } catch (error) {
         console.error("Failed to fetch artwork data:", error);
