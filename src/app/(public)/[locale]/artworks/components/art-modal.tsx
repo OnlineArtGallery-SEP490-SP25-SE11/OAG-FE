@@ -31,7 +31,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { AlertCircle, Check } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import ArtFeed from "./art-feed";
 import useAuth from "@/hooks/useAuth-client";
 import { AuthDialog } from "@/components/ui.custom/auth-dialog";
@@ -43,6 +43,7 @@ import {
   useStartClosingArtModal,
 } from "@/hooks/useArtModal";
 import CommentArtworkDrawer from "./comments-tab";
+import { formatDateByLocale } from '@/utils/converters';
 
 // Simplified animation variants
 const animations = {
@@ -194,6 +195,9 @@ function DetailTab({ artwork, userHasPurchased, isArtworkCreator, handleBuy, han
       default: return 'bg-blue-500/10 text-blue-400 border-blue-500/30';
     }
   };
+
+  const locale = useLocale();
+
 
   // Calculate optimal description height based on screen size and content
   const getDescriptionHeight = () => {
@@ -396,7 +400,7 @@ function DetailTab({ artwork, userHasPurchased, isArtworkCreator, handleBuy, han
               </div>
               <div className="flex items-center gap-1">
                 <CalendarIcon className="w-2.5 h-2.5" />
-                <span>{new Date(artwork.createdAt).toLocaleDateString()}</span>
+                <span>{formatDateByLocale(artwork.createdAt, locale)}</span>
               </div>
             </div>
           </div>
