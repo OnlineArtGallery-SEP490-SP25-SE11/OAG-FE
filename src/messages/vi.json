@@ -549,7 +549,8 @@
       "following": "Đang theo dõi",
       "email": "Email",
       "joined": "Tham gia {date}",
-      "premium_badge": "premium"
+      "premium_badge": "premium",
+      "become_artist": "Trở thành nghệ sĩ"
     },
     "view": {
       "view_detail": "Xem chi tiết",
@@ -572,7 +573,17 @@
       "social_links": "Liên kết mạng xã hội",
       "artworks_section": "Tác phẩm nghệ thuật",
       "view_all_artworks": "Xem tất cả {count} tác phẩm",
-      "no_artworks": "Chưa có tác phẩm nào"
+      "no_artworks": "Chưa có tác phẩm nào",
+      "no_collections": "Chưa có bộ sưu tập nào",
+      "no_collections_description": "Người dùng này chưa tạo bộ sưu tập nào",
+      "no_description": "Chưa có mô tả",
+      "created_on": "Được tạo vào",
+      "view_artwork": "Xem tác phẩm",
+      "no_artworks_description": "Bộ sưu tập này chưa có tác phẩm nào",
+      "artist_artworks": "Tác phẩm nghệ thuật",
+      "genre": "Thể loại",
+      "default_bio": "Không có tiểu sử",
+      "artist_albums": "Bộ sưu tập nghệ sĩ"
     },
     "edit": {
       "title": "Chỉnh sửa hồ sơ",
@@ -610,6 +621,13 @@
         "max_genres": "Không thể chọn quá 10 phong cách nghệ thuật",
         "genre_max_length": "Mỗi phong cách nghệ thuật không được vượt quá 30 ký tự"
       }
+    },
+    "toast": {
+      "followed": "Đã theo dõi",
+      "followed_description": "Bạn đã theo dõi người dùng này",
+      "unfollowed": "Đã hủy theo dõi",
+      "operation_failed": "Thao tác không thành công",
+      "login_required": "Vui lòng đăng nhập để thực hiện thao tác này"
     }
   },
   "filter": {
