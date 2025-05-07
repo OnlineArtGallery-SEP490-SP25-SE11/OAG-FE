@@ -3,15 +3,46 @@ import { ArtworksResponse } from "@/types/artwork";
 import { ApiResponse } from "@/types/response";
 import { handleApiError } from "@/utils/error-handler";
 
+// First, define an enum for moderation status
+export enum ArtworkModerationStatus {
+  APPROVED = 'approved',
+  REJECTED = 'rejected',
+  PENDING = 'pending'
+}
+
+// Define an interface for the query parameters
+export interface ArtistArtworksParams {
+  skip?: number;
+  take?: number;
+  moderationStatus?: ArtworkModerationStatus;
+  category?: string;
+  status?: string;
+  sortBy?: 'createdAt' | 'title' | 'views';
+  sortOrder?: 'asc' | 'desc';
+}
+
 export const getArtistArtworks = async (
   accessToken: string,
-  skip: number = 0,
-  take: number = 10 // Thay đổi từ 3 thành 10
+  params: ArtistArtworksParams = {}
 ): Promise<ApiResponse<ArtworksResponse>> => {
     try {
+        // Merge default params with provided params
+        const queryParams: ArtistArtworksParams = {
+            ...params,
+            // Ensure skip and take are numbers
+            skip: Number(params.skip ?? DEFAULT_PARAMS.skip),
+            take: Number(params.take ?? DEFAULT_PARAMS.take)
+        };
+
+        // Remove undefined values
+        const cleanParams = Object.fromEntries(
+            Object.entries(queryParams).filter(([_, value]) => value !== undefined)
+        );
+
         const res = await createApi(accessToken).get('/artwork/artist', {
-            params: { skip, take }
+            params: cleanParams
         });
+
         return res.data;
     } catch (error) {
         console.error('Error getting artist artworks:', error);
