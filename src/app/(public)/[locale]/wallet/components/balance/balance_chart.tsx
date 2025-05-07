@@ -8,6 +8,7 @@ interface SummaryData {
 	totalInflow: number;
 	totalOutflow: number;
 	totalTransactions: number;
+}
 interface BalanceChartProps {
     statistics?: WalletStatistics;
     isLoading?: boolean;
