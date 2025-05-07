@@ -3,15 +3,44 @@ import { ArtworksResponse } from "@/types/artwork";
 import { ApiResponse } from "@/types/response";
 import { handleApiError } from "@/utils/error-handler";
 
+// First, define an enum for moderation status
+export enum ArtworkModerationStatus {
+  APPROVED = 'approved',
+  REJECTED = 'rejected',
+  PENDING = 'pending'
+}
+
+// Define an interface for the query parameters
+export interface ArtistArtworksParams {
+  skip?: number;
+  take?: number;
+  moderationStatus?: ArtworkModerationStatus;
+  category?: string;
+  status?: string;
+  sortBy?: 'createdAt' | 'title' | 'views';
+  sortOrder?: 'asc' | 'desc';
+}
+
 export const getArtistArtworks = async (
   accessToken: string,
-  skip: number = 0,
-  take: number = 10 // Thay đổi từ 3 thành 10
+  params: ArtistArtworksParams = {}
 ): Promise<ApiResponse<ArtworksResponse>> => {
     try {
+        // Merge default params with provided params
+        const queryParams: ArtistArtworksParams = {
+            ...params,
+        };
+
+        // Remove undefined values
+        const cleanParams = Object.fromEntries(
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            Object.entries(queryParams).filter(([_, value]) => value !== undefined)
+        );
+
         const res = await createApi(accessToken).get('/artwork/artist', {
-            params: { skip, take }
+            params: cleanParams
         });
+
         return res.data;
     } catch (error) {
         console.error('Error getting artist artworks:', error);
@@ -21,6 +50,38 @@ export const getArtistArtworks = async (
         );
     }
 };
+
+
+export const getByArtistId = async (
+    artistId: string,
+    params: ArtistArtworksParams = {}
+): Promise<ApiResponse<ArtworksResponse>> => {
+    try {
+        // Merge default params with provided params
+        const queryParams: ArtistArtworksParams = {
+            ...params,
+        };
+
+        // Remove undefined values
+        const cleanParams = Object.fromEntries(
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            Object.entries(queryParams).filter(([_, value]) => value !== undefined)
+        );
+
+        const res = await createApi().get(`/artwork/artist/${artistId}`, {
+            params: cleanParams
+        });
+
+        console.log('rez', res.data);   
+        return res.data;
+    } catch (error) {
+        console.error('Error getting artist artworks:', error);
+        return handleApiError<ArtworksResponse>(
+            error,
+            'Failed to fetch artist artworks'
+        );
+    }
+}
 // Định nghĩa interface cho thông tin khi mua tranh
 export interface PurchaseArtworkResponse {
     success: boolean;

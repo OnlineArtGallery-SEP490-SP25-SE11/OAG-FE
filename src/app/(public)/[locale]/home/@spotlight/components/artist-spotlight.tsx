@@ -96,7 +96,7 @@ export function ArtistSpotlight({ artist }: ArtistSpotlightProps) {
 
                         {/* Profile Link Button */}
                         <Button variant="outline" size="lg" asChild>
-                            <Link href={`/artists/${artist._id}`}> {/* Use a clearer route like /artists/ */}
+                            <Link href={`/profile/${artist._id}`}> {/* Use a clearer route like /artists/ */}
                                 {t('view_profile')}
                             </Link>
                         </Button>

@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { getArtistArtworks } from '@/service/artwork';
+import { ArtworkModerationStatus, getArtistArtworks } from '@/service/artwork';
 import { getCurrentUser } from '@/lib/session';
 import { LoaderButton } from '@/components/ui.custom/loader-button';
 import { ArtworksResponse } from '@/types/artwork';
@@ -96,8 +96,11 @@ export function ArtworkSelectionModal({
         // Truyền pageParam vào skip để lấy trang tiếp theo
         const response = await getArtistArtworks(
             user.accessToken,
-            Number(pageParam) * 10, // skip: số trang * số items mỗi trang
-            10 // take: số items mỗi trang
+            {
+              skip: Number(pageParam) * 10,
+              take: 10,
+              moderationStatus: ArtworkModerationStatus.APPROVED
+            }
         );
         if (!response.data) {
             throw new Error("Failed to fetch artworks");
