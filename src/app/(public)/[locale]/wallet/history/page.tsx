@@ -75,18 +75,18 @@ export default function HistoryPage() {
 		<div className='min-h-screen bg-gradient-to-b from-background to-muted/20'>
 			<SectionHeader
 				title="Transaction History"
-				rightContent={
-					<button
-						onClick={() => setIsFiltersVisible(!isFiltersVisible)}
-						className="text-sm font-medium text-blue-500 hover:text-blue-700"
-					>
-						{isFiltersVisible ? 'Hide Filters' : 'Show Filters'}
-					</button>
-				}
+				// rightContent={
+				// 	<button
+				// 		onClick={() => setIsFiltersVisible(!isFiltersVisible)}
+				// 		className="text-sm font-medium text-blue-500 hover:text-blue-700"
+				// 	>
+				// 		{isFiltersVisible ? 'Hide Filters' : 'Show Filters'}
+				// 	</button>
+				// }
 			/>
 
 			<main className='container mx-auto max-w-7xl py-8 px-4'>
-				<section className='grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8'>
+				{/* <section className='grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8'>
 					<BalanceSummary accountStats={accountStats} />
 
 					{accountStats.netChange !== 0 && (
@@ -106,7 +106,7 @@ export default function HistoryPage() {
 							setPeriod={setPeriod}
 						/>
 					)}
-				</AnimatePresence>
+				</AnimatePresence> */}
 				<TransactionList
 					// transactions={mappedFilteredTransactions}
 					showCard={true}

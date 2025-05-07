@@ -42,7 +42,7 @@ export function BalanceCard({ balance, currency = 'VND' }: BalanceCardProps) {
                 <CardTitle className='text-base font-medium'>
                     Current Balance
                 </CardTitle>
-                <DropdownMenu>
+                {/* <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant='ghost' size='sm'>
                             {selectedPeriodLabel}
@@ -59,7 +59,7 @@ export function BalanceCard({ balance, currency = 'VND' }: BalanceCardProps) {
                             </DropdownMenuItem>
                         ))}
                     </DropdownMenuContent>
-                </DropdownMenu>
+                </DropdownMenu> */}
             </CardHeader>
             <CardContent>
                 <div className='text-3xl font-bold text-green-500'>
