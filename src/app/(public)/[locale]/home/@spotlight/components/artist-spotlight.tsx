@@ -112,12 +112,12 @@ export function ArtistSpotlight({ artist }: ArtistSpotlightProps) {
                         ))}
                     </div>
                 )}
-                 {/* Optional: Placeholder if no featured works */}
-                 {featuredWorks.length === 0 && (
+                {/* Optional: Placeholder if no featured works */}
+                {featuredWorks.length === 0 && (
                     <div className="flex items-center justify-center h-full text-gray-400 italic col-span-1 lg:col-span-1">
                         {t('no_featured_works')} {/* Add translation key */}
                     </div>
-                 )}
+                )}
             </div>
         </div>
     );
@@ -137,7 +137,7 @@ function FeaturedWorkCard({ work }: FeaturedWorkCardProps) {
     return (
         // Make the entire card a link
         <Link
-            href={`/artworks/${work._id}`} // Link to the specific artwork
+            href={`/artworks?id=${work._id}`} // Đường dẫn đến trang artwork với ID trong query parameter
             className="group block rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300"
         >
             <div className="relative aspect-square">
