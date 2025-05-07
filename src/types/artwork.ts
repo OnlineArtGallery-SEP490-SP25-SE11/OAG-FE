@@ -6,4 +6,6 @@ export type ArtworkResponse = {
 
 export type ArtworksResponse = {
     artworks: Artwork[];
+    total: number;
 }
+
