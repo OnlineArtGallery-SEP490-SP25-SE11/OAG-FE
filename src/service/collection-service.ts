@@ -61,11 +61,11 @@ const collectionService = {
             if(!axios){
                 throw new Error('Failed to create axios instance');
             }
-            const res = await axios.get(`/collection/other?userId=${userId}`);
+            const res = await axios.get(`/collection/artist-collection?artistId=${userId}`);
             return res.data;
         }
         catch(error){
-            console.error('Error getting collections by userId:', error);
+            console.error('Error getting collections by artistId:', error);
             return null;
         }
     },
