@@ -192,14 +192,6 @@ export default function SubscriptionOptions() {
                 <span className="text-sm text-gray-500 font-normal">{t('premium.subscription.plan.period')}</span>
               </div>
 
-              {userBalance !== null && premiumStatus !== 'active' && (
-                <div className="mb-4 text-sm">
-                  {userBalance < 45000 && (
-                    <p className="text-red-500 text-xs mt-1">{t('wallet.insufficient_balance')}</p>
-                  )}
-                </div>
-              )}
-
               <div className="space-y-4 mb-8">
                 <FeatureItem text={t('premium.subscription.plan.features.gallery')} />
                 <FeatureItem text={t('premium.subscription.plan.features.quality')} />
@@ -212,8 +204,7 @@ export default function SubscriptionOptions() {
                 onClick={handleSubscribe}
                 disabled={
                   purchaseMutation.isPending ||
-                  cancelMutation.isPending ||
-                  (premiumStatus !== 'active' && userBalance !== null && userBalance < 45000)
+                  cancelMutation.isPending
                 }
                 className={`w-full py-4 px-6 rounded-xl font-semibold transform hover:-translate-y-1 transition-all duration-300 shadow-lg 
                 ${premiumStatus === 'active'
