@@ -21,6 +21,7 @@ import {
 	MessageSquare,
 	ImageOff,
 	Eye,
+	Album,
 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
@@ -311,8 +312,8 @@ export default function UserProfileContent({ userId }: { userId: string }) {
 							<button
 								onClick={() => setActiveTab("collections")}
 								className={`px-6 py-3 text-left flex items-center ${activeTab === "collections"
-										? "bg-purple-50 border-l-4 border-purple-500 text-purple-700"
-										: "hover:bg-gray-50"
+									? "bg-purple-50 border-l-4 border-purple-500 text-purple-700"
+									: "hover:bg-gray-50"
 									}`}
 							>
 								<FolderOpen className="w-4 h-4 mr-3" />
@@ -350,7 +351,7 @@ export default function UserProfileContent({ userId }: { userId: string }) {
 									<span>{t('view.artist_info')}</span>
 								</button>
 							)}
-							
+
 						</nav>
 					</div>
 				</div>
@@ -644,6 +645,78 @@ export default function UserProfileContent({ userId }: { userId: string }) {
 												</div>
 											)}
 
+											{/* Artist Albums/Collections */}
+											<div className='mt-8'>
+												<h4 className='text-lg font-semibold mb-4 text-gray-800 flex items-center border-b pb-2'>
+													<Album className='w-5 h-5 mr-2 text-purple-500' />
+													{t('view.artist_albums')}
+												</h4>
+
+												{isLoadingCollections ? (
+													<div className="flex justify-center items-center h-32">
+														<div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500"></div>
+													</div>
+												) : collectionsData && collectionsData.length > 0 ? (
+													<ScrollArea className="h-[300px] pr-4 mb-8">
+														<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+															{collectionsData.map((collection: Collection) => (
+																<div
+																	key={collection._id}
+																	className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-200 cursor-pointer"
+																	onClick={() => handleCollectionClick(collection)}
+																>
+																	{/* Collection Preview */}
+																	<div className="aspect-video relative bg-gray-50">
+																		{collection.artworks && collection.artworks.length > 0 ? (
+																			<div className="grid grid-cols-2 gap-1 p-2 h-full">
+																				{collection.artworks.slice(0, 4).map((artwork) => (
+																					<div
+																						key={artwork._id}
+																						className="relative rounded-md overflow-hidden bg-gray-100"
+																					>
+																						<Image
+																							src={artwork.url}
+																							alt={artwork.title}
+																							fill
+																							className="object-cover"
+																							sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+																						/>
+																					</div>
+																				))}
+																			</div>
+																		) : (
+																			<div className="flex items-center justify-center h-full">
+																				<FolderOpen className="w-8 h-8 text-gray-400" />
+																			</div>
+																		)}
+																	</div>
+
+																	{/* Collection Info */}
+																	<div className="p-4">
+																		<h3 className="font-semibold text-lg mb-1 truncate">
+																			{collection.title}
+																		</h3>
+																		<p className="text-sm text-gray-600 line-clamp-2 mb-3">
+																			{collection.description || t("view.no_description")}
+																		</p>
+
+																		<div className="flex justify-between items-center text-sm text-gray-500">
+																			<span>{collection.artworks?.length || 0} {tCommon('artworks')}</span>
+																			<span>{new Date(collection.createdAt).toLocaleDateString(locale)}</span>
+																		</div>
+																	</div>
+																</div>
+															))}
+														</div>
+													</ScrollArea>
+												) : (
+													<div className="text-center py-8 bg-gray-50 rounded-lg mb-8">
+														<FolderOpen className="mx-auto h-12 w-12 text-gray-400" />
+														<h3 className="mt-2 text-sm font-semibold text-gray-900">{t('view.no_collections')}</h3>
+													</div>
+												)}
+											</div>
+
 											{/* Tác phẩm của nghệ sĩ */}
 											<div className='mt-8'>
 												<h4 className='text-lg font-semibold mb-4 text-gray-800 flex items-center border-b pb-2'>
@@ -690,8 +763,6 @@ export default function UserProfileContent({ userId }: { userId: string }) {
 														<h3 className="mt-2 text-sm font-semibold text-gray-900">{t('view.no_artworks')}</h3>
 													</div>
 												)}
-
-
 											</div>
 										</div>
 									) : (
@@ -776,87 +847,87 @@ export default function UserProfileContent({ userId }: { userId: string }) {
 										</div>
 									)}
 								</div>
-
-								{/* Collection Detail Dialog */}
-								<Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-									<DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
-										<DialogHeader>
-											<DialogTitle className="text-2xl font-bold break-words">
-												{selectedCollection?.title}
-											</DialogTitle>
-											<p className="text-muted-foreground mt-2 break-words">
-												{selectedCollection?.description || t("view.no_description")}
-											</p>
-											<p className="text-sm text-muted-foreground">
-												{t("view.created_on")}{" "}
-												{selectedCollection?.createdAt
-													? new Date(selectedCollection.createdAt).toLocaleDateString(
-														locale,
-														{ year: "numeric", month: "long", day: "numeric" }
-													)
-													: ""}
-											</p>
-										</DialogHeader>
-
-										<div className="my-6">
-											<div className="flex items-center justify-between mb-4">
-												<h3 className="text-lg font-medium">{tCommon('artworks')}</h3>
-												<p className="text-sm text-muted-foreground">
-													{selectedCollection?.artworks?.length || 0} {tCommon('artworks')}
-												</p>
-											</div>
-
-											{selectedCollection?.artworks && selectedCollection.artworks.length > 0 ? (
-												<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-													{selectedCollection.artworks.map((artwork) => (
-														<div
-															key={artwork._id}
-															className="group aspect-square bg-muted rounded-lg overflow-hidden relative"
-														>
-															<Image
-																src={artwork.url}
-																alt={artwork.title}
-																fill
-																className="object-cover"
-															/>
-															
-															{/* Hover overlay */}
-															<div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-2">
-																<p className="text-white text-sm font-medium text-center mb-2 line-clamp-2">
-																	{artwork.title}
-																</p>
-																<Button
-																	size="sm"
-																	variant="secondary"
-																	onClick={(e) => {
-																		e.stopPropagation();
-																		window.open(`/artworks?id=${artwork._id}`, '_blank');
-																	}}
-																>
-																	<Eye className="w-4 h-4 mr-1" />
-																	{t("view.view_artwork")}
-																</Button>
-															</div>
-														</div>
-													))}
-												</div>
-											) : (
-												<div className="flex flex-col items-center justify-center py-12 bg-muted/30 rounded-lg border border-dashed">
-													<ImageOff className="w-12 h-12 text-muted-foreground mb-4" />
-													<p className="text-lg font-medium mb-2">{t("view.no_artworks")}</p>
-													<p className="text-muted-foreground text-center max-w-md">
-														{t("view.no_artworks_description")}
-													</p>
-												</div>
-											)}
-										</div>
-									</DialogContent>
-								</Dialog>
 							</div>
 						)}
 					</div>
 				</div>
 			</div>
+
+			{/* Collection Detail Dialog - Moved outside to be accessible from all tabs */}
+			<Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+				<DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
+					<DialogHeader>
+						<DialogTitle className="text-2xl font-bold break-words">
+							{selectedCollection?.title}
+						</DialogTitle>
+						<p className="text-muted-foreground mt-2 break-words">
+							{selectedCollection?.description || t("view.no_description")}
+						</p>
+						<p className="text-sm text-muted-foreground">
+							{t("view.created_on")}{" "}
+							{selectedCollection?.createdAt
+								? new Date(selectedCollection.createdAt).toLocaleDateString(
+									locale,
+									{ year: "numeric", month: "long", day: "numeric" }
+								)
+								: ""}
+						</p>
+					</DialogHeader>
+
+					<div className="my-6">
+						<div className="flex items-center justify-between mb-4">
+							<h3 className="text-lg font-medium">{tCommon('artworks')}</h3>
+							<p className="text-sm text-muted-foreground">
+								{selectedCollection?.artworks?.length || 0} {tCommon('artworks')}
+							</p>
+						</div>
+
+						{selectedCollection?.artworks && selectedCollection.artworks.length > 0 ? (
+							<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+								{selectedCollection.artworks.map((artwork) => (
+									<div
+										key={artwork._id}
+										className="group aspect-square bg-muted rounded-lg overflow-hidden relative"
+									>
+										<Image
+											src={artwork.url}
+											alt={artwork.title}
+											fill
+											className="object-cover"
+										/>
+										
+										{/* Hover overlay */}
+										<div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-2">
+											<p className="text-white text-sm font-medium text-center mb-2 line-clamp-2">
+												{artwork.title}
+											</p>
+											<Button
+												size="sm"
+												variant="secondary"
+												onClick={(e) => {
+													e.stopPropagation();
+													window.open(`/artworks?id=${artwork._id}`, '_blank');
+												}}
+											>
+												<Eye className="w-4 h-4 mr-1" />
+												{t("view.view_artwork")}
+											</Button>
+										</div>
+									</div>
+								))}
+							</div>
+						) : (
+							<div className="flex flex-col items-center justify-center py-12 bg-muted/30 rounded-lg border border-dashed">
+								<ImageOff className="w-12 h-12 text-muted-foreground mb-4" />
+								<p className="text-lg font-medium mb-2">{t("view.no_artworks")}</p>
+								<p className="text-muted-foreground text-center max-w-md">
+									{t("view.no_artworks_description")}
+								</p>
+							</div>
+						)}
+					</div>
+				</DialogContent>
+			</Dialog>
 		</div>
 	);
 }

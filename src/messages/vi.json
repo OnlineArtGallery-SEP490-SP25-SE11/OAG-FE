@@ -582,7 +582,8 @@
       "no_artworks_description": "Bộ sưu tập này chưa có tác phẩm nào",
       "artist_artworks": "Tác phẩm nghệ thuật",
       "genre": "Thể loại",
-      "default_bio": "Không có tiểu sử"
+      "default_bio": "Không có tiểu sử",
+      "artist_albums": "Bộ sưu tập nghệ sĩ"
     },
     "edit": {
       "title": "Chỉnh sửa hồ sơ",

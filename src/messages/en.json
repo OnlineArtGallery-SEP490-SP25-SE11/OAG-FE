@@ -582,7 +582,8 @@
       "no_artworks_description": "This collection doesn't have any artworks yet",
       "artist_artworks": "Artworks",
       "genre": "Genre",
-      "default_bio": "No biography provided"
+      "default_bio": "No biography provided",
+      "artist_albums": "Artist Albums"
     },
     "edit": {
       "title": "Edit Profile",

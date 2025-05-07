@@ -56,7 +56,7 @@ export default function PublishContent({ exhibition }: { exhibition: Exhibition 
   const [isDiscoverable, setIsDiscoverable] = useState(exhibition.discovery || false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
-  const baseUrl = 'oag-vault.vercel.app/exhibition/';
+  const baseUrl = 'oag-vault.vercel.app/exhibitions/';
 
   // Initialize the forms with exhibition data
   const linkNameForm = useForm<LinkFormValues>({

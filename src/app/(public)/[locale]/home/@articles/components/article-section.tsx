@@ -34,7 +34,7 @@ export function ArticleSection({ articles }: ArticleSectionProps) {
   const [featuredArticle, ...regularArticles] = sortedArticles;
 
   // --- Generate a consistent base URL for articles ---
-  const articleBaseUrl = '/blogs'; // Or '/articles', ensure consistency
+  const articleBaseUrl = '/en/blogs'; // Or '/articles', ensure consistency
 
   return (
     <div className="mx-auto px-4">
