@@ -1,22 +1,6 @@
-import { createApi, createAxiosInstance } from "@/lib/axios";
-import { ArtworksResponse } from "@/types/artwork";
-import { Exhibition } from "@/types/exhibition";
+import { createApi } from "@/lib/axios";
 import { ApiResponse } from "@/types/response";
 import { handleApiError } from "@/utils/error-handler";
-
-export const getArtistArtworks = async (accessToken: string): Promise<ApiResponse<ArtworksResponse>> => {
-    try {
-        const res = await createApi(accessToken).get('/artwork/artist');
-        return res.data;
-    } catch (error) {
-        console.error('Error getting artist artworks:', error);
-        return handleApiError<ArtworksResponse>(
-            error,
-            'Failed to fetch artist artworks'
-        );
-    }
-};
-
 
 export interface Transaction {
     _id: string;
