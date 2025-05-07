@@ -47,9 +47,14 @@ export interface Transaction {
     }
   };
 
-  export const getExhibitions = async (accessToken: string): Promise<ApiResponse<any>> => {
+  export const getExhibitions = async (
+    accessToken: string,
+    limit: number = 1000 // đặt limit lớn hơn mặc định
+  ): Promise<ApiResponse<any>> => {
     try {
-      const res = await createApi(accessToken).get('/exhibition/user-exhibitions');
+      const res = await createApi(accessToken).get('/exhibition/user-exhibitions', {
+        params: { page: 1, limit } // truyền limit lớn để tránh phân trang
+      });
       return res.data;
     } catch (error) {
       console.error("Error getting exhibitions:", error);
@@ -59,5 +64,6 @@ export interface Transaction {
       );
     }
   };
+  
   
   
