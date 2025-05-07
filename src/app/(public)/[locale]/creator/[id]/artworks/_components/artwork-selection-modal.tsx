@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Check, Loader2, AlertCircle, Trash2 } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInView } from 'react-intersection-observer';
 import { useRouter } from 'next/navigation';
 
 import {
@@ -19,8 +20,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { getArtistArtworks } from '@/service/artwork';
 import { getCurrentUser } from '@/lib/session';
 import { LoaderButton } from '@/components/ui.custom/loader-button';
+import { ArtworksResponse } from '@/types/artwork';
 
-// Type for artwork
 interface Artwork {
   _id: string;
   title: string;
@@ -32,12 +33,11 @@ interface Artwork {
   };
 }
 
-// Type for artwork position
 interface ArtworkPosition {
   artwork: {
     _id: string;
     title: string;
-    url: string;
+    lowResUrl: string;
   };
   positionIndex: number;
 }
@@ -49,7 +49,6 @@ interface ArtworkSelectionModalProps {
   onConfirm: (artwork: Artwork | null, position: number) => void;
   isPlacingArtwork: boolean;
   existingArtworkPosition: ArtworkPosition | null;
-  // Translations
   t: {
     select_artwork_for_position: string;
     replace_artwork_at_position: string;
@@ -65,6 +64,7 @@ interface ArtworkSelectionModalProps {
   };
 }
 
+
 export function ArtworkSelectionModal({
   isOpen,
   onOpenChange,
@@ -77,29 +77,54 @@ export function ArtworkSelectionModal({
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
   const [isRemoveMode, setIsRemoveMode] = useState(false);
   const router = useRouter();
+  const { ref: loadMoreRef, inView } = useInView();
 
-  // Fetch all artist artworks when the modal is open
-  const { data: artworks = [], isLoading: isLoadingArtworks, error: queryError } = useQuery({
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isLoadingArtworks,
+    error: queryError
+} = useInfiniteQuery<ArtworksResponse>({
     queryKey: ['artistArtworks'],
-    queryFn: async () => {
-      const user = await getCurrentUser();
-      if (!user?.accessToken) {
-        console.error("User or access token not found for fetching artworks.");
-        return [];
-      }
-      const response = await getArtistArtworks(user.accessToken);
-      if (!response.data?.artworks) {
-        console.error("Failed to fetch artworks:", response.details);
-        return [];
-      }
-      return response.data.artworks;
+    queryFn: async ({ pageParam }) => {
+        const user = await getCurrentUser();
+        if (!user?.accessToken) {
+            throw new Error("User or access token not found");
+        }
+        // Truyền pageParam vào skip để lấy trang tiếp theo
+        const response = await getArtistArtworks(
+            user.accessToken,
+            Number(pageParam) * 10, // skip: số trang * số items mỗi trang
+            10 // take: số items mỗi trang
+        );
+        if (!response.data) {
+            throw new Error("Failed to fetch artworks");
+        }
+        return response.data;
     },
-    enabled: isOpen && position !== null && !isRemoveMode, // Only fetch when modal is open, position is set, and not in remove mode
-    staleTime: 5 * 60 * 1000, // Cache data for 5 minutes
-    gcTime: 10 * 60 * 1000, // Keep data in cache for 10 minutes even if inactive
+    getNextPageParam: (lastPage, allPages) => {
+        const loadedItems = allPages.reduce((acc, page) => acc + page.artworks.length, 0);
+        return loadedItems < lastPage.total ? allPages.length : undefined;
+    },
+    initialPageParam: 0,
+    enabled: isOpen && position !== null && !isRemoveMode,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 
-  // Reset selection when modal closes or position changes
+  // Combine all artworks from all pages
+  const allArtworks = data?.pages.flatMap(page => page.artworks) ?? [];
+
+  // Effect for infinite scroll
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  // Reset selection when modal closes
   useEffect(() => {
     if (!isOpen) {
       setSelectedArtwork(null);
@@ -114,10 +139,8 @@ export function ArtworkSelectionModal({
   const handleConfirmClick = () => {
     if (position !== null) {
       if (isRemoveMode) {
-        // Send null to indicate artwork removal
         onConfirm(null, position);
       } else if (selectedArtwork) {
-        // Send selected artwork for placement/replacement
         onConfirm(selectedArtwork, position);
       }
     }
@@ -135,7 +158,7 @@ export function ArtworkSelectionModal({
     setIsRemoveMode(false);
   };
 
-  // If in remove confirmation mode
+  // Remove confirmation dialog
   if (isRemoveMode && existingArtworkPosition) {
     return (
       <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -146,14 +169,14 @@ export function ArtworkSelectionModal({
               {t.remove_artwork_confirmation}
             </DialogTitle>
             <DialogDescription>
-            {t.remove_artwork_description}
+              {t.remove_artwork_description}
             </DialogDescription>
           </DialogHeader>
 
           <div className="flex justify-center my-6">
             <div className="relative w-36 h-36 rounded-md overflow-hidden border border-muted">
               <Image
-                src={existingArtworkPosition.artwork.url}
+                src={existingArtworkPosition.artwork.lowResUrl}
                 alt={existingArtworkPosition.artwork.title}
                 fill
                 className="object-cover"
@@ -199,7 +222,7 @@ export function ArtworkSelectionModal({
           <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-md flex items-center gap-3">
             <div className="relative h-16 w-16 rounded overflow-hidden flex-shrink-0">
               <Image
-                src={existingArtworkPosition.artwork.url}
+                src={existingArtworkPosition.artwork.lowResUrl}
                 alt={existingArtworkPosition.artwork.title}
                 fill
                 className="object-cover"
@@ -222,7 +245,7 @@ export function ArtworkSelectionModal({
         )}
 
         {/* Loading State */}
-        {isLoadingArtworks && (
+        {isLoadingArtworks && !data && (
           <div className="flex justify-center items-center py-12 h-[60vh]">
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
@@ -231,34 +254,31 @@ export function ArtworkSelectionModal({
         {/* Error State */}
         {!isLoadingArtworks && queryError && (
           <div className="py-8 text-center text-destructive h-[60vh]">
-            <p>Error loading artworks: {queryError.message}</p>
+            <p>Error loading artworks: {(queryError as Error).message}</p>
           </div>
         )}
 
         {/* Empty State */}
-        {!isLoadingArtworks && !queryError && artworks.length === 0 && (
+        {!isLoadingArtworks && !queryError && allArtworks.length === 0 && (
           <div className="py-8 text-center h-[60vh] flex flex-col justify-center items-center">
-            <p className="text-muted-foreground mb-4">
-              {t.no_artworks_found}
-            </p>
-            <Button onClick={handleCreateArtworkClick}>
-              {t.create_artwork}
-            </Button>
+            <p className="text-muted-foreground mb-4">{t.no_artworks_found}</p>
+            <Button onClick={handleCreateArtworkClick}>{t.create_artwork}</Button>
           </div>
         )}
 
-        {/* Content State */}
-        {!isLoadingArtworks && !queryError && artworks.length > 0 && (
+        {/* Content State with Infinite Scroll */}
+        {!isLoadingArtworks && !queryError && allArtworks.length > 0 && (
           <ScrollArea className="h-[60vh] border rounded-md">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4">
-              {artworks.map((artwork) => (
+              {allArtworks.map((artwork) => (
                 <div
                   key={artwork._id}
                   onClick={() => handleArtworkSelect(artwork)}
-                  className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all duration-200 cursor-pointer group ${selectedArtwork?._id === artwork._id
+                  className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all duration-200 cursor-pointer group ${
+                    selectedArtwork?._id === artwork._id
                       ? 'border-primary ring-2 ring-primary/20 scale-[0.98]'
                       : 'border-transparent hover:border-primary/50'
-                    }`}
+                  }`}
                   role="button"
                   tabIndex={0}
                   aria-pressed={selectedArtwork?._id === artwork._id}
@@ -295,6 +315,13 @@ export function ArtworkSelectionModal({
                   )}
                 </div>
               ))}
+
+              {/* Infinite Scroll Trigger */}
+              <div ref={loadMoreRef} className="col-span-full flex justify-center p-4">
+                {isFetchingNextPage && (
+                  <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                )}
+              </div>
             </div>
           </ScrollArea>
         )}

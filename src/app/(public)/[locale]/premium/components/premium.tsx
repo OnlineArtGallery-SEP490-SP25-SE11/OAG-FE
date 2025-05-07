@@ -34,17 +34,10 @@ export default function SubscriptionOptions() {
     enabled: !!session?.user.accessToken
   });
 
-  console.log('Premium Data:', premiumData);
 
   const userBalance = balanceData?.data?.balance || 0;
   const premiumStatus = premiumData?.data?.premiumStatus;
 
-  // Thêm log để debug
-  console.log('Premium Status:', {
-    status: premiumStatus,
-    endDate: premiumData?.data?.endDate,
-    currentDate: new Date()
-  });
 
   // Mutation để mua gói Premium
   const purchaseMutation = useMutation({
@@ -70,7 +63,6 @@ export default function SubscriptionOptions() {
 
       // Kiểm tra lại trạng thái Premium sau khi cập nhật
       const newPremiumStatus = await checkPremium(session?.user.accessToken as string);
-      console.log('New Premium Status:', newPremiumStatus);
 
       if (newPremiumStatus?.data?.premiumStatus === 'active') {
         // Nếu trạng thái đã là active thì reload trang

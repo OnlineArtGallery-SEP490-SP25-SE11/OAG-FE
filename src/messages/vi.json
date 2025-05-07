@@ -123,7 +123,10 @@
     "spotlight": {
       "title": "Nghệ sĩ Tiêu điểm",
       "view_all": "Xem tất cả Nghệ sĩ",
-      "view_profile": "Xem Hồ sơ"
+      "view_profile": "Xem Hồ sơ",
+      "no_featured_works": "Không có tác phẩm nổi bật nào",
+      "exhibitions": "Triển lãm",
+      "artworks": "Tác phẩm"
     },
     "articles": {
       "title": "Bài viết Mới nhất",
@@ -664,6 +667,8 @@
     }
   },
   "exhibitions": {
+    "no_artworks_found" : "Chưa có tác phẩm nào",
+    "create_artwork" : "Thêm tác phẩm",
     "upgrade_to_premium": "Nâng cấp Premium",
     "limit_reached_title": "Đã đạt giới hạn lượt xem",
     "limit_reached_description": "Bạn đã đạt giới hạn 5 lượt xem phòng tranh mỗi ngày. Nâng cấp lên Premium để xem không giới hạn.",
@@ -673,6 +678,7 @@
     "unlock_analytics_desc": "Nâng cấp lên Premium để truy cập phân tích chi tiết bao gồm thống kê người xem, tương tác tác phẩm và các chỉ số hiệu suất.",
     "upgrade_now_button": "Nâng cấp Ngay",
     "artwork_placed_success": "Tác phẩm đã được thêm thành công",
+    "artwork_replaced_success" : "Tác phẩm đã được thay thế thành công",
     "placing": "Đang thêm",
     "cancel_pending_request": "Huỷ yêu cầu",
     "cancelling_request": "Đang hủy...",

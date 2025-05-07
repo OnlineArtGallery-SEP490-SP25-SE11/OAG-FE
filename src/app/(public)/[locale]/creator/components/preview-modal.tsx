@@ -20,7 +20,6 @@ export default function PreviewModal({ isOpen, onOpenChange, template }: Preview
     if (document.pointerLockElement) {
       try {
         document.exitPointerLock();
-        console.log('Pointer lock exited via PreviewModal handleClose');
       } catch (error) {
         console.warn("Attempted to exit pointer lock on modal close but failed (might be expected if already released):", error);
       }

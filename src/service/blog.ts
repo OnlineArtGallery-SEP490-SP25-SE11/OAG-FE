@@ -83,7 +83,6 @@ export async function updateBlog({
 			`/blog/${updateData._id}`,
 			payload
 		);
-		console.log(res.data, 'update blog');
 		return res.data;
 	} catch (error) {
 			console.error(`Error when updating blog:`, error);

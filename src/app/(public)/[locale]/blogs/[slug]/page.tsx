@@ -13,7 +13,6 @@ export default async function BlogPage({
 	params: { slug: string };
 }) {
 	const blogId = params.slug.split('.')[1];
-	console.log(blogId, 'dcm');
 	const [user, res] = await Promise.all([
 		getCurrentUser(),
 		getBlogById(blogId)

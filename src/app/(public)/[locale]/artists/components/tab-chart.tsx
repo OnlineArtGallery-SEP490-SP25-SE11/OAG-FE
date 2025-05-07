@@ -47,7 +47,6 @@ export default function TabChart() {
         if (res?.data) {
           setArtworkData(res.data);
         }
-        console.log("Fetched artwork data:", res.data);
       } catch (error) {
         console.error("Failed to fetch artwork data:", error);
       }
@@ -63,7 +62,6 @@ export default function TabChart() {
         if (res?.data) {
           setExhibitionData(res.data);
         }
-        console.log("object", res.data);
       } catch (error) {
         console.error("Failed to fetch exhibitions:", error);
       }

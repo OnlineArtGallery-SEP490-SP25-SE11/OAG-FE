@@ -22,7 +22,7 @@ export default function CozyA1Ceilling() {
             position={[0, Y_AXIS, 0]}
         >
             <boxGeometry args={[X_AXIS, Z_AXIS, 0.3]} />
-            <meshBasicMaterial map={ceilingTexture} color={'ffffff'}/>
+            <meshBasicMaterial map={ceilingTexture} color={'#ffffff'}/>
         </mesh>
     );
 }
