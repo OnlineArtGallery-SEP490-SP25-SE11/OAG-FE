@@ -253,9 +253,9 @@ export default function Dashboard() {
       onChange={onChange}
       className="text-sm md:text-base text-emerald-700 dark:text-emerald-200 bg-transparent border border-emerald-300 dark:border-emerald-600 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-emerald-400 dark:focus:ring-emerald-600"
     >
-      <option value="week">Tuần</option>
-      <option value="month">Tháng</option>
-      <option value="year">Năm</option>
+      <option value="week">Week</option>
+      <option value="month">Month</option>
+      <option value="year">Year</option>
     </select>
   );
 
@@ -357,7 +357,7 @@ export default function Dashboard() {
         <Card className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
           <CardHeader className="border-b border-gray-200 dark:border-gray-700 py-2 md:py-3 bg-gradient-to-r from-emerald-50 to-teal-100 dark:from-emerald-900 dark:to-teal-800">
             <CardTitle className="text-sm md:text-lg font-semibold text-emerald-700 dark:text-emerald-200 line-clamp-1">
-              Phân bố trạng thái tác phẩm
+              Status of artwork
             </CardTitle>
           </CardHeader>
           <CardContent className="p-3 md:p-6 h-[200px] md:h-[300px]">
@@ -369,7 +369,7 @@ export default function Dashboard() {
           <CardHeader className="border-b border-gray-200 dark:border-gray-700 py-2 md:py-3 bg-gradient-to-r from-emerald-50 to-teal-100 dark:from-emerald-900 dark:to-teal-800">
             <div className="flex items-center justify-between w-full">
               <h2 className="text-base md:text-lg font-semibold text-emerald-700 dark:text-emerald-200">
-                Xu hướng doanh số
+                Sales trends
               </h2>
               <TimeFilter
                 value={salesFilter}
@@ -395,17 +395,6 @@ export default function Dashboard() {
           <TabChart />
         </div>
       )}
-
-      {/* <Card className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
-        <CardHeader className="border-b border-gray-200 dark:border-gray-700 py-2 md:py-3 bg-gradient-to-r from-emerald-50 to-teal-100 dark:from-emerald-900 dark:to-teal-800">
-          <CardTitle className="text-sm md:text-lg font-semibold text-emerald-700 dark:text-emerald-200 line-clamp-1">
-            Doanh thu bán vé từng phòng tranh
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-3 md:p-6 h-[250px] md:h-[350px]">
-          <Bar data={revenueData} />
-        </CardContent>
-      </Card> */}
     </motion.div>
   );
 }
