@@ -25,7 +25,6 @@ export const artworkService = {
 		});
 
 		if (response.status === 201) {
-			console.log(response.data);
 			return response.data;
 		} else {
 			throw new Error('Network response was not ok');
@@ -53,7 +52,6 @@ export const artworkService = {
 			// 	'Cache-Control': 'no-cache'
 			// } }
 		);
-		console.log(response);
 		if (response.status !== 200 && response.status !== 304) {
 			throw new Error('Error fetching artworks');
 		}
@@ -82,7 +80,6 @@ export const artworkService = {
 			// 	'Cache-Control': 'no-cache'
 			// } }
 		);
-		console.log(response);
 		if (response.status !== 200 && response.status !== 304) {
 			throw new Error('Error fetching artworks');
 		}
@@ -103,7 +100,6 @@ export const artworkService = {
 		});
 
 		if (response.status === 200) {
-			console.log('Artwork updated successfully:', response.data);
 			return response.data;
 		} else {
 			throw new Error('Failed to update artwork');
@@ -116,7 +112,6 @@ export const artworkService = {
 		const response = await axios.delete(`/artwork/${id}`);
 
 		if (response.status === 200) {
-			console.log('Artwork deleted successfully');
 			return response.data;
 		} else {
 			throw new Error('Failed to delete artwork');
@@ -129,7 +124,6 @@ export const artworkService = {
 		const response = await axios.get('/artwork/categories');
 
 		if (response.status === 200) {
-			console.log('Category get successfully');
 			return response.data;
 		} else {
 			throw new Error('Failed to get category');

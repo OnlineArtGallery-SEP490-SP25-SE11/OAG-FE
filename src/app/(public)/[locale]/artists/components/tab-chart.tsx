@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { vietnamCurrency } from "@/utils/converters";
-import { Eye, Heart, DollarSign, ImageDown } from "lucide-react";
+import { Eye, ImageDown } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { getArtistArtworks, getExhibitions } from "@/service/dashboard";
@@ -47,7 +47,6 @@ export default function TabChart() {
         if (res?.data) {
           setArtworkData(res.data);
         }
-        console.log("Fetched artwork data:", res.data);
       } catch (error) {
         console.error("Failed to fetch artwork data:", error);
       }
@@ -63,7 +62,6 @@ export default function TabChart() {
         if (res?.data) {
           setExhibitionData(res.data);
         }
-        console.log("object", res.data);
       } catch (error) {
         console.error("Failed to fetch exhibitions:", error);
       }
@@ -250,7 +248,6 @@ export default function TabChart() {
                           {artwork.buyers.length}
                         </span>
                         <span className="flex items-center gap-1">
-                          <DollarSign className="w-3 h-3 md:w-4 md:h-4" />{" "}
                           {vietnamCurrency(
                             artwork.buyers.length * artwork.price * 0.97
                           )}

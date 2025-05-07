@@ -56,7 +56,6 @@ const ReportForm = ({ onClose }: { onClose: () => void }) => {
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		console.log('Report submitted:', { reason, comment });
 		onClose();
 	};
 

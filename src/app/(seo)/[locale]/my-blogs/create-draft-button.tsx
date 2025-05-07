@@ -90,7 +90,6 @@ export default function CreateDraftButton() {
 		},
 		onError: (error) => {
 			const errorRespone = error?.err;
-			console.log('errorRespone', errorRespone);
 			toast({
 				title: tCommon('error'),
 				// description: tBlog('draft_create_error'),

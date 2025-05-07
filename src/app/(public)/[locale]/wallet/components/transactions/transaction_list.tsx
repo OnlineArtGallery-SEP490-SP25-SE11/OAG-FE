@@ -166,7 +166,6 @@ export function TransactionList({
     const transactions = data?.data?.transactions?.map(mapApiToTransaction) || [];
     const totalPages = data?.data?.total ? Math.ceil(data.data.total / pageSize) : 0;
 
-    console.log(data)
     const handlePrevPage = () => {
         setPage((prev) => Math.max(prev - 1, 1));
     };

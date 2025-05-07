@@ -30,7 +30,6 @@ const collectionService = {
                 throw new Error('Failed to create axios instance');
             }
             const res = await axios.get(`/collection/in-user`);
-            console.log('res', res.data);
             return res.data;
         }
         catch(error){
@@ -46,7 +45,6 @@ const collectionService = {
                 throw new Error('Failed to create axios instance');
             }
             const res = await axios.get(`/collection/in-artist`);
-            console.log('res', res.data);
             return res.data;
         }
         catch(error){

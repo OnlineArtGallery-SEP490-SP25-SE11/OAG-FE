@@ -5,7 +5,7 @@ import { RoomFloor } from '@/app/(exhibitions)/[locale]/exhibitions/components/r
 import { COZY_A1_ROOM_CONFIG } from '@/utils/gallery-config';
 import { Vec3 } from '@/types/gallery';
 import { useCloudinaryAsset } from '@/hooks/useCloudinaryAsset';
-import { ARTWORK_URL, TEXTURE_URL } from '@/utils/constants';
+import { TEXTURE_URL } from '@/utils/constants';
 import CozyA1Ceilling from '@/app/(exhibitions)/[locale]/exhibitions/components/galleries/cozy-gallery/cozy-gallery-ceilling';
 import { Environment } from '@react-three/drei';
 import { RoomLights } from '@/app/(exhibitions)/[locale]/exhibitions/components/room-light';
@@ -179,7 +179,7 @@ export default function CozyGallery() {
                         description: 'A vibrant abstract representation of a natural landscape.',
                         category: ['abstract', 'landscape'],
                         dimensions: { width: 600, height: 400 },
-                        url: "https://images.unsplash.com/photo-1515405295579-ba7b45403062?w=400&q=80",
+                        lowResUrl: "https://images.unsplash.com/photo-1515405295579-ba7b45403062?w=400&q=80",
                         status: 'active',
                         views: 120,
                         price: 2500,
@@ -198,7 +198,7 @@ export default function CozyGallery() {
                         description: 'A study in geometric shapes inspired by urban architecture.',
                         category: ['modern', 'geometry'],
                         dimensions: { width: 500, height: 500 },
-                        url: "https://images.unsplash.com/photo-1460411794035-42aac080490a?w=400&q=80",
+                        lowResUrl: "https://images.unsplash.com/photo-1460411794035-42aac080490a?w=400&q=80",
                         status: 'active',
                         views: 87,
                         price: 1800,
@@ -217,7 +217,7 @@ export default function CozyGallery() {
                         description: 'A calming piece representing inner peace and tranquility.',
                         category: ['abstract', 'minimal'],
                         dimensions: { width: 700, height: 500 },
-                        url: "https://images.unsplash.com/photo-1552083974-186346191183?w=400&q=80",
+                        lowResUrl: "https://images.unsplash.com/photo-1552083974-186346191183?w=400&q=80",
                         status: 'active',
                         views: 215,
                         price: 3000,
@@ -239,7 +239,7 @@ export default function CozyGallery() {
                         description: 'An exploration of blue tones and their emotional resonance.',
                         category: ['color study', 'abstract'],
                         dimensions: { width: 600, height: 450 },
-                        url: "https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=400&q=80",
+                        lowResUrl: "https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=400&q=80",
                         status: 'active',
                         views: 75,
                         price: 1900,
@@ -258,7 +258,7 @@ export default function CozyGallery() {
                         description: 'An impressionist view of a mystical forest scene.',
                         category: ['landscape', 'impressionist'],
                         dimensions: { width: 550, height: 700 },
-                        url: "https://images.unsplash.com/photo-1448375240586-882707db888b?w=400&q=80",
+                        lowResUrl: "https://images.unsplash.com/photo-1448375240586-882707db888b?w=400&q=80",
                         status: 'active',
                         views: 142,
                         price: 2200,
@@ -285,7 +285,7 @@ export default function CozyGallery() {
                         description: 'A study of movement and circular patterns in nature.',
                         category: ['kinetic', 'natural'],
                         dimensions: { width: 500, height: 500 },
-                        url: "https://images.unsplash.com/photo-1501446529957-6226bd447c46?w=400&q=80",
+                        lowResUrl: "https://images.unsplash.com/photo-1501446529957-6226bd447c46?w=400&q=80",
                         status: 'active',
                         views: 97,
                         price: 2100,
@@ -304,7 +304,7 @@ export default function CozyGallery() {
                         description: 'Pure geometric abstraction exploring form and color.',
                         category: ['geometric', 'abstract'],
                         dimensions: { width: 600, height: 600 },
-                        url: "https://images.unsplash.com/photo-1605106702734-205df224ecce?w=400&q=80",
+                        lowResUrl: "https://images.unsplash.com/photo-1605106702734-205df224ecce?w=400&q=80",
                         status: 'active',
                         views: 136,
                         price: 2300,

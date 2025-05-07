@@ -63,7 +63,6 @@ export default function useNotification() {
 
     // Handler for new notifications coming from socket
     const handleNewNotification = (newNotification: Notification) => {
-      console.log('Received new notification event in useNotification', newNotification);
       
       // Temporarily pause any ongoing refetches to reduce UI flicker
       queryClient.cancelQueries({ queryKey: notificationsQueryKey });

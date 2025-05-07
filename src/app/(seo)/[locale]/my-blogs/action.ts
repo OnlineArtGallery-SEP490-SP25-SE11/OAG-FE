@@ -123,7 +123,6 @@ export const cancelPublicRequestAction = authenticatedAction
 			accessToken: ctx.user.accessToken,
 			updateData: { _id: input.id, status: BlogStatus.DRAFT }
 		});
-		console.log('cancelPublicRequestAction', res);
 		const blog = res.data?.blog;
 		revalidatePath(`/blogs/${blog?._id}`);
 		return { id: blog?._id };

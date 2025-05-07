@@ -1,10 +1,7 @@
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { motion } from 'framer-motion';
-// import { DollarSignIcon, Eye, Info, RulerIcon, TagIcon, UserIcon, X, CalendarIcon, BookmarkIcon, Flag, ShoppingCart, Download, Grid, Rows, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
-// import Image from 'next/image';
 import Image from '@/components/ui.custom/optimized-image';
 import { Eye, Info, RulerIcon, TagIcon, UserIcon, X, CalendarIcon, BookmarkIcon, Flag, ShoppingCart, Download, Grid, Rows, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
-// import Image from 'next/image';
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BiComment } from 'react-icons/bi';
 import { useRouter, usePathname } from 'next/navigation';
@@ -34,7 +31,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { AlertCircle, Check } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import ArtFeed from "./art-feed";
 import useAuth from "@/hooks/useAuth-client";
 import { AuthDialog } from "@/components/ui.custom/auth-dialog";
@@ -46,6 +43,7 @@ import {
   useStartClosingArtModal,
 } from "@/hooks/useArtModal";
 import CommentArtworkDrawer from "./comments-tab";
+import { formatDateByLocale } from '@/utils/converters';
 
 // Simplified animation variants
 const animations = {
@@ -197,6 +195,9 @@ function DetailTab({ artwork, userHasPurchased, isArtworkCreator, handleBuy, han
       default: return 'bg-blue-500/10 text-blue-400 border-blue-500/30';
     }
   };
+
+  const locale = useLocale();
+
 
   // Calculate optimal description height based on screen size and content
   const getDescriptionHeight = () => {
@@ -399,7 +400,7 @@ function DetailTab({ artwork, userHasPurchased, isArtworkCreator, handleBuy, han
               </div>
               <div className="flex items-center gap-1">
                 <CalendarIcon className="w-2.5 h-2.5" />
-                <span>{new Date(artwork.createdAt).toLocaleDateString()}</span>
+                <span>{formatDateByLocale(artwork.createdAt, locale)}</span>
               </div>
             </div>
           </div>
@@ -668,7 +669,8 @@ function Modal() {
       const artworksBasePath = `${langPrefix}/artworks`;
       router.replace(artworksBasePath, { scroll: false });
     }, 150); // Match this to CSS transition duration
-  }, [startClosing, resetArtModal, router, pathname, viewMutation]);
+  // }, [startClosing, resetArtModal, router, pathname, viewMutation]);
+  }, [startClosing, resetArtModal, router, pathname]);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -677,7 +679,7 @@ function Modal() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch: refetchArtworkById } = useQuery({
     queryKey: ["artworks", selectedId],
     queryFn: () =>
       selectedId ? fetchArtworkById(selectedId) : Promise.reject("Invalid ID"),
@@ -730,7 +732,7 @@ function Modal() {
         queryClient.invalidateQueries({ queryKey: ["artworks", selectedId] });
 
         // Reload lại trang
-        router.refresh();
+        refetchArtworkById();
       } else {
         if (response.message?.includes("không đủ")) {
           toast({

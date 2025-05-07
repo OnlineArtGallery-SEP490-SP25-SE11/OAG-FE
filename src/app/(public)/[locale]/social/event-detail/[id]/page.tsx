@@ -95,10 +95,10 @@ export default function EventDetailPage() {
         <p className="mt-4 text-muted-foreground">
           The event you are looking for might have been removed or is no longer available.
         </p>
-        <Link href="/events" className="mt-6 inline-block">
+        <Link href="/social" className="mt-6 inline-block">
           <Button variant="outline" className="gap-2">
             <ArrowLeft className="h-4 w-4" />
-            Back to Events
+              Back
           </Button>
         </Link>
       </div>

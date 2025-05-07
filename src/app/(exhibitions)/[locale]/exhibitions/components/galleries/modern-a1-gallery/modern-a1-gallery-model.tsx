@@ -22,7 +22,7 @@ export default function ModernA1GalleryModel() {
         <>
             <ambientLight
                 intensity={2}
-                color={'ffffff'}
+                color={'#ffffff'}
             />
             <mesh ref={ref} visible={false} />
             <primitive object={clonedScene} scale={3} position={[0, 0, 0]} />

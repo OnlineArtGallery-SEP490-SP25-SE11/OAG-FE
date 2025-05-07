@@ -44,7 +44,6 @@ const reportService = {
 				throw new Error('Failed to create axios instance');
 			}
 			const imageArray = Array.isArray(data.image) ? data.image : [data.image].filter(Boolean);
-			console.log(`report`,data)
 			const res = await axios.post('/report', {
 				refId: data.refId,
 				refType: data.refType,

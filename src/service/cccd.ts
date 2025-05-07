@@ -1,5 +1,6 @@
 "use server";
 import { createApi } from '@/lib/axios';
+import { handleApiError } from '@/utils/error-handler';
 import axiosInstance from 'axios';
 
 export async function createArtistRequest({
@@ -20,57 +21,57 @@ export async function createArtistRequest({
     issue_loc: string;
     features?: string;
     mrz?: string;
-    user: string;
     imageFront?: string;
     imageBack?: string;
   };
 }) {
   try {
-    // const res = await createApi(accessToken).post('/cccd', cccdData);
-    //refacter to create  become artist request
-    console.log('cccdData', cccdData);
-    const res = await createApi(accessToken).post('/artist-request', {
+    const api = createApi(accessToken);
+    const res = await api.post('/artist-request', {
       cccd: cccdData
     });
-    if (res.status === 201) {
-      return res.data;
-    } else {
-      console.error(`Failed to create CCCD: ${res.statusText}`);
-    }
-  } catch (err) {
-    if (axiosInstance.isAxiosError(err)) {
-      console.error(`Error when creating CCCD: ${err.response?.data?.message || err.message}`);
-    } else {
-      console.error(`Unexpected error: ${err}`);
-    }
+    return res.data;
+  } catch (err: any) {
+   const errorData = err.response?.data || {
+      message: 'Unknown error occurred',
+      statusCode: 500,
+      errorCode: 'UNKNOWN_ERROR',
+    };
+    console.error('Artist request error:', errorData);
+    
+    // Return error object instead of throwing
+    return {
+      success: false,
+      error: errorData
+    };
   }
 }
 
-export async function getCCCDById({ accessToken, cccdId }: { accessToken: string; cccdId: string }) {
-  try {
-    const res = await createApi(accessToken).get(`/cccd/${cccdId}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    return res.data;
-  } catch (err) {
-    console.error(`Error when fetching CCCD by ID: ${err}`);
-  }
-}
+// export async function getCCCDById({ accessToken, cccdId }: { accessToken: string; cccdId: string }) {
+//   try {
+//     const res = await createApi(accessToken).get(`/cccd/${cccdId}`, {
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//       },
+//     });
+//     return res.data;
+//   } catch (err) {
+//     console.error(`Error when fetching CCCD by ID: ${err}`);
+//   }
+// }
 
-export async function getCCCDByUserId({ accessToken, userId }: { accessToken: string; userId: string }) {
-  try {
-    const res = await createApi(accessToken).get(`/cccd/user/${userId}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    return res.data;
-  } catch (err) {
-    console.error(`Error when fetching CCCD by User ID: ${err}`);
-  }
-}
+// export async function getCCCDByUserId({ accessToken, userId }: { accessToken: string; userId: string }) {
+//   try {
+//     const res = await createApi(accessToken).get(`/cccd/user/${userId}`, {
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//       },
+//     });
+//     return res.data;
+//   } catch (err) {
+//     console.error(`Error when fetching CCCD by User ID: ${err}`);
+//   }
+// }
 
 export async function updateCCCD({
   accessToken,
@@ -136,27 +137,27 @@ export async function deleteCCCD({ accessToken, cccdId }: { accessToken: string;
   }
 }
 
-export async function requestBecomeArtist({ accessToken }: { accessToken: string }) {
-  try {
-    const res = await createApi(accessToken).post('user/request-become-artist', {}, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+// export async function requestBecomeArtist({ accessToken }: { accessToken: string }) {
+//   try {
+//     const res = await createApi(accessToken).post('user/request-become-artist', {}, {
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//       },
+//     });
 
-    if (res.status === 200) {
-      return res.data;
-    } else {
-      console.error(`Failed to request become artist: ${res.statusText}`);
-      return null;
-    }
-  } catch (err) {
-    if (axiosInstance.isAxiosError(err)) {
-      console.error(`Error when requesting become artist: ${err.response?.data?.message || err.message}`);
-    } else {
-      console.error(`Unexpected error: ${err}`);
-    }
-    return null;
-  }
-}
+//     if (res.status === 200) {
+//       return res.data;
+//     } else {
+//       console.error(`Failed to request become artist: ${res.statusText}`);
+//       return null;
+//     }
+//   } catch (err) {
+//     if (axiosInstance.isAxiosError(err)) {
+//       console.error(`Error when requesting become artist: ${err.response?.data?.message || err.message}`);
+//     } else {
+//       console.error(`Unexpected error: ${err}`);
+//     }
+//     return null;
+//   }
+// }
 

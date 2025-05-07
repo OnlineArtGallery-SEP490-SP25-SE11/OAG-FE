@@ -5,22 +5,33 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { getCurrentUser } from "@/lib/session";
 import FileUploader from "@/components/ui.custom/file-uploader";
 import {
   createArtistRequest,
-  requestBecomeArtist,
 } from "@/service/cccd";
 import { getArtistRequest } from "@/service/artist-request";
+import { getCurrentUser } from "@/lib/session";
+import { notFound } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function SettingsPage() {
   const [frontImage, setFrontImage] = useState<string | null>(null);
   const [backImage, setBackImage] = useState<string | null>(null);
   const [status, setStatus] = useState<'pending' | 'approved' | 'rejected' | ''>('');
-  const [token, setToken] = useState("");
-  const [userId, setUserId] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const { data: session, status: sessionStatus } = useSession();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  // --- Authentication Handling ---
+  useEffect(() => {
+    if (sessionStatus === "loading") {
+      setIsLoading(true);
+      return; // Still loading session, wait.
+    }
+    if (sessionStatus === "unauthenticated" || !session?.user) {
+      notFound(); // Redirect to not found or login page if not authenticated
+    }
+    // If authenticated, proceed to fetch data (implicitly handled by fetchArtistRequestData)
+    setIsLoading(false);
+  }, [sessionStatus, session]);
 
   // Biến lưu dữ liệu CCCD
   const [cccdData, setCccdData] = useState({
@@ -36,72 +47,71 @@ export default function SettingsPage() {
     issue_loc: "",
     features: "",
     mrz: "",
-    user: userId,
+    // user: userId,
     imageFront: "",
     imageBack: "",
   });
 
+  // --- Authentication Handling ---
   useEffect(() => {
-    fetchCurrentUser();
-  }, []);
+    if (sessionStatus === "loading") {
+      setIsLoading(true);
+      return; // Still loading session, wait.
+    }
+    if (sessionStatus === "unauthenticated" || !session?.user) {
+      setIsLoading(false); // Stop loading if unauthenticated
+      notFound();
+    }
 
+    // If authenticated, proceed to fetch data
+    if (sessionStatus === "authenticated" && session.user) {
+      fetchCurrentUser();
+    } else {
+      setIsLoading(false);
+    }
+
+  }, [sessionStatus, session]);
   const fetchCurrentUser = async () => {
-    const user = await getCurrentUser(); // Lấy thông tin người dùng
-    if (user) {
-      setToken(user.accessToken);
-      setUserId(user.id);
-      setCurrentUser(user);
 
-      const data = await getArtistRequest();
-      console.log("dataz", data.data.artistRequest);
-      if (data.data.artistRequest) {
-        const artistRequest = data.data.artistRequest;
-        setCccdData(artistRequest.cccd); // Cập nhật thông tin CCCD
-        setStatus(artistRequest.status);
-        setFrontImage(artistRequest.cccd.imageFront);
-        setBackImage(artistRequest.cccd.imageBack);
+    const data = await getArtistRequest(session!.user.accessToken);
+    if (data.data.artistRequest) {
+      const artistRequest = data.data.artistRequest;
+      setCccdData(artistRequest.cccd); // Cập nhật thông tin CCCD
+      setStatus(artistRequest.status);
+      setFrontImage(artistRequest.cccd.imageFront);
+      setBackImage(artistRequest.cccd.imageBack);
 
-        setCccdData((prev) => ({
-          ...prev,
-          imageFront: artistRequest.cccd.imageFront,
-          imageBack: artistRequest.cccd.imageBack,
-        }));
-      }
+      setCccdData((prev) => ({
+        ...prev,
+        imageFront: artistRequest.cccd.imageFront,
+        imageBack: artistRequest.cccd.imageBack,
+      }));
     }
   };
 
   const handleSaveCCCD = async () => {
     try {
-      console.log("token", token);
-      // Lưu CCCD data
-      const response = await createArtistRequest({
-        accessToken: token,
-        cccdData: { ...cccdData, user: userId },
+      
+
+      const result = await createArtistRequest({
+        accessToken: session!.user.accessToken,
+        cccdData: { ...cccdData},
       });
 
-      if (response) {
-        console.log("CCCD data saved successfully:", response);
-
-        // Gửi yêu cầu trở thành Artist
-        const requestResponse = await requestBecomeArtist({
-          accessToken: token,
-        });
-
-        if (requestResponse) {
-          console.log(
-            "Request to become Artist sent successfully:",
-            requestResponse
-          );
-          alert("CCCD saved successfully. Request to become Artist sent!");
-          setStatus("pending"); // Cập nhật trạng thái thành "pending"
+      if (result.statusCode === 201) {
+        // alert("CCCD saved successfully. Request to become Artist sent!");
+        setStatus(result.data.status);
+      } else {
+        const error = result.error;
+        if (error.errorCode === 'cccd_used') {
+          alert("This CCCD ID has already been registered by another user.");
         } else {
-          console.error("Failed to request becoming an Artist.");
-          alert("CCCD saved, but failed to send request to become an Artist.");
+          alert(`Error: ${error.message}`);
         }
       }
     } catch (error) {
-      console.error("Error saving CCCD data:", error);
-      alert("Failed to save CCCD data.");
+      console.error("Unexpected error:", error);
+      alert("An unexpected error occurred. Please try again.");
     }
   };
 
@@ -115,7 +125,7 @@ export default function SettingsPage() {
         formData,
         {
           headers: {
-            "api-key": "2RTwag6kRKPlqRMkENa0e60Q9RpvmT30",
+            "api-key": process.env.NEXT_PUBLIC_FPT_AI_API_KEY,
             "Content-Type": "multipart/form-data",
           },
         }
@@ -160,7 +170,6 @@ export default function SettingsPage() {
           issue_loc: extractedData.issue_loc || prev.issue_loc,
           features: extractedData.features || prev.features,
           mrz: extractedData.mrz ? extractedData.mrz.join(" ") : prev.mrz,
-          user: userId,
         }));
       }
     } catch (error) {
@@ -170,8 +179,6 @@ export default function SettingsPage() {
 
   const handleFrontImageUpload = async (url: string) => {
     setFrontImage(url);
-
-    // Update cccdData with the front image URL
     setCccdData((prev) => ({
       ...prev,
       imageFront: url,
@@ -180,8 +187,6 @@ export default function SettingsPage() {
 
   const handleBackImageUpload = async (url: string) => {
     setBackImage(url);
-
-    // Update cccdData with the back image URL
     setCccdData((prev) => ({
       ...prev,
       imageBack: url,
@@ -211,6 +216,15 @@ export default function SettingsPage() {
 
     await processOcrData(file, false);
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[calc(100vh-200px)]">
+        {/* Add a spinner or loading text */}
+        <p className="text-lg text-gray-600">Loading your details...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl mx-auto p-8 bg-white shadow-lg rounded-lg space-y-8">
@@ -273,12 +287,7 @@ export default function SettingsPage() {
               )}
             </CardContent>
           </Card>
-
-                    {currentUser?.role === "artist" ? (
-            <p className="text-green-600 text-center col-span-2">
-              You are already an Artist.
-            </p>
-          ) : status === 'approved' ? (
+          {status === 'approved' ? (
             <p className="text-green-600 text-center col-span-2">
               Your request to become an Artist has been approved.
             </p>
@@ -287,8 +296,8 @@ export default function SettingsPage() {
               <p className="text-red-600 mb-2">
                 Your artist application was rejected.
               </p>
-              <Button 
-                onClick={handleSaveCCCD} 
+              <Button
+                onClick={handleSaveCCCD}
                 className="w-full"
                 disabled={!frontImage || !backImage}
               >
@@ -300,7 +309,7 @@ export default function SettingsPage() {
               <p className="text-yellow-600 mb-2">
                 Your request is pending approval.
               </p>
-           
+
             </div>
           ) : (
             <Button

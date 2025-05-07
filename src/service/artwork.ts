@@ -3,9 +3,15 @@ import { ArtworksResponse } from "@/types/artwork";
 import { ApiResponse } from "@/types/response";
 import { handleApiError } from "@/utils/error-handler";
 
-export const getArtistArtworks = async (accessToken: string): Promise<ApiResponse<ArtworksResponse>> => {
+export const getArtistArtworks = async (
+  accessToken: string,
+  skip: number = 0,
+  take: number = 10 // Thay đổi từ 3 thành 10
+): Promise<ApiResponse<ArtworksResponse>> => {
     try {
-        const res = await createApi(accessToken).get('/artwork/artist');
+        const res = await createApi(accessToken).get('/artwork/artist', {
+            params: { skip, take }
+        });
         return res.data;
     } catch (error) {
         console.error('Error getting artist artworks:', error);
@@ -15,7 +21,6 @@ export const getArtistArtworks = async (accessToken: string): Promise<ApiRespons
         );
     }
 };
-
 // Định nghĩa interface cho thông tin khi mua tranh
 export interface PurchaseArtworkResponse {
     success: boolean;
@@ -81,7 +86,6 @@ export const checkUserPurchased = async (
 ): Promise<ApiResponse<{ hasPurchased: boolean }>> => {
     try {
         const res = await createApi(accessToken).get(`/artwork/${artworkId}/check-purchased`);
-        console.log('rescac', res.data);
         return res.data;
     } catch (error) {
         console.error('Lỗi khi kiểm tra trạng thái mua tranh:', error);

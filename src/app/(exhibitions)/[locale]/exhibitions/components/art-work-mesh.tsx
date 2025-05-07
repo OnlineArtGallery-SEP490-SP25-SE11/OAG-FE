@@ -168,7 +168,7 @@ export const ArtworkMesh: React.FC<ArtworkMeshProps> = React.memo(
         }, []);
 
         // --- Rendering Logic ---
-        const texture = useCloudinaryAsset(artwork.url);
+        const texture = useCloudinaryAsset(artwork.lowResUrl);
         texture.colorSpace = 'srgb';
         const artworkMaterial = useMemo(() => new MeshBasicMaterial({ map: texture, toneMapped: false }), [texture]);
         const { geometry, dimensions } = useMemo(() => {

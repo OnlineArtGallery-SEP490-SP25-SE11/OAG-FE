@@ -8,7 +8,7 @@ import { ChevronDown, ChevronUp, Grid, Check, Replace } from 'lucide-react';
 interface SimpleArtwork {
   _id: string;
   title: string;
-  url: string;
+  lowResUrl: string;
 }
 
 // Type for artwork position with embedded artwork
@@ -102,7 +102,7 @@ export function ArtworkPositionsGrid({
                   <>
                     <div className="absolute inset-0" aria-hidden="true">
                       <Image
-                        src={artwork.url}
+                        src={artwork.lowResUrl}
                         alt={artwork.title}
                         fill
                         quality={50}

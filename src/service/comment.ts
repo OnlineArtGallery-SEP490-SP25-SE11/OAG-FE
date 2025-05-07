@@ -85,11 +85,6 @@ export async function updateComment({
   replies: string[];
 }) {
   try {
-    console.log("⏳ Đang cập nhật comment...", {
-      commentId,
-      content,
-      replies,
-    });
 
     const res = await createApi(accessToken).put(
       `/comments/${commentId}`,
@@ -105,7 +100,6 @@ export async function updateComment({
     );
 
     if (res.status === 200) {
-      console.log("✅ Comment đã được cập nhật thành công:", res.data);
       return res.data; // Trả về comment sau khi cập nhật
     } else {
       console.error(`❌ Failed to update comment: ${res.statusText}`);
