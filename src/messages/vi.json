@@ -678,6 +678,7 @@
     "unlock_analytics_desc": "Nâng cấp lên Premium để truy cập phân tích chi tiết bao gồm thống kê người xem, tương tác tác phẩm và các chỉ số hiệu suất.",
     "upgrade_now_button": "Nâng cấp Ngay",
     "artwork_placed_success": "Tác phẩm đã được thêm thành công",
+    "artwork_replaced_success" : "Tác phẩm đã được thay thế thành công",
     "placing": "Đang thêm",
     "cancel_pending_request": "Huỷ yêu cầu",
     "cancelling_request": "Đang hủy...",
