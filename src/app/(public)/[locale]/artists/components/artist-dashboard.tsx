@@ -58,7 +58,7 @@ export default function Dashboard() {
     const fetchExhibitions = async () => {
       if (!token) return;
       try {
-        const res = await getExhibitions(token);
+        const res = await getExhibitions(token, 1000);
         if (res?.data) {
           setTotalExhibition(res.data.exhibitions.length);
         }
