@@ -7,15 +7,8 @@ import {
     CardHeader,
     CardTitle
 } from '@/components/ui/card';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { ChevronDown } from 'lucide-react';
+import { Skeleton } from "@/components/ui/skeleton";
 import { useState } from 'react';
-import { BalanceChart } from './balance_chart';
 
 const PERIOD_OPTIONS = [
     { value: '24h', label: 'Last 24 hours' },
@@ -27,14 +20,30 @@ const PERIOD_OPTIONS = [
 interface BalanceCardProps {
     balance: number;
     currency?: string;
+    isLoading?: boolean;
 }
 
-export function BalanceCard({ balance, currency = 'VND' }: BalanceCardProps) {
+export function BalanceCard({ balance, currency = 'VND', isLoading = false }: BalanceCardProps) {
     const [selectedPeriod, setSelectedPeriod] = useState('7d');
 
     const selectedPeriodLabel = PERIOD_OPTIONS.find(
         option => option.value === selectedPeriod
     )?.label || 'Last 7 days';
+
+    if (isLoading) {
+        return (
+            <Card className="border-primary/20">
+                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                    <CardTitle className='text-base font-medium'>
+                        <Skeleton className="h-4 w-32" />
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <Skeleton className="h-10 w-36 mb-4" />
+                </CardContent>
+            </Card>
+        );
+    }
 
     return (
         <Card className="border-primary/20">
@@ -42,7 +51,7 @@ export function BalanceCard({ balance, currency = 'VND' }: BalanceCardProps) {
                 <CardTitle className='text-base font-medium'>
                     Current Balance
                 </CardTitle>
-                <DropdownMenu>
+                {/* <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant='ghost' size='sm'>
                             {selectedPeriodLabel}
@@ -59,14 +68,11 @@ export function BalanceCard({ balance, currency = 'VND' }: BalanceCardProps) {
                             </DropdownMenuItem>
                         ))}
                     </DropdownMenuContent>
-                </DropdownMenu>
+                </DropdownMenu> */}
             </CardHeader>
             <CardContent>
                 <div className='text-3xl font-bold text-green-500'>
                     {balance.toLocaleString()} {currency}
-                </div>
-                <div className='h-[200px]'>
-                    <BalanceChart period={selectedPeriod} />
                 </div>
             </CardContent>
         </Card>

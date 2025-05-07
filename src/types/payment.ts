@@ -72,3 +72,31 @@ export interface Transaction {
     transactions: TransactionData[];
     total: number;
 }
+
+
+interface TimeSeriesData {
+    _id: string;
+    inflow: number;
+    outflow: number;
+    transactions: number;
+}
+
+interface TrendData {
+    inflowTrend: number;
+    outflowTrend: number;
+    netFlowTrend: number;
+}
+
+interface SummaryData {
+    totalInflow: number;
+    totalOutflow: number;
+    totalTransactions: number;
+    avgDailyVolume: number;
+}
+
+export interface WalletStatistics {
+    currentBalance: number;
+    timeSeries: TimeSeriesData[];
+    trends: TrendData;
+    summary: SummaryData;
+}

@@ -76,10 +76,10 @@ export default function PaymentSuccess() {
     if (data?.data?.paymentUrl) {
       toast({
         title: 'Success',
-        description: 'Premium subscription activated successfully!',
+        description: 'Deposit successfully!',
         variant: 'success'
       });
-      const timer = setTimeout(() => router.push('/'), 3000);
+      const timer = setTimeout(() => router.push('/wallet'), 3000);
       return () => clearTimeout(timer);
     } else if (error) {
       toast({
@@ -124,14 +124,14 @@ export default function PaymentSuccess() {
             </div>
             <h1 className="text-2xl font-bold text-green-600">Payment Successful!</h1>
             <p className="text-gray-600 mt-2">Your premium subscription has been activated successfully.</p>
-            <p className="text-gray-500 mt-1 text-sm">Redirecting to homepage...</p>
+            <p className="text-gray-500 mt-1 text-sm">Redirecting to wallet...</p>
           </div>
         ) : (
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-800">Payment Status Unknown</h1>
             <p className="text-gray-600 mt-2">We couldn't determine the status of your payment.</p>
             <button
-              onClick={() => router.push('/')}
+              onClick={() => router.push('/wallet')}
               className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
             >
               Return to Homepage

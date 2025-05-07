@@ -5,7 +5,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationNext, Paginati
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowDownLeft, ArrowUpRight } from 'lucide-react';
+import { ArrowDownLeft, ArrowUpRight, Banknote, CreditCard, ShoppingBag, Wallet } from 'lucide-react';
 import { useState } from 'react';
 import { walletService } from '../../queries';
 
@@ -34,12 +34,12 @@ export interface ApiResponse {
 
 export interface Transaction {
     id: string;
-    type: 'DEPOSIT' | 'WITHDRAWAL' | 'PAYMENT';
+    type: 'DEPOSIT' | 'WITHDRAWAL' | 'PAYMENT' | 'SALE';
     amount: number;
     date: string;
-    description: string;
+    description?: string;
     status: 'PENDING' | 'PAID' | 'FAILED';
-    orderCode?: string;
+    orderCode: string;
 }
 
 interface TransactionListContentProps {
@@ -58,22 +58,24 @@ export interface TransactionData {
     _id: string;
     walletId: string;
     amount: number;
-    type: string; // Less restrictive than ApiTransaction
-    status: string;
+    type: string;
+    status: string; // Change to string to match incoming data
+    description?: string;
     orderCode: string;
     createdAt: string;
     updatedAt: string;
     __v: number;
 }
-const mapApiToTransaction = (transaction: TransactionData): Transaction => {
-    // Validate the type to ensure it matches our expected values
-    const validType = ['DEPOSIT', 'WITHDRAWAL', 'PAYMENT'].includes(transaction.type)
-        ? transaction.type as 'DEPOSIT' | 'WITHDRAWAL' | 'PAYMENT'
-        : 'PAYMENT'; // Default fallback
 
-    // Validate status similarly
+const mapApiToTransaction = (transaction: TransactionData): Transaction => {
+    // Validate and cast the type to our union type
+    const validType = ['DEPOSIT', 'WITHDRAWAL', 'PAYMENT', 'SALE'].includes(transaction.type)
+        ? (transaction.type as 'DEPOSIT' | 'WITHDRAWAL' | 'PAYMENT' | 'SALE')
+        : 'PAYMENT';
+
+    // Validate and cast the status to our union type
     const validStatus = ['PENDING', 'PAID', 'FAILED'].includes(transaction.status)
-        ? transaction.status as 'PENDING' | 'PAID' | 'FAILED'
+        ? (transaction.status as 'PENDING' | 'PAID' | 'FAILED')
         : 'PENDING';
 
     return {
@@ -81,11 +83,7 @@ const mapApiToTransaction = (transaction: TransactionData): Transaction => {
         type: validType,
         amount: transaction.amount,
         date: transaction.createdAt,
-        description: validType === 'DEPOSIT'
-            ? `Deposit - ${transaction.orderCode}`
-            : transaction.orderCode
-                ? `Withdrawal - ${transaction.orderCode}`
-                : 'Withdrawal',
+        description: transaction.description || `${validType} - ${transaction.orderCode}`,
         status: validStatus,
         orderCode: transaction.orderCode
     };
@@ -102,46 +100,75 @@ export function TransactionListContent({ transactions = [], limit, isLoading }: 
         return <div className="text-center py-4 text-muted-foreground">No transactions found</div>;
     }
 
+    const getTransactionIcon = (type: Transaction['type']) => {
+        switch (type) {
+            case 'DEPOSIT':
+                return <ArrowUpRight className='h-4 w-4 text-green-500' />; // Money coming in (up)
+            case 'SALE':
+                return <ArrowUpRight className='h-4 w-4 text-green-500' />; // Money coming in (up)
+            case 'WITHDRAWAL':
+                return <ArrowDownLeft className='h-4 w-4 text-red-500' />; // Money going out (down)
+            case 'PAYMENT':
+                return <ArrowDownLeft className='h-4 w-4 text-red-500' />; // Money going out (down)
+            default:
+                return <Banknote className='h-4 w-4 text-gray-500' />;
+        }
+    };
+
+    const getStatusStyle = (status: Transaction['status']) => {
+        switch (status) {
+            case 'PAID':
+                return 'bg-green-100 text-green-700';
+            case 'PENDING':
+                return 'bg-yellow-100 text-yellow-700';
+            case 'FAILED':
+                return 'bg-red-100 text-red-700';
+            default:
+                return 'bg-gray-100 text-gray-700';
+        }
+    };
+
     return (
         <div className='space-y-4'>
-            {displayedTransactions.map((transaction) => (
-                <div
-                    key={transaction.id}
-                    className='flex items-center justify-between space-x-4 rounded-lg border p-4 transition-all hover:bg-muted/50'
-                >
-                    <div className='flex items-center space-x-4'>
-                        <div className='rounded-full border p-2'>
-                            {transaction.type === 'DEPOSIT' ? (
-                                <ArrowDownLeft className='h-4 w-4 text-green-500' />
-                            ) : (
-                                <ArrowUpRight className='h-4 w-4 text-red-500' />
-                            )}
-                        </div>
-                        <div>
-                            <p className='text-sm font-medium leading-none'>
-                                {transaction.description}
-                            </p>
-                            <p className='text-sm text-muted-foreground'>
-                                {new Date(transaction.date).toLocaleString()}
-                            </p>
-                            <p className='text-xs text-muted-foreground'>
-                                Status: {transaction.status}
-                            </p>
-                        </div>
-                    </div>
+            {displayedTransactions.map((transaction) => {
+                const isIncoming = transaction.type === 'DEPOSIT' || transaction.type === 'SALE';
+                
+                return (
                     <div
-                        className={cn(
-                            'text-sm font-medium',
-                            transaction.type === 'DEPOSIT'
-                                ? 'text-green-500'
-                                : 'text-red-500'
-                        )}
+                        key={transaction.id}
+                        className='flex items-center justify-between space-x-4 rounded-lg border p-4 transition-all hover:bg-muted/50'
                     >
-                        {transaction.type === 'DEPOSIT' ? '+' : '-'}
-                        {Math.abs(transaction.amount).toLocaleString()} VND
+                        <div className='flex items-center space-x-4'>
+                            <div className='rounded-full border p-2'>
+                                {getTransactionIcon(transaction.type)}
+                            </div>
+                            <div className='space-y-1.5'>
+                                <div className='flex items-center gap-2'>
+                                    <span className='px-2 py-1 rounded-full text-xs bg-muted font-medium'>
+                                        {transaction.type}
+                                    </span>
+                                    <span className={`px-2 py-0.5 rounded-full text-xs ${getStatusStyle(transaction.status)}`}>
+                                        {transaction.status}
+                                    </span>
+                                </div>
+                                <p className='text-sm text-muted-foreground'>
+                                    {new Date(transaction.date).toLocaleString()}
+                                </p>
+                                <p className='text-sm text-foreground'>
+                                    {transaction.description}
+                                </p>
+                            </div>
+                        </div>
+                        <div className={cn(
+                            'text-sm font-medium',
+                            isIncoming ? 'text-green-500' : 'text-red-500'
+                        )}>
+                            {isIncoming ? '+' : '-'}
+                            {Math.abs(transaction.amount).toLocaleString()} VND
+                        </div>
                     </div>
-                </div>
-            ))}
+                );
+            })}
         </div>
     );
 }
