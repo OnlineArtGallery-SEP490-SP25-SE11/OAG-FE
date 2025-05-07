@@ -29,13 +29,11 @@ export const getArtistArtworks = async (
         // Merge default params with provided params
         const queryParams: ArtistArtworksParams = {
             ...params,
-            // Ensure skip and take are numbers
-            skip: Number(params.skip ?? DEFAULT_PARAMS.skip),
-            take: Number(params.take ?? DEFAULT_PARAMS.take)
         };
 
         // Remove undefined values
         const cleanParams = Object.fromEntries(
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             Object.entries(queryParams).filter(([_, value]) => value !== undefined)
         );
 
@@ -52,6 +50,38 @@ export const getArtistArtworks = async (
         );
     }
 };
+
+
+export const getByArtistId = async (
+    artistId: string,
+    params: ArtistArtworksParams = {}
+): Promise<ApiResponse<ArtworksResponse>> => {
+    try {
+        // Merge default params with provided params
+        const queryParams: ArtistArtworksParams = {
+            ...params,
+        };
+
+        // Remove undefined values
+        const cleanParams = Object.fromEntries(
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            Object.entries(queryParams).filter(([_, value]) => value !== undefined)
+        );
+
+        const res = await createApi().get(`/artwork/artist/${artistId}`, {
+            params: cleanParams
+        });
+
+        console.log('rez', res.data);   
+        return res.data;
+    } catch (error) {
+        console.error('Error getting artist artworks:', error);
+        return handleApiError<ArtworksResponse>(
+            error,
+            'Failed to fetch artist artworks'
+        );
+    }
+}
 // Định nghĩa interface cho thông tin khi mua tranh
 export interface PurchaseArtworkResponse {
     success: boolean;

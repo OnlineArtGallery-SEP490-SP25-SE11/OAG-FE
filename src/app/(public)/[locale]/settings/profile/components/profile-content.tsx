@@ -384,7 +384,7 @@ const ProfileContent = ({ initialData }: ProfileContentProps) => {
                           />
                         ) : (
                           <p className="italic text-gray-500">
-                            {initialData.name} {t("view.default_bio")}
+                            {t("view.default_bio")}
                           </p>
                         )}
                       </div>

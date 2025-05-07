@@ -549,7 +549,8 @@
       "following": "Following",
       "email": "Email",
       "joined": "Joined {date}",
-      "premium_badge": "premium"
+      "premium_badge": "premium",
+      "become_artist": "Become Artist"
     },
     "view": {
       "view_detail": "View Detail",
@@ -572,7 +573,16 @@
       "social_links": "Social Links",
       "artworks_section": "Artworks",
       "view_all_artworks": "View all {count} artworks",
-      "no_artworks": "No artworks yet"
+      "no_artworks": "No artworks yet",
+      "no_collections": "No collections yet",
+      "no_collections_description": "This user hasn't created any collections",
+      "no_description": "No description provided",
+      "created_on": "Created on",
+      "view_artwork": "View Artwork",
+      "no_artworks_description": "This collection doesn't have any artworks yet",
+      "artist_artworks": "Artworks",
+      "genre": "Genre",
+      "default_bio": "No biography provided"
     },
     "edit": {
       "title": "Edit Profile",
@@ -610,6 +620,13 @@
         "max_genres": "Cannot select more than 10 art styles",
         "genre_max_length": "Each art style must not exceed 30 characters"
       }
+    },
+    "toast": {
+      "followed": "Followed",
+      "followed_description": "You are now following this user",
+      "unfollowed": "Unfollowed",
+      "operation_failed": "Operation failed",
+      "login_required": "You must be logged in to perform this action"
     }
   },
   "filter": {
