@@ -176,7 +176,7 @@ export default function TabChart() {
                             Total Time
                           </div>
                           <div className="font-medium text-gray-700 dark:text-gray-200">
-                            {totalTime / 60} mins
+                            {Math.round(totalTime / 60)} mins
                           </div>
                         </div>
                         <div>

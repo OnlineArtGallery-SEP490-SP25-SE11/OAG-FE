@@ -28,9 +28,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     return session?.user?.role?.includes('artist') || false;
   }, [session]);
 
-  // Redirect non-artists when session is loaded
+  // Handle unauthorized access immediately when session is loaded
   useEffect(() => {
-    if (status === 'authenticated' && !isArtist) {
+    if (status === 'unauthenticated') {
+      router.push('/sign-in');
+    } else if (status === 'authenticated' && !isArtist) {
       router.push('/403');
     }
   }, [status, isArtist, router]);
@@ -84,8 +86,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           `}
         >
           <item.icon
-            className={`${mobile ? 'h-6 w-6' : 'h-5 w-5'} ${isActive ? 'text-teal-600 dark:text-teal-400' : 'text-slate-500 dark:text-slate-400'
-              } transition-colors duration-200`}
+            className={`${mobile ? 'h-6 w-6' : 'h-5 w-5'} ${
+              isActive ? 'text-teal-600 dark:text-teal-400' : 'text-slate-500 dark:text-slate-400'
+            } transition-colors duration-200`}
           />
           {!mobile && (
             <span className="truncate transition-opacity duration-200">
@@ -122,23 +125,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   const toggleSidebar = () => setSidebarOpen(prev => !prev);
 
-  // Show loading state while session is loading
-  // Show loading state while session is loading
-  if (status === 'loading') {
+  // Show loading state for ANY status except authenticated + artist
+  if (status === 'loading' || (status === 'authenticated' && !isArtist) || status === 'unauthenticated') {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900">
         <div className="w-12 h-12 border-4 border-slate-200 dark:border-slate-700 border-t-teal-500 dark:border-t-teal-400 rounded-full animate-spin"></div>
       </div>
     );
   }
-
-  // If not authenticated, redirect to sign-in
-  if (status === 'unauthenticated') {
-    router.push('/sign-in');
-    return null;
-  }
-
-  // If authenticated but not an artist, will be redirected by the useEffect
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
