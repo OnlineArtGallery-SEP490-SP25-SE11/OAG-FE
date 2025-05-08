@@ -211,17 +211,19 @@ const ArtworkCard = React.memo(({
 
                         {/* Action buttons with improved contrast and effects */}
                         <div className="mt-auto space-y-2 border-t border-white/20 pt-3">
-                            <AddArtworkCollection
-                                artworkId={artwork._id}
-                                triggerButton={
-                                    <Button
-                                        size="sm"
-                                        className="w-full bg-cyan-600 hover:bg-cyan-500 hover:scale-[1.02] active:scale-[0.98] text-white text-xs flex items-center justify-center gap-1 shadow-md transition-all font-medium"
-                                    >
-                                        <BookmarkIcon className="h-3 w-3" /> {t('save_collection')}
-                                    </Button>
-                                }
-                            />
+                            {artwork.moderationStatus === 'approved' && (
+                                <AddArtworkCollection
+                                    artworkId={artwork._id}
+                                    triggerButton={
+                                        <Button
+                                            size="sm"
+                                            className="w-full bg-cyan-600 hover:bg-cyan-500 hover:scale-[1.02] active:scale-[0.98] text-white text-xs flex items-center justify-center gap-1 shadow-md transition-all font-medium"
+                                        >
+                                            <BookmarkIcon className="h-3 w-3" /> {t('save_collection')}
+                                        </Button>
+                                    }
+                                />
+                            )}
 
                             <div className="flex gap-2">
                                 <Button
