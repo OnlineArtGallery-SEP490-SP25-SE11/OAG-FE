@@ -1,11 +1,12 @@
 'use client';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { BarChart, Crown, FolderOpen, Image, Upload, Settings } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { useSession } from 'next-auth/react';
 
 interface NavItem {
   href: string;
@@ -17,8 +18,24 @@ interface NavItem {
 export default function Layout({ children }: { children: React.ReactNode }) {
   const t = useTranslations('artist_layout');
   const pathname = usePathname();
+  const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { data: session, status } = useSession();
+
+  // Check if user is artist
+  const isArtist = useMemo(() => {
+    return session?.user?.role?.includes('artist') || false;
+  }, [session]);
+
+  // Handle unauthorized access immediately when session is loaded
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/sign-in');
+    } else if (status === 'authenticated' && !isArtist) {
+      router.push('/403');
+    }
+  }, [status, isArtist, router]);
 
   const navItems: NavItem[] = useMemo(
     () => [
@@ -107,6 +124,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }, [navItems]);
 
   const toggleSidebar = () => setSidebarOpen(prev => !prev);
+
+  // Show loading state for ANY status except authenticated + artist
+  if (status === 'loading' || (status === 'authenticated' && !isArtist) || status === 'unauthenticated') {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <div className="w-12 h-12 border-4 border-slate-200 dark:border-slate-700 border-t-teal-500 dark:border-t-teal-400 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
