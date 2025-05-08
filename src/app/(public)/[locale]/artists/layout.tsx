@@ -1,11 +1,12 @@
 'use client';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { BarChart, Crown, FolderOpen, Image, Upload, Settings } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { useSession } from 'next-auth/react';
 
 interface NavItem {
   href: string;
@@ -17,8 +18,22 @@ interface NavItem {
 export default function Layout({ children }: { children: React.ReactNode }) {
   const t = useTranslations('artist_layout');
   const pathname = usePathname();
+  const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { data: session, status } = useSession();
+
+  // Check if user is artist
+  const isArtist = useMemo(() => {
+    return session?.user?.role?.includes('artist') || false;
+  }, [session]);
+
+  // Redirect non-artists when session is loaded
+  useEffect(() => {
+    if (status === 'authenticated' && !isArtist) {
+      router.push('/403');
+    }
+  }, [status, isArtist, router]);
 
   const navItems: NavItem[] = useMemo(
     () => [
@@ -69,9 +84,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           `}
         >
           <item.icon
-            className={`${mobile ? 'h-6 w-6' : 'h-5 w-5'} ${
-              isActive ? 'text-teal-600 dark:text-teal-400' : 'text-slate-500 dark:text-slate-400'
-            } transition-colors duration-200`}
+            className={`${mobile ? 'h-6 w-6' : 'h-5 w-5'} ${isActive ? 'text-teal-600 dark:text-teal-400' : 'text-slate-500 dark:text-slate-400'
+              } transition-colors duration-200`}
           />
           {!mobile && (
             <span className="truncate transition-opacity duration-200">
@@ -107,6 +121,24 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }, [navItems]);
 
   const toggleSidebar = () => setSidebarOpen(prev => !prev);
+
+  // Show loading state while session is loading
+  // Show loading state while session is loading
+  if (status === 'loading') {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <div className="w-12 h-12 border-4 border-slate-200 dark:border-slate-700 border-t-teal-500 dark:border-t-teal-400 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  // If not authenticated, redirect to sign-in
+  if (status === 'unauthenticated') {
+    router.push('/sign-in');
+    return null;
+  }
+
+  // If authenticated but not an artist, will be redirected by the useEffect
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
